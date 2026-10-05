@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Criar conta · Recomendador de UCs opcionais{% endblock %}
+
+{% block content %}
+<h1>Criar conta</h1>
+<p class="lead">Use o seu email institucional. Vamos enviar-lhe uma ligação para confirmar a conta.</p>
+
+{% if errors.form %}
+  <div class="alert alert-error" role="alert">{{ errors.form }}</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('auth.register_submit') }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+
+  <div class="field">
+    <label for="email">Email institucional</label>
+    <input id="email" name="email" type="email" autocomplete="email" required
+           value="{{ values.get('email', '') }}"
+           {% if errors.email %}aria-invalid="true" aria-describedby="email-error"{% else %}aria-describedby="email-hint"{% endif %}>
+    {% if errors.email %}
+      <p class="error" id="email-error">{{ errors.email }}</p>
+    {% else %}
+      <p class="hint" id="email-hint">Terminado em {{ domains_hint }}.</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="password">Palavra-passe</label>
+    <input id="password" name="password" type="password" autocomplete="new-password" required
+           {% if errors.password %}aria-invalid="true" aria-describedby="password-error"{% else %}aria-describedby="password-hint"{% endif %}>
+    {% if errors.password %}
+      <p class="error" id="password-error">{{ errors.password }}</p>
+    {% else %}
+      <p class="hint" id="password-hint">Pelo menos {{ min_length }} caracteres, com uma letra e um número.</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="password_confirm">Repita a palavra-passe</label>
+    <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required
+           {% if errors.password_confirm %}aria-invalid="true" aria-describedby="password_confirm-error"{% endif %}>
+    {% if errors.password_confirm %}
+      <p class="error" id="password_confirm-error">{{ errors.password_confirm }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <div class="check">
+      <input id="accepted_privacy" name="accepted_privacy" type="checkbox"
+             {% if errors.accepted_privacy %}aria-invalid="true" aria-describedby="accepted_privacy-error"{% endif %}>
+      <label for="accepted_privacy">Li e aceito a <a href="{{ url_for('main.privacy') }}">política de privacidade</a>.</label>
+    </div>
+    {% if errors.accepted_privacy %}
+      <p class="error" id="accepted_privacy-error">{{ errors.accepted_privacy }}</p>
+    {% endif %}
+  </div>
+
+  <button type="submit">Criar conta</button>
+</form>
+{% endblock %}

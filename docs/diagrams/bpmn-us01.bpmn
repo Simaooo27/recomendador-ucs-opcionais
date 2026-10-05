@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US01" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US01">
+    <bpmn:participant id="Participant_US01" name="US01 — Registo com email institucional" processRef="Process_US01" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US01" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US01">
+      <bpmn:lane id="Lane_Aluno" name="Aluno">
+        <bpmn:flowNodeRef>Start_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Preencher</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Abrir</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Sistema" name="Sistema">
+        <bpmn:flowNodeRef>Task_Validar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Dados</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Erros</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Criar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Email</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ValidarLink</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Link</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Ativar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Ativa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Falhou</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Falhou</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_1" name="Quer criar conta">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Preencher" name="Preencher o formulário de registo">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_Validar" name="Validar os dados">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gw_Dados" name="Dados válidos?">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Erros" name="Mostrar os erros no formulário">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Criar" name="Criar conta inativa com hash da palavra-passe">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Email" name="Enviar email de confirmação">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_Abrir" name="Abrir a ligação do email">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_ValidarLink" name="Validar a ligação (assinatura e prazo)">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gw_Link" name="Ligação válida?">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Ativar" name="Ativar a conta">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_Ativa" name="Conta ativa">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Falhou" name="Informar que a ligação falhou">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_Falhou" name="Ligação inválida ou expirada">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_1" targetRef="Task_Preencher" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Preencher" targetRef="Task_Validar" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Validar" targetRef="Gw_Dados" />
+    <bpmn:sequenceFlow id="Flow_4" name="sim" sourceRef="Gw_Dados" targetRef="Task_Criar" />
+    <bpmn:sequenceFlow id="Flow_5" name="não" sourceRef="Gw_Dados" targetRef="Task_Erros" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_Erros" targetRef="Task_Preencher" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_Criar" targetRef="Task_Email" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_Email" targetRef="Task_Abrir" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Abrir" targetRef="Task_ValidarLink" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_ValidarLink" targetRef="Gw_Link" />
+    <bpmn:sequenceFlow id="Flow_11" name="sim" sourceRef="Gw_Link" targetRef="Task_Ativar" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_Ativar" targetRef="End_Ativa" />
+    <bpmn:sequenceFlow id="Flow_13" name="não" sourceRef="Gw_Link" targetRef="Task_Falhou" />
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_Falhou" targetRef="End_Falhou" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_US01">
+    <bpmndi:BPMNPlane id="BPMNPlane_US01" bpmnElement="Collaboration_US01">
+      <bpmndi:BPMNShape id="Participant_US01_di" bpmnElement="Participant_US01" isHorizontal="true"><dc:Bounds x="40" y="40" width="1500" height="480" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Aluno_di" bpmnElement="Lane_Aluno" isHorizontal="true"><dc:Bounds x="70" y="40" width="1470" height="200" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Sistema_di" bpmnElement="Lane_Sistema" isHorizontal="true"><dc:Bounds x="70" y="240" width="1470" height="280" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_1_di" bpmnElement="Start_1"><dc:Bounds x="110" y="122" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="83" y="162" width="90" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Preencher_di" bpmnElement="Task_Preencher"><dc:Bounds x="190" y="100" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Validar_di" bpmnElement="Task_Validar"><dc:Bounds x="380" y="290" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Dados_di" bpmnElement="Gw_Dados" isMarkerVisible="true"><dc:Bounds x="560" y="305" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="540" y="273" width="90" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Erros_di" bpmnElement="Task_Erros"><dc:Bounds x="520" y="410" width="130" height="70" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Criar_di" bpmnElement="Task_Criar"><dc:Bounds x="670" y="290" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Email_di" bpmnElement="Task_Email"><dc:Bounds x="850" y="290" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Abrir_di" bpmnElement="Task_Abrir"><dc:Bounds x="1030" y="100" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidarLink_di" bpmnElement="Task_ValidarLink"><dc:Bounds x="1030" y="290" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Link_di" bpmnElement="Gw_Link" isMarkerVisible="true"><dc:Bounds x="1210" y="305" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1190" y="273" width="90" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Ativar_di" bpmnElement="Task_Ativar"><dc:Bounds x="1310" y="290" width="130" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Ativa_di" bpmnElement="End_Ativa"><dc:Bounds x="1470" y="312" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1443" y="352" width="90" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Falhou_di" bpmnElement="Task_Falhou"><dc:Bounds x="1170" y="420" width="130" height="70" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Falhou_di" bpmnElement="End_Falhou"><dc:Bounds x="1340" y="437" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1313" y="477" width="90" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="146" y="140" /><di:waypoint x="190" y="140" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="320" y="140" /><di:waypoint x="350" y="140" /><di:waypoint x="350" y="330" /><di:waypoint x="380" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="510" y="330" /><di:waypoint x="560" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="610" y="330" /><di:waypoint x="670" y="330" /><bpmndi:BPMNLabel><dc:Bounds x="630" y="311" width="24" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="585" y="355" /><di:waypoint x="585" y="410" /><bpmndi:BPMNLabel><dc:Bounds x="592" y="378" width="24" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="520" y="445" /><di:waypoint x="255" y="445" /><di:waypoint x="255" y="180" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="800" y="330" /><di:waypoint x="850" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="980" y="330" /><di:waypoint x="1005" y="330" /><di:waypoint x="1005" y="140" /><di:waypoint x="1030" y="140" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9"><di:waypoint x="1095" y="180" /><di:waypoint x="1095" y="290" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="1160" y="330" /><di:waypoint x="1210" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11"><di:waypoint x="1260" y="330" /><di:waypoint x="1310" y="330" /><bpmndi:BPMNLabel><dc:Bounds x="1275" y="311" width="24" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12"><di:waypoint x="1440" y="330" /><di:waypoint x="1470" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13"><di:waypoint x="1235" y="355" /><di:waypoint x="1235" y="420" /><bpmndi:BPMNLabel><dc:Bounds x="1242" y="385" width="24" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14"><di:waypoint x="1300" y="455" /><di:waypoint x="1340" y="455" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

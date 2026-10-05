@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" font-family="Arial, Helvetica, sans-serif">
+<title>Diagrama de use case — US01 Registo com email institucional</title>
+<desc>O aluno regista a conta e confirma o email. Registar inclui validar os dados e enviar o email de confirmação; confirmar inclui validar a ligação. O serviço de email participa no envio.</desc>
+<defs><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M1,1 L9,5 L1,9" fill="none" stroke="#22242a" stroke-width="1.5"/></marker></defs>
+<rect width="960" height="560" fill="#ffffff"/>
+<rect x="200" y="28" width="580" height="504" rx="8" fill="#fafbfc" stroke="#22242a" stroke-width="2"/>
+<text x="490" y="52.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#1b2430">Sistema: Recomendador de UCs opcionais</text>
+<line x1="119" y1="277" x2="288.6" y2="198.4" stroke="#22242a" stroke-width="1.8"/>
+<line x1="119" y1="277" x2="294.0" y2="370.2" stroke="#22242a" stroke-width="1.8"/>
+<line x1="846" y1="227" x2="754.3" y2="230.7" stroke="#22242a" stroke-width="1.8"/>
+<line x1="437.4" y1="152.5" x2="559.3" y2="128.1" stroke="#22242a" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#open)"/><rect x="464.4" y="120.3" width="68" height="16" rx="3" fill="#fafbfc"/><text x="498.4" y="128.3" text-anchor="middle" dominant-baseline="central" font-size="12" font-style="italic" fill="#22242a">«include»</text>
+<line x1="435.7" y1="188.6" x2="561.2" y2="215.8" stroke="#22242a" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#open)"/><rect x="464.5" y="182.2" width="68" height="16" rx="3" fill="#fafbfc"/><text x="498.5" y="190.2" text-anchor="middle" dominant-baseline="central" font-size="12" font-style="italic" fill="#22242a">«include»</text>
+<line x1="450.0" y1="400.0" x2="545.0" y2="400.0" stroke="#22242a" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#open)"/><rect x="463.5" y="380.0" width="68" height="16" rx="3" fill="#fafbfc"/><text x="497.5" y="388.0" text-anchor="middle" dominant-baseline="central" font-size="12" font-style="italic" fill="#22242a">«include»</text>
+<ellipse cx="350" cy="170" rx="100" ry="36" fill="#e6effb" stroke="#22242a" stroke-width="2"/>
+<text x="350" y="162.0" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="400" fill="#1b2430">UC01</text>
+<text x="350" y="178.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#1b2430">Registar conta</text>
+<ellipse cx="350" cy="400" rx="100" ry="36" fill="#e6effb" stroke="#22242a" stroke-width="2"/>
+<text x="350" y="392.0" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="400" fill="#1b2430">UC02</text>
+<text x="350" y="408.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#1b2430">Confirmar email</text>
+<ellipse cx="650" cy="110" rx="105" ry="36" fill="#ffffff" stroke="#22242a" stroke-width="2"/>
+<text x="650" y="102.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">Validar os dados</text>
+<text x="650" y="118.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">do registo</text>
+<ellipse cx="650" cy="235" rx="105" ry="36" fill="#ffffff" stroke="#22242a" stroke-width="2"/>
+<text x="650" y="227.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">Enviar email</text>
+<text x="650" y="243.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">de confirmação</text>
+<ellipse cx="650" cy="400" rx="105" ry="36" fill="#ffffff" stroke="#22242a" stroke-width="2"/>
+<text x="650" y="392.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">Validar a ligação</text>
+<text x="650" y="408.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="400" fill="#1b2430">de confirmação</text>
+<circle cx="95" cy="251" r="13" fill="#ffffff" stroke="#22242a" stroke-width="2"/><path d="M95,264 L95,299 M71,277 L119,277 M95,299 L75,329 M95,299 L115,329" stroke="#22242a" stroke-width="2" fill="none" stroke-linecap="round"/><text x="95" y="351.0" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#1b2430">Aluno</text>
+<circle cx="870" cy="201" r="13" fill="#ffffff" stroke="#22242a" stroke-width="2"/><path d="M870,214 L870,249 M846,227 L894,227 M870,249 L850,279 M870,249 L890,279" stroke="#22242a" stroke-width="2" fill="none" stroke-linecap="round"/><text x="870" y="292.9" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#1b2430">Serviço de</text>
+<text x="870" y="309.1" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#1b2430">email</text>
+</svg>

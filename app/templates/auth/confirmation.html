@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Confirmação de email · Recomendador de UCs opcionais{% endblock %}
+
+{% block content %}
+{% if outcome == "confirmed" %}
+  <h1>Conta ativada</h1>
+  <div class="alert alert-ok" role="status">O seu email foi confirmado e a conta está ativa.</div>
+{% elif outcome == "already_confirmed" %}
+  <h1>Conta já ativa</h1>
+  <p>Este email já tinha sido confirmado. Não precisa de fazer mais nada.</p>
+{% elif outcome == "expired" %}
+  <h1>Ligação expirada</h1>
+  <div class="alert alert-error" role="alert">Esta ligação já não é válida.</div>
+  <p><a href="{{ url_for('auth.register_form') }}">Crie a conta de novo</a> com o mesmo email para receber uma ligação nova.</p>
+{% else %}
+  <h1>Ligação inválida</h1>
+  <div class="alert alert-error" role="alert">Não foi possível confirmar o email com esta ligação.</div>
+  <p>Copie a ligação completa do email que recebeu ou <a href="{{ url_for('auth.register_form') }}">crie a conta de novo</a> para receber uma nova.</p>
+{% endif %}
+{% endblock %}

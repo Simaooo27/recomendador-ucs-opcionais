@@ -1,0 +1,14 @@
+# Registo de uso de IA
+
+Obrigatório (RNF09, secção 9 de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md)). Uma linha por sessão relevante. Este registo alimenta o relatório.
+
+| Data | Quem | Ferramenta | Pedido (resumo) | O que foi gerado | Como foi validado | Revisto por | Resultado |
+|---|---|---|---|---|---|---|---|
+| 2026-10-01 | (preencher) | Claude | Documentos de requisitos, regras de geração de código, use case, BPMN e prompt da US01; implementação da US01 e testes | Documentos `docs/01` a `docs/05`, prompt da US01, código em `app/`, testes em `tests/`, diagramas | 62 testes automáticos a passar; teste manual do fluxo registo → ligação → ativação no servidor de desenvolvimento | (pendente: outro elemento da equipa) | Aceite com alterações a decidir na revisão |
+| 2026-10-01 | (preencher) | Claude | Revisão crítica dos requisitos (Tarefa 2) contra o backlog e o código da US01 | Versão 1.1 de `docs/01`: RNF e RN alterados, secção de dependências e pontos em aberto | Comparação com os critérios de aceitação do backlog e com as decisões técnicas de `docs/02` | (pendente: Product Owner e outro elemento) | Por validar |
+
+## Modelo para novas entradas
+
+| Data | Quem | Ferramenta | Pedido (resumo) | O que foi gerado | Como foi validado | Revisto por | Resultado |
+|---|---|---|---|---|---|---|---|
+| AAAA-MM-DD | | | | | | | Aceite / Aceite com alterações / Rejeitado |

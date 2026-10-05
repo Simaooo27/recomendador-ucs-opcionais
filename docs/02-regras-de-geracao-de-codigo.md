@@ -5,10 +5,7 @@ Estas regras aplicam-se a **todo** o código, testes e documentação gerados co
 **Estado:** aprovado pela equipa em 2026-10-05.
 
 | Decisão | Opção escolhida |
-|---|---|
-| Tecnologia da base de dados | Flask e biblioteca padrão (`sqlite3`), sem ORM |
-| Língua do código | Identificadores em inglês; textos para o utilizador, comentários e docstrings em português de Portugal |
-| Entrada de código no `main` | Um Pull Request por user story, com pelo menos 1 aprovação de outro elemento |
+ |
 
 ## 1. Princípios
 

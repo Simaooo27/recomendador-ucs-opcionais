@@ -2,6 +2,14 @@
 
 Estas regras aplicam-se a **todo** o código, testes e documentação gerados com apoio de IA neste projeto (RNF09). A IA escreve o primeiro rascunho; a equipa é responsável pelo que entra no repositório. Cada prompt deve referir este documento (ver [prompts/](../prompts/)).
 
+**Estado:** aprovado pela equipa em 2026-10-05.
+
+| Decisão | Opção escolhida |
+|---|---|
+| Tecnologia da base de dados | Flask e biblioteca padrão (`sqlite3`), sem ORM |
+| Língua do código | Identificadores em inglês; textos para o utilizador, comentários e docstrings em português de Portugal |
+| Entrada de código no `main` | Um Pull Request por user story, com pelo menos 1 aprovação de outro elemento |
+
 ## 1. Princípios
 
 1. **Uma user story por prompt e por Pull Request.** Pedidos grandes geram código que ninguém consegue rever.

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% import "macros/password.html" as password with context %}
+{% set page_title = texts.ADMIN_LOGIN_TITLE %}
+{% set noindex = true %}
+
+{% block content %}
+<h1>{{ texts.ADMIN_LOGIN_TITLE }}</h1>
+<p class="lead">{{ texts.ADMIN_LOGIN_INTRO }}</p>
+
+{% if error %}
+  <div class="alert alert-error" role="alert" id="login-error">{{ error }}</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('gestao.login_submit') }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+
+  <div class="field">
+    <label for="username">{{ texts.ADMIN_USERNAME_LABEL }}</label>
+    <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required
+           value="{{ username }}" {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+  </div>
+
+  <div class="field">
+    <label for="password">{{ texts.ADMIN_PASSWORD_LABEL }}</label>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="current-password" required
+             {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+      {{ password.toggle("password") }}
+    </div>
+  </div>
+
+  <button type="submit">{{ texts.ADMIN_LOGIN_BUTTON }}</button>
+</form>
+{% endblock %}

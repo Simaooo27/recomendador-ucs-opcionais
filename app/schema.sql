@@ -14,3 +14,14 @@ CREATE TABLE IF NOT EXISTS users (
     created_at              TEXT    NOT NULL,  -- UTC, ISO 8601
     confirmed_at            TEXT               -- UTC, ISO 8601
 );
+
+-- Administradores (US03): contas próprias, separadas dos alunos e sem email.
+-- O primeiro é criado no terminal (flask --app app create-admin); os seguintes, na área de gestão.
+CREATE TABLE IF NOT EXISTS admins (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    username        TEXT    NOT NULL UNIQUE COLLATE NOCASE,
+    password_hash   TEXT    NOT NULL,
+    created_at      TEXT    NOT NULL,  -- UTC, ISO 8601
+    created_by      TEXT,              -- nome de quem o criou; vazio = criado no terminal
+    last_login_at   TEXT               -- UTC, ISO 8601
+);

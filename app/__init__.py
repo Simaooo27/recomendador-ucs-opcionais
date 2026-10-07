@@ -25,14 +25,19 @@ def create_app(config: dict | None = None) -> Flask:
         app.config["DATABASE"] = str(Path(app.instance_path) / "app.sqlite3")
 
     db.init_app(app)
+    from .gestao import cli as gestao_cli
+
+    gestao_cli.init_app(app)
     init_security(app)
     app.extensions["mailer"] = create_mailer(app.config)
 
     from .auth import bp as auth_bp
+    from .gestao import bp as gestao_bp
     from .main import bp as main_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(gestao_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
 
     # Todos os templates recebem os textos de app/texts.py como «texts».
     @app.context_processor

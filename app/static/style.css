@@ -60,6 +60,7 @@ label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
 
 input[type="email"],
 input[type="password"],
+input[type="text"],
 .password-field input {
   width: 100%;
   padding: 0.65rem 0.75rem;
@@ -128,6 +129,33 @@ button:hover { background: var(--accent-hover); }
 
 a { color: var(--accent); }
 
+/* Menu da barra do topo (com sessão iniciada) e etiqueta com o nome do administrador. */
+.site-header > span { margin-right: auto; }
+.user-nav { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
+.user-nav a { color: var(--accent-ink); }
+.role-badge { padding: 0.15rem 0.5rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+@media (max-width: 30rem) {
+  .site-header { flex-wrap: wrap; }
+  .user-nav { order: 3; width: 100%; }
+}
+h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }
+.plain-list { margin: 0 0 1rem; padding-left: 1.2rem; }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* As páginas da gestão usam um painel mais largo, por causa das tabelas. */
+main.wide { max-width: 52rem; }
+
+/* Tabela da lista de administradores. */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { text-align: left; padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 600; }
+td.nowrap { white-space: nowrap; }
+td form { margin: 0; }
+.button-small { width: auto; padding: 0.35rem 0.7rem; font-size: 0.85rem; background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+.button-small:hover { background: var(--danger-bg); }
+
 /* Botão «Terminar sessão» na barra do topo. */
 .logout { margin: 0; }
 .logout button {
@@ -154,8 +182,10 @@ a { color: var(--accent); }
   }
   .site-header { background: #0d1b33; color: #e7ebf1; }
   .logout button { color: #e7ebf1; }
+  .user-nav a { color: #e7ebf1; }
+  .button-small:hover { background: var(--danger-bg); }
   .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }
   button:hover { background: #b6cdff; }
-  input[type="email"], input[type="password"], .password-field input { border-color: #6b778a; }
+  input[type="email"], input[type="password"], input[type="text"], .password-field input { border-color: #6b778a; }
   .password-toggle:hover { background: transparent; }
 }

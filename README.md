@@ -2,7 +2,44 @@
 
 Aplicação web que ajuda os alunos a escolher unidades curriculares opcionais com base na experiência de colegas com percursos e gostos parecidos. Projeto 1 de Metodologias Ágeis (Scrum).
 
-**Estado:** Sprint 1, em curso. Está implementada a **US01 (registo com email institucional)**. As restantes stories estão no Product Backlog.
+**Estado:** Sprint 1, em curso. O estado de cada user story está na secção [Estado do projeto](#estado-do-projeto).
+
+## Estado do projeto
+
+**Sprint Goal do Sprint 1:** um aluno consegue registar-se, construir o seu percurso e avaliar UCs.
+
+| User story | Título | Sprint | Estado | Documentação |
+|---|---|---|---|---|
+| US01 | Registo com email institucional | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
+| US02 | Autenticação | Sprint 1 | Feita (o código ainda não está no repositório) | — |
+| US03 | Importar catálogo de UCs | Sprint 1 | Por fazer | — |
+| US04 | Consultar catálogo de opcionais | Sprint 1 | Por fazer | — |
+| US05 | Registar percurso | Sprint 1 | Por fazer | — |
+| US06 | Avaliar opcional concluída | Sprint 1 | Por fazer | — |
+| US07 | Avaliação rápida de obrigatórias | Sprint 1 | Por fazer | — |
+| US09 | Avaliações pseudonimizadas | Sprint 2 | Por fazer | — |
+| US20 | Dataset sintético | Sprint 2 | Por fazer | — |
+| US11 | Recomendações de popularidade | Sprint 2 | Por fazer | — |
+| US12 | Recomendações user-based | Sprint 2 | Por fazer | — |
+| US15 | Excluir UCs inválidas | Sprint 2 | Por fazer | — |
+| US13 | Explicação da recomendação | Sprint 3 | Por fazer | — |
+| US21 | Avaliação offline do motor | Sprint 3 | Por fazer | — |
+| US14 | Preferência de carga de trabalho | Sprint 3 | Por fazer | — |
+| US24 | Períodos de avaliação | Sprint 3 | Por fazer | — |
+| US08 | Comentário livre | Sprint 3 | Por fazer | — |
+| US16 | Filtrar por semestre e ECTS | Sprint 3 | Por fazer | — |
+| US22 | Fatorização de matrizes (SVD) | Sprint 4 | Por fazer | — |
+| US23 | Comparação de estratégias | Sprint 4 | Por fazer | — |
+| US25 | Moderar comentários | Sprint 4 | Por fazer | — |
+| US10 | Exportar e apagar dados | Sprint 4 | Por fazer | — |
+| US17 | Esconder UCs sem vagas | Backlog | Por fazer | — |
+| US19 | Feedback sobre recomendações | Backlog | Por fazer | — |
+| US26 | Painel de participação | Backlog | Por fazer | — |
+| US27 | Filtragem baseada em itens | Backlog | Por fazer | — |
+| US18 | Evitar conflitos de horário | Backlog | Por fazer | — |
+| US28 | Lembretes de avaliação | Backlog | Por fazer | — |
+
+O código da US02 foi desenvolvido mas ainda não foi integrado neste repositório. Só a US01 tem, por enquanto, documentação em `docs/`; cada nova story terá a sua pasta `docs/USNN/`.
 
 ## Requisitos
 
@@ -61,26 +98,29 @@ Também funciona com `pytest` (`pip install -r requirements-dev.txt`). Os testes
 ```
 app/            código da aplicação (Flask)
 tests/          testes automáticos
-docs/           requisitos, regras de código, use case, BPMN, registo de IA
-prompts/        prompts usados para gerar código com IA
+docs/           documentação (índice em docs/README.md)
+  geral/        requisitos, regras de código e registo de uso de IA
+  US01/         documentação da US01: requisitos, use case, BPMN, prompt e diagramas
+  USNN/         uma pasta por cada nova story, com a mesma estrutura
 instance/       dados locais (ignorado pelo Git)
 ```
 
 ## Documentação
 
+O índice completo está em [docs/README.md](docs/README.md).
+
 | Documento | Conteúdo |
 |---|---|
-| [docs/01](docs/01-requisitos-funcionais-e-nao-funcionais.md) | Requisitos funcionais, não funcionais, regras de negócio e rastreabilidade |
-| [docs/02](docs/02-regras-de-geracao-de-codigo.md) | Regras para gerar e rever código com IA |
-| [docs/03](docs/03-rf-us01-registo-email-institucional.md) | Requisitos da US01 e critérios de aceitação |
-| [docs/04](docs/04-use-case-us01.md) | Use case da US01 |
-| [docs/05](docs/05-bpmn-us01.md) | Processo BPMN da US01 |
-| [docs/registo-de-uso-de-ia.md](docs/registo-de-uso-de-ia.md) | Registo de uso de IA |
-| [prompts/](prompts/) | Prompts |
+| [docs/geral/01-requisitos-funcionais-e-nao-funcionais.md](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) | Requisitos funcionais, não funcionais, regras de negócio e rastreabilidade |
+| [docs/geral/02-regras-de-geracao-de-codigo.md](docs/geral/02-regras-de-geracao-de-codigo.md) | Regras para gerar e rever código com IA |
+| [docs/geral/registo-de-uso-de-ia.md](docs/geral/registo-de-uso-de-ia.md) | Registo de uso de IA |
+| [docs/US01/](docs/US01/README.md) | US01: requisitos, use case, BPMN, prompt e diagramas |
 
 ## Como contribuir
 
-1. Um ramo por story: `feature/US02-autenticacao`.
-2. Commits no formato `US02: <resumo no imperativo>`.
-3. Pull Request com a checklist da secção 10 de [docs/02](docs/02-regras-de-geracao-de-codigo.md), revisto por outro elemento.
-4. Cada utilização relevante de IA fica anotada em [docs/registo-de-uso-de-ia.md](docs/registo-de-uso-de-ia.md).
+1. Cada story tem uma issue criada com o modelo [User story](.github/ISSUE_TEMPLATE/user-story.md).
+2. Um ramo por story: `feature/US02-autenticacao`.
+3. A documentação da story fica em `docs/USNN/` (por exemplo, `docs/US02/`), com a mesma estrutura da [US01](docs/US01/README.md): `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta ao [índice](docs/README.md) e atualize a tabela de [estado do projeto](#estado-do-projeto).
+4. Commits no formato `US02: <resumo no imperativo>`.
+5. Pull Request com o [modelo do repositório](.github/pull_request_template.md), que inclui a checklist da secção 10 de [docs/geral/02-regras-de-geracao-de-codigo.md](docs/geral/02-regras-de-geracao-de-codigo.md), revisto por outro elemento.
+6. Cada utilização relevante de IA fica anotada em [docs/geral/registo-de-uso-de-ia.md](docs/geral/registo-de-uso-de-ia.md).

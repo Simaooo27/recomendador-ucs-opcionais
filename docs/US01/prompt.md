@@ -1,6 +1,6 @@
 # Prompt — US01: registo com email institucional
 
-**Como usar.** Abra a ferramenta de IA com acesso ao repositório (ou anexe os ficheiros listados em «Contexto») e cole tudo o que está abaixo da linha. Depois do resultado, siga a checklist de [docs/02-regras-de-geracao-de-codigo.md](../docs/02-regras-de-geracao-de-codigo.md) (secção 10) e preencha [docs/registo-de-uso-de-ia.md](../docs/registo-de-uso-de-ia.md).
+**Como usar.** Abra a ferramenta de IA com acesso ao repositório (ou anexe os ficheiros listados em «Contexto») e cole tudo o que está abaixo da linha. Depois do resultado, siga a checklist de [docs/geral/02-regras-de-geracao-de-codigo.md](../geral/02-regras-de-geracao-de-codigo.md) (secção 10) e preencha [docs/geral/registo-de-uso-de-ia.md](../geral/registo-de-uso-de-ia.md).
 
 **Não inclua** emails reais de alunos, palavras-passe ou chaves no prompt.
 
@@ -16,14 +16,14 @@ Estamos a construir uma aplicação web que recomenda UCs opcionais a alunos com
 
 Lê, por esta ordem, antes de escreveres código:
 
-1. `docs/03-rf-us01-registo-email-institucional.md` (o que implementar; manda sobre tudo o resto)
-2. `docs/02-regras-de-geracao-de-codigo.md` (como escrever o código; obrigatório)
-3. `docs/04-use-case-us01.md` e `docs/05-bpmn-us01.md` (fluxos principal e alternativos)
-4. `docs/01-requisitos-funcionais-e-nao-funcionais.md` (RF01, RNF01, RNF02, RNF06, RNF08)
+1. `docs/US01/requisitos.md` (o que implementar; manda sobre tudo o resto)
+2. `docs/geral/02-regras-de-geracao-de-codigo.md` (como escrever o código; obrigatório)
+3. `docs/US01/use-case.md` e `docs/US01/bpmn.md` (fluxos principal e alternativos)
+4. `docs/geral/01-requisitos-funcionais-e-nao-funcionais.md` (RF01, RNF01, RNF02, RNF06, RNF08)
 
 ## Tarefa
 
-Implementa a US01 em Flask, na estrutura descrita no documento 02:
+Implementa a US01 em Flask, na estrutura descrita nas regras de código (`docs/geral/02-regras-de-geracao-de-codigo.md`, secção 3):
 
 - Formulário de registo (email, palavra-passe, repetição, aceitação da política de privacidade) e página de «confirme o seu email».
 - Validação no servidor: domínio institucional configurável (por omissão `iscap.ipp.pt`, com subdomínios verdadeiros), palavra-passe (8 a 128 caracteres, uma letra e um número) e política aceite.
@@ -64,7 +64,7 @@ Usa `unittest` (compatível com `pytest`). Base de dados temporária por teste, 
 
 ## Verificação final (faz antes de responder)
 
-- [ ] Cada RF01.x do documento 03 está implementado ou assinalado como não implementado.
+- [ ] Cada RF01.x de `docs/US01/requisitos.md` está implementado ou assinalado como não implementado.
 - [ ] Cada critério de aceitação tem pelo menos um teste.
 - [ ] Nenhum segredo no código; palavra-passe nunca em logs nem na resposta.
 - [ ] Sem dependências novas.

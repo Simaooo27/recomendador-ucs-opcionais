@@ -1,6 +1,6 @@
 # Regras de geração de código com IA
 
-Estas regras aplicam-se a **todo** o código, testes e documentação gerados com apoio de IA neste projeto (RNF09). A IA escreve o primeiro rascunho; a equipa é responsável pelo que entra no repositório. Cada prompt deve referir este documento (ver [prompts/](../prompts/)).
+Estas regras aplicam-se a **todo** o código, testes e documentação gerados com apoio de IA neste projeto (RNF09). A IA escreve o primeiro rascunho; a equipa é responsável pelo que entra no repositório. Cada prompt deve referir este documento (ver, por exemplo, o [prompt da US01](../US01/prompt.md)).
 
 **Estado:** aprovado pela equipa em 2026-10-05.
 
@@ -42,7 +42,13 @@ app/
     repository.py    SQL, e só SQL
   templates/, static/
 tests/               espelha a estrutura de app/
-docs/, prompts/
+docs/
+  README.md          índice da documentação
+  geral/             requisitos, regras de código e registo de uso de IA
+  USNN/              uma pasta por user story (ex.: US01)
+    README.md        resumo da story, estado e ligações
+    requisitos.md, use-case.md, bpmn.md, prompt.md
+    diagramas/       SVG e ficheiros editáveis
 ```
 
 - As **rotas** não contêm regras de negócio; os **serviços** não conhecem `request` nem `session`; os **repositórios** não decidem nada.

@@ -85,6 +85,9 @@ input[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; }
 }
 .alert-error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
 .alert-ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+/* Caixa só de desenvolvimento, com a ligação de confirmação. */
+.alert-dev { background: #fff8e1; color: #5c4400; border-color: #c99a00; border-style: dashed; }
+.alert-dev p:last-child { margin: 0; }
 
 button {
   width: 100%;
@@ -127,6 +130,7 @@ a { color: var(--accent); }
   }
   .site-header { background: #0d1b33; color: #e7ebf1; }
   .logout button { color: #e7ebf1; }
+  .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }
   button:hover { background: #b6cdff; }
   input[type="email"], input[type="password"] { border-color: #6b778a; }
 }

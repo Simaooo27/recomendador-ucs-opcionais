@@ -35,6 +35,7 @@
 | **RF01.13** | Se o email de confirmação não puder ser enviado, o utilizador vê uma mensagem de erro (HTTP 503) e a conta fica pendente. Um novo pedido de registo recomeça o processo. |
 | **RF01.14** | Em caso de dados inválidos o formulário volta a ser mostrado com o email preenchido, **sem** palavras-passe, e uma mensagem junto de cada campo com erro (HTTP 422). |
 | **RF01.15** | Todos os pedidos `POST` exigem token CSRF válido; sem ele a resposta é HTTP 400 e nada é gravado. |
+| **RF01.16** | Em desenvolvimento (`MAIL_BACKEND=console`), a página «Confirme o seu email» mostra também a ligação de confirmação, para testar sem email real. Com email real (SMTP) a ligação nunca aparece na página. |
 
 ## 3. Mensagens ao utilizador
 

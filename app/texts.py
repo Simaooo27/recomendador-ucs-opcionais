@@ -99,6 +99,10 @@ PENDING_HELP_BEFORE_LINK = "Não chegou? Veja a pasta de spam. Se a ligação ex
 PENDING_HELP_LINK = "criar a conta"
 PENDING_HELP_AFTER_LINK = " com o mesmo email para receber uma nova."
 
+# Só aparece em desenvolvimento (MAIL_BACKEND=console), quando não é enviado email real.
+DEV_LINK_NOTE = "Modo de desenvolvimento: não foi enviado nenhum email real. Use a ligação abaixo para confirmar a conta (também aparece no terminal)."
+DEV_LINK_BUTTON = "Confirmar a conta agora"
+
 # ---------------------------------------------------------------------------
 # Email de confirmação
 # ---------------------------------------------------------------------------

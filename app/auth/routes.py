@@ -11,6 +11,8 @@ from .services import ConfirmationOutcome, LoginOutcome
 from .validators import RegistrationInput, domains_hint
 
 _PENDING_EMAIL_KEY = "pending_email"
+# Só em desenvolvimento (MAIL_BACKEND=console): a ligação aparece também na página.
+_DEV_LINK_KEY = "dev_confirmation_link"
 
 _CONFIRMATION_STATUS = {
     ConfirmationOutcome.CONFIRMED: 200,
@@ -68,12 +70,15 @@ def register_submit():
         )
 
     session[_PENDING_EMAIL_KEY] = pending.email
+    if current_app.config["MAIL_BACKEND"] == "console":
+        session[_DEV_LINK_KEY] = link
     return redirect(url_for("auth.register_pending"))
 
 
 @bp.get("/registo/pendente")
 def register_pending():
-    return render_template("auth/pending.html", email=session.get(_PENDING_EMAIL_KEY))
+    dev_link = session.get(_DEV_LINK_KEY) if current_app.config["MAIL_BACKEND"] == "console" else None
+    return render_template("auth/pending.html", email=session.get(_PENDING_EMAIL_KEY), dev_link=dev_link)
 
 
 @bp.get("/confirmar/<token>")

@@ -9,4 +9,10 @@
   <p>{{ texts.PENDING_SENT_GENERIC }}</p>
 {% endif %}
 <p class="lead">{{ texts.PENDING_HELP_BEFORE_LINK }}<a href="{{ url_for('auth.register_form') }}">{{ texts.PENDING_HELP_LINK }}</a>{{ texts.PENDING_HELP_AFTER_LINK }}</p>
+{% if dev_link %}
+  <div class="alert alert-dev" role="note">
+    <p>{{ texts.DEV_LINK_NOTE }}</p>
+    <p><a href="{{ dev_link }}">{{ texts.DEV_LINK_BUTTON }}</a></p>
+  </div>
+{% endif %}
 {% endblock %}

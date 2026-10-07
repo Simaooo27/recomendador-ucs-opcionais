@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 1 (em curso) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão |
-| **Testes automáticos** | 89, todos a passar |
+| **Testes automáticos** | 92, todos a passar |
 
 ## Índice
 
@@ -107,7 +107,7 @@ flask --app app init-db                # cria a base de dados (só da primeira v
 flask --app app run --debug
 ```
 
-Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para criar conta. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **no terminal** onde a aplicação está a correr.
+Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para criar conta. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **na própria página «Confirme o seu email»** (caixa amarela) e no terminal onde a aplicação está a correr.
 
 <details>
 <summary>Outras configurações (variáveis de ambiente)</summary>

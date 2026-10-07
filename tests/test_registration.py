@@ -1,4 +1,4 @@
-"""US01 — registo com email institucional (critérios de aceitação 1, 3 e 4 + CSRF)."""
+"""US01 — registo com email pessoal (critérios de aceitação 1, 3 e 4 + CSRF)."""
 from werkzeug.security import check_password_hash
 
 from tests.base import VALID_EMAIL, VALID_PASSWORD, AppTestCase
@@ -12,7 +12,7 @@ class RegistrationFormTests(AppTestCase):
         for name in ("email", "password", "password_confirm", "accepted_privacy", "csrf_token"):
             self.assertIn(f'name="{name}"', html)
         self.assertIn("/privacidade", html)
-        self.assertIn("@iscap.ipp.pt", html)
+        self.assertNotIn("@iscap.ipp.pt", html)
 
     def test_formulario_tem_ligacao_para_iniciar_sessao(self):
         self.assertIn('href="/auth/entrar"', self.client.get("/auth/registo").get_data(as_text=True))
@@ -62,13 +62,15 @@ class SuccessfulRegistrationTests(AppTestCase):
         self.assertTrue(user["privacy_accepted_at"])
 
     def test_normaliza_o_email(self):
-        self.register(email="  Aluno@ISCAP.ipp.pt ")
-        self.assertIsNotNone(self.fetch_user("aluno@iscap.ipp.pt"))
-        self.assertEqual(self.mailer.outbox[0].to, "aluno@iscap.ipp.pt")
+        self.register(email="  Aluno@GMAIL.com ")
+        self.assertIsNotNone(self.fetch_user("aluno@gmail.com"))
+        self.assertEqual(self.mailer.outbox[0].to, "aluno@gmail.com")
 
-    def test_aceita_subdominio_institucional(self):
-        response = self.register(email="aluno@alunos.iscap.ipp.pt")
-        self.assertEqual(response.status_code, 302)
+    def test_aceita_emails_de_varios_fornecedores(self):
+        for email in ("nome@outlook.pt", "nome@sapo.pt", "nome@iscap.ipp.pt"):
+            with self.subTest(email=email):
+                self.assertEqual(self.register(email=email).status_code, 302)
+                self.assertIsNotNone(self.fetch_user(email))
 
 
 class RejectedRegistrationTests(AppTestCase):
@@ -78,11 +80,8 @@ class RejectedRegistrationTests(AppTestCase):
         self.assertEqual(self.count_users(), 0)
         self.assertEqual(self.mailer.outbox, [])
 
-    def test_rejeita_email_fora_do_dominio(self):
-        self.assert_rejected(self.register(email="aluno@gmail.com"), "email")
-
-    def test_rejeita_dominio_parecido(self):
-        self.assert_rejected(self.register(email="aluno@iscap.ipp.pt.evil.com"), "email")
+    def test_rejeita_email_mal_formado(self):
+        self.assert_rejected(self.register(email="aluno@gmail"), "email")
 
     def test_rejeita_palavra_passe_fraca(self):
         self.assert_rejected(self.register(password="abc", password_confirm="abc"), "password")
@@ -94,14 +93,38 @@ class RejectedRegistrationTests(AppTestCase):
         self.assert_rejected(self.register(accepted_privacy=None), "accepted_privacy")
 
     def test_mantem_o_email_mas_nunca_devolve_a_palavra_passe(self):
-        response = self.register(email="aluno@gmail.com", password="segredo-muito-1", password_confirm="segredo-muito-1")
+        response = self.register(password="segredo-muito-1", password_confirm="outra-coisa-1")
         html = response.get_data(as_text=True)
         self.assertIn('value="aluno@gmail.com"', html)
         self.assertNotIn("segredo-muito-1", html)
 
-    def test_mensagem_de_erro_indica_o_dominio_aceite(self):
-        html = self.register(email="aluno@gmail.com").get_data(as_text=True)
-        self.assertIn("@iscap.ipp.pt", html)
+
+class RestrictedDomainRegistrationTests(RejectedRegistrationTests):
+    """Opção ALLOWED_EMAIL_DOMAINS: se a equipa voltar a exigir o email institucional."""
+
+    config_overrides = {"ALLOWED_EMAIL_DOMAINS": ["iscap.ipp.pt"]}
+
+    def register(self, client=None, **overrides):
+        overrides.setdefault("email", "aluno@iscap.ipp.pt")
+        return super().register(client, **overrides)
+
+    def test_mantem_o_email_mas_nunca_devolve_a_palavra_passe(self):
+        pass  # já coberto sem restrição
+
+    def test_aceita_o_dominio_configurado_e_subdominios(self):
+        for email in ("aluno@iscap.ipp.pt", "outro@alunos.iscap.ipp.pt"):
+            with self.subTest(email=email):
+                self.assertEqual(self.register(email=email).status_code, 302)
+
+    def test_rejeita_email_fora_do_dominio(self):
+        self.assert_rejected(self.register(email="aluno@gmail.com"), "email")
+
+    def test_rejeita_dominio_parecido(self):
+        self.assert_rejected(self.register(email="aluno@iscap.ipp.pt.evil.com"), "email")
+
+    def test_formulario_e_erro_indicam_o_dominio_aceite(self):
+        self.assertIn("@iscap.ipp.pt", self.client.get("/auth/registo").get_data(as_text=True))
+        self.assertIn("@iscap.ipp.pt", self.register(email="aluno@gmail.com").get_data(as_text=True))
 
 
 class DuplicateRegistrationTests(AppTestCase):
@@ -137,7 +160,7 @@ class DuplicateRegistrationTests(AppTestCase):
 
     def test_email_diferente_so_na_capitalizacao_conta_como_duplicado(self):
         self.register()
-        self.register(email="ALUNO@iscap.ipp.pt")
+        self.register(email="ALUNO@gmail.com")
         self.assertEqual(self.count_users(), 1)
 
 

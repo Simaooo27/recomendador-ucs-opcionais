@@ -1,5 +1,7 @@
 # Prompt — US01: registo com email institucional
 
+> Registo histórico do prompt original (2026-10-01). Em 2026-10-07 o Product Owner decidiu aceitar email pessoal; ver a versão 1.1 de [requisitos.md](requisitos.md).
+
 **Como usar.** Abra a ferramenta de IA com acesso ao repositório (ou anexe os ficheiros listados em «Contexto») e cole tudo o que está abaixo da linha. Depois do resultado, siga a checklist de [docs/geral/02-regras-de-geracao-de-codigo.md](../geral/02-regras-de-geracao-de-codigo.md) (secção 10) e preencha [docs/geral/registo-de-uso-de-ia.md](../geral/registo-de-uso-de-ia.md).
 
 **Não inclua** emails reais de alunos, palavras-passe ou chaves no prompt.

@@ -1,4 +1,9 @@
-"""Regras de validação do registo (US01). Funções puras, sem Flask nem base de dados."""
+"""Regras de validação do registo (US01). Funções puras, sem Flask nem base de dados.
+
+Por omissão aceita-se qualquer email válido (email pessoal). Se ``allowed_domains`` tiver
+domínios, só se aceitam emails desses domínios (por exemplo, para voltar a exigir o
+email institucional).
+"""
 from __future__ import annotations
 
 import re
@@ -33,21 +38,27 @@ def normalize_email(raw: str) -> str:
     return raw.strip().lower()
 
 
-def is_institutional_email(email: str, allowed_domains: Iterable[str]) -> bool:
-    """True se o email é válido e o domínio é (ou é subdomínio de) um domínio permitido.
+def is_valid_email(email: str) -> bool:
+    """True se o email tem um formato válido e não é demasiado longo."""
+    email = normalize_email(email)
+    return len(email) <= _MAX_EMAIL_LENGTH and bool(_EMAIL_RE.match(email))
+
+
+def is_allowed_domain(email: str, allowed_domains: Iterable[str]) -> bool:
+    """True se não há restrição de domínio ou se o domínio é (ou é subdomínio de) um permitido.
 
     ``evil-iscap.ipp.pt`` e ``iscap.ipp.pt.evil.com`` são rejeitados: só se aceita o
     domínio exato ou um subdomínio verdadeiro (``alunos.iscap.ipp.pt``).
     """
-    email = normalize_email(email)
-    if len(email) > _MAX_EMAIL_LENGTH or not _EMAIL_RE.match(email):
-        return False
-    domain = email.rsplit("@", 1)[1]
-    return any(domain == d or domain.endswith("." + d) for d in (x.lower() for x in allowed_domains))
+    domains = [d.lower() for d in allowed_domains]
+    if not domains:
+        return True
+    domain = normalize_email(email).rsplit("@", 1)[1]
+    return any(domain == d or domain.endswith("." + d) for d in domains)
 
 
 def domains_hint(allowed_domains: Iterable[str]) -> str:
-    """Texto com os domínios aceites, por exemplo «@iscap.ipp.pt»."""
+    """Texto com os domínios aceites, por exemplo «@iscap.ipp.pt»; vazio se não há restrição."""
     return " ou ".join("@" + d for d in allowed_domains)
 
 
@@ -66,7 +77,9 @@ def validate_registration(
 
     if not data.email:
         errors["email"] = MSG_EMAIL_REQUIRED
-    elif not is_institutional_email(data.email, allowed_domains):
+    elif not is_valid_email(data.email):
+        errors["email"] = texts.ERROR_EMAIL_INVALID
+    elif not is_allowed_domain(data.email, allowed_domains):
         errors["email"] = texts.ERROR_EMAIL_DOMAIN.format(dominios=domains_hint(allowed_domains))
 
     password = data.password

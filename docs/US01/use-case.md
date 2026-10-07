@@ -1,4 +1,4 @@
-# US01 — Use case: registo com email institucional
+# US01 — Use case: registo com email pessoal
 
 ![Diagrama de use case da US01](diagramas/use-case.svg)
 
@@ -6,7 +6,7 @@
 
 | Ator | Tipo | Descrição |
 |---|---|---|
-| Aluno | Primário | Pessoa com email institucional que quer criar conta para avaliar UCs e receber recomendações. |
+| Aluno | Primário | Pessoa com email que quer criar conta para avaliar UCs e receber recomendações. |
 | Serviço de email | Secundário | Sistema externo (SMTP) que entrega a mensagem de confirmação. |
 
 ## 2. Lista de use cases
@@ -23,7 +23,7 @@
 | **Objetivo** | Criar uma conta de aluno, ainda inativa, e pedir a confirmação do email. |
 | **Ator principal** | Aluno |
 | **Ator secundário** | Serviço de email |
-| **Pré-condições** | O aluno tem um email institucional e consegue aceder à caixa de correio. |
+| **Pré-condições** | O aluno tem um email e consegue aceder à caixa de correio. |
 | **Gatilho** | O aluno abre a página de registo. |
 | **Requisitos** | RF01.1 a RF01.8, RF01.11 a RF01.15 |
 
@@ -41,7 +41,7 @@
 
 | ID | Passo | Condição | Resultado |
 |---|---|---|---|
-| A1 | 4 | Dados inválidos (email fora do domínio, palavra-passe fraca, repetição diferente, política não aceite) | O sistema mostra o formulário com o email preenchido e uma mensagem por campo com erro. Nada é gravado (HTTP 422). Volta ao passo 2. |
+| A1 | 4 | Dados inválidos (email mal formado ou fora do domínio configurado, palavra-passe fraca, repetição diferente, política não aceite) | O sistema mostra o formulário com o email preenchido e uma mensagem por campo com erro. Nada é gravado (HTTP 422). Volta ao passo 2. |
 | A2 | 4 | Já existe uma conta **ativa** com o email | O sistema rejeita o registo com mensagem clara. Volta ao passo 2. |
 | A3 | 5 | Já existe uma conta **por confirmar** com o email | O sistema atualiza a palavra-passe, gera uma nova ligação e invalida as anteriores. Continua no passo 6. |
 | A4 | 6 | O email não pode ser enviado | O sistema mostra um erro (HTTP 503). A conta fica pendente. Volta ao passo 2. |

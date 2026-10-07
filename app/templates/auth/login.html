@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros/password.html" as password with context %}
 {% set page_title = texts.LOGIN_TITLE %}
 
 {% block content %}
@@ -20,8 +21,11 @@
 
   <div class="field">
     <label for="password">{{ texts.LOGIN_PASSWORD_LABEL }}</label>
-    <input id="password" name="password" type="password" autocomplete="current-password" required
-           {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="current-password" required
+             {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+      {{ password.toggle("password") }}
+    </div>
   </div>
 
   <button type="submit">{{ texts.LOGIN_BUTTON }}</button>

@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 1 (em curso) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão |
-| **Testes automáticos** | 103, todos a passar |
+| **Testes automáticos** | 107, todos a passar |
 
 ## Índice
 

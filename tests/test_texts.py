@@ -10,6 +10,7 @@ from tests.base import AppTestCase
 # ou o email ficam incompletos (por exemplo, o email sem a ligação de confirmação).
 REQUIRED_PLACEHOLDERS = {
     "PAGE_TITLE_FORMAT": {"pagina", "aplicacao"},
+    "HOME_GREETING": {"email"},
     "REGISTER_EMAIL_HINT": {"dominios"},
     "REGISTER_PASSWORD_HINT": {"minimo"},
     "ERROR_EMAIL_DOMAIN": {"dominios"},
@@ -58,7 +59,7 @@ class TextsInPagesTests(AppTestCase):
     def test_nome_da_aplicacao_aparece_no_topo_e_no_separador(self):
         with mock.patch.object(texts, "APP_NAME", "OptaBem"):
             html = self.client.get("/auth/registo").get_data(as_text=True)
-        self.assertIn('<header class="site-header">OptaBem</header>', html)
+        self.assertIn("<span>OptaBem</span>", html)
         self.assertIn("<title>Criar conta · OptaBem</title>", html)
 
     def test_titulo_da_pagina_vem_dos_textos(self):

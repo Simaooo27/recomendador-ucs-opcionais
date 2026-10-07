@@ -14,10 +14,8 @@ class RegistrationFormTests(AppTestCase):
         self.assertIn("/privacidade", html)
         self.assertIn("@iscap.ipp.pt", html)
 
-    def test_pagina_inicial_redireciona_para_o_registo(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.headers["Location"].endswith("/auth/registo"))
+    def test_formulario_tem_ligacao_para_iniciar_sessao(self):
+        self.assertIn('href="/auth/entrar"', self.client.get("/auth/registo").get_data(as_text=True))
 
     def test_pagina_de_privacidade_existe(self):
         self.assertEqual(self.client.get("/privacidade").status_code, 200)

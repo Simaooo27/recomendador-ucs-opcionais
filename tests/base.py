@@ -77,6 +77,30 @@ class AppTestCase(unittest.TestCase):
         finally:
             connection.close()
 
+    def create_active_user(self, email: str = VALID_EMAIL, password: str = VALID_PASSWORD) -> None:
+        """Regista e confirma uma conta, num cliente à parte (não deixa sessão no ``self.client``)."""
+        other = self.app.test_client()
+        response = self.register(other, email=email, password=password, password_confirm=password)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(other.get(f"/auth/confirmar/{self.last_token()}").status_code, 200)
+
+    def login(self, client=None, *, with_csrf: bool = True, **overrides):
+        """Submete o formulário de início de sessão; por omissão com dados válidos."""
+        client = client or self.client
+        if with_csrf:
+            self.set_csrf(client)
+        data = {"csrf_token": CSRF_TOKEN, "email": VALID_EMAIL, "password": VALID_PASSWORD}
+        data.update(overrides)
+        data = {key: value for key, value in data.items() if value is not None}
+        return client.post("/auth/entrar", data=data)
+
+    def logout(self, client=None, *, with_csrf: bool = True):
+        client = client or self.client
+        data = {"csrf_token": CSRF_TOKEN} if with_csrf else {}
+        if with_csrf:
+            self.set_csrf(client)
+        return client.post("/auth/sair", data=data)
+
     def last_token(self) -> str:
         match = _TOKEN_IN_LINK.search(self.mailer.outbox[-1].body)
         self.assertIsNotNone(match, "O email não contém a ligação de confirmação")

@@ -26,7 +26,7 @@
 | **RF01.4** | A palavra-passe tem entre 8 e 128 caracteres, com pelo menos uma letra e um número, e coincide com a repetição. |
 | **RF01.5** | Sem aceitar a política de privacidade não há registo. A aceitação fica gravada com a versão da política e a data e hora (UTC). |
 | **RF01.6** | A palavra-passe é guardada **apenas como hash** (scrypt, via Werkzeug). Nunca é gravada em texto, registada em logs nem devolvida ao navegador. |
-| **RF01.7** | Um registo válido cria uma conta com perfil `aluno` e estado **inativo**. Uma conta inativa não pode iniciar sessão (a verificar na US02). |
+| **RF01.7** | Um registo válido cria uma conta com perfil `aluno` e estado **inativo**. Uma conta inativa não pode iniciar sessão (verificado na [US02](../US02/requisitos.md), RF02.5). |
 | **RF01.8** | Após o registo, o sistema envia ao email indicado uma mensagem com uma ligação de confirmação, assinada e válida durante 24 horas. |
 | **RF01.9** | Abrir uma ligação válida ativa a conta e grava a data de confirmação. Abrir a mesma ligação de novo não tem efeito e informa que a conta já está ativa. |
 | **RF01.10** | Uma ligação adulterada, assinada por outra chave, de um utilizador inexistente ou já substituída é rejeitada (HTTP 400). Uma ligação fora do prazo é rejeitada com HTTP 410. Em ambos os casos a conta mantém-se inativa. |

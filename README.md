@@ -7,8 +7,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | | |
 |---|---|
 | **Sprint atual** | Sprint 1 (em curso) |
-| **No repositório** | US01 — Registo com email e confirmação por ligação |
-| **Testes automáticos** | 69, todos a passar |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão |
+| **Testes automáticos** | 89, todos a passar |
 
 ## Índice
 
@@ -27,7 +27,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email institucional | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
-| US02 | Autenticação | Sprint 1 | Feita (o código ainda não está no repositório) | — |
+| US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
 | US03 | Importar catálogo de UCs | Sprint 1 | Por fazer | — |
 | US04 | Consultar catálogo de opcionais | Sprint 1 | Por fazer | — |
 | US05 | Registar percurso | Sprint 1 | Por fazer | — |
@@ -55,7 +55,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US18 | Evitar conflitos de horário | Backlog | Por fazer | — |
 | US28 | Lembretes de avaliação | Backlog | Por fazer | — |
 
-O código da US02 foi desenvolvido mas ainda não foi integrado neste repositório. Só a US01 tem, por enquanto, documentação em `docs/`; cada nova story terá a sua pasta `docs/USNN/`.
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 e US02).
 
 ## 2. Documentação do projeto
 
@@ -67,6 +67,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Regras de geração de código](docs/geral/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
+| [US02](docs/US02/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US02 |
 
 ## 3. Alterar textos e cores
 
@@ -106,7 +107,7 @@ flask --app app init-db                # cria a base de dados (só da primeira v
 flask --app app run --debug
 ```
 
-Abre http://127.0.0.1:5000. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **no terminal** onde a aplicação está a correr.
+Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para criar conta. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **no terminal** onde a aplicação está a correr.
 
 <details>
 <summary>Outras configurações (variáveis de ambiente)</summary>
@@ -136,6 +137,7 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 |---|---|
 | `tests/test_registration.py` | Formulário de registo, contas duplicadas, falha no envio do email, CSRF |
 | `tests/test_confirmation.py` | Ligação de confirmação: válida, repetida, adulterada, expirada |
+| `tests/test_login.py` | Iniciar e terminar sessão, mensagem genérica, páginas privadas |
 | `tests/test_validators.py` | Regras do email e da palavra-passe |
 | `tests/test_texts.py` | Ficheiro de textos: nada vazio e marcadores `{…}` no sítio |
 | `tests/test_app_factory.py` | Arranque e configuração da aplicação |
@@ -147,9 +149,10 @@ app/
   texts.py          todos os textos que o utilizador vê
   static/style.css  aspeto e cores
   templates/        páginas HTML (usam os textos de texts.py)
-  auth/             registo e confirmação de email (US01)
+  auth/             contas: registo e confirmação (US01), iniciar e terminar sessão (US02)
     routes.py         recebe os pedidos do navegador e devolve as páginas
-    services.py       regras do registo e da confirmação
+    services.py       regras do registo, da confirmação e da autenticação
+    sessions.py       quem tem a sessão iniciada; proteção das páginas privadas
     validators.py     validação do email e da palavra-passe
     repository.py     acesso à base de dados
     tokens.py         ligações de confirmação assinadas
@@ -157,11 +160,12 @@ app/
   db.py, schema.sql base de dados SQLite
   security.py       proteção CSRF e cabeçalhos de segurança
   mailer.py         envio de email (terminal ou SMTP)
-  main.py           página inicial e política de privacidade
+  main.py           página inicial do aluno e política de privacidade
 tests/              testes automáticos
 docs/               documentação (índice em docs/README.md)
   geral/            requisitos, regras de código e registo de uso de IA
   US01/             requisitos, use case, BPMN, prompt e diagramas da US01
+  US02/             o mesmo para a US02
   USNN/             uma pasta por cada nova story, com a mesma estrutura
 .github/            modelos de issue (user story) e de Pull Request
 instance/           dados locais (ignorado pelo Git)

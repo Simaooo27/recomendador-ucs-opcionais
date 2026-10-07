@@ -102,7 +102,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 | User story | Requisitos funcionais |
 |---|---|
 | US01 — Registo com email institucional | RF01 (ver [detalhe](../US01/requisitos.md)) |
-| US02 — Autenticação | RF02 (início e fim de sessão) |
+| US02 — Autenticação | RF02 (início e fim de sessão; ver [detalhe](../US02/requisitos.md)) |
 | US03 — Importar catálogo de UCs | RF05 |
 | US04 — Consultar catálogo de opcionais | RF07 |
 | US05 — Registar percurso | RF08, RF09 |

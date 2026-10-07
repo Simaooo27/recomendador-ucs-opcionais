@@ -3,11 +3,12 @@ from __future__ import annotations
 
 from flask import current_app, redirect, render_template, request, session, url_for
 
+from .. import texts
 from ..db import get_db
 from ..mailer import Message
 from . import bp, services
 from .services import ConfirmationOutcome
-from .validators import RegistrationInput
+from .validators import RegistrationInput, domains_hint
 
 _PENDING_EMAIL_KEY = "pending_email"
 
@@ -18,18 +19,15 @@ _CONFIRMATION_STATUS = {
     ConfirmationOutcome.EXPIRED: 410,
 }
 
-MSG_EMAIL_SEND_FAILED = (
-    "Não foi possível enviar o email de confirmação. Tente de novo dentro de alguns minutos."
-)
+MSG_EMAIL_SEND_FAILED = texts.ERROR_EMAIL_SEND_FAILED
 
 
 def _render_register(values: dict, errors: dict, status: int = 200):
-    domains = current_app.config["ALLOWED_EMAIL_DOMAINS"]
     page = render_template(
         "auth/register.html",
         values=values,
         errors=errors,
-        domains_hint=" ou ".join("@" + d for d in domains),
+        domains_hint=domains_hint(current_app.config["ALLOWED_EMAIL_DOMAINS"]),
         min_length=current_app.config["PASSWORD_MIN_LENGTH"],
     )
     return page, status
@@ -37,14 +35,8 @@ def _render_register(values: dict, errors: dict, status: int = 200):
 
 def _confirmation_message(to: str, link: str) -> Message:
     hours = current_app.config["CONFIRMATION_TOKEN_MAX_AGE_SECONDS"] // 3600
-    body = (
-        "Olá,\n\n"
-        "Recebemos um pedido de registo com este email. Para ativar a conta, abra a "
-        f"ligação abaixo nas próximas {hours} horas:\n\n"
-        f"{link}\n\n"
-        "Se não fez este pedido, ignore esta mensagem: a conta não será ativada.\n"
-    )
-    return Message(to=to, subject="Confirme o seu registo", body=body)
+    body = texts.CONFIRMATION_EMAIL_BODY.format(horas=hours, ligacao=link)
+    return Message(to=to, subject=texts.CONFIRMATION_EMAIL_SUBJECT, body=body)
 
 
 @bp.get("/registo")

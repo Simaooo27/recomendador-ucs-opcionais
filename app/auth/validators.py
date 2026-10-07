@@ -5,16 +5,19 @@ import re
 from dataclasses import dataclass
 from typing import Iterable
 
+from .. import texts
+
 # Parte local sem "@"; domínio com pelo menos um ponto. Comprimento máximo 254 (RFC 5321).
 _EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+$")
 _MAX_EMAIL_LENGTH = 254
 
-MSG_EMAIL_REQUIRED = "Indique o seu email institucional."
-MSG_PASSWORD_REQUIRED = "Escolha uma palavra-passe."
-MSG_PASSWORD_COMPOSITION = "A palavra-passe deve incluir pelo menos uma letra e um número."
-MSG_PASSWORD_MISMATCH = "As palavras-passe não coincidem."
-MSG_PRIVACY_REQUIRED = "É necessário aceitar a política de privacidade para criar a conta."
-MSG_EMAIL_DUPLICATE = "Já existe uma conta com este email. Se é a sua, inicie sessão."
+# As mensagens vêm de app/texts.py; estes nomes mantêm-se para o resto do código e os testes.
+MSG_EMAIL_REQUIRED = texts.ERROR_EMAIL_REQUIRED
+MSG_PASSWORD_REQUIRED = texts.ERROR_PASSWORD_REQUIRED
+MSG_PASSWORD_COMPOSITION = texts.ERROR_PASSWORD_COMPOSITION
+MSG_PASSWORD_MISMATCH = texts.ERROR_PASSWORD_MISMATCH
+MSG_PRIVACY_REQUIRED = texts.ERROR_PRIVACY_REQUIRED
+MSG_EMAIL_DUPLICATE = texts.ERROR_EMAIL_DUPLICATE
 
 
 @dataclass(frozen=True)
@@ -43,7 +46,8 @@ def is_institutional_email(email: str, allowed_domains: Iterable[str]) -> bool:
     return any(domain == d or domain.endswith("." + d) for d in (x.lower() for x in allowed_domains))
 
 
-def _domains_hint(allowed_domains: Iterable[str]) -> str:
+def domains_hint(allowed_domains: Iterable[str]) -> str:
+    """Texto com os domínios aceites, por exemplo «@iscap.ipp.pt»."""
     return " ou ".join("@" + d for d in allowed_domains)
 
 
@@ -63,15 +67,15 @@ def validate_registration(
     if not data.email:
         errors["email"] = MSG_EMAIL_REQUIRED
     elif not is_institutional_email(data.email, allowed_domains):
-        errors["email"] = f"Use o seu email institucional (terminado em {_domains_hint(allowed_domains)})."
+        errors["email"] = texts.ERROR_EMAIL_DOMAIN.format(dominios=domains_hint(allowed_domains))
 
     password = data.password
     if not password:
         errors["password"] = MSG_PASSWORD_REQUIRED
     elif len(password) < min_length:
-        errors["password"] = f"A palavra-passe deve ter pelo menos {min_length} caracteres."
+        errors["password"] = texts.ERROR_PASSWORD_TOO_SHORT.format(minimo=min_length)
     elif len(password) > max_length:
-        errors["password"] = f"A palavra-passe não pode ter mais de {max_length} caracteres."
+        errors["password"] = texts.ERROR_PASSWORD_TOO_LONG.format(maximo=max_length)
     elif not (any(c.isalpha() for c in password) and any(c.isdigit() for c in password)):
         errors["password"] = MSG_PASSWORD_COMPOSITION
 

@@ -9,6 +9,7 @@ A documentação está organizada por user story: os documentos que valem para t
 | [geral/01-requisitos-funcionais-e-nao-funcionais.md](geral/01-requisitos-funcionais-e-nao-funcionais.md) | Requisitos funcionais, não funcionais, regras de negócio e rastreabilidade |
 | [geral/02-regras-de-geracao-de-codigo.md](geral/02-regras-de-geracao-de-codigo.md) | Regras para gerar e rever código com IA, checklist de revisão e Definition of Done |
 | [geral/registo-de-uso-de-ia.md](geral/registo-de-uso-de-ia.md) | Registo de uso de IA |
+| [geral/product-backlog.xlsx](geral/product-backlog.xlsx) | Product Backlog: stories, plano de sprints e resumo MoSCoW |
 
 ## Uma pasta por story
 

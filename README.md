@@ -22,37 +22,39 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 ## 1. Estado do projeto
 
-**Sprint Goal do Sprint 1:** um aluno consegue registar-se, construir o seu percurso e avaliar UCs.
+**Sprint Goal do Sprint 1:** um aluno cria conta, entra e sai, e há um administrador com permissões próprias.
+
+O plano foi revisto a 07/10/2026 (decisão do Product Owner): o Sprint 1 passou a ter três stories, ajustado à velocidade real, e as stories foram renumeradas pela nova ordem. O backlog completo, com o plano de sprints e o número anterior de cada story, está em [docs/geral/product-backlog.xlsx](docs/geral/product-backlog.xlsx).
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
-| US03 | Importar catálogo de UCs | Sprint 1 | Por fazer | — |
-| US04 | Consultar catálogo de opcionais | Sprint 1 | Por fazer | — |
-| US05 | Registar percurso | Sprint 1 | Por fazer | — |
-| US06 | Avaliar opcional concluída | Sprint 1 | Por fazer | — |
-| US07 | Avaliação rápida de obrigatórias | Sprint 1 | Por fazer | — |
+| US03 | Perfis de aluno e administrador | Sprint 1 | Por fazer | — |
+| US04 | Importar catálogo de cursos e UCs | Sprint 2 | Por fazer | — |
+| US05 | Consultar catálogo de opcionais | Sprint 2 | Por fazer | — |
+| US06 | Registar percurso | Sprint 2 | Por fazer | — |
+| US07 | Avaliar opcional concluída | Sprint 2 | Por fazer | — |
+| US08 | Avaliação rápida de obrigatórias | Sprint 2 | Por fazer | — |
 | US09 | Avaliações pseudonimizadas | Sprint 2 | Por fazer | — |
-| US20 | Dataset sintético | Sprint 2 | Por fazer | — |
-| US11 | Recomendações de popularidade | Sprint 2 | Por fazer | — |
-| US12 | Recomendações user-based | Sprint 2 | Por fazer | — |
-| US15 | Excluir UCs inválidas | Sprint 2 | Por fazer | — |
-| US13 | Explicação da recomendação | Sprint 3 | Por fazer | — |
-| US21 | Avaliação offline do motor | Sprint 3 | Por fazer | — |
-| US14 | Preferência de carga de trabalho | Sprint 3 | Por fazer | — |
-| US24 | Períodos de avaliação | Sprint 3 | Por fazer | — |
-| US08 | Comentário livre | Sprint 3 | Por fazer | — |
-| US16 | Filtrar por semestre e ECTS | Sprint 3 | Por fazer | — |
-| US22 | Fatorização de matrizes (SVD) | Sprint 4 | Por fazer | — |
-| US23 | Comparação de estratégias | Sprint 4 | Por fazer | — |
-| US25 | Moderar comentários | Sprint 4 | Por fazer | — |
-| US10 | Exportar e apagar dados | Sprint 4 | Por fazer | — |
-| US17 | Esconder UCs sem vagas | Backlog | Por fazer | — |
-| US19 | Feedback sobre recomendações | Backlog | Por fazer | — |
-| US26 | Painel de participação | Backlog | Por fazer | — |
-| US27 | Filtragem baseada em itens | Backlog | Por fazer | — |
-| US18 | Evitar conflitos de horário | Backlog | Por fazer | — |
+| US10 | Dataset sintético | Sprint 3 | Por fazer | — |
+| US11 | Recomendações de popularidade | Sprint 3 | Por fazer | — |
+| US12 | Recomendações user-based | Sprint 3 | Por fazer | — |
+| US13 | Excluir UCs inválidas | Sprint 3 | Por fazer | — |
+| US14 | Explicação da recomendação | Sprint 3 | Por fazer | — |
+| US15 | Avaliação offline do motor | Sprint 4 | Por fazer | — |
+| US16 | Períodos de avaliação | Sprint 4 | Por fazer | — |
+| US17 | Exportar e apagar dados | Sprint 4 | Por fazer | — |
+| US18 | Comentário livre | Sprint 4 | Por fazer | — |
+| US19 | Moderar comentários | Sprint 4 | Por fazer | — |
+| US20 | Filtrar por semestre e ECTS | Sprint 4 | Por fazer | — |
+| US21 | Preferência de carga de trabalho | Backlog | Por fazer | — |
+| US22 | Comparação de estratégias | Backlog | Por fazer | — |
+| US23 | Esconder UCs sem vagas | Backlog | Por fazer | — |
+| US24 | Feedback sobre recomendações | Backlog | Por fazer | — |
+| US25 | Painel de participação | Backlog | Por fazer | — |
+| US26 | Filtragem baseada em itens | Backlog | Por fazer | — |
+| US27 | Evitar conflitos de horário | Backlog | Por fazer | — |
 | US28 | Lembretes de avaliação | Backlog | Por fazer | — |
 
 Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 e US02).
@@ -66,6 +68,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Requisitos funcionais e não funcionais](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) | Todos os requisitos (RF, RNF), regras de negócio e ligação às user stories |
 | [Regras de geração de código](docs/geral/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
+| [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
 | [US02](docs/US02/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US02 |
 

@@ -66,5 +66,5 @@ RNF02 (hash, CSRF, sessão renovada no login, mensagem que não revela contas), 
 |---|---|---|
 | 1 | Limite de tentativas falhadas (proteção contra adivinhar palavras-passe). | Fora do Sprint 1; a propor como story |
 | 2 | Recuperação de palavra-passe (RF02) não tem story. | Por decidir pelo PO |
-| 3 | A página inicial (`/inicio`) é provisória: vai mostrar o catálogo (US04) e as recomendações. | Aceite |
+| 3 | A página inicial (`/inicio`) é provisória: vai mostrar o catálogo (US05) e as recomendações. | Aceite |
 | 4 | A página `/` passou a levar ao início de sessão (antes levava ao registo). | Aceite |

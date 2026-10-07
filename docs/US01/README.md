@@ -22,7 +22,7 @@
 
 ## Código
 
-[`app/auth/`](../../app/auth/): rotas (`routes.py`), casos de uso (`services.py`), validação (`validators.py`), ligações de confirmação (`tokens.py`) e SQL (`repository.py`). Os templates estão em [`app/templates/auth/`](../../app/templates/auth/).
+[`app/auth/`](../../app/auth/): rotas (`routes.py`), casos de uso (`services.py`), validação (`validators.py`), ligações de confirmação (`tokens.py`) e SQL (`repository.py`). Os templates estão em [`app/templates/auth/`](../../app/templates/auth/). Os textos das páginas, mensagens e email estão em [`app/texts.py`](../../app/texts.py).
 
 ## Testes
 
@@ -32,6 +32,7 @@
 | [`tests/test_registration.py`](../../tests/test_registration.py) | Registo, rejeições, duplicados, CSRF e cabeçalhos de segurança |
 | [`tests/test_confirmation.py`](../../tests/test_confirmation.py) | Ligação de confirmação e ativação da conta |
 | [`tests/test_app_factory.py`](../../tests/test_app_factory.py) | Configuração da aplicação e do envio de email |
+| [`tests/test_texts.py`](../../tests/test_texts.py) | Ficheiro de textos: nada vazio e marcadores `{…}` no sítio |
 | [`tests/base.py`](../../tests/base.py) | Base comum: aplicação com base de dados temporária e email simulado |
 
 A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).

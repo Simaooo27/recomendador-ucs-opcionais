@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Criar conta · Recomendador de UCs opcionais{% endblock %}
+{% set page_title = texts.REGISTER_TITLE %}
 
 {% block content %}
-<h1>Criar conta</h1>
-<p class="lead">Use o seu email institucional. Vamos enviar-lhe uma ligação para confirmar a conta.</p>
+<h1>{{ texts.REGISTER_TITLE }}</h1>
+<p class="lead">{{ texts.REGISTER_INTRO }}</p>
 
 {% if errors.form %}
   <div class="alert alert-error" role="alert">{{ errors.form }}</div>
@@ -13,30 +13,30 @@
   <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
 
   <div class="field">
-    <label for="email">Email institucional</label>
+    <label for="email">{{ texts.REGISTER_EMAIL_LABEL }}</label>
     <input id="email" name="email" type="email" autocomplete="email" required
            value="{{ values.get('email', '') }}"
            {% if errors.email %}aria-invalid="true" aria-describedby="email-error"{% else %}aria-describedby="email-hint"{% endif %}>
     {% if errors.email %}
       <p class="error" id="email-error">{{ errors.email }}</p>
     {% else %}
-      <p class="hint" id="email-hint">Terminado em {{ domains_hint }}.</p>
+      <p class="hint" id="email-hint">{{ texts.REGISTER_EMAIL_HINT.format(dominios=domains_hint) }}</p>
     {% endif %}
   </div>
 
   <div class="field">
-    <label for="password">Palavra-passe</label>
+    <label for="password">{{ texts.REGISTER_PASSWORD_LABEL }}</label>
     <input id="password" name="password" type="password" autocomplete="new-password" required
            {% if errors.password %}aria-invalid="true" aria-describedby="password-error"{% else %}aria-describedby="password-hint"{% endif %}>
     {% if errors.password %}
       <p class="error" id="password-error">{{ errors.password }}</p>
     {% else %}
-      <p class="hint" id="password-hint">Pelo menos {{ min_length }} caracteres, com uma letra e um número.</p>
+      <p class="hint" id="password-hint">{{ texts.REGISTER_PASSWORD_HINT.format(minimo=min_length) }}</p>
     {% endif %}
   </div>
 
   <div class="field">
-    <label for="password_confirm">Repita a palavra-passe</label>
+    <label for="password_confirm">{{ texts.REGISTER_PASSWORD_CONFIRM_LABEL }}</label>
     <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required
            {% if errors.password_confirm %}aria-invalid="true" aria-describedby="password_confirm-error"{% endif %}>
     {% if errors.password_confirm %}
@@ -48,13 +48,13 @@
     <div class="check">
       <input id="accepted_privacy" name="accepted_privacy" type="checkbox"
              {% if errors.accepted_privacy %}aria-invalid="true" aria-describedby="accepted_privacy-error"{% endif %}>
-      <label for="accepted_privacy">Li e aceito a <a href="{{ url_for('main.privacy') }}">política de privacidade</a>.</label>
+      <label for="accepted_privacy">{{ texts.REGISTER_PRIVACY_BEFORE_LINK }}<a href="{{ url_for('main.privacy') }}">{{ texts.REGISTER_PRIVACY_LINK }}</a>{{ texts.REGISTER_PRIVACY_AFTER_LINK }}</label>
     </div>
     {% if errors.accepted_privacy %}
       <p class="error" id="accepted_privacy-error">{{ errors.accepted_privacy }}</p>
     {% endif %}
   </div>
 
-  <button type="submit">Criar conta</button>
+  <button type="submit">{{ texts.REGISTER_BUTTON }}</button>
 </form>
 {% endblock %}

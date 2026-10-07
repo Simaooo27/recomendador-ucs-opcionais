@@ -1,15 +1,18 @@
+/* Cores da aplicação: mude aqui e a alteração aplica-se a todas as páginas.
+   Cada cor é um código hexadecimal (#rrggbb). Pode escolher cores em https://htmlcolorcodes.com */
 :root {
-  --ink: #1b2430;
-  --muted: #5b6675;
-  --line: #cfd6df;
-  --paper: #ffffff;
-  --page: #f3f5f8;
-  --accent: #1f3864;
-  --accent-ink: #ffffff;
-  --danger: #a4161a;
-  --danger-bg: #fdecec;
-  --ok: #17603a;
-  --ok-bg: #e8f5ee;
+  --ink: #1b2430;        /* texto principal */
+  --muted: #5b6675;      /* texto secundário (ajudas e introduções) */
+  --line: #cfd6df;       /* contornos dos campos e do painel */
+  --paper: #ffffff;      /* fundo do painel central */
+  --page: #f3f5f8;       /* fundo da página */
+  --accent: #1f3864;     /* barra do topo, botões e ligações */
+  --accent-hover: #162a4d; /* botões quando o rato passa por cima */
+  --accent-ink: #ffffff; /* texto sobre a cor de destaque */
+  --danger: #a4161a;     /* mensagens de erro */
+  --danger-bg: #fdecec;  /* fundo das caixas de erro */
+  --ok: #17603a;         /* mensagens de sucesso */
+  --ok-bg: #e8f5ee;      /* fundo das caixas de sucesso */
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
 }
@@ -90,7 +93,7 @@ button {
   border-radius: 0.375rem;
   cursor: pointer;
 }
-button:hover { background: #162a4d; }
+button:hover { background: var(--accent-hover); }
 
 a { color: var(--accent); }
 

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Confirme o seu email · Recomendador de UCs opcionais{% endblock %}
+{% set page_title = texts.PENDING_TITLE %}
 
 {% block content %}
-<h1>Confirme o seu email</h1>
+<h1>{{ texts.PENDING_TITLE }}</h1>
 {% if email %}
-  <p>Enviámos uma ligação de confirmação para <strong>{{ email }}</strong>. Abra-a para ativar a conta.</p>
+  <p>{{ texts.PENDING_SENT_TO }} <strong>{{ email }}</strong>{{ texts.PENDING_SENT_TO_END }}</p>
 {% else %}
-  <p>Enviámos uma ligação de confirmação para o seu email. Abra-a para ativar a conta.</p>
+  <p>{{ texts.PENDING_SENT_GENERIC }}</p>
 {% endif %}
-<p class="lead">Não chegou? Veja a pasta de spam. Se a ligação expirar, volte a <a href="{{ url_for('auth.register_form') }}">criar a conta</a> com o mesmo email para receber uma nova.</p>
+<p class="lead">{{ texts.PENDING_HELP_BEFORE_LINK }}<a href="{{ url_for('auth.register_form') }}">{{ texts.PENDING_HELP_LINK }}</a>{{ texts.PENDING_HELP_AFTER_LINK }}</p>
 {% endblock %}

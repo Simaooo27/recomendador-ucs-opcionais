@@ -38,6 +38,8 @@
 
 ## 3. Mensagens ao utilizador
 
+Os textos em uso estão em [`app/texts.py`](../../app/texts.py); esta tabela regista a versão aprovada para a US01.
+
 | Situação | Mensagem |
 |---|---|
 | Email vazio | Indique o seu email institucional. |

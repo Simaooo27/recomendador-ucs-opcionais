@@ -1,13 +1,20 @@
 <!doctype html>
+{#- Moldura comum a todas as páginas. Os textos vêm de app/texts.py. -#}
 <html lang="pt-PT">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Recomendador de UCs opcionais{% endblock %}</title>
+  <title>
+    {%- if page_title -%}
+      {{ texts.PAGE_TITLE_FORMAT.format(pagina=page_title, aplicacao=texts.APP_NAME) }}
+    {%- else -%}
+      {{ texts.APP_NAME }}
+    {%- endif -%}
+  </title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header class="site-header">Recomendador de UCs opcionais</header>
+  <header class="site-header">{{ texts.APP_NAME }}</header>
   <main>
     <div class="panel">
       {% block content %}{% endblock %}

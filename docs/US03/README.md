@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita (em revisão) |
+| Estado | Feita |
 | Sprint | Sprint 1 |
 | Story points | 5 |
 | Épico | E1 — Contas e perfis |

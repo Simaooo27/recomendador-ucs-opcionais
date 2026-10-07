@@ -26,7 +26,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
-| US01 | Registo com email institucional | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
+| US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita (o código ainda não está no repositório) | — |
 | US03 | Importar catálogo de UCs | Sprint 1 | Por fazer | — |
 | US04 | Consultar catálogo de opcionais | Sprint 1 | Por fazer | — |
@@ -79,7 +79,7 @@ Para mudanças pequenas não é preciso mexer no código da aplicação.
 | O email de confirmação | [`app/texts.py`](app/texts.py) | `CONFIRMATION_EMAIL_SUBJECT` e `CONFIRMATION_EMAIL_BODY` |
 | O texto da política de privacidade | [`app/texts.py`](app/texts.py) | `PRIVACY_BODY` |
 | As cores | [`app/static/style.css`](app/static/style.css) | As primeiras linhas do ficheiro; cada cor tem um comentário a dizer onde aparece |
-| Domínios de email aceites, versão da política, prazo da ligação | [`app/config.py`](app/config.py) | Exige cuidado: fala com quem desenvolve |
+| Exigir um domínio de email (ex.: só institucional), versão da política, prazo da ligação | [`app/config.py`](app/config.py) | Exige cuidado: fala com quem desenvolve |
 
 Ao editar `app/texts.py`:
 
@@ -116,7 +116,7 @@ A aplicação lê variáveis de ambiente (ver [`.env.example`](.env.example)). S
 | Variável | Para quê | Por omissão |
 |---|---|---|
 | `SECRET_KEY` | Assinar sessões e ligações de confirmação | obrigatória |
-| `ALLOWED_EMAIL_DOMAINS` | Domínios aceites no registo (inclui subdomínios) | `iscap.ipp.pt` |
+| `ALLOWED_EMAIL_DOMAINS` | Restringe o registo a estes domínios (inclui subdomínios). Vazio = qualquer email | vazio |
 | `DATABASE_PATH` | Ficheiro SQLite | `instance/app.sqlite3` |
 | `MAIL_BACKEND` | `console` (escreve o email no terminal) ou `smtp` | `console` |
 | `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` | |

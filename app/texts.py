@@ -27,9 +27,11 @@ PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 # ---------------------------------------------------------------------------
 
 REGISTER_TITLE = "Criar conta"
-REGISTER_INTRO = "Use o seu email institucional. Vamos enviar-lhe uma ligação para confirmar a conta."
+REGISTER_INTRO = "Use o seu email pessoal. Vamos enviar-lhe uma ligação para confirmar a conta."
 
-REGISTER_EMAIL_LABEL = "Email institucional"
+REGISTER_EMAIL_LABEL = "Email"
+REGISTER_EMAIL_HINT_ANY = "Por exemplo, nome@gmail.com."
+# Só aparece se a equipa restringir os domínios aceites (ALLOWED_EMAIL_DOMAINS em app/config.py).
 REGISTER_EMAIL_HINT = "Terminado em {dominios}."
 
 REGISTER_PASSWORD_LABEL = "Palavra-passe"
@@ -45,8 +47,9 @@ REGISTER_PRIVACY_AFTER_LINK = "."
 REGISTER_BUTTON = "Criar conta"
 
 # Mensagens de erro do formulário de registo.
-ERROR_EMAIL_REQUIRED = "Indique o seu email institucional."
-ERROR_EMAIL_DOMAIN = "Use o seu email institucional (terminado em {dominios})."
+ERROR_EMAIL_REQUIRED = "Indique o seu email."
+ERROR_EMAIL_INVALID = "Indique um email válido, por exemplo nome@gmail.com."
+ERROR_EMAIL_DOMAIN = "Use um email terminado em {dominios}."
 ERROR_EMAIL_DUPLICATE = "Já existe uma conta com este email. Se é a sua, inicie sessão."
 ERROR_PASSWORD_REQUIRED = "Escolha uma palavra-passe."
 ERROR_PASSWORD_TOO_SHORT = "A palavra-passe deve ter pelo menos {minimo} caracteres."

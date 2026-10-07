@@ -1,6 +1,6 @@
-# US01 — Registo com email institucional
+# US01 — Registo com email pessoal
 
-> **Como** aluno, **quero** registar-me com o meu email institucional, **para que** apenas alunos da instituição possam avaliar e o sistema seja fiável.
+> **Como** aluno, **quero** registar-me com o meu email pessoal, **para** poder avaliar as UCs que fiz e receber recomendações.
 
 | | |
 |---|---|
@@ -28,7 +28,7 @@
 
 | Ficheiro | O que testa |
 |---|---|
-| [`tests/test_validators.py`](../../tests/test_validators.py) | Validação do email institucional e da palavra-passe |
+| [`tests/test_validators.py`](../../tests/test_validators.py) | Validação do email (pessoal, com domínio opcional) e da palavra-passe |
 | [`tests/test_registration.py`](../../tests/test_registration.py) | Registo, rejeições, duplicados, CSRF e cabeçalhos de segurança |
 | [`tests/test_confirmation.py`](../../tests/test_confirmation.py) | Ligação de confirmação e ativação da conta |
 | [`tests/test_app_factory.py`](../../tests/test_app_factory.py) | Configuração da aplicação e do envio de email |

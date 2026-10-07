@@ -12,7 +12,7 @@ A documentação está organizada por user story: os documentos que valem para t
 
 ## Uma pasta por story
 
-### [US01 — Registo com email institucional](US01/README.md)
+### [US01 — Registo com email pessoal](US01/README.md)
 
 | Ficheiro | Conteúdo |
 |---|---|

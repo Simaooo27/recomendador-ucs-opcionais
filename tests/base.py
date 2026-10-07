@@ -11,7 +11,7 @@ from app import create_app
 from app.db import init_db
 
 CSRF_TOKEN = "token-csrf-de-teste"
-VALID_EMAIL = "aluno@iscap.ipp.pt"
+VALID_EMAIL = "aluno@gmail.com"
 VALID_PASSWORD = "palavra-passe-1"
 _TOKEN_IN_LINK = re.compile(r"/auth/confirmar/([A-Za-z0-9_\-.]+)")
 

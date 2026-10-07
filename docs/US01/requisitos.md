@@ -1,6 +1,8 @@
-# US01 — Registo com email institucional: requisitos funcionais
+# US01 — Registo com email pessoal: requisitos funcionais
 
-> **Como** aluno, **quero** registar-me com o meu email institucional, **para que** apenas alunos da instituição possam avaliar e o sistema seja fiável.
+> **Como** aluno, **quero** registar-me com o meu email pessoal, **para** poder avaliar as UCs que fiz e receber recomendações.
+
+*Versão 1.1 (2026-10-07): o registo passou a aceitar email pessoal, por decisão do Product Owner. A restrição a um domínio continua disponível como opção de configuração.*
 
 | | |
 |---|---|
@@ -20,9 +22,9 @@
 
 | ID | Requisito |
 |---|---|
-| **RF01.1** | O sistema apresenta um formulário com: email institucional, palavra-passe, repetição da palavra-passe e uma caixa para aceitar a política de privacidade. |
+| **RF01.1** | O sistema apresenta um formulário com: email, palavra-passe, repetição da palavra-passe e uma caixa para aceitar a política de privacidade. |
 | **RF01.2** | O email é normalizado antes de qualquer validação ou gravação: sem espaços nas pontas e em minúsculas. |
-| **RF01.3** | Só são aceites emails válidos cujo domínio seja um dos **domínios institucionais configurados** (ou um subdomínio verdadeiro de um deles). Domínios parecidos (`iscap.ipp.pt.evil.com`, `evil-iscap.ipp.pt`) são rejeitados. |
+| **RF01.3** | É aceite qualquer email com formato válido e até 254 caracteres (email pessoal). Se a equipa configurar domínios em `ALLOWED_EMAIL_DOMAINS`, só se aceitam esses domínios ou subdomínios verdadeiros deles; domínios parecidos (`iscap.ipp.pt.evil.com`, `evil-iscap.ipp.pt`) são rejeitados. |
 | **RF01.4** | A palavra-passe tem entre 8 e 128 caracteres, com pelo menos uma letra e um número, e coincide com a repetição. |
 | **RF01.5** | Sem aceitar a política de privacidade não há registo. A aceitação fica gravada com a versão da política e a data e hora (UTC). |
 | **RF01.6** | A palavra-passe é guardada **apenas como hash** (scrypt, via Werkzeug). Nunca é gravada em texto, registada em logs nem devolvida ao navegador. |
@@ -42,8 +44,9 @@ Os textos em uso estão em [`app/texts.py`](../../app/texts.py); esta tabela reg
 
 | Situação | Mensagem |
 |---|---|
-| Email vazio | Indique o seu email institucional. |
-| Email fora do domínio | Use o seu email institucional (terminado em @iscap.ipp.pt). |
+| Email vazio | Indique o seu email. |
+| Email mal formado | Indique um email válido, por exemplo nome@gmail.com. |
+| Email fora do domínio (só com domínios configurados) | Use um email terminado em @iscap.ipp.pt. |
 | Palavra-passe vazia | Escolha uma palavra-passe. |
 | Palavra-passe curta | A palavra-passe deve ter pelo menos 8 caracteres. |
 | Palavra-passe longa | A palavra-passe não pode ter mais de 128 caracteres. |
@@ -66,7 +69,7 @@ O `confirmation_nonce` muda a cada registo; faz parte do token e é o que invali
 
 | Critério da story | Requisitos | Testes automáticos |
 |---|---|---|
-| Só são aceites emails do domínio institucional. | RF01.2, RF01.3 | `tests/test_validators.py` (`InstitutionalEmailTests`); `tests/test_registration.py` (`RejectedRegistrationTests`: email fora do domínio, domínio parecido) |
+| São aceites emails pessoais. | RF01.2, RF01.3 | `tests/test_validators.py` (`PersonalEmailTests`, `RestrictedDomainTests`); `tests/test_registration.py` (`test_aceita_emails_de_varios_fornecedores`, `test_rejeita_email_mal_formado`, `RestrictedDomainRegistrationTests`) |
 | A conta só fica ativa após confirmação por email. | RF01.7 a RF01.10, RF01.12 | `tests/test_confirmation.py` (todos); `tests/test_registration.py` (`SuccessfulRegistrationTests`: conta inativa, email com ligação; `DuplicateRegistrationTests`) |
 | A palavra-passe é guardada com hash. | RF01.6 | `tests/test_registration.py` (`SuccessfulRegistrationTests.test_palavra_passe_guardada_com_hash`) |
 | O registo exige aceitação explícita da política de privacidade. | RF01.5 | `tests/test_registration.py` (`RejectedRegistrationTests.test_exige_aceitacao_da_politica_de_privacidade`; `SuccessfulRegistrationTests.test_guarda_aceitacao_da_politica_com_versao_e_data`) |
@@ -80,7 +83,7 @@ RNF01 (privacidade: consentimento registado, só os dados necessários), RNF02 (
 
 | # | Questão | Estado |
 |---|---|---|
-| 1 | **Domínio dos emails dos alunos.** O valor por omissão é `iscap.ipp.pt`, com subdomínios. Confirmar o domínio real dos alunos. Muda-se em `ALLOWED_EMAIL_DOMAINS` sem alterar código. | A confirmar pela equipa |
+| 1 | **Domínio dos emails.** Decidido: aceita-se email pessoal (`ALLOWED_EMAIL_DOMAINS` vazio). Para voltar a exigir o institucional, define-se `ALLOWED_EMAIL_DOMAINS=iscap.ipp.pt`, sem alterar código. Nota: sem restrição de domínio, qualquer pessoa se pode registar; a confirmação de que é aluno terá de vir de outro dado (ex.: curso, RF03). | **Decidido** pelo PO (2026-10-07) |
 | 2 | Texto final da política de privacidade (a página atual é provisória). | A escrever |
 | 3 | Regras da palavra-passe (8 a 128 caracteres, letra e número). | Proposta; PO a validar |
 | 4 | Prazo da ligação: 24 horas. | Proposta; PO a validar |

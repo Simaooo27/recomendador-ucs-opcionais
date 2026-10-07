@@ -35,6 +35,7 @@ app/
   db.py, schema.sql  ligação e esquema SQLite
   security.py        CSRF e cabeçalhos de segurança
   mailer.py          envio de email (console ou SMTP)
+  texts.py           todos os textos que o utilizador vê (editáveis pelo Product Owner)
   <modulo>/          um pacote por área funcional (ex.: auth)
     routes.py        HTTP: lê o pedido, chama o serviço, devolve a resposta
     services.py      casos de uso: orquestra regras e persistência
@@ -56,6 +57,7 @@ docs/, prompts/
 - Docstring curta em todo o módulo e em funções públicas não óbvias. Comentários explicam o *porquê*, não o *quê*.
 - Sem código morto, sem `print` de depuração (exceção: o email simulado do desenvolvimento), sem `TODO` sem dono.
 - Mensagens de erro ao utilizador: dizem o que falhou e como corrigir; não culpam o utilizador nem expõem detalhes internos.
+- Todo o texto visível ao utilizador (páginas, mensagens, emails) fica em `app/texts.py`, nunca escrito diretamente nos templates ou no código. Assim o Product Owner altera textos sem mexer na lógica.
 
 ## 5. Segurança (obrigatório, RNF02)
 

@@ -1,8 +1,8 @@
 # US01 — Diagrama BPMN: registo e confirmação
 
-![Processo BPMN do registo](diagrams/bpmn-us01.svg)
+![Processo BPMN do registo](diagramas/bpmn.svg)
 
-O ficheiro editável é [diagrams/bpmn-us01.bpmn](diagrams/bpmn-us01.bpmn) (BPMN 2.0). Abre-se em [demo.bpmn.io](https://demo.bpmn.io) ou no Camunda Modeler: *Open → escolher o ficheiro*. O SVG acima é a imagem para o relatório e para o GitHub.
+O ficheiro editável é [diagramas/bpmn.bpmn](diagramas/bpmn.bpmn) (BPMN 2.0). Abre-se em [demo.bpmn.io](https://demo.bpmn.io) ou no Camunda Modeler: *Open → escolher o ficheiro*. O SVG acima é a imagem para o relatório e para o GitHub.
 
 ## Descrição do processo
 

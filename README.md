@@ -7,34 +7,68 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | | |
 |---|---|
 | **Sprint atual** | Sprint 1 (em curso) |
-| **Feito** | US01 — Registo com email e confirmação por ligação |
-| **A seguir** | US02 — Autenticação (iniciar e terminar sessão) |
+| **No repositório** | US01 — Registo com email e confirmação por ligação |
 | **Testes automáticos** | 69, todos a passar |
 
 ## Índice
 
-1. [Documentação do projeto](#1-documentação-do-projeto)
-2. [Alterar textos e cores](#2-alterar-textos-e-cores)
-3. [Pôr a aplicação a correr](#3-pôr-a-aplicação-a-correr)
-4. [Testes](#4-testes)
-5. [Organização do código](#5-organização-do-código)
-6. [Regras da equipa](#6-regras-da-equipa)
+1. [Estado do projeto](#1-estado-do-projeto)
+2. [Documentação do projeto](#2-documentação-do-projeto)
+3. [Alterar textos e cores](#3-alterar-textos-e-cores)
+4. [Pôr a aplicação a correr](#4-pôr-a-aplicação-a-correr)
+5. [Testes](#5-testes)
+6. [Organização do código](#6-organização-do-código)
+7. [Como contribuir](#7-como-contribuir)
 
-## 1. Documentação do projeto
+## 1. Estado do projeto
+
+**Sprint Goal do Sprint 1:** um aluno consegue registar-se, construir o seu percurso e avaliar UCs.
+
+| User story | Título | Sprint | Estado | Documentação |
+|---|---|---|---|---|
+| US01 | Registo com email institucional | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
+| US02 | Autenticação | Sprint 1 | Feita (o código ainda não está no repositório) | — |
+| US03 | Importar catálogo de UCs | Sprint 1 | Por fazer | — |
+| US04 | Consultar catálogo de opcionais | Sprint 1 | Por fazer | — |
+| US05 | Registar percurso | Sprint 1 | Por fazer | — |
+| US06 | Avaliar opcional concluída | Sprint 1 | Por fazer | — |
+| US07 | Avaliação rápida de obrigatórias | Sprint 1 | Por fazer | — |
+| US09 | Avaliações pseudonimizadas | Sprint 2 | Por fazer | — |
+| US20 | Dataset sintético | Sprint 2 | Por fazer | — |
+| US11 | Recomendações de popularidade | Sprint 2 | Por fazer | — |
+| US12 | Recomendações user-based | Sprint 2 | Por fazer | — |
+| US15 | Excluir UCs inválidas | Sprint 2 | Por fazer | — |
+| US13 | Explicação da recomendação | Sprint 3 | Por fazer | — |
+| US21 | Avaliação offline do motor | Sprint 3 | Por fazer | — |
+| US14 | Preferência de carga de trabalho | Sprint 3 | Por fazer | — |
+| US24 | Períodos de avaliação | Sprint 3 | Por fazer | — |
+| US08 | Comentário livre | Sprint 3 | Por fazer | — |
+| US16 | Filtrar por semestre e ECTS | Sprint 3 | Por fazer | — |
+| US22 | Fatorização de matrizes (SVD) | Sprint 4 | Por fazer | — |
+| US23 | Comparação de estratégias | Sprint 4 | Por fazer | — |
+| US25 | Moderar comentários | Sprint 4 | Por fazer | — |
+| US10 | Exportar e apagar dados | Sprint 4 | Por fazer | — |
+| US17 | Esconder UCs sem vagas | Backlog | Por fazer | — |
+| US19 | Feedback sobre recomendações | Backlog | Por fazer | — |
+| US26 | Painel de participação | Backlog | Por fazer | — |
+| US27 | Filtragem baseada em itens | Backlog | Por fazer | — |
+| US18 | Evitar conflitos de horário | Backlog | Por fazer | — |
+| US28 | Lembretes de avaliação | Backlog | Por fazer | — |
+
+O código da US02 foi desenvolvido mas ainda não foi integrado neste repositório. Só a US01 tem, por enquanto, documentação em `docs/`; cada nova story terá a sua pasta `docs/USNN/`.
+
+## 2. Documentação do projeto
+
+O índice completo está em [docs/README.md](docs/README.md). Os documentos gerais ficam em `docs/geral/` e cada user story tem a sua pasta `docs/USNN/`.
 
 | Documento | O que contém |
 |---|---|
-| [Requisitos funcionais e não funcionais](docs/01-requisitos-funcionais-e-nao-funcionais.md) | Todos os requisitos (RF, RNF), regras de negócio e ligação às user stories |
-| [Requisitos da US01](docs/03-rf-us01-registo-email-institucional.md) | Detalhe do registo, critérios de aceitação e testes que os verificam |
-| [Use case da US01](docs/04-use-case-us01.md) | Diagrama e descrição dos casos de uso do registo |
-| [BPMN da US01](docs/05-bpmn-us01.md) | Diagrama do processo de registo e confirmação |
-| [Regras de geração de código](docs/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
-| [Registo de uso de IA](docs/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
-| [Prompts](prompts/) | Prompts usados para gerar código com IA |
+| [Requisitos funcionais e não funcionais](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) | Todos os requisitos (RF, RNF), regras de negócio e ligação às user stories |
+| [Regras de geração de código](docs/geral/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
+| [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
+| [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
 
-Os diagramas estão em [`docs/diagrams/`](docs/diagrams/).
-
-## 2. Alterar textos e cores
+## 3. Alterar textos e cores
 
 Para mudanças pequenas não é preciso mexer no código da aplicação.
 
@@ -51,9 +85,9 @@ Ao editar `app/texts.py`:
 
 - muda **só o que está entre aspas**, nunca o nome em maiúsculas à esquerda;
 - palavras entre chavetas, como `{email}` ou `{horas}`, são preenchidas pela aplicação: podem mudar de sítio na frase, mas não podem ser apagadas;
-- depois de guardar, recarrega a página no navegador e corre os testes (secção 4). Se um marcador entre chavetas tiver sido apagado por engano, um teste avisa.
+- depois de guardar, recarrega a página no navegador e corre os testes (secção 5). Se um marcador entre chavetas tiver sido apagado por engano, um teste avisa.
 
-## 3. Pôr a aplicação a correr
+## 4. Pôr a aplicação a correr
 
 Precisas de **Python 3.10 ou superior** e de **Git**.
 
@@ -90,7 +124,7 @@ A aplicação lê variáveis de ambiente (ver [`.env.example`](.env.example)). S
 
 </details>
 
-## 4. Testes
+## 5. Testes
 
 ```bash
 python -m unittest discover -s tests -t . -v
@@ -106,7 +140,7 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 | `tests/test_texts.py` | Ficheiro de textos: nada vazio e marcadores `{…}` no sítio |
 | `tests/test_app_factory.py` | Arranque e configuração da aplicação |
 
-## 5. Organização do código
+## 6. Organização do código
 
 ```
 app/
@@ -125,13 +159,20 @@ app/
   mailer.py         envio de email (terminal ou SMTP)
   main.py           página inicial e política de privacidade
 tests/              testes automáticos
-docs/               requisitos, use cases, BPMN e regras da equipa
-prompts/            prompts usados com IA
+docs/               documentação (índice em docs/README.md)
+  geral/            requisitos, regras de código e registo de uso de IA
+  US01/             requisitos, use case, BPMN, prompt e diagramas da US01
+  USNN/             uma pasta por cada nova story, com a mesma estrutura
+.github/            modelos de issue (user story) e de Pull Request
+instance/           dados locais (ignorado pelo Git)
 ```
 
-## 6. Regras da equipa
+## 7. Como contribuir
 
-1. Um ramo por story: `feature/US02-autenticacao`.
-2. Commits no formato `US02: <resumo no imperativo>`.
-3. Pull Request com a checklist da secção 10 das [regras de código](docs/02-regras-de-geracao-de-codigo.md), revisto pelo outro elemento antes do merge.
-4. Cada utilização relevante de IA fica no [registo de uso de IA](docs/registo-de-uso-de-ia.md).
+1. Cada story tem uma issue criada com o modelo [User story](.github/ISSUE_TEMPLATE/user-story.md).
+2. Um ramo por story: `feature/US02-autenticacao`.
+3. A documentação da story fica em `docs/USNN/` (por exemplo, `docs/US02/`), com a mesma estrutura da [US01](docs/US01/README.md): `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta ao [índice](docs/README.md) e atualize a tabela de [estado do projeto](#1-estado-do-projeto).
+4. Commits no formato `US02: <resumo no imperativo>`.
+5. Pull Request com o [modelo do repositório](.github/pull_request_template.md), que inclui a checklist da secção 10 de [docs/geral/02-regras-de-geracao-de-codigo.md](docs/geral/02-regras-de-geracao-de-codigo.md), revisto por outro elemento.
+6. Textos visíveis ao utilizador vão sempre para [`app/texts.py`](app/texts.py), nunca escritos diretamente nos templates.
+7. Cada utilização relevante de IA fica anotada em [docs/geral/registo-de-uso-de-ia.md](docs/geral/registo-de-uso-de-ia.md).

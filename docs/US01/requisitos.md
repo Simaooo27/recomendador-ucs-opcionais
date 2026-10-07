@@ -6,9 +6,9 @@
 |---|---|
 | Épico | E1 — Contas e perfis |
 | Prioridade | Must · 3 story points · Sprint 1 |
-| Requisito de origem | RF01 (ver [01-requisitos-funcionais-e-nao-funcionais.md](01-requisitos-funcionais-e-nao-funcionais.md)) |
+| Requisito de origem | RF01 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Atores | Aluno (primário), serviço de email (secundário) |
-| Artefactos | [Use case](04-use-case-us01.md) · [BPMN](05-bpmn-us01.md) · [Prompt](../prompts/US01-registo-email-institucional.md) |
+| Artefactos | [Use case](use-case.md) · [BPMN](bpmn.md) · [Prompt](prompt.md) |
 
 ## 1. Âmbito
 
@@ -38,7 +38,7 @@
 
 ## 3. Mensagens ao utilizador
 
-Os textos em uso estão em [`app/texts.py`](../app/texts.py); esta tabela regista a versão aprovada para a US01.
+Os textos em uso estão em [`app/texts.py`](../../app/texts.py); esta tabela regista a versão aprovada para a US01.
 
 | Situação | Mensagem |
 |---|---|

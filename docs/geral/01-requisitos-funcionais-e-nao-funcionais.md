@@ -104,7 +104,7 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | User story | Requisitos funcionais | Sprint | ID anterior |
 |---|---|---|---|
 | US01 — Registo com email pessoal | RF01 (ver [detalhe](../US01/requisitos.md)) | Sprint 1 | US01 |
-| US02 — Autenticação | RF02 (início e fim de sessão) | Sprint 1 | US02 |
+| US02 — Autenticação | RF02 (início e fim de sessão; ver [detalhe](../US02/requisitos.md)) | Sprint 1 | US02 |
 | US03 — Perfis de aluno e administrador | RF04 | Sprint 1 | nova |
 | US04 — Importar catálogo de cursos e UCs | RF05 | Sprint 2 | US03 |
 | US05 — Consultar catálogo de opcionais | RF07 | Sprint 2 | US04 |

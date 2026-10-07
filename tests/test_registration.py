@@ -14,10 +14,8 @@ class RegistrationFormTests(AppTestCase):
         self.assertIn("/privacidade", html)
         self.assertNotIn("@iscap.ipp.pt", html)
 
-    def test_pagina_inicial_redireciona_para_o_registo(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.headers["Location"].endswith("/auth/registo"))
+    def test_formulario_tem_ligacao_para_iniciar_sessao(self):
+        self.assertIn('href="/auth/entrar"', self.client.get("/auth/registo").get_data(as_text=True))
 
     def test_pagina_de_privacidade_existe(self):
         self.assertEqual(self.client.get("/privacidade").status_code, 200)
@@ -209,3 +207,37 @@ class SecurityHeadersTests(AppTestCase):
         self.assertIn("frame-ancestors 'none'", response.headers["Content-Security-Policy"])
         self.assertEqual(response.headers["Referrer-Policy"], "no-referrer")
         self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+
+
+class DevConfirmationLinkTests(AppTestCase):
+    """Em desenvolvimento (email no terminal), a ligação aparece também na página «Confirme o seu email»."""
+
+    def test_em_desenvolvimento_a_pagina_mostra_a_ligacao(self):
+        self.register()
+        html = self.client.get("/auth/registo/pendente").get_data(as_text=True)
+        self.assertIn(f"/auth/confirmar/{self.last_token()}", html)
+        self.assertIn("Modo de desenvolvimento", html)
+
+    def test_a_ligacao_da_pagina_ativa_a_conta(self):
+        self.register()
+        self.assertEqual(self.client.get(f"/auth/confirmar/{self.last_token()}").status_code, 200)
+        self.assertEqual(self.fetch_user()["is_active"], 1)
+
+
+class NoDevLinkWithRealEmailTests(AppTestCase):
+    """Com email real (SMTP), a ligação nunca aparece na página."""
+
+    config_overrides = {"MAIL_BACKEND": "smtp", "MAIL_SERVER": "smtp.exemplo.pt"}
+
+    def setUp(self) -> None:
+        super().setUp()
+        from app.mailer import ConsoleMailer
+
+        # Substitui o SMTP por um envio simulado, para o teste não usar a rede.
+        self.mailer = self.app.extensions["mailer"] = ConsoleMailer(echo=False)
+
+    def test_com_smtp_a_pagina_nao_mostra_a_ligacao(self):
+        self.register()
+        html = self.client.get("/auth/registo/pendente").get_data(as_text=True)
+        self.assertNotIn("/auth/confirmar/", html)
+        self.assertNotIn("Modo de desenvolvimento", html)

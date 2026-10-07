@@ -22,6 +22,13 @@ APP_NAME = "Recomendador de UCs opcionais"
 # Como o título de cada página aparece no separador do navegador.
 PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 
+# Ícone de olho junto dos campos de palavra-passe (texto lido por leitores de ecrã e ao passar o rato).
+SHOW_PASSWORD = "Mostrar palavra-passe"
+HIDE_PASSWORD = "Esconder palavra-passe"
+
+# Botão na barra do topo quando há sessão iniciada.
+LOGOUT_BUTTON = "Terminar sessão"
+
 # ---------------------------------------------------------------------------
 # Página «Criar conta» (/auth/registo)
 # ---------------------------------------------------------------------------
@@ -46,6 +53,10 @@ REGISTER_PRIVACY_AFTER_LINK = "."
 
 REGISTER_BUTTON = "Criar conta"
 
+# Ligação por baixo do formulário, para quem já tem conta.
+REGISTER_HAVE_ACCOUNT = "Já tem conta? "
+REGISTER_LOGIN_LINK = "Inicie sessão"
+
 # Mensagens de erro do formulário de registo.
 ERROR_EMAIL_REQUIRED = "Indique o seu email."
 ERROR_EMAIL_INVALID = "Indique um email válido, por exemplo nome@gmail.com."
@@ -60,6 +71,30 @@ ERROR_PRIVACY_REQUIRED = "É necessário aceitar a política de privacidade para
 ERROR_EMAIL_SEND_FAILED = "Não foi possível enviar o email de confirmação. Tente de novo dentro de alguns minutos."
 
 # ---------------------------------------------------------------------------
+# Página «Iniciar sessão» (/auth/entrar)
+# ---------------------------------------------------------------------------
+
+LOGIN_TITLE = "Iniciar sessão"
+LOGIN_INTRO = "Entre com o email e a palavra-passe com que criou a conta."
+LOGIN_EMAIL_LABEL = "Email"
+LOGIN_PASSWORD_LABEL = "Palavra-passe"
+LOGIN_BUTTON = "Entrar"
+LOGIN_NO_ACCOUNT = "Ainda não tem conta? "
+LOGIN_REGISTER_LINK = "Crie uma conta"
+
+# A mesma mensagem para email inexistente e palavra-passe errada (não revela que emails têm conta).
+ERROR_LOGIN_INVALID = "Email ou palavra-passe incorretos."
+ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que lhe enviámos para ativar a conta."
+
+# ---------------------------------------------------------------------------
+# Página inicial do aluno (/inicio), depois de iniciar sessão
+# ---------------------------------------------------------------------------
+
+HOME_TITLE = "Início"
+HOME_GREETING = "Olá, {email}"
+HOME_INTRO = "Tem a sessão iniciada. As recomendações de UCs opcionais vão aparecer aqui."
+
+# ---------------------------------------------------------------------------
 # Página «Confirme o seu email» (depois de criar a conta)
 # ---------------------------------------------------------------------------
 
@@ -70,6 +105,10 @@ PENDING_SENT_GENERIC = "Enviámos uma ligação de confirmação para o seu emai
 PENDING_HELP_BEFORE_LINK = "Não chegou? Veja a pasta de spam. Se a ligação expirar, volte a "
 PENDING_HELP_LINK = "criar a conta"
 PENDING_HELP_AFTER_LINK = " com o mesmo email para receber uma nova."
+
+# Só aparece em desenvolvimento (MAIL_BACKEND=console), quando não é enviado email real.
+DEV_LINK_NOTE = "Modo de desenvolvimento: não foi enviado nenhum email real. Use a ligação abaixo para confirmar a conta (também aparece no terminal)."
+DEV_LINK_BUTTON = "Confirmar a conta agora"
 
 # ---------------------------------------------------------------------------
 # Email de confirmação
@@ -92,6 +131,7 @@ CONFIRMATION_PAGE_TITLE = "Confirmação de email"
 
 CONFIRMED_TITLE = "Conta ativada"
 CONFIRMED_MESSAGE = "O seu email foi confirmado e a conta está ativa."
+CONFIRMED_LOGIN_LINK = "Iniciar sessão"
 
 ALREADY_CONFIRMED_TITLE = "Conta já ativa"
 ALREADY_CONFIRMED_MESSAGE = "Este email já tinha sido confirmado. Não precisa de fazer mais nada."

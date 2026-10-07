@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US02" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US02">
+    <bpmn:participant id="Participant_US02" name="US02 — Autenticação" processRef="Process_US02" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US02" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US02">
+      <bpmn:lane id="Lane_Aluno" name="Aluno">
+        <bpmn:flowNodeRef>Start_Entrar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Indicar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Usar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Terminar</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Sistema" name="Sistema">
+        <bpmn:flowNodeRef>Task_Validar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Credenciais</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Ativa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Sessao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Inicio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Apagar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Terminada</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Erro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Confirmar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_NaoIniciada</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Entrar" name="Quer entrar">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Indicar" name="Indicar email e palavra-passe">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_Validar" name="Validar o pedido e as credenciais">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gw_Credenciais" name="Credenciais corretas?">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gw_Ativa" name="Conta ativa?">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Sessao" name="Criar nova sessão">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Inicio" name="Mostrar a página inicial">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_Usar" name="Usar a aplicação">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Terminar" name="Terminar sessão">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_Apagar" name="Apagar a sessão">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_Terminada" name="Sessão terminada">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Erro" name="Mostrar mensagem genérica de erro">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Confirmar" name="Pedir para confirmar o email">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_NaoIniciada" name="Sessão não iniciada">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_Entrar" targetRef="Task_Indicar" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Indicar" targetRef="Task_Validar" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Validar" targetRef="Gw_Credenciais" />
+    <bpmn:sequenceFlow id="Flow_4" name="sim" sourceRef="Gw_Credenciais" targetRef="Gw_Ativa" />
+    <bpmn:sequenceFlow id="Flow_5" name="sim" sourceRef="Gw_Ativa" targetRef="Task_Sessao" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_Sessao" targetRef="Task_Inicio" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_Inicio" targetRef="Task_Usar" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_Usar" targetRef="Task_Terminar" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Terminar" targetRef="Task_Apagar" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_Apagar" targetRef="End_Terminada" />
+    <bpmn:sequenceFlow id="Flow_11" name="não" sourceRef="Gw_Credenciais" targetRef="Task_Erro" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_Erro" targetRef="Task_Indicar" />
+    <bpmn:sequenceFlow id="Flow_13" name="não" sourceRef="Gw_Ativa" targetRef="Task_Confirmar" />
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_Confirmar" targetRef="End_NaoIniciada" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_US02">
+    <bpmndi:BPMNPlane id="Plane_US02" bpmnElement="Collaboration_US02">
+      <bpmndi:BPMNShape id="Participant_US02_di" bpmnElement="Participant_US02" isHorizontal="true"><dc:Bounds x="30" y="20" width="1480" height="650" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Aluno_di" bpmnElement="Lane_Aluno" isHorizontal="true"><dc:Bounds x="60" y="20" width="1450" height="220" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Sistema_di" bpmnElement="Lane_Sistema" isHorizontal="true"><dc:Bounds x="60" y="240" width="1450" height="430" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Entrar_di" bpmnElement="Start_Entrar"><dc:Bounds x="132" y="112" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Indicar_di" bpmnElement="Task_Indicar"><dc:Bounds x="205" y="98" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Validar_di" bpmnElement="Task_Validar"><dc:Bounds x="365" y="348" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Credenciais_di" bpmnElement="Gw_Credenciais" isMarkerVisible="true"><dc:Bounds x="534" y="354" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Ativa_di" bpmnElement="Gw_Ativa" isMarkerVisible="true"><dc:Bounds x="664" y="354" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Sessao_di" bpmnElement="Task_Sessao"><dc:Bounds x="775" y="348" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Inicio_di" bpmnElement="Task_Inicio"><dc:Bounds x="925" y="348" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Usar_di" bpmnElement="Task_Usar"><dc:Bounds x="1095" y="98" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Terminar_di" bpmnElement="Task_Terminar"><dc:Bounds x="1255" y="98" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Apagar_di" bpmnElement="Task_Apagar"><dc:Bounds x="1255" y="348" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Terminada_di" bpmnElement="End_Terminada"><dc:Bounds x="1432" y="362" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Erro_di" bpmnElement="Task_Erro"><dc:Bounds x="495" y="498" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Confirmar_di" bpmnElement="Task_Confirmar"><dc:Bounds x="625" y="588" width="130" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_NaoIniciada_di" bpmnElement="End_NaoIniciada"><dc:Bounds x="812" y="602" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="168" y="130" /><di:waypoint x="205" y="130" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="335" y="130" /><di:waypoint x="352" y="130" /><di:waypoint x="352" y="380" /><di:waypoint x="365" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="495" y="380" /><di:waypoint x="534" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="586" y="380" /><di:waypoint x="664" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="716" y="380" /><di:waypoint x="775" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="905" y="380" /><di:waypoint x="925" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1055" y="380" /><di:waypoint x="1075" y="380" /><di:waypoint x="1075" y="130" /><di:waypoint x="1095" y="130" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="1225" y="130" /><di:waypoint x="1255" y="130" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9"><di:waypoint x="1320" y="162" /><di:waypoint x="1320" y="348" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="1385" y="380" /><di:waypoint x="1432" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11"><di:waypoint x="560" y="406" /><di:waypoint x="560" y="498" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12"><di:waypoint x="495" y="530" /><di:waypoint x="270" y="530" /><di:waypoint x="270" y="162" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13"><di:waypoint x="690" y="406" /><di:waypoint x="690" y="588" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14"><di:waypoint x="755" y="620" /><di:waypoint x="812" y="620" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

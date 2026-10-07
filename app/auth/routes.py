@@ -1,16 +1,18 @@
-"""Rotas HTTP do registo (US01)."""
+"""Rotas HTTP do registo (US01) e do início e fim de sessão (US02)."""
 from __future__ import annotations
 
-from flask import current_app, redirect, render_template, request, session, url_for
+from flask import current_app, g, redirect, render_template, request, session, url_for
 
 from .. import texts
 from ..db import get_db
 from ..mailer import Message
-from . import bp, services
-from .services import ConfirmationOutcome
+from . import bp, services, sessions
+from .services import ConfirmationOutcome, LoginOutcome
 from .validators import RegistrationInput, domains_hint
 
 _PENDING_EMAIL_KEY = "pending_email"
+# Só em desenvolvimento (MAIL_BACKEND=console): a ligação aparece também na página.
+_DEV_LINK_KEY = "dev_confirmation_link"
 
 _CONFIRMATION_STATUS = {
     ConfirmationOutcome.CONFIRMED: 200,
@@ -68,12 +70,15 @@ def register_submit():
         )
 
     session[_PENDING_EMAIL_KEY] = pending.email
+    if current_app.config["MAIL_BACKEND"] == "console":
+        session[_DEV_LINK_KEY] = link
     return redirect(url_for("auth.register_pending"))
 
 
 @bp.get("/registo/pendente")
 def register_pending():
-    return render_template("auth/pending.html", email=session.get(_PENDING_EMAIL_KEY))
+    dev_link = session.get(_DEV_LINK_KEY) if current_app.config["MAIL_BACKEND"] == "console" else None
+    return render_template("auth/pending.html", email=session.get(_PENDING_EMAIL_KEY), dev_link=dev_link)
 
 
 @bp.get("/confirmar/<token>")
@@ -84,3 +89,40 @@ def confirm(token: str):
     )
     response.headers["Cache-Control"] = "no-store"
     return response
+
+
+# -- US02: iniciar e terminar sessão -------------------------------------------------
+
+_LOGIN_ERRORS = {
+    LoginOutcome.INVALID_CREDENTIALS: (texts.ERROR_LOGIN_INVALID, 401),
+    LoginOutcome.INACTIVE: (texts.ERROR_LOGIN_INACTIVE, 403),
+}
+
+
+def _render_login(email: str = "", error: str | None = None, status: int = 200):
+    return render_template("auth/login.html", email=email, error=error), status
+
+
+@bp.get("/entrar")
+def login_form():
+    if g.user is not None:
+        return redirect(url_for("main.home"))
+    return _render_login()
+
+
+@bp.post("/entrar")
+def login_submit():
+    email = request.form.get("email", "")
+    result = services.authenticate(get_db(), email, request.form.get("password", ""))
+    if result.outcome is LoginOutcome.SUCCESS:
+        sessions.login_user(result.user_id)
+        return redirect(url_for("main.home"))
+    message, status = _LOGIN_ERRORS[result.outcome]
+    # A palavra-passe nunca volta ao navegador; o email sim, para não o reescrever.
+    return _render_login(email=email.strip(), error=message, status=status)
+
+
+@bp.post("/sair")
+def logout():
+    sessions.logout_user()
+    return redirect(url_for("auth.login_form"))

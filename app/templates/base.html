@@ -14,7 +14,15 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header class="site-header">{{ texts.APP_NAME }}</header>
+  <header class="site-header">
+    <span>{{ texts.APP_NAME }}</span>
+    {% if g.user %}
+      <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
+        <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+        <button type="submit">{{ texts.LOGOUT_BUTTON }}</button>
+      </form>
+    {% endif %}
+  </header>
   <main>
     <div class="panel">
       {% block content %}{% endblock %}

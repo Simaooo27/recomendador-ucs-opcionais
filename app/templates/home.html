@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set page_title = texts.HOME_TITLE %}
+
+{% block content %}
+<h1>{{ texts.HOME_GREETING.format(email=g.user["email"]) }}</h1>
+<p class="lead">{{ texts.HOME_INTRO }}</p>
+{% endblock %}

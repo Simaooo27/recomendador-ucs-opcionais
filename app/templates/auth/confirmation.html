@@ -5,9 +5,11 @@
 {% if outcome == "confirmed" %}
   <h1>{{ texts.CONFIRMED_TITLE }}</h1>
   <div class="alert alert-ok" role="status">{{ texts.CONFIRMED_MESSAGE }}</div>
+  <p><a href="{{ url_for('auth.login_form') }}">{{ texts.CONFIRMED_LOGIN_LINK }}</a></p>
 {% elif outcome == "already_confirmed" %}
   <h1>{{ texts.ALREADY_CONFIRMED_TITLE }}</h1>
   <p>{{ texts.ALREADY_CONFIRMED_MESSAGE }}</p>
+  <p><a href="{{ url_for('auth.login_form') }}">{{ texts.CONFIRMED_LOGIN_LINK }}</a></p>
 {% elif outcome == "expired" %}
   <h1>{{ texts.EXPIRED_TITLE }}</h1>
   <div class="alert alert-error" role="alert">{{ texts.EXPIRED_MESSAGE }}</div>

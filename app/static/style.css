@@ -27,6 +27,10 @@ body {
 }
 
 .site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 1.25rem;
   background: var(--accent);
   color: var(--accent-ink);
@@ -97,6 +101,22 @@ button:hover { background: var(--accent-hover); }
 
 a { color: var(--accent); }
 
+/* Botão «Terminar sessão» na barra do topo. */
+.logout { margin: 0; }
+.logout button {
+  width: auto;
+  white-space: nowrap;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background: transparent;
+  color: var(--accent-ink);
+  border: 1px solid currentColor;
+}
+.logout button:hover { background: rgba(255, 255, 255, 0.15); }
+
+/* Ligação entre «Criar conta» e «Iniciar sessão». */
+.switch { margin: 1.25rem 0 0; text-align: center; }
+
 :focus-visible { outline: 3px solid #2f6fdb; outline-offset: 2px; }
 
 @media (prefers-color-scheme: dark) {
@@ -106,6 +126,7 @@ a { color: var(--accent); }
     --danger: #ff9a9d; --danger-bg: #3a1618; --ok: #8be0b0; --ok-bg: #12301f;
   }
   .site-header { background: #0d1b33; color: #e7ebf1; }
+  .logout button { color: #e7ebf1; }
   button:hover { background: #b6cdff; }
   input[type="email"], input[type="password"] { border-color: #6b778a; }
 }

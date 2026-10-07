@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set page_title = texts.LOGIN_TITLE %}
+
+{% block content %}
+<h1>{{ texts.LOGIN_TITLE }}</h1>
+<p class="lead">{{ texts.LOGIN_INTRO }}</p>
+
+{% if error %}
+  <div class="alert alert-error" role="alert" id="login-error">{{ error }}</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('auth.login_submit') }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+
+  <div class="field">
+    <label for="email">{{ texts.LOGIN_EMAIL_LABEL }}</label>
+    <input id="email" name="email" type="email" autocomplete="username" required value="{{ email }}"
+           {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+  </div>
+
+  <div class="field">
+    <label for="password">{{ texts.LOGIN_PASSWORD_LABEL }}</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required
+           {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+  </div>
+
+  <button type="submit">{{ texts.LOGIN_BUTTON }}</button>
+</form>
+<p class="switch">{{ texts.LOGIN_NO_ACCOUNT }}<a href="{{ url_for('auth.register_form') }}">{{ texts.LOGIN_REGISTER_LINK }}</a></p>
+{% endblock %}

@@ -1,4 +1,4 @@
-"""Casos de uso do registo (US01): registar aluno e confirmar email."""
+"""Casos de uso das contas: registar aluno e confirmar email (US01), autenticar (US02)."""
 from __future__ import annotations
 
 import hmac
@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Mapping
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import repository
 from .tokens import TokenExpired, TokenInvalid, make_confirmation_token, read_confirmation_token
@@ -34,6 +34,23 @@ class PendingConfirmation:
     user_id: int
     email: str
     token: str
+
+
+class LoginOutcome(str, Enum):
+    SUCCESS = "success"
+    INVALID_CREDENTIALS = "invalid_credentials"
+    INACTIVE = "inactive"
+
+
+@dataclass(frozen=True)
+class LoginResult:
+    outcome: LoginOutcome
+    user_id: int | None = None
+
+
+# Hash usado quando o email não existe, para a verificação demorar o mesmo tempo
+# e não revelar que emails estão registados.
+_DUMMY_PASSWORD_HASH = generate_password_hash("palavra-passe-que-nao-existe")
 
 
 class ConfirmationOutcome(str, Enum):
@@ -112,3 +129,21 @@ def confirm_email(db: sqlite3.Connection, token: str, config: Mapping) -> Confir
     repository.activate_user(db, user_id, _utc_now())
     db.commit()
     return ConfirmationOutcome.CONFIRMED
+
+
+def authenticate(db: sqlite3.Connection, email: str, password: str) -> LoginResult:
+    """Verifica email e palavra-passe (US02).
+
+    - Email inexistente ou palavra-passe errada: ``INVALID_CREDENTIALS`` (a mesma resposta
+      nos dois casos, para não revelar que emails têm conta).
+    - Palavra-passe certa mas conta por confirmar: ``INACTIVE``.
+    """
+    user = repository.get_by_email(db, normalize_email(email))
+    if user is None:
+        check_password_hash(_DUMMY_PASSWORD_HASH, password)
+        return LoginResult(LoginOutcome.INVALID_CREDENTIALS)
+    if not password or not check_password_hash(user["password_hash"], password):
+        return LoginResult(LoginOutcome.INVALID_CREDENTIALS)
+    if not user["is_active"]:
+        return LoginResult(LoginOutcome.INACTIVE)
+    return LoginResult(LoginOutcome.SUCCESS, user_id=int(user["id"]))

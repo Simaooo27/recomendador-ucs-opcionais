@@ -57,4 +57,5 @@
 
   <button type="submit">{{ texts.REGISTER_BUTTON }}</button>
 </form>
+<p class="switch">{{ texts.REGISTER_HAVE_ACCOUNT }}<a href="{{ url_for('auth.login_form') }}">{{ texts.REGISTER_LOGIN_LINK }}</a></p>
 {% endblock %}

@@ -11,6 +11,11 @@ from tests.base import AppTestCase
 REQUIRED_PLACEHOLDERS = {
     "PAGE_TITLE_FORMAT": {"pagina", "aplicacao"},
     "HOME_GREETING": {"email"},
+    "ADMIN_DASHBOARD_GREETING": {"nome"},
+    "ADMIN_PASSWORD_HINT": {"minimo"},
+    "ADMIN_CREATED": {"nome"},
+    "ADMIN_REMOVED": {"nome"},
+    "CLI_ADMIN_CREATED": {"nome", "endereco"},
     "REGISTER_EMAIL_HINT": {"dominios"},
     "REGISTER_PASSWORD_HINT": {"minimo"},
     "ERROR_EMAIL_DOMAIN": {"dominios"},
@@ -22,7 +27,16 @@ REQUIRED_PLACEHOLDERS = {
 
 
 def _all_texts() -> dict[str, str]:
-    return {name: value for name, value in vars(texts).items() if name.isupper()}
+    """Todos os textos; os que são listas (ex.: ADMIN_UPCOMING) contam linha a linha."""
+    result = {}
+    for name, value in vars(texts).items():
+        if not name.isupper():
+            continue
+        if isinstance(value, list):
+            result.update({f"{name}[{i}]": item for i, item in enumerate(value)})
+        else:
+            result[name] = value
+    return result
 
 
 def _placeholders(text: str) -> set[str]:
@@ -92,7 +106,9 @@ class PasswordToggleTests(AppTestCase):
         # A política de segurança (CSP) não deixa correr scripts escritos dentro da página.
         html = self.client.get("/auth/entrar").get_data(as_text=True)
         self.assertIn('src="/static/password-toggle.js"', html)
-        self.assertEqual(self.client.get("/static/password-toggle.js").status_code, 200)
+        response = self.client.get("/static/password-toggle.js")
+        self.assertEqual(response.status_code, 200)
+        response.close()
 
     def test_o_campo_continua_a_ser_de_palavra_passe(self):
         html = self.client.get("/auth/registo").get_data(as_text=True)

@@ -7,8 +7,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | | |
 |---|---|
 | **Sprint atual** | Sprint 1 (em curso) |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão |
-| **Testes automáticos** | 107, todos a passar |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
+| **Testes automáticos** | 136, todos a passar |
 
 ## Índice
 
@@ -30,7 +30,7 @@ O plano foi revisto a 07/10/2026 (decisão do Product Owner): o Sprint 1 passou 
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
-| US03 | Perfis de aluno e administrador | Sprint 1 | Por fazer | — |
+| US03 | Perfis de aluno e administrador | Sprint 1 | Feita, em revisão | [docs/US03/](docs/US03/) |
 | US04 | Importar catálogo de cursos e UCs | Sprint 2 | Por fazer | — |
 | US05 | Consultar catálogo de opcionais | Sprint 2 | Por fazer | — |
 | US06 | Registar percurso | Sprint 2 | Por fazer | — |
@@ -57,7 +57,7 @@ O plano foi revisto a 07/10/2026 (decisão do Product Owner): o Sprint 1 passou 
 | US27 | Evitar conflitos de horário | Backlog | Por fazer | — |
 | US28 | Lembretes de avaliação | Backlog | Por fazer | — |
 
-Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 e US02).
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US03).
 
 ## 2. Documentação do projeto
 
@@ -71,6 +71,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
 | [US02](docs/US02/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US02 |
+| [US03](docs/US03/README.md) | Administradores e área de gestão: requisitos, use case, BPMN e como criar o primeiro administrador |
 
 ## 3. Alterar textos e cores
 
@@ -106,11 +107,17 @@ pip install -r requirements.txt
 export SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))")
 # Windows (PowerShell): $env:SECRET_KEY = python -c "import secrets; print(secrets.token_hex(32))"
 
-flask --app app init-db                # cria a base de dados (só da primeira vez)
+flask --app app init-db                # cria as tabelas (pode repetir: não apaga dados)
 flask --app app run --debug
 ```
 
 Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para criar conta. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **na própria página «Confirme o seu email»** (caixa amarela) e no terminal onde a aplicação está a correr.
+
+**Administradores (US03):** têm contas próprias, sem email, numa área que não aparece nas páginas dos alunos. O primeiro cria-se no terminal e depois entra-se em http://127.0.0.1:5000/gestao/entrar (ver [docs/US03/](docs/US03/README.md)):
+
+```bash
+flask --app app create-admin    # pede o nome e a palavra-passe
+```
 
 <details>
 <summary>Outras configurações (variáveis de ambiente)</summary>
@@ -125,6 +132,7 @@ A aplicação lê variáveis de ambiente (ver [`.env.example`](.env.example)). S
 | `MAIL_BACKEND` | `console` (escreve o email no terminal) ou `smtp` | `console` |
 | `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` | |
 | `SESSION_COOKIE_SECURE` | `true` em produção (HTTPS) | `false` |
+| `ADMIN_URL_PREFIX` | Endereço da área de gestão (administradores) | `gestao` |
 
 </details>
 
@@ -141,6 +149,7 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 | `tests/test_registration.py` | Formulário de registo, contas duplicadas, falha no envio do email, CSRF |
 | `tests/test_confirmation.py` | Ligação de confirmação: válida, repetida, adulterada, expirada |
 | `tests/test_login.py` | Iniciar e terminar sessão, mensagem genérica, páginas privadas |
+| `tests/test_gestao.py` | Administradores: contas separadas, primeiro administrador, área de gestão escondida |
 | `tests/test_validators.py` | Regras do email e da palavra-passe |
 | `tests/test_texts.py` | Ficheiro de textos: nada vazio e marcadores `{…}` no sítio |
 | `tests/test_app_factory.py` | Arranque e configuração da aplicação |
@@ -164,11 +173,17 @@ app/
   security.py       proteção CSRF e cabeçalhos de segurança
   mailer.py         envio de email (terminal ou SMTP)
   main.py           página inicial do aluno e política de privacidade
+  gestao/           área de gestão (administradores, US03); endereço em ADMIN_URL_PREFIX
+    routes.py         entrar, sair, painel e lista de administradores
+    services.py       criar, autenticar e remover administradores
+    sessions.py       sessão de administrador e proteção das páginas
+    cli.py            comandos create-admin e list-admins
 tests/              testes automáticos
 docs/               documentação (índice em docs/README.md)
   geral/            requisitos, regras de código e registo de uso de IA
   US01/             requisitos, use case, BPMN, prompt e diagramas da US01
   US02/             o mesmo para a US02
+  US03/             o mesmo para a US03
   USNN/             uma pasta por cada nova story, com a mesma estrutura
 .github/            modelos de issue (user story) e de Pull Request
 instance/           dados locais (ignorado pelo Git)

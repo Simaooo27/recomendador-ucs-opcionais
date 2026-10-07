@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% import "macros/password.html" as password with context %}
+{% set page_title = texts.ADMIN_LIST_TITLE %}
+{% set noindex = true %}
+
+{% block content %}
+<h1>{{ texts.ADMIN_LIST_TITLE }}</h1>
+<p class="lead">{{ texts.ADMIN_LIST_INTRO }}</p>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">{{ texts.ADMIN_COL_USERNAME }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_CREATED }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_CREATED_BY }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_LAST_LOGIN }}</th>
+        <th scope="col"><span class="visually-hidden">{{ texts.ADMIN_REMOVE_BUTTON }}</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for admin in admins %}
+        <tr>
+          <td>{{ admin["username"] }}{% if admin["id"] == g.admin["id"] %} {{ texts.ADMIN_YOU }}{% endif %}</td>
+          <td class="nowrap">{{ admin["created_at"][:10] }}</td>
+          <td>{{ admin["created_by"] or texts.ADMIN_CREATED_BY_TERMINAL }}</td>
+          <td class="nowrap">{{ admin["last_login_at"][:16].replace("T", " ") if admin["last_login_at"] else texts.ADMIN_NEVER }}</td>
+          <td>
+            {% if admin["id"] != g.admin["id"] %}
+              <form method="post" action="{{ url_for('gestao.admins_remove', admin_id=admin['id']) }}">
+                <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+                <button type="submit" class="button-small">{{ texts.ADMIN_REMOVE_BUTTON }}</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>{{ texts.ADMIN_NEW_TITLE }}</h2>
+<form method="post" action="{{ url_for('gestao.admins_create') }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+
+  <div class="field">
+    <label for="username">{{ texts.ADMIN_USERNAME_LABEL }}</label>
+    <input id="username" name="username" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" required
+           value="{{ values.get('username', '') }}"
+           {% if errors.username %}aria-invalid="true" aria-describedby="username-error"{% else %}aria-describedby="username-hint"{% endif %}>
+    {% if errors.username %}
+      <p class="error" id="username-error">{{ errors.username }}</p>
+    {% else %}
+      <p class="hint" id="username-hint">{{ texts.ADMIN_USERNAME_HINT }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="password">{{ texts.ADMIN_PASSWORD_LABEL }}</label>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="new-password" required
+             {% if errors.password %}aria-invalid="true" aria-describedby="password-error"{% else %}aria-describedby="password-hint"{% endif %}>
+      {{ password.toggle("password") }}
+    </div>
+    {% if errors.password %}
+      <p class="error" id="password-error">{{ errors.password }}</p>
+    {% else %}
+      <p class="hint" id="password-hint">{{ texts.ADMIN_PASSWORD_HINT.format(minimo=min_length) }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="password_confirm">{{ texts.ADMIN_PASSWORD_CONFIRM_LABEL }}</label>
+    <div class="password-field">
+      <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required
+             {% if errors.password_confirm %}aria-invalid="true" aria-describedby="password_confirm-error"{% endif %}>
+      {{ password.toggle("password_confirm") }}
+    </div>
+    {% if errors.password_confirm %}
+      <p class="error" id="password_confirm-error">{{ errors.password_confirm }}</p>
+    {% endif %}
+  </div>
+
+  <button type="submit">{{ texts.ADMIN_CREATE_BUTTON }}</button>
+</form>
+{% endblock %}

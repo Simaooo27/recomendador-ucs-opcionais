@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% set page_title = texts.ADMIN_DASHBOARD_TITLE %}
+{% set noindex = true %}
+
+{% block content %}
+<h1>{{ texts.ADMIN_DASHBOARD_TITLE }}</h1>
+<p>{{ texts.ADMIN_DASHBOARD_GREETING.format(nome=g.admin["username"]) }}</p>
+<p class="lead">{{ texts.ADMIN_DASHBOARD_INTRO }}</p>
+<ul class="plain-list">
+  {% for item in texts.ADMIN_UPCOMING %}
+    <li>{{ item }}</li>
+  {% endfor %}
+</ul>
+<p><a href="{{ url_for('gestao.admins') }}">{{ texts.ADMIN_NAV_ADMINS }}</a></p>
+{% endblock %}

@@ -31,6 +31,8 @@ def default_config() -> dict:
         "PASSWORD_MAX_LENGTH": 128,
         "CONFIRMATION_TOKEN_MAX_AGE_SECONDS": 24 * 60 * 60,
         "PRIVACY_POLICY_VERSION": "1.0",
+        # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
+        "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),
         # Email
         "MAIL_BACKEND": os.environ.get("MAIL_BACKEND", "console"),
         "MAIL_SERVER": os.environ.get("MAIL_SERVER", ""),

@@ -26,8 +26,9 @@ PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 SHOW_PASSWORD = "Mostrar palavra-passe"
 HIDE_PASSWORD = "Esconder palavra-passe"
 
-# Botão na barra do topo quando há sessão iniciada.
+# Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
+NAV_LABEL = "Menu"
 
 # ---------------------------------------------------------------------------
 # Página «Criar conta» (/auth/registo)
@@ -93,6 +94,61 @@ ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que l
 HOME_TITLE = "Início"
 HOME_GREETING = "Olá, {email}"
 HOME_INTRO = "Tem a sessão iniciada. As recomendações de UCs opcionais vão aparecer aqui."
+
+# ---------------------------------------------------------------------------
+# Área de gestão (administradores, US03). Endereço em ADMIN_URL_PREFIX (por omissão /gestao).
+# Nenhuma destas páginas tem ligações a partir das páginas dos alunos.
+# ---------------------------------------------------------------------------
+
+ADMIN_AREA_NAME = "Gestão"
+ADMIN_NAV_DASHBOARD = "Painel"
+ADMIN_NAV_ADMINS = "Administradores"
+
+ADMIN_LOGIN_TITLE = "Gestão — iniciar sessão"
+ADMIN_LOGIN_INTRO = "Área reservada aos administradores."
+ADMIN_USERNAME_LABEL = "Nome de utilizador"
+ADMIN_PASSWORD_LABEL = "Palavra-passe"
+ADMIN_LOGIN_BUTTON = "Entrar"
+ERROR_ADMIN_LOGIN_INVALID = "Nome de utilizador ou palavra-passe incorretos."
+
+ADMIN_DASHBOARD_TITLE = "Painel de gestão"
+ADMIN_DASHBOARD_GREETING = "Olá, {nome}."
+ADMIN_DASHBOARD_INTRO = "Nos próximos sprints, esta área vai permitir:"
+# Uma linha por funcionalidade prevista (pode acrescentar ou retirar linhas).
+ADMIN_UPCOMING = [
+    "Importar o catálogo de cursos e UCs a partir de um ficheiro CSV.",
+    "Abrir e fechar os períodos de avaliação.",
+    "Moderar comentários.",
+]
+
+ADMIN_LIST_TITLE = "Administradores"
+ADMIN_LIST_INTRO = "Os administradores têm contas próprias, separadas das contas dos alunos."
+ADMIN_COL_USERNAME = "Nome de utilizador"
+ADMIN_COL_CREATED = "Criado em"
+ADMIN_COL_CREATED_BY = "Criado por"
+ADMIN_COL_LAST_LOGIN = "Última entrada"
+ADMIN_CREATED_BY_TERMINAL = "terminal"
+ADMIN_NEVER = "nunca"
+ADMIN_YOU = "(você)"
+ADMIN_REMOVE_BUTTON = "Remover"
+ADMIN_NEW_TITLE = "Novo administrador"
+ADMIN_USERNAME_HINT = "3 a 30 caracteres: letras minúsculas, números, ponto, hífen ou sublinhado."
+ADMIN_PASSWORD_HINT = "Pelo menos {minimo} caracteres, com uma letra e um número."
+ADMIN_PASSWORD_CONFIRM_LABEL = "Repita a palavra-passe"
+ADMIN_CREATE_BUTTON = "Criar administrador"
+ADMIN_CREATED = "Administrador «{nome}» criado."
+ADMIN_REMOVED = "Administrador «{nome}» removido."
+ERROR_ADMIN_REMOVE_SELF = "Não pode remover a sua própria conta. Peça a outro administrador."
+ERROR_ADMIN_USERNAME_REQUIRED = "Indique um nome de utilizador."
+ERROR_ADMIN_USERNAME_FORMAT = "Use 3 a 30 caracteres: letras minúsculas, números, ponto, hífen ou sublinhado."
+ERROR_ADMIN_USERNAME_TAKEN = "Já existe um administrador com este nome."
+
+# Comandos de terminal (create-admin, list-admins).
+CLI_ADMIN_USERNAME_PROMPT = "Nome de utilizador"
+CLI_ADMIN_PASSWORD_PROMPT = "Palavra-passe"
+CLI_ADMIN_PASSWORD_CONFIRM_PROMPT = "Repita a palavra-passe"
+CLI_ADMIN_CREATED = "Administrador «{nome}» criado. Entre em {endereco}."
+CLI_NO_ADMINS = "Ainda não há administradores. Use: flask --app app create-admin"
 
 # ---------------------------------------------------------------------------
 # Página «Confirme o seu email» (depois de criar a conta)

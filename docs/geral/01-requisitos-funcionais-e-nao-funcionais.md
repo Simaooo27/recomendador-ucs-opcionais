@@ -4,7 +4,7 @@ Projeto 1 · Metodologias Ágeis (Scrum) · Recomendador de UCs opcionais
 
 **Versão 1.1 · rascunho para validação do Product Owner · 2026-10-01.** As alterações face à versão 1.0 estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
-Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [03-rf-us01-registo-email-institucional.md](03-rf-us01-registo-email-institucional.md).
+Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
 **Convenções.** RF = requisito funcional. RNF = requisito não funcional. RN = regra de negócio. Os requisitos descrevem *o quê*, não *como*; as decisões técnicas estão em [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md).
 
@@ -101,7 +101,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 | User story | Requisitos funcionais |
 |---|---|
-| US01 — Registo com email institucional | RF01 (ver [detalhe](03-rf-us01-registo-email-institucional.md)) |
+| US01 — Registo com email institucional | RF01 (ver [detalhe](../US01/requisitos.md)) |
 | US02 — Autenticação | RF02 (início e fim de sessão) |
 | US03 — Importar catálogo de UCs | RF05 |
 | US04 — Consultar catálogo de opcionais | RF07 |
@@ -150,7 +150,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 6 | RF03, RF04, RF06 e a recuperação de palavra-passe (RF02) não têm user story; as US27 e US28 não têm requisito. | Requisitos sem story nunca são implementados; stories sem requisito não têm critério de origem. | Ver a lista no fim da secção 4. | Por decidir |
 | 7 | A RN04 (mínimo de 5 avaliações) pode esconder quase tudo se a turma for pequena. | Numa demonstração com 20 alunos, muitas UCs ficam sem estatísticas e as explicações caem no ramo genérico. | Dataset sintético (US20) e recolha piloto cedo; o painel da US26 mostra quantas UCs já passam o mínimo. | Por decidir |
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
-| 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Confirmar e definir `ALLOWED_EMAIL_DOMAINS` (ver [03-rf-us01-registo-email-institucional.md](03-rf-us01-registo-email-institucional.md)). | Por decidir |
+| 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Confirmar e definir `ALLOWED_EMAIL_DOMAINS` (ver [US01/requisitos.md](../US01/requisitos.md)). | Por decidir |
 
 ## 6. Histórico de alterações
 

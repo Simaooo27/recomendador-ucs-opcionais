@@ -1,6 +1,6 @@
 # US01 — Use case: registo com email institucional
 
-![Diagrama de use case da US01](diagrams/use-case-us01.svg)
+![Diagrama de use case da US01](diagramas/use-case.svg)
 
 ## 1. Atores
 

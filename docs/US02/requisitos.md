@@ -29,6 +29,7 @@
 | **RF02.7** | Quem abre uma página privada sem sessão é redirecionado para o início de sessão. Uma sessão de uma conta que deixou de existir ou de estar ativa é terminada. |
 | **RF02.8** | A palavra-passe nunca é devolvida ao navegador nem registada em logs; em caso de erro, o formulário volta só com o email. |
 | **RF02.9** | A página inicial (`/`) leva à área do aluno com sessão iniciada e ao início de sessão sem ela. As páginas de registo e de início de sessão têm ligações uma para a outra. |
+| **RF02.10** | Os campos de palavra-passe (início de sessão e registo) têm um ícone de olho para mostrar ou esconder o que foi escrito. O ícone tem nome acessível («Mostrar/Esconder palavra-passe»), e a palavra-passe volta a ficar escondida ao enviar o formulário. Sem JavaScript, o ícone não aparece e o campo funciona como antes. |
 
 ## 3. Mensagens ao utilizador
 
@@ -53,6 +54,7 @@ Não há tabelas novas. A sessão guarda apenas o `user_id` (cookie assinado com
 | O logout termina a sessão. | RF02.6 | `LogoutTests` (3 testes: termina a sessão, exige CSRF, `GET` não permitido) |
 | Páginas privadas redirecionam para o login. | RF02.7, RF02.9 | `PrivatePageTests` (3 testes); `LoginFormTests` (2 testes) |
 | (Transversal) segurança | RF02.1, RNF02 | `LoginSecurityTests` (CSRF no login) |
+| (Pedido do PO) mostrar a palavra-passe | RF02.10 | `tests/test_texts.py` (`PasswordToggleTests`, 4 testes); comportamento no navegador verificado à mão |
 
 ## 6. Requisitos não funcionais aplicáveis
 

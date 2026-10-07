@@ -22,6 +22,10 @@ APP_NAME = "Recomendador de UCs opcionais"
 # Como o título de cada página aparece no separador do navegador.
 PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 
+# Ícone de olho junto dos campos de palavra-passe (texto lido por leitores de ecrã e ao passar o rato).
+SHOW_PASSWORD = "Mostrar palavra-passe"
+HIDE_PASSWORD = "Esconder palavra-passe"
+
 # Botão na barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
 

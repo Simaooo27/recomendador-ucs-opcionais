@@ -73,3 +73,27 @@ class TextsInPagesTests(AppTestCase):
         message = self.mailer.outbox[-1]
         self.assertEqual(message.subject, "Bem-vindo")
         self.assertIn("/auth/confirmar/", message.body)
+
+
+class PasswordToggleTests(AppTestCase):
+    """Ícone de olho para mostrar ou esconder a palavra-passe (registo e início de sessão)."""
+
+    def test_registo_tem_o_icone_nos_dois_campos(self):
+        html = self.client.get("/auth/registo").get_data(as_text=True)
+        self.assertIn('data-toggle-password="password"', html)
+        self.assertIn('data-toggle-password="password_confirm"', html)
+        self.assertIn('aria-label="Mostrar palavra-passe"', html)
+
+    def test_inicio_de_sessao_tem_o_icone(self):
+        html = self.client.get("/auth/entrar").get_data(as_text=True)
+        self.assertIn('data-toggle-password="password"', html)
+
+    def test_o_script_e_um_ficheiro_proprio(self):
+        # A política de segurança (CSP) não deixa correr scripts escritos dentro da página.
+        html = self.client.get("/auth/entrar").get_data(as_text=True)
+        self.assertIn('src="/static/password-toggle.js"', html)
+        self.assertEqual(self.client.get("/static/password-toggle.js").status_code, 200)
+
+    def test_o_campo_continua_a_ser_de_palavra_passe(self):
+        html = self.client.get("/auth/registo").get_data(as_text=True)
+        self.assertIn('id="password" name="password" type="password"', html)

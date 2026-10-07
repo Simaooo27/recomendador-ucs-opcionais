@@ -99,42 +99,45 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 ## 4. Rastreabilidade: user story → requisitos
 
-| User story | Requisitos funcionais |
-|---|---|
-| US01 — Registo com email pessoal | RF01 (ver [detalhe](../US01/requisitos.md)) |
-| US02 — Autenticação | RF02 (início e fim de sessão) |
-| US03 — Importar catálogo de UCs | RF05 |
-| US04 — Consultar catálogo de opcionais | RF07 |
-| US05 — Registar percurso | RF08, RF09 |
-| US06 — Avaliar opcional concluída | RF10, RF13 |
-| US07 — Avaliação rápida de obrigatórias | RF11 |
-| US08 — Comentário livre | RF12 |
-| US09 — Avaliações pseudonimizadas | RF15, RF16 |
-| US10 — Exportar e apagar dados | RF17 |
-| US11 — Recomendações de popularidade | RF20 |
-| US12 — Recomendações user-based | RF19, RF21 |
-| US13 — Explicação da recomendação | RF29 |
-| US14 — Preferência de carga de trabalho | RF26 |
-| US15 — Excluir UCs inválidas | RF24 |
-| US16 — Filtrar por semestre e ECTS | RF25 |
-| US17 — Esconder UCs sem vagas | RF27 |
-| US18 — Evitar conflitos de horário | RF28 |
-| US19 — Feedback sobre recomendações | RF30 |
-| US20 — Dataset sintético | RF31 |
-| US21 — Avaliação offline do motor | RF32 |
-| US22 — Fatorização de matrizes (SVD) | RF22 |
-| US23 — Comparação de estratégias | RF23 |
-| US24 — Períodos de avaliação | RF14 |
-| US25 — Moderar comentários | RF18 |
-| US26 — Painel de participação | RF33 |
-| US27 — Filtragem baseada em itens | sem RF associado |
-| US28 — Lembretes de avaliação | sem RF associado |
+As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([product-backlog.xlsx](product-backlog.xlsx)); a coluna «ID anterior» liga aos números usados antes dessa data.
+
+| User story | Requisitos funcionais | Sprint | ID anterior |
+|---|---|---|---|
+| US01 — Registo com email pessoal | RF01 (ver [detalhe](../US01/requisitos.md)) | Sprint 1 | US01 |
+| US02 — Autenticação | RF02 (início e fim de sessão) | Sprint 1 | US02 |
+| US03 — Perfis de aluno e administrador | RF04 | Sprint 1 | nova |
+| US04 — Importar catálogo de cursos e UCs | RF05 | Sprint 2 | US03 |
+| US05 — Consultar catálogo de opcionais | RF07 | Sprint 2 | US04 |
+| US06 — Registar percurso | RF08, RF09 | Sprint 2 | US05 |
+| US07 — Avaliar opcional concluída | RF10, RF13 | Sprint 2 | US06 |
+| US08 — Avaliação rápida de obrigatórias | RF11 | Sprint 2 | US07 |
+| US09 — Avaliações pseudonimizadas | RF15, RF16 | Sprint 2 | US09 |
+| US10 — Dataset sintético | RF31 | Sprint 3 | US20 |
+| US11 — Recomendações de popularidade | RF20 | Sprint 3 | US11 |
+| US12 — Recomendações user-based | RF19, RF21 | Sprint 3 | US12 |
+| US13 — Excluir UCs inválidas | RF24 | Sprint 3 | US15 |
+| US14 — Explicação da recomendação | RF29 | Sprint 3 | US13 |
+| US15 — Avaliação offline do motor | RF32 | Sprint 4 | US21 |
+| US16 — Períodos de avaliação | RF14 | Sprint 4 | US24 |
+| US17 — Exportar e apagar dados | RF17 | Sprint 4 | US10 |
+| US18 — Comentário livre | RF12 | Sprint 4 | US08 |
+| US19 — Moderar comentários | RF18 | Sprint 4 | US25 |
+| US20 — Filtrar por semestre e ECTS | RF25 | Sprint 4 | US16 |
+| US21 — Preferência de carga de trabalho | RF26 | Backlog | US14 |
+| US22 — Comparação de estratégias | RF23 | Backlog | US23 |
+| US23 — Esconder UCs sem vagas | RF27 | Backlog | US17 |
+| US24 — Feedback sobre recomendações | RF30 | Backlog | US19 |
+| US25 — Painel de participação | RF33 | Backlog | US26 |
+| US26 — Filtragem baseada em itens | sem RF associado | Backlog | US27 |
+| US27 — Evitar conflitos de horário | RF28 | Backlog | US18 |
+| US28 — Lembretes de avaliação | sem RF associado | Backlog | US28 |
+| *(fora do plano)* — Fatorização de matrizes (SVD) | RF22 | — | US22 |
 
 ### Lacunas a resolver pelo Product Owner
 
-- **Sem user story:** RF03 (curso e ano curricular do aluno), RF04 (distinção entre perfis Aluno e Administrador) e RF06 (criar, editar e desativar UCs individualmente).
+- **Sem user story:** RF03 (curso e ano curricular do aluno) e RF06 (criar, editar e desativar UCs individualmente). O RF04 (perfis Aluno e Administrador) passou a ter a US03.
 - **Parte sem user story:** a recuperação de palavra-passe, incluída no RF02.
-- **Sem requisito:** as user stories US27 e US28 não têm RF. Acrescentar o requisito ou retirar a story.
+- **Sem requisito:** as user stories US26 e US28 (antigas US27 e US28) não têm RF. Acrescentar o requisito ou retirar a story.
 
 ## 5. Dependências e pontos em aberto
 

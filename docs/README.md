@@ -39,6 +39,19 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US02/diagramas/bpmn.svg](US02/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
 | [US02/diagramas/bpmn.bpmn](US02/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 
+### [US03 — Perfis de aluno e administrador](US03/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US03/README.md](US03/README.md) | Resumo, como criar o primeiro administrador, código e testes |
+| [US03/requisitos.md](US03/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US03/use-case.md](US03/use-case.md) | Use case |
+| [US03/bpmn.md](US03/bpmn.md) | Processos BPMN |
+| [US03/prompt.md](US03/prompt.md) | Pedidos feitos à IA (incluindo a revisão do PO) |
+| [US03/diagramas/use-case.svg](US03/diagramas/use-case.svg) | Diagrama de use case |
+| [US03/diagramas/bpmn.svg](US03/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US03/diagramas/bpmn.bpmn](US03/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+
 ## Nova story
 
 Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [README da raiz](../README.md#estado-do-projeto).

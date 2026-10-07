@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US03" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US03">
+    <bpmn:participant id="Participant_US03_0" name="Criar o primeiro administrador" processRef="Process_US03_0" />
+    <bpmn:participant id="Participant_US03_1" name="Gerir a aplicação" processRef="Process_US03_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US03_0" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US03_0">
+      <bpmn:lane id="Lane_US03_0_0" name="Equipa (terminal)">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US03_0_1" name="Sistema">
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Instalar a aplicação">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="T1" name="Correr create-admin (nome e palavra-passe)">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="T2" name="Validar nome e palavra-passe">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="G1" name="Dados válidos?">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="G2" name="Nome livre?">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+      <bpmn:outgoing>F8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="T3" name="Guardar o administrador (palavra-passe com hash)">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="E1" name="Administrador criado">
+      <bpmn:incoming>F6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="T4" name="Mostrar o erro">
+      <bpmn:incoming>F7</bpmn:incoming>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="T5" name="Mostrar «já existe»">
+      <bpmn:incoming>F8</bpmn:incoming>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="E2" name="Não criado">
+      <bpmn:incoming>F9</bpmn:incoming>
+      <bpmn:incoming>F10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" sourceRef="S1" targetRef="T1" />
+    <bpmn:sequenceFlow id="F2" sourceRef="T1" targetRef="T2" />
+    <bpmn:sequenceFlow id="F3" sourceRef="T2" targetRef="G1" />
+    <bpmn:sequenceFlow id="F4" name="sim" sourceRef="G1" targetRef="G2" />
+    <bpmn:sequenceFlow id="F5" name="sim" sourceRef="G2" targetRef="T3" />
+    <bpmn:sequenceFlow id="F6" sourceRef="T3" targetRef="E1" />
+    <bpmn:sequenceFlow id="F7" name="não" sourceRef="G1" targetRef="T4" />
+    <bpmn:sequenceFlow id="F8" name="não" sourceRef="G2" targetRef="T5" />
+    <bpmn:sequenceFlow id="F9" sourceRef="T4" targetRef="E2" />
+    <bpmn:sequenceFlow id="F10" sourceRef="T5" targetRef="E2" />
+  </bpmn:process>
+  <bpmn:process id="Process_US03_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US03_1">
+      <bpmn:lane id="Lane_US03_1_0" name="Administrador">
+        <bpmn:flowNodeRef>S2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>U1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>U2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>U3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E3</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US03_1_1" name="Sistema">
+        <bpmn:flowNodeRef>H1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>H2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V4</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S2" name="Quer gerir a aplicação">
+      <bpmn:outgoing>G1_</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="U1" name="Abrir o endereço da gestão">
+      <bpmn:incoming>G1_</bpmn:incoming>
+      <bpmn:outgoing>G2_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="H1" name="Sessão de administrador?">
+      <bpmn:incoming>G2_</bpmn:incoming>
+      <bpmn:outgoing>G3_</bpmn:outgoing>
+      <bpmn:outgoing>G9_</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="V1" name="Mostrar o início de sessão (com o erro, se houver)">
+      <bpmn:incoming>G3_</bpmn:incoming>
+      <bpmn:incoming>G7_</bpmn:incoming>
+      <bpmn:outgoing>G4_</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="U2" name="Indicar nome e palavra-passe">
+      <bpmn:incoming>G4_</bpmn:incoming>
+      <bpmn:outgoing>G5_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="H2" name="Credenciais corretas?">
+      <bpmn:incoming>G5_</bpmn:incoming>
+      <bpmn:outgoing>G6_</bpmn:outgoing>
+      <bpmn:outgoing>G7_</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="V3" name="Criar sessão de administrador">
+      <bpmn:incoming>G6_</bpmn:incoming>
+      <bpmn:outgoing>G8_</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="V4" name="Mostrar o painel">
+      <bpmn:incoming>G8_</bpmn:incoming>
+      <bpmn:incoming>G9_</bpmn:incoming>
+      <bpmn:outgoing>G10_</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="U3" name="Criar ou remover administradores">
+      <bpmn:incoming>G10_</bpmn:incoming>
+      <bpmn:outgoing>G11_</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="E3" name="Gestão feita">
+      <bpmn:incoming>G11_</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="G1_" sourceRef="S2" targetRef="U1" />
+    <bpmn:sequenceFlow id="G2_" sourceRef="U1" targetRef="H1" />
+    <bpmn:sequenceFlow id="G3_" name="não" sourceRef="H1" targetRef="V1" />
+    <bpmn:sequenceFlow id="G4_" sourceRef="V1" targetRef="U2" />
+    <bpmn:sequenceFlow id="G5_" sourceRef="U2" targetRef="H2" />
+    <bpmn:sequenceFlow id="G6_" name="sim" sourceRef="H2" targetRef="V3" />
+    <bpmn:sequenceFlow id="G7_" name="não" sourceRef="H2" targetRef="V1" />
+    <bpmn:sequenceFlow id="G8_" sourceRef="V3" targetRef="V4" />
+    <bpmn:sequenceFlow id="G9_" name="sim" sourceRef="H1" targetRef="V4" />
+    <bpmn:sequenceFlow id="G10_" sourceRef="V4" targetRef="U3" />
+    <bpmn:sequenceFlow id="G11_" sourceRef="U3" targetRef="E3" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_US03">
+    <bpmndi:BPMNPlane id="Plane_US03" bpmnElement="Collaboration_US03">
+      <bpmndi:BPMNShape id="Participant_US03_0_di" bpmnElement="Participant_US03_0" isHorizontal="true"><dc:Bounds x="30" y="20" width="1150" height="460" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US03_0_0_di" bpmnElement="Lane_US03_0_0" isHorizontal="true"><dc:Bounds x="60" y="20" width="1120" height="170" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US03_0_1_di" bpmnElement="Lane_US03_0_1" isHorizontal="true"><dc:Bounds x="60" y="190" width="1120" height="290" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S1_di" bpmnElement="S1"><dc:Bounds x="132" y="87" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T1_di" bpmnElement="T1"><dc:Bounds x="220" y="73" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T2_di" bpmnElement="T2"><dc:Bounds x="380" y="268" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G1_di" bpmnElement="G1" isMarkerVisible="true"><dc:Bounds x="564" y="274" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G2_di" bpmnElement="G2" isMarkerVisible="true"><dc:Bounds x="694" y="274" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T3_di" bpmnElement="T3"><dc:Bounds x="800" y="268" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E1_di" bpmnElement="E1"><dc:Bounds x="992" y="282" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T4_di" bpmnElement="T4"><dc:Bounds x="520" y="383" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T5_di" bpmnElement="T5"><dc:Bounds x="800" y="383" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E2_di" bpmnElement="E2"><dc:Bounds x="1092" y="397" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="168" y="105" /><di:waypoint x="220" y="105" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="360" y="105" /><di:waypoint x="375" y="105" /><di:waypoint x="375" y="300" /><di:waypoint x="380" y="300" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="520" y="300" /><di:waypoint x="564" y="300" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="616" y="300" /><di:waypoint x="694" y="300" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="746" y="300" /><di:waypoint x="800" y="300" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6"><di:waypoint x="940" y="300" /><di:waypoint x="992" y="300" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7"><di:waypoint x="590" y="326" /><di:waypoint x="590" y="383" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8"><di:waypoint x="720" y="326" /><di:waypoint x="720" y="415" /><di:waypoint x="800" y="415" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9"><di:waypoint x="590" y="447" /><di:waypoint x="590" y="465" /><di:waypoint x="1110" y="465" /><di:waypoint x="1110" y="433" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10"><di:waypoint x="940" y="415" /><di:waypoint x="1092" y="415" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_US03_1_di" bpmnElement="Participant_US03_1" isHorizontal="true"><dc:Bounds x="30" y="510" width="1150" height="500" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US03_1_0_di" bpmnElement="Lane_US03_1_0" isHorizontal="true"><dc:Bounds x="60" y="510" width="1120" height="190" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US03_1_1_di" bpmnElement="Lane_US03_1_1" isHorizontal="true"><dc:Bounds x="60" y="700" width="1120" height="310" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S2_di" bpmnElement="S2"><dc:Bounds x="132" y="582" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="U1_di" bpmnElement="U1"><dc:Bounds x="220" y="568" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="H1_di" bpmnElement="H1" isMarkerVisible="true"><dc:Bounds x="424" y="764" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V1_di" bpmnElement="V1"><dc:Bounds x="540" y="758" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="U2_di" bpmnElement="U2"><dc:Bounds x="540" y="568" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="H2_di" bpmnElement="H2" isMarkerVisible="true"><dc:Bounds x="754" y="764" width="52" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V3_di" bpmnElement="V3"><dc:Bounds x="860" y="758" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V4_di" bpmnElement="V4"><dc:Bounds x="1020" y="758" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="U3_di" bpmnElement="U3"><dc:Bounds x="1020" y="568" width="140" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E3_di" bpmnElement="E3"><dc:Bounds x="912" y="582" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="G1__di" bpmnElement="G1_"><di:waypoint x="168" y="600" /><di:waypoint x="220" y="600" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G2__di" bpmnElement="G2_"><di:waypoint x="360" y="600" /><di:waypoint x="380" y="600" /><di:waypoint x="380" y="790" /><di:waypoint x="424" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G3__di" bpmnElement="G3_"><di:waypoint x="476" y="790" /><di:waypoint x="540" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G4__di" bpmnElement="G4_"><di:waypoint x="610" y="758" /><di:waypoint x="610" y="632" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G5__di" bpmnElement="G5_"><di:waypoint x="680" y="600" /><di:waypoint x="700" y="600" /><di:waypoint x="700" y="790" /><di:waypoint x="754" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G6__di" bpmnElement="G6_"><di:waypoint x="806" y="790" /><di:waypoint x="860" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G7__di" bpmnElement="G7_"><di:waypoint x="780" y="816" /><di:waypoint x="780" y="880" /><di:waypoint x="610" y="880" /><di:waypoint x="610" y="822" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G8__di" bpmnElement="G8_"><di:waypoint x="1000" y="790" /><di:waypoint x="1020" y="790" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G9__di" bpmnElement="G9_"><di:waypoint x="450" y="816" /><di:waypoint x="450" y="960" /><di:waypoint x="1090" y="960" /><di:waypoint x="1090" y="822" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G10__di" bpmnElement="G10_"><di:waypoint x="1090" y="758" /><di:waypoint x="1090" y="632" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G11__di" bpmnElement="G11_"><di:waypoint x="1020" y="600" /><di:waypoint x="948" y="600" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

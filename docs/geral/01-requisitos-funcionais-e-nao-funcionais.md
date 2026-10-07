@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · Recomendador de UCs opcionais
 
-**Versão 1.1 · rascunho para validação do Product Owner · 2026-10-01.** As alterações face à versão 1.0 estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.2 · rascunho para validação do Product Owner · 2026-10-07.** As alterações face à versão 1.0 estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
@@ -12,7 +12,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 ### Módulo A — Contas e perfis
 
-- **RF01** O sistema deve permitir o registo de alunos apenas com email institucional.
+- **RF01** O sistema deve permitir o registo de alunos com email pessoal, confirmado por uma ligação enviada para esse email.
 - **RF02** O sistema deve permitir autenticação, recuperação de palavra-passe e fim de sessão.
 - **RF03** O aluno deve indicar o curso e o ano curricular atual.
 - **RF04** O sistema deve distinguir os perfis Aluno e Administrador, com permissões distintas.
@@ -101,7 +101,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 | User story | Requisitos funcionais |
 |---|---|
-| US01 — Registo com email institucional | RF01 (ver [detalhe](../US01/requisitos.md)) |
+| US01 — Registo com email pessoal | RF01 (ver [detalhe](../US01/requisitos.md)) |
 | US02 — Autenticação | RF02 (início e fim de sessão; ver [detalhe](../US02/requisitos.md)) |
 | US03 — Importar catálogo de UCs | RF05 |
 | US04 — Consultar catálogo de opcionais | RF07 |
@@ -150,7 +150,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 6 | RF03, RF04, RF06 e a recuperação de palavra-passe (RF02) não têm user story; as US27 e US28 não têm requisito. | Requisitos sem story nunca são implementados; stories sem requisito não têm critério de origem. | Ver a lista no fim da secção 4. | Por decidir |
 | 7 | A RN04 (mínimo de 5 avaliações) pode esconder quase tudo se a turma for pequena. | Numa demonstração com 20 alunos, muitas UCs ficam sem estatísticas e as explicações caem no ramo genérico. | Dataset sintético (US20) e recolha piloto cedo; o painel da US26 mostra quantas UCs já passam o mínimo. | Por decidir |
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
-| 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Confirmar e definir `ALLOWED_EMAIL_DOMAINS` (ver [US01/requisitos.md](../US01/requisitos.md)). | Por decidir |
+| 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Aceitar email pessoal; a restrição a um domínio fica como opção (`ALLOWED_EMAIL_DOMAINS`, ver [US01/requisitos.md](../US01/requisitos.md)). | **Alterado:** RF01 (versão 1.2). |
 
 ## 6. Histórico de alterações
 
@@ -158,5 +158,6 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 |---|---|---|
 | 1.0 | 2026-09-30 | Versão inicial (33 RF, 9 RNF, 6 RN), igual ao documento Word. |
 | 1.1 | 2026-10-01 | RNF01, RNF02, RNF05 e RNF06 reescritos para refletirem a segurança e a tecnologia decididas. Novos RNF10 (acessibilidade) e RNF11 (idioma). RN05 com definição numérica; novas RN07 (escalas) e RN08 (privacidade nas explicações). Novas secções 5 e 6 e matriz de rastreabilidade. |
+| 1.2 | 2026-10-07 | RF01: registo com email pessoal, por decisão do Product Owner (ponto 9 da secção 5). |
 
 O ficheiro Word e o Excel do backlog continuam na versão 1.0. Depois de o Product Owner validar a 1.1, devem ser atualizados a partir deste documento.

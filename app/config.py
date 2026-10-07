@@ -25,7 +25,8 @@ def default_config() -> dict:
         "SECRET_KEY": os.environ.get("SECRET_KEY"),
         "DATABASE": os.environ.get("DATABASE_PATH"),
         # Registo (US01)
-        "ALLOWED_EMAIL_DOMAINS": _env_list("ALLOWED_EMAIL_DOMAINS", "iscap.ipp.pt"),
+        # Vazio (por omissão) = aceita qualquer email. Para exigir um domínio, ex.: "iscap.ipp.pt".
+        "ALLOWED_EMAIL_DOMAINS": _env_list("ALLOWED_EMAIL_DOMAINS", ""),
         "PASSWORD_MIN_LENGTH": 8,
         "PASSWORD_MAX_LENGTH": 128,
         "CONFIRMATION_TOKEN_MAX_AGE_SECONDS": 24 * 60 * 60,

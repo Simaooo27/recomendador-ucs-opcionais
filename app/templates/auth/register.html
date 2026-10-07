@@ -21,7 +21,13 @@
     {% if errors.email %}
       <p class="error" id="email-error">{{ errors.email }}</p>
     {% else %}
-      <p class="hint" id="email-hint">{{ texts.REGISTER_EMAIL_HINT.format(dominios=domains_hint) }}</p>
+      <p class="hint" id="email-hint">
+        {%- if domains_hint -%}
+          {{ texts.REGISTER_EMAIL_HINT.format(dominios=domains_hint) }}
+        {%- else -%}
+          {{ texts.REGISTER_EMAIL_HINT_ANY }}
+        {%- endif -%}
+      </p>
     {% endif %}
   </div>
 

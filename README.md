@@ -6,7 +6,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 1 (em curso) |
+| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · a seguir: Sprint 2 |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
 | **Testes automáticos** | 136, todos a passar |
 
@@ -24,13 +24,15 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint Goal do Sprint 1:** um aluno cria conta, entra e sai, e há um administrador com permissões próprias.
 
+**Sprint 1 concluído a 07/10/2026:** 10 de 10 SP. As três stories estão no `main`, com testes e documentação.
+
 O plano foi revisto a 07/10/2026 (decisão do Product Owner): o Sprint 1 passou a ter três stories, ajustado à velocidade real, e as stories foram renumeradas pela nova ordem. O backlog completo, com o plano de sprints e o número anterior de cada story, está em [docs/geral/product-backlog.xlsx](docs/geral/product-backlog.xlsx).
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
-| US03 | Perfis de aluno e administrador | Sprint 1 | Feita, em revisão | [docs/US03/](docs/US03/) |
+| US03 | Perfis de aluno e administrador | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
 | US04 | Importar catálogo de cursos e UCs | Sprint 2 | Por fazer | — |
 | US05 | Consultar catálogo de opcionais | Sprint 2 | Por fazer | — |
 | US06 | Registar percurso | Sprint 2 | Por fazer | — |

@@ -69,6 +69,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 |---|---|
 | [Requisitos funcionais e não funcionais](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) | Todos os requisitos (RF, RNF), regras de negócio e ligação às user stories |
 | [Regras de geração de código](docs/geral/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
+| [Guia do código](docs/geral/03-guia-do-codigo.md) | Onde está cada coisa (incluindo o CSS), onde mexer para alterar, quem escreveu o quê |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
@@ -157,6 +158,8 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 | `tests/test_app_factory.py` | Arranque e configuração da aplicação |
 
 ## 6. Organização do código
+
+Explicação completa, ficheiro a ficheiro, no [Guia do código](docs/geral/03-guia-do-codigo.md).
 
 ```
 app/

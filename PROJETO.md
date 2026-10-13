@@ -1,6 +1,6 @@
 # Recomendador de UCs opcionais
 
-Aplicação web que ajuda os alunos a escolher unidades curriculares opcionais com base na experiência de colegas com percursos e gostos parecidos.
+Aplicação web que ajuda os alunos a escolher unidades curriculares opcionais ou cursos, com base na experiência de colegas com percursos e gostos parecidos.
 
 Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 

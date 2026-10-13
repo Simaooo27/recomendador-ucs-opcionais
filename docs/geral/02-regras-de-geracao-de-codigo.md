@@ -23,7 +23,8 @@ Estas regras aplicam-se a **todo** o código, testes e documentação gerados co
 | Framework web | Flask 3.x |
 | Base de dados | SQLite pela biblioteca padrão (`sqlite3`), com consultas parametrizadas. Mudar para outro motor ou ORM exige decisão da equipa |
 | Testes | `unittest` da biblioteca padrão (o `pytest` também os executa) |
-| Motor de recomendação (sprints 2 a 4) | `pandas` e `numpy`; `scikit-surprise` só para a estratégia SVD (US22) |
+| Motor de recomendação (a partir da US11) | `pandas` e `numpy`; `scikit-surprise` só para a estratégia SVD (US22) |
+| LLM (US30) | Sempre através da interface `ClienteLLM` e de um adaptador por fornecedor ([03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md#42-adapter--ligação-ao-llm-us30)). Só `app/llm/adaptadores.py` pode importar a biblioteca de um fornecedor. Os testes usam o `LLMFalso` |
 | Novas dependências | Só com justificação escrita no Pull Request (para que serve, alternativa na biblioteca padrão, licença, manutenção) e atualização de `requirements.txt` |
 
 ## 3. Estrutura e responsabilidades
@@ -55,6 +56,7 @@ docs/
 - As **rotas** não contêm regras de negócio; os **serviços** não conhecem `request` nem `session`; os **repositórios** não decidem nada.
 - Cada função faz uma coisa. Funções puras (validação, cálculos de similaridade) ficam separadas do acesso a dados para serem testáveis sem base de dados.
 - O motor de recomendação (RNF07) vive num módulo próprio, com interface comum às estratégias.
+- Os padrões de desenho do projeto (os que já existem e os previstos para o catálogo, a orientação e o LLM) estão em [03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md). Os pacotes novos nascem com a story que os usa.
 
 ## 4. Estilo
 
@@ -105,7 +107,7 @@ docs/
 
 **A IA não pode:**
 - decidir requisitos ou prioridades (é do Product Owner);
-- receber dados reais de alunos, segredos ou credenciais num prompt;
+- receber dados reais de alunos, segredos ou credenciais num prompt (o mesmo vale para o LLM usado dentro da aplicação: RNF12);
 - fazer commit ou merge sem revisão humana;
 - ser citada como justificação: quem faz o commit responde pelo código.
 
@@ -119,6 +121,7 @@ docs/
 - [ ] SQL parametrizado, CSRF nos POST, sem `|safe`.
 - [ ] Sem dependências novas, ou com justificação escrita.
 - [ ] Rotas finas, regras nos serviços, validação em funções puras.
+- [ ] A funcionalidade nova segue os padrões de [03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md), ou o PR explica porque não.
 - [ ] Mensagens ao utilizador claras e em português de Portugal.
 - [ ] O código gerado por IA foi lido e entendido por quem submete.
 - [ ] A entrada no registo de uso de IA está preenchida.

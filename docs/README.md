@@ -1,13 +1,16 @@
 # Documentação
 
-A documentação está organizada por user story: os documentos que valem para todo o projeto ficam em `geral/` e cada story tem a sua pasta `USNN/`, sempre com a mesma estrutura. O estado de cada story está no [README da raiz](../README.md#estado-do-projeto).
+A documentação está organizada por user story: os documentos que valem para todo o projeto ficam em `geral/` e cada story tem a sua pasta `USNN/`, sempre com a mesma estrutura. O estado de cada story está no [PROJETO.md](../PROJETO.md#1-estado-do-projeto).
 
 ## Documentos gerais
 
 | Documento | Conteúdo |
 |---|---|
+| [geral/00-visao-do-produto.md](geral/00-visao-do-produto.md) | Visão do produto: públicos, percurso como sequência de decisões, âmbito do MVP e metas |
 | [geral/01-requisitos-funcionais-e-nao-funcionais.md](geral/01-requisitos-funcionais-e-nao-funcionais.md) | Requisitos funcionais, não funcionais, regras de negócio e rastreabilidade |
 | [geral/02-regras-de-geracao-de-codigo.md](geral/02-regras-de-geracao-de-codigo.md) | Regras para gerar e rever código com IA, checklist de revisão e Definition of Done |
+| [geral/03-arquitetura-e-padroes.md](geral/03-arquitetura-e-padroes.md) | Tecnologias, padrões de desenho existentes e previstos, estrutura dos módulos novos |
+| [../dados/README.md](../dados/README.md) | Catálogo de instituições e cursos: colunas, fontes e lacunas |
 | [geral/registo-de-uso-de-ia.md](geral/registo-de-uso-de-ia.md) | Registo de uso de IA |
 | [geral/product-backlog.xlsx](geral/product-backlog.xlsx) | Product Backlog: stories, plano de sprints e resumo MoSCoW |
 
@@ -54,4 +57,4 @@ A documentação está organizada por user story: os documentos que valem para t
 
 ## Nova story
 
-Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [README da raiz](../README.md#estado-do-projeto).
+Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [PROJETO.md](../PROJETO.md#1-estado-do-projeto).

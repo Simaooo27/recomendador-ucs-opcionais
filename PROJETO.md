@@ -1,12 +1,12 @@
 # Recomendador de UCs opcionais
 
-Aplicação web que ajuda os alunos a escolher unidades curriculares opcionais ou cursos, com base na experiência de colegas com percursos e gostos parecidos.
+Aplicação web que ajuda a escolher cursos e unidades curriculares opcionais, com base nas preferências de cada pessoa e na experiência de outros estudantes. Serve quem ainda não tem curso (sugere cursos de várias instituições, com um LLM) e quem já é aluno (sugere opcionais). Ver a [visão do produto](docs/geral/00-visao-do-produto.md).
 
 Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · a seguir: Sprint 2 |
+| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · a seguir: Sprint 2 (catálogo de cursos e questionário de orientação) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
 | **Testes automáticos** | 136, todos a passar |
 
@@ -26,30 +26,39 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint 1 concluído a 07/10/2026:** 10 de 10 SP. As três stories estão no `main`, com testes e documentação.
 
-O plano foi revisto a 07/10/2026 (decisão do Product Owner): o Sprint 1 passou a ter três stories, ajustado à velocidade real, e as stories foram renumeradas pela nova ordem. O backlog completo, com o plano de sprints e o número anterior de cada story, está em [docs/geral/product-backlog.xlsx](docs/geral/product-backlog.xlsx).
+**Replaneamento de 13/10/2026 (decisão dos Product Owners, com sugestões do docente):** o OptaBem passa a orientar também quem ainda não tem curso, com um catálogo de várias instituições e sugestões de curso feitas por um LLM. Entram as stories US29 a US31 e o resto do plano foi reordenado. Os números das stories ficam fixos a partir desta data; a tabela segue a ordem de trabalho. O detalhe está no [backlog](docs/geral/product-backlog.xlsx) e na [visão do produto](docs/geral/00-visao-do-produto.md).
+
+| Sprint | Sprint Goal |
+|---|---|
+| Sprint 2 | Uma pessoa indecisa descobre e compara cursos de várias instituições e responde ao questionário de orientação. |
+| Sprint 3 | O OptaBem sugere cursos com explicação e o utilizador escolhe, ficando a decisão registada no percurso. |
+| Sprint 4 | Quem já é aluno regista o percurso, avalia opcionais de forma anónima e recebe sugestões por popularidade. |
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
 | US03 | Perfis de aluno e administrador | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
-| US04 | Importar catálogo de cursos e UCs | Sprint 2 | Por fazer | — |
-| US05 | Consultar catálogo de opcionais | Sprint 2 | Por fazer | — |
-| US06 | Registar percurso | Sprint 2 | Por fazer | — |
-| US07 | Avaliar opcional concluída | Sprint 2 | Por fazer | — |
-| US08 | Avaliação rápida de obrigatórias | Sprint 2 | Por fazer | — |
-| US09 | Avaliações pseudonimizadas | Sprint 2 | Por fazer | — |
-| US10 | Dataset sintético | Sprint 3 | Por fazer | — |
-| US11 | Recomendações de popularidade | Sprint 3 | Por fazer | — |
-| US12 | Recomendações user-based | Sprint 3 | Por fazer | — |
-| US13 | Excluir UCs inválidas | Sprint 3 | Por fazer | — |
-| US14 | Explicação da recomendação | Sprint 3 | Por fazer | — |
-| US15 | Avaliação offline do motor | Sprint 4 | Por fazer | — |
-| US16 | Períodos de avaliação | Sprint 4 | Por fazer | — |
-| US17 | Exportar e apagar dados | Sprint 4 | Por fazer | — |
-| US18 | Comentário livre | Sprint 4 | Por fazer | — |
-| US19 | Moderar comentários | Sprint 4 | Por fazer | — |
-| US20 | Filtrar por semestre e ECTS | Sprint 4 | Por fazer | — |
+| US04 | Importar catálogo de instituições e cursos | Sprint 2 | Por fazer | — |
+| US05 | Consultar e comparar cursos | Sprint 2 | Por fazer | — |
+| US29 | Questionário de orientação | Sprint 2 | Por fazer | — |
+| US30 | Sugestão de cursos com LLM | Sprint 3 | Por fazer | — |
+| US31 | Escolher curso e linha do tempo do percurso | Sprint 3 | Por fazer | — |
+| US06 | Registar percurso | Sprint 4 | Por fazer | — |
+| US07 | Avaliar opcional concluída | Sprint 4 | Por fazer | — |
+| US09 | Avaliações pseudonimizadas | Sprint 4 | Por fazer | — |
+| US11 | Recomendações de popularidade | Sprint 4 | Por fazer | — |
+| US08 | Avaliação rápida de obrigatórias | Backlog | Por fazer | — |
+| US10 | Dataset sintético | Backlog | Por fazer | — |
+| US12 | Recomendações user-based | Backlog | Por fazer | — |
+| US13 | Excluir UCs inválidas | Backlog | Por fazer | — |
+| US14 | Explicação da recomendação | Backlog | Por fazer | — |
+| US15 | Avaliação offline do motor | Backlog | Por fazer | — |
+| US16 | Períodos de avaliação | Backlog | Por fazer | — |
+| US17 | Exportar e apagar dados | Backlog | Por fazer | — |
+| US18 | Comentário livre | Backlog | Por fazer | — |
+| US19 | Moderar comentários | Backlog | Por fazer | — |
+| US20 | Filtrar por semestre e ECTS | Backlog | Por fazer | — |
 | US21 | Preferência de carga de trabalho | Backlog | Por fazer | — |
 | US22 | Comparação de estratégias | Backlog | Por fazer | — |
 | US23 | Esconder UCs sem vagas | Backlog | Por fazer | — |
@@ -67,8 +76,11 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 
 | Documento | O que contém |
 |---|---|
+| [Visão do produto](docs/geral/00-visao-do-produto.md) | Para quem é o OptaBem, o percurso como sequência de decisões, âmbito do MVP e metas |
 | [Requisitos funcionais e não funcionais](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) | Todos os requisitos (RF, RNF), regras de negócio e ligação às user stories |
 | [Regras de geração de código](docs/geral/02-regras-de-geracao-de-codigo.md) | Como a equipa escreve, testa e revê código (incluindo com IA) |
+| [Arquitetura e padrões de desenho](docs/geral/03-arquitetura-e-padroes.md) | Tecnologias e porquê, padrões que o código já usa e os previstos (Strategy, Adapter, Factory, Decorator…) |
+| [Catálogo de cursos](dados/README.md) | 30 licenciaturas de 12 instituições (DGES), para importar na US04 |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
@@ -182,7 +194,8 @@ app/
     cli.py            comandos create-admin e list-admins
 tests/              testes automáticos
 docs/               documentação (índice em docs/README.md)
-  geral/            requisitos, regras de código e registo de uso de IA
+dados/              catálogo de instituições e cursos (dados públicos, ver dados/README.md)
+  geral/            visão, requisitos, regras de código, arquitetura e registo de uso de IA
   US01/             requisitos, use case, BPMN, prompt e diagramas da US01
   US02/             o mesmo para a US02
   US03/             o mesmo para a US03

@@ -1,8 +1,8 @@
 # Requisitos funcionais e não funcionais
 
-Projeto 1 · Metodologias Ágeis (Scrum) · Recomendador de UCs opcionais
+Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.2 · rascunho para validação do Product Owner · 2026-10-07.** As alterações face à versão 1.0 estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.3 · rascunho para validação do Product Owner · 2026-10-13.** Esta versão acompanha a nova [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e o OptaBem sugere cursos com um LLM. As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
@@ -14,16 +14,19 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 - **RF01** O sistema deve permitir o registo de alunos com email pessoal, confirmado por uma ligação enviada para esse email.
 - **RF02** O sistema deve permitir autenticação, recuperação de palavra-passe e fim de sessão.
-- **RF03** O aluno deve indicar o curso e o ano curricular atual.
+- **RF03** O utilizador pode indicar o curso, a instituição e o ano curricular atual, ou declarar que ainda não tem curso. *(Alterado na 1.3: antes era obrigatório ter curso.)*
 - **RF04** O sistema deve distinguir os perfis Aluno e Administrador, com permissões distintas.
 
-### Módulo B — Catálogo de UCs
+### Módulo B — Catálogo de instituições, cursos e UCs
 
-- **RF05** O administrador deve poder importar UCs a partir de CSV (código, nome, curso, ano, semestre, ECTS, tipo obrigatória/opcional, descrição).
+- **RF05** O administrador deve poder importar, a partir de CSV, instituições e cursos (códigos DGES, grau, ECTS, vagas, nota do último colocado, área, descrição, saídas profissionais e fontes) e, para cada curso, as suas UCs (código, nome, ano, semestre, ECTS, tipo obrigatória/opcional, descrição). *(Alterado na 1.3: antes só UCs de um curso.)*
 - **RF06** O administrador deve poder criar, editar e desativar UCs individualmente.
-- **RF07** O aluno deve poder consultar o catálogo de opcionais com descrição e estatísticas agregadas (médias de interesse, carga e dificuldade), sujeitas à regra de anonimato RN04.
+- **RF07** O aluno deve poder consultar o catálogo de opcionais do seu curso com descrição e estatísticas agregadas (médias de interesse, carga e dificuldade), sujeitas à regra de anonimato RN04.
+- **RF34** Qualquer utilizador deve poder consultar e filtrar os cursos do catálogo (por área, instituição e localidade) e comparar até 3 cursos lado a lado. *(Nova na 1.3.)*
 
 ### Módulo C — Percurso académico
+
+- **RF35** O sistema deve registar cada decisão do percurso (escolha ou mudança de curso, escolha de opcionais) com data, opções sugeridas e opção escolhida, e mostrá-las numa linha do tempo. *(Nova na 1.3.)*
 
 - **RF08** O aluno deve poder indicar as UCs (obrigatórias e opcionais) que concluiu e o ano letivo/semestre em que as frequentou.
 - **RF09** O sistema deve impedir registos duplicados da mesma UC no mesmo ano letivo.
@@ -70,6 +73,13 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RF32** O sistema deve correr uma avaliação offline (divisão treino/teste) e reportar RMSE, MAE, Precision@K e cobertura para cada estratégia.
 - **RF33** O administrador deve ter um painel com indicadores de participação (nº de avaliações, nº de alunos, grau de esparsidade da matriz).
 
+### Módulo J — Orientação de curso *(novo na 1.3)*
+
+- **RF36** O utilizador sem curso deve poder responder a um questionário de orientação (interesses, tipo de trabalho preferido, saídas que imagina, preferências de localidade e regime), e refazê-lo mais tarde.
+- **RF37** A partir das respostas, o sistema deve sugerir 2 a 3 cursos do catálogo, cada um com uma explicação em linguagem simples, usando um modelo de linguagem (LLM).
+- **RF38** O fornecedor do LLM deve ser configurável (incluindo um modelo local e um modelo falso para testes), sem alterar o resto da aplicação.
+- **RF39** O utilizador deve poder escolher um dos cursos sugeridos, ou outro do catálogo, passando a ter esse curso no perfil (RF03).
+
 ## 2. Requisitos não funcionais
 
 | ID | Categoria | Requisito |
@@ -85,6 +95,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 | RNF09 | Uso de IA | O código gerado com apoio de IA é revisto, testado e assinalado; as ferramentas e os prompts relevantes são documentados no relatório. |
 | RNF10 | Acessibilidade | Formulários com etiquetas associadas aos campos, erros ligados ao campo, contraste suficiente e navegação completa por teclado (referência: WCAG 2.1 nível AA, nos aspetos básicos). |
 | RNF11 | Idioma | Interface e mensagens em português de Portugal. |
+| RNF12 | Uso de LLM | Ao LLM só são enviadas as respostas do questionário e dados do catálogo, nunca email, nome ou outros dados identificativos. Chaves de API ficam fora do código e do repositório. Os testes usam um LLM falso e correm sem rede. A sugestão tem de ser mostrada em menos de 15 segundos ou o utilizador recebe uma mensagem clara. *(Nova na 1.3.)* |
 
 ## 3. Regras de negócio
 
@@ -96,33 +107,38 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RN06** O critério principal de recomendação é o **interesse**; carga e dificuldade funcionam como ajuste/filtro segundo a preferência do aluno.
 - **RN07** As avaliações são números inteiros de 1 a 5. Interesse: 1 = nenhum, 5 = muito. Carga de trabalho: 1 = muito leve, 5 = muito pesada. Dificuldade: 1 = muito fácil, 5 = muito difícil. *(Nova.)*
 - **RN08** As explicações das recomendações seguem a RN04: o número de colegas semelhantes e a média de interesse deles só se mostram quando contribuíram pelo menos 5 colegas; caso contrário, a explicação indica apenas que a UC é bem avaliada pelos colegas em geral. *(Nova; fecha uma lacuna de privacidade entre RF29 e RN04.)*
+- **RN09** Só podem ser mostrados ao utilizador cursos que existem no catálogo: qualquer curso devolvido pelo LLM que não exista é descartado antes de chegar ao ecrã. *(Nova na 1.3.)*
+- **RN10** As sugestões nunca atribuem um curso ou uma opcional automaticamente: o utilizador confirma sempre a escolha. *(Nova na 1.3.)*
 
 ## 4. Rastreabilidade: user story → requisitos
 
-As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([product-backlog.xlsx](product-backlog.xlsx)); a coluna «ID anterior» liga aos números usados antes dessa data.
+As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([product-backlog.xlsx](product-backlog.xlsx)); a coluna «ID anterior» liga aos números usados antes dessa data. **A partir de 13/10/2026 os números ficam fixos:** as stories novas recebem o número seguinte (US29 em diante) e a ordem de trabalho é a do plano de sprints.
 
 | User story | Requisitos funcionais | Sprint | ID anterior |
 |---|---|---|---|
 | US01 — Registo com email pessoal | RF01 (ver [detalhe](../US01/requisitos.md)) | Sprint 1 | US01 |
 | US02 — Autenticação | RF02 (início e fim de sessão; ver [detalhe](../US02/requisitos.md)) | Sprint 1 | US02 |
 | US03 — Perfis de aluno e administrador | RF04 (ver [detalhe](../US03/requisitos.md)) | Sprint 1 | nova |
-| US04 — Importar catálogo de cursos e UCs | RF05 | Sprint 2 | US03 |
-| US05 — Consultar catálogo de opcionais | RF07 | Sprint 2 | US04 |
-| US06 — Registar percurso | RF08, RF09 | Sprint 2 | US05 |
-| US07 — Avaliar opcional concluída | RF10, RF13 | Sprint 2 | US06 |
-| US08 — Avaliação rápida de obrigatórias | RF11 | Sprint 2 | US07 |
-| US09 — Avaliações pseudonimizadas | RF15, RF16 | Sprint 2 | US09 |
-| US10 — Dataset sintético | RF31 | Sprint 3 | US20 |
-| US11 — Recomendações de popularidade | RF20 | Sprint 3 | US11 |
-| US12 — Recomendações user-based | RF19, RF21 | Sprint 3 | US12 |
-| US13 — Excluir UCs inválidas | RF24 | Sprint 3 | US15 |
-| US14 — Explicação da recomendação | RF29 | Sprint 3 | US13 |
-| US15 — Avaliação offline do motor | RF32 | Sprint 4 | US21 |
-| US16 — Períodos de avaliação | RF14 | Sprint 4 | US24 |
-| US17 — Exportar e apagar dados | RF17 | Sprint 4 | US10 |
-| US18 — Comentário livre | RF12 | Sprint 4 | US08 |
-| US19 — Moderar comentários | RF18 | Sprint 4 | US25 |
-| US20 — Filtrar por semestre e ECTS | RF25 | Sprint 4 | US16 |
+| US04 — Importar catálogo de instituições e cursos | RF05 (instituições e cursos) | Sprint 2 | US03 |
+| US05 — Consultar e comparar cursos | RF34 | Sprint 2 | US04 |
+| US29 — Questionário de orientação | RF36 | Sprint 2 | nova (13/10) |
+| US30 — Sugestão de cursos com LLM | RF37, RF38, RNF12, RN09, RN10 | Sprint 3 | nova (13/10) |
+| US31 — Escolher curso e linha do tempo do percurso | RF03, RF35, RF39, RN10 | Sprint 3 | nova (13/10) |
+| US06 — Registar percurso | RF05 (UCs), RF08, RF09 | Sprint 4 | US05 |
+| US07 — Avaliar opcional concluída | RF10, RF13 | Sprint 4 | US06 |
+| US09 — Avaliações pseudonimizadas | RF15, RF16 | Sprint 4 | US09 |
+| US11 — Recomendações de popularidade | RF07, RF20 | Sprint 4 | US11 |
+| US08 — Avaliação rápida de obrigatórias | RF11 | Backlog | US07 |
+| US10 — Dataset sintético | RF31 | Backlog | US20 |
+| US12 — Recomendações user-based | RF19, RF21 | Backlog | US12 |
+| US13 — Excluir UCs inválidas | RF24 | Backlog | US15 |
+| US14 — Explicação da recomendação | RF29 | Backlog | US13 |
+| US15 — Avaliação offline do motor | RF32 | Backlog | US21 |
+| US16 — Períodos de avaliação | RF14 | Backlog | US24 |
+| US17 — Exportar e apagar dados | RF17 | Backlog | US10 |
+| US18 — Comentário livre | RF12 | Backlog | US08 |
+| US19 — Moderar comentários | RF18 | Backlog | US25 |
+| US20 — Filtrar por semestre e ECTS | RF25 | Backlog | US16 |
 | US21 — Preferência de carga de trabalho | RF26 | Backlog | US14 |
 | US22 — Comparação de estratégias | RF23 | Backlog | US23 |
 | US23 — Esconder UCs sem vagas | RF27 | Backlog | US17 |
@@ -135,9 +151,10 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 
 ### Lacunas a resolver pelo Product Owner
 
-- **Sem user story:** RF03 (curso e ano curricular do aluno) e RF06 (criar, editar e desativar UCs individualmente). O RF04 (perfis Aluno e Administrador) passou a ter a US03.
+- **Sem user story:** RF06 (criar, editar e desativar UCs individualmente). O RF03 passou a ter a US31 e o RF04 a US03.
 - **Parte sem user story:** a recuperação de palavra-passe, incluída no RF02.
 - **Sem requisito:** as user stories US26 e US28 (antigas US27 e US28) não têm RF. Acrescentar o requisito ou retirar a story.
+- **Privacidade das avaliações:** com a US17 (exportar e apagar dados) no backlog, o RNF01 fica por cumprir nesta release. Ver o ponto 11 da secção 5.
 
 ## 5. Dependências e pontos em aberto
 
@@ -154,6 +171,9 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 7 | A RN04 (mínimo de 5 avaliações) pode esconder quase tudo se a turma for pequena. | Numa demonstração com 20 alunos, muitas UCs ficam sem estatísticas e as explicações caem no ramo genérico. | Dataset sintético (US20) e recolha piloto cedo; o painel da US26 mostra quantas UCs já passam o mínimo. | Por decidir |
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
 | 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Aceitar email pessoal; a restrição a um domínio fica como opção (`ALLOWED_EMAIL_DOMAINS`, ver [US01/requisitos.md](../US01/requisitos.md)). | **Alterado:** RF01 (versão 1.2). |
+| 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Manter o plano e rever na Sprint Review do Sprint 2; se a velocidade se mantiver, a US09 ou a US11 passa para o backlog. | Por decidir |
+| 11 | A exportação e o apagamento de dados (US17, RF17) ficam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | Por decidir |
+| 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições de `dados/catalogo-cursos-mvp.csv` antes da US30; a Gestão da Universidade de Aveiro ainda não tem descrição. | Por decidir |
 
 ## 6. Histórico de alterações
 
@@ -162,5 +182,6 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.0 | 2026-09-30 | Versão inicial (33 RF, 9 RNF, 6 RN), igual ao documento Word. |
 | 1.1 | 2026-10-01 | RNF01, RNF02, RNF05 e RNF06 reescritos para refletirem a segurança e a tecnologia decididas. Novos RNF10 (acessibilidade) e RNF11 (idioma). RN05 com definição numérica; novas RN07 (escalas) e RN08 (privacidade nas explicações). Novas secções 5 e 6 e matriz de rastreabilidade. |
 | 1.2 | 2026-10-07 | RF01: registo com email pessoal, por decisão do Product Owner (ponto 9 da secção 5). |
+| 1.3 | 2026-10-13 | Nova [visão do produto](00-visao-do-produto.md). RF03, RF05 e RF07 alterados; novos RF34 a RF39 (comparar cursos, linha do tempo, orientação de curso com LLM), RNF12 (uso de LLM), RN09 e RN10. Rastreabilidade com as stories novas US29 a US31 e o novo plano de sprints. Pontos 10 a 12 da secção 5. |
 
 O ficheiro Word e o Excel do backlog continuam na versão 1.0. Depois de o Product Owner validar a 1.1, devem ser atualizados a partir deste documento.

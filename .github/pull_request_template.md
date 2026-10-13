@@ -24,6 +24,7 @@ Secção 10 de [docs/geral/02-regras-de-geracao-de-codigo.md](../docs/geral/02-r
 - [ ] SQL parametrizado, CSRF nos POST, sem `|safe`.
 - [ ] Sem dependências novas, ou com justificação escrita.
 - [ ] Rotas finas, regras nos serviços, validação em funções puras.
+- [ ] A funcionalidade nova segue os padrões de [03-arquitetura-e-padroes.md](../docs/geral/03-arquitetura-e-padroes.md), ou o PR explica porque não.
 - [ ] Mensagens ao utilizador claras e em português de Portugal.
 - [ ] O código gerado por IA foi lido e entendido por quem submete.
 - [ ] A entrada no registo de uso de IA está preenchida.

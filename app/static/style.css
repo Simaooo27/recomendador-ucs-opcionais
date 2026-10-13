@@ -1,63 +1,153 @@
-/* Cores da aplicação: mude aqui e a alteração aplica-se a todas as páginas.
-   Cada cor é um código hexadecimal (#rrggbb). Pode escolher cores em https://htmlcolorcodes.com */
+/* ==========================================================================
+   Aspeto da aplicação (Recomendador de UCs opcionais)
+   ==========================================================================
+
+   Este é o único ficheiro de estilos. Todas as páginas o usam (ver
+   app/templates/base.html). Para encontrar uma secção, use Ctrl+F no VS Code
+   e procure pelo número, por exemplo «2.».
+
+   ÍNDICE
+     1. Cores ........................ mudar as cores de todas as páginas
+     2. Página e painel .............. fundo, largura do painel central
+     3. Barra do topo ................ nome da aplicação, menu, «Terminar sessão»
+     4. Texto ........................ títulos, parágrafos, ligações, listas
+     5. Formulários .................. campos, etiquetas, ajudas, erros, ícone de olho
+     6. Botões ....................... botão principal e botão pequeno («Remover»)
+     7. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
+     8. Tabelas ...................... lista de administradores (gestão)
+     9. Modo escuro .................. cores quando o computador está em modo escuro
+
+   Dica: para ver o efeito de uma alteração, guarde o ficheiro e recarregue a
+   página no navegador com Ctrl+F5 (força o navegador a ler o CSS novo).
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Cores
+   Mude aqui e a alteração aplica-se a todas as páginas. Cada cor é um código
+   hexadecimal (#rrggbb); pode escolher cores em https://htmlcolorcodes.com
+   As cores do modo escuro estão na secção 9.
+   -------------------------------------------------------------------------- */
 :root {
-  --ink: #1b2430;        /* texto principal */
-  --muted: #5b6675;      /* texto secundário (ajudas e introduções) */
-  --line: #cfd6df;       /* contornos dos campos e do painel */
-  --paper: #ffffff;      /* fundo do painel central */
-  --page: #f3f5f8;       /* fundo da página */
-  --accent: #1f3864;     /* barra do topo, botões e ligações */
+  --ink: #1b2430;          /* texto principal */
+  --muted: #5b6675;        /* texto secundário (ajudas e introduções) */
+  --line: #cfd6df;         /* contornos dos campos e do painel */
+  --paper: #ffffff;        /* fundo do painel central */
+  --page: #f3f5f8;         /* fundo da página */
+  --accent: #1f3864;       /* barra do topo, botões e ligações */
   --accent-hover: #162a4d; /* botões quando o rato passa por cima */
-  --accent-ink: #ffffff; /* texto sobre a cor de destaque */
-  --danger: #a4161a;     /* mensagens de erro */
-  --danger-bg: #fdecec;  /* fundo das caixas de erro */
-  --ok: #17603a;         /* mensagens de sucesso */
-  --ok-bg: #e8f5ee;      /* fundo das caixas de sucesso */
+  --accent-ink: #ffffff;   /* texto sobre a cor de destaque */
+  --danger: #a4161a;       /* mensagens de erro */
+  --danger-bg: #fdecec;    /* fundo das caixas de erro */
+  --ok: #17603a;           /* mensagens de sucesso */
+  --ok-bg: #e8f5ee;        /* fundo das caixas de sucesso */
+  /* Tipo de letra de todas as páginas e espaço entre linhas. */
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
 }
 
+
+/* --------------------------------------------------------------------------
+   2. Página e painel
+   O conteúdo de cada página fica num painel branco ao centro (.panel).
+   -------------------------------------------------------------------------- */
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--page);
   color: var(--ink);
-  font-size: 1rem;
+  font-size: 1rem;         /* tamanho base da letra; aumentar aqui aumenta tudo */
 }
 
+main {
+  max-width: 32rem;        /* largura máxima do painel nas páginas dos alunos */
+  margin: 2rem auto;
+  padding: 0 1.25rem 3rem;
+}
+
+/* As páginas da gestão usam um painel mais largo, por causa das tabelas. */
+main.wide { max-width: 52rem; }
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;   /* cantos arredondados */
+  padding: 1.5rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Barra do topo
+   Nome da aplicação à esquerda; com sessão iniciada, o menu e o botão
+   «Terminar sessão» à direita (templates/base.html).
+   -------------------------------------------------------------------------- */
 .site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.25rem;   /* altura da barra */
   background: var(--accent);
   color: var(--accent-ink);
   font-weight: 600;
 }
+.site-header > span { margin-right: auto; }   /* nome da aplicação */
 
-main {
-  max-width: 32rem;
-  margin: 2rem auto;
-  padding: 0 1.25rem 3rem;
+/* Menu (Início, Painel, Administradores) e etiqueta com o nome do administrador. */
+.user-nav { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
+.user-nav a { color: var(--accent-ink); }
+.role-badge { padding: 0.15rem 0.5rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+
+/* Botão «Terminar sessão». */
+.logout { margin: 0; }
+.logout button {
+  width: auto;
+  white-space: nowrap;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background: transparent;
+  color: var(--accent-ink);
+  border: 1px solid currentColor;
+}
+.logout button:hover { background: rgba(255, 255, 255, 0.15); }
+
+/* Ecrãs estreitos (telemóvel): o menu passa para uma segunda linha. */
+@media (max-width: 30rem) {
+  .site-header { flex-wrap: wrap; }
+  .user-nav { order: 3; width: 100%; }
 }
 
-.panel {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-}
 
-h1 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 0.5rem; }
+/* --------------------------------------------------------------------------
+   4. Texto
+   -------------------------------------------------------------------------- */
+h1 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 0.5rem; }   /* título da página */
+h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }                /* subtítulo */
 p { margin: 0 0 1rem; }
-.lead { color: var(--muted); }
+.lead { color: var(--muted); }                                      /* frase de introdução */
+.plain-list { margin: 0 0 1rem; padding-left: 1.2rem; }
 
-.field { margin-bottom: 1.25rem; }
-label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
-.hint { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0; }
+a { color: var(--accent); }
 
+/* Ligação entre «Criar conta» e «Iniciar sessão», por baixo do formulário. */
+.switch { margin: 1.25rem 0 0; text-align: center; }
+
+/* Texto só para leitores de ecrã (invisível no ecrã). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Contorno azul à volta do elemento selecionado com o teclado (Tab). */
+:focus-visible { outline: 3px solid #2f6fdb; outline-offset: 2px; }
+
+
+/* --------------------------------------------------------------------------
+   5. Formulários
+   -------------------------------------------------------------------------- */
+.field { margin-bottom: 1.25rem; }                                   /* espaço entre campos */
+label { display: block; font-weight: 600; margin-bottom: 0.25rem; }  /* nome do campo */
+.hint { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0; }  /* ajuda por baixo do campo */
+
+/* Caixas de texto (email, nome de utilizador, palavra-passe). */
 input[type="email"],
 input[type="password"],
 input[type="text"],
@@ -71,9 +161,19 @@ input[type="text"],
   border-radius: 0.375rem;
 }
 
+/* Campo com erro: contorno vermelho mais grosso. */
 input[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; }
 
-/* Campo de palavra-passe com o ícone de olho (mostrar/esconder) do lado direito. */
+/* Mensagem de erro por baixo do campo. */
+.error { color: var(--danger); font-size: 0.95rem; margin: 0.35rem 0 0; }
+
+/* Caixa de aceitação (política de privacidade). */
+.check { display: flex; gap: 0.6rem; align-items: flex-start; }
+.check input { margin-top: 0.3rem; width: 1.1rem; height: 1.1rem; }
+.check label { font-weight: 400; margin: 0; }
+
+/* Campo de palavra-passe com o ícone de olho (mostrar/esconder) do lado direito.
+   O ícone vem de templates/macros/password.html e o clique de static/password-toggle.js. */
 .password-field { position: relative; }
 .password-field input { padding-right: 3rem; }
 .password-toggle {
@@ -96,24 +196,11 @@ input[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; }
 .password-toggle[aria-pressed="true"] .icon-show { display: none; }
 .password-toggle[aria-pressed="true"] .icon-hide { display: block; }
 
-.check { display: flex; gap: 0.6rem; align-items: flex-start; }
-.check input { margin-top: 0.3rem; width: 1.1rem; height: 1.1rem; }
-.check label { font-weight: 400; margin: 0; }
 
-.error { color: var(--danger); font-size: 0.95rem; margin: 0.35rem 0 0; }
-
-.alert {
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1.25rem;
-  border: 1px solid;
-}
-.alert-error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
-.alert-ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
-/* Caixa só de desenvolvimento, com a ligação de confirmação. */
-.alert-dev { background: #fff8e1; color: #5c4400; border-color: #c99a00; border-style: dashed; }
-.alert-dev p:last-child { margin: 0; }
-
+/* --------------------------------------------------------------------------
+   6. Botões
+   -------------------------------------------------------------------------- */
+/* Botão principal («Criar conta», «Entrar», «Criar administrador»). */
 button {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -127,53 +214,43 @@ button {
 }
 button:hover { background: var(--accent-hover); }
 
-a { color: var(--accent); }
-
-/* Menu da barra do topo (com sessão iniciada) e etiqueta com o nome do administrador. */
-.site-header > span { margin-right: auto; }
-.user-nav { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
-.user-nav a { color: var(--accent-ink); }
-.role-badge { padding: 0.15rem 0.5rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
-@media (max-width: 30rem) {
-  .site-header { flex-wrap: wrap; }
-  .user-nav { order: 3; width: 100%; }
-}
-h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }
-.plain-list { margin: 0 0 1rem; padding-left: 1.2rem; }
-
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-/* As páginas da gestão usam um painel mais largo, por causa das tabelas. */
-main.wide { max-width: 52rem; }
-
-/* Tabela da lista de administradores. */
-.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-th, td { text-align: left; padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { font-weight: 600; }
-td.nowrap { white-space: nowrap; }
-td form { margin: 0; }
+/* Botão pequeno e vermelho («Remover» na lista de administradores). */
 .button-small { width: auto; padding: 0.35rem 0.7rem; font-size: 0.85rem; background: transparent; color: var(--danger); border: 1px solid var(--danger); }
 .button-small:hover { background: var(--danger-bg); }
 
-/* Botão «Terminar sessão» na barra do topo. */
-.logout { margin: 0; }
-.logout button {
-  width: auto;
-  white-space: nowrap;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  background: transparent;
-  color: var(--accent-ink);
-  border: 1px solid currentColor;
+
+/* --------------------------------------------------------------------------
+   7. Caixas de mensagem
+   -------------------------------------------------------------------------- */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid;
 }
-.logout button:hover { background: rgba(255, 255, 255, 0.15); }
+.alert-error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }  /* erro */
+.alert-ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }                 /* sucesso */
+/* Caixa amarela só de desenvolvimento, com a ligação de confirmação. */
+.alert-dev { background: #fff8e1; color: #5c4400; border-color: #c99a00; border-style: dashed; }
+.alert-dev p:last-child { margin: 0; }
 
-/* Ligação entre «Criar conta» e «Iniciar sessão». */
-.switch { margin: 1.25rem 0 0; text-align: center; }
 
-:focus-visible { outline: 3px solid #2f6fdb; outline-offset: 2px; }
+/* --------------------------------------------------------------------------
+   8. Tabelas (lista de administradores, na gestão)
+   -------------------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }   /* em ecrãs estreitos, a tabela desliza para o lado */
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { text-align: left; padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 600; }
+td.nowrap { white-space: nowrap; }                       /* datas numa só linha */
+td form { margin: 0; }
 
+
+/* --------------------------------------------------------------------------
+   9. Modo escuro
+   Usado automaticamente quando o computador ou o telemóvel está em modo
+   escuro. Fica no fim do ficheiro para se sobrepor às regras de cima.
+   -------------------------------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #e7ebf1; --muted: #a5afbd; --line: #3a4453;

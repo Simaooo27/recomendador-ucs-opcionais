@@ -157,7 +157,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 07/10 · PR #6 | Replaneamento do Sprint 1 e Product Backlog | `docs/geral/product-backlog.xlsx`, README | PR #6 |
 | 07/10 · PR #7 | US03: administradores e área de gestão | `app/gestao/`, `app/templates/gestao/`, `app/schema.sql`, `docs/US03/` | PR #7 |
 | 08/10 · PR #8 | Sprint 1 concluído | README, `docs/US02/`, `docs/US03/`, Excel | PR #8 |
-| 08/10 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/03-guia-do-codigo.md` | PR deste guia |
+| 08/10 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/04-guia-do-codigo.md` | PR deste guia |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

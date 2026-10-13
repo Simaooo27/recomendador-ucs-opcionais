@@ -1,4 +1,4 @@
-# Recomendador de UCs opcionais (OptaBem)
+# Recomendador de UCs opcionais
 
 Aplicação web que ajuda os alunos a escolher unidades curriculares opcionais com base na experiência de colegas com percursos e gostos parecidos.
 

@@ -25,3 +25,13 @@ CREATE TABLE IF NOT EXISTS admins (
     created_by      TEXT,              -- nome de quem o criou; vazio = criado no terminal
     last_login_at   TEXT               -- UTC, ISO 8601
 );
+
+-- Conversa de orientação com o LLM (US29). Uma por aluno; apagada quando recomeça.
+-- Fica no servidor porque não cabe no cookie de sessão (4 KB). O texto do aluno é guardado
+-- já sem emails nem números longos (o mesmo que é enviado ao LLM, RNF12).
+CREATE TABLE IF NOT EXISTS conversas_orientacao (
+    user_id         INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    mensagens       TEXT    NOT NULL,  -- JSON: [{"papel": "assistente" | "utilizador", "texto": "..."}]
+    sugestao        TEXT,              -- JSON da sugestão final (US30); vazio enquanto a conversa decorre
+    atualizada_em   TEXT    NOT NULL   -- UTC, ISO 8601
+);

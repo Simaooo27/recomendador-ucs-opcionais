@@ -28,7 +28,7 @@ MODELOS_POR_OMISSAO = {
 def criar_cliente_llm(config: Mapping) -> ClienteLLM:
     backend = (config.get("LLM_BACKEND") or "falso").strip().lower()
     modelo = (config.get("LLM_MODELO") or "").strip() or MODELOS_POR_OMISSAO.get(backend, "")
-    timeout = float(config.get("LLM_TIMEOUT", 30))
+    timeout = float(config.get("LLM_TIMEOUT", 15))
     if backend == "falso":
         cliente: ClienteLLM = LLMFalso()
     elif backend == "gemini":

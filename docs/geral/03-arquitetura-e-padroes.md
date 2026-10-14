@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.1 · 2026-10-14** (1.0 de 13/10: proposta inicial; 1.1: início de sessão único com Strategy, Chain of Responsibility e Factory). Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
+**Versão 1.2 · 2026-10-14** (1.0 de 13/10: proposta inicial; 1.1: início de sessão único com Strategy, Chain of Responsibility e Factory; 1.2: spike do LLM — Gemini e Groq, conversa em vez de pedido único, ver [05-spike-llm.md](05-spike-llm.md)). Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
 
 ## 1. Visão geral
 
@@ -18,7 +18,7 @@ flowchart LR
     L -.-> API[(Fornecedor de LLM<br>ou modelo local)]
 ```
 
-As caixas `recomendacao/`, `orientacao/` e `llm/` ainda não existem: entram com as stories indicadas na secção 4.
+`llm/` e a lógica de `orientacao/` existem desde o spike de 14/10 (sem páginas: entram com a US29). `recomendacao/` entra com a US11.
 
 ## 2. Tecnologias
 
@@ -29,7 +29,7 @@ As caixas `recomendacao/`, `orientacao/` e `llm/` ainda não existem: entram com
 | Base de dados | SQLite (`sqlite3` da biblioteca padrão) | Um ficheiro, sem servidor para instalar; suficiente para o volume do projeto |
 | Testes | `unittest` | Biblioteca padrão; corre com um único comando e sem rede |
 | Motor de recomendação | `pandas` e `numpy` (a partir da US11) | Cálculos de médias e similaridades sobre matrizes |
-| LLM | Atrás de uma interface própria (secção 4.2); fornecedor escolhido na US30 | Não ficar preso a um fornecedor; testes sem rede nem custos |
+| LLM | Google Gemini (Flash-Lite, plano gratuito) e Groq como reserva, atrás de uma interface própria (secção 4.2); pedidos com `urllib`, sem SDK | Não ficar preso a um fornecedor; testes sem rede nem custos. Limites, custo e termos em [05-spike-llm.md](05-spike-llm.md) |
 | Interface | HTML (Jinja), CSS e JavaScript próprios, sem React nem Tailwind | Componentes de bibliotecas React (ex.: FlowButton, HandwritingText) são **adaptados** a este formato em vez de mudar o projeto para React: a política de segurança (CSP) só aceita ficheiros do próprio site e o código fica legível para os dois elementos |
 | Letras «escritas à mão» | `fontTools` no servidor (`app/manuscrito.py`) | Converte as letras em traços SVG sem carregar bibliotecas de outros sites; sem ele, a página mostra texto normal |
 
@@ -108,28 +108,34 @@ class EstrategiaRecomendacao(Protocol):
 
 Cada `Recomendacao` traz o item, uma pontuação e a explicação (US14). Ganhos: a US22 (comparar estratégias) e a US15 (avaliação offline) correm todas as estratégias pela mesma interface; acrescentar uma estratégia não mexe nas outras (RNF07).
 
-### 4.2 Adapter — ligação ao LLM (US30)
+### 4.2 Adapter — ligação ao LLM (spike de 14/10; US29, US30)
 
-A aplicação fala com uma interface sua. Cada adaptador traduz para um fornecedor concreto.
+A aplicação fala com uma interface sua. Cada adaptador traduz para um fornecedor concreto. Como o LLM não se lembra de nada entre pedidos e quem conduz a conversa é ele, cada pedido leva a conversa toda: por isso a interface recebe uma lista de mensagens, e não uma só (versão 1.1 deste documento).
 
 ```mermaid
 classDiagram
     class ClienteLLM {
         <<interface>>
-        +completar(instrucoes, mensagem) str
+        +nome
+        +conversar(instrucoes, mensagens) str
     }
-    class AdaptadorAnthropic
-    class AdaptadorOllama
+    class AdaptadorGemini
+    class AdaptadorGroq
     class LLMFalso
-    ClienteLLM <|.. AdaptadorAnthropic
-    ClienteLLM <|.. AdaptadorOllama
+    class ProtegerDadosPessoais
+    ClienteLLM <|.. AdaptadorGemini
+    ClienteLLM <|.. AdaptadorGroq
     ClienteLLM <|.. LLMFalso
-    SugestaoLLM --> ClienteLLM
+    ClienteLLM <|.. ProtegerDadosPessoais
+    ProtegerDadosPessoais --> ClienteLLM : embrulha
+    proximo_passo ..> ClienteLLM
 ```
 
-- `AdaptadorAnthropic`: API externa (exige chave em `.env`, nunca no repositório).
-- `AdaptadorOllama`: modelo local, sem custos e sem dados a sair do computador.
-- `LLMFalso`: devolve respostas fixas; é o que os testes usam (RNF06: sem rede).
+- `AdaptadorGemini`: Google Gemini (`generateContent`); chave `GEMINI_API_KEY` no `.env`, nunca no repositório, sempre num cabeçalho e nunca no endereço.
+- `AdaptadorGroq`: Groq (API compatível com a da OpenAI), reserva; chave `GROQ_API_KEY`.
+- `LLMFalso`: devolve respostas fixas e guarda o que recebeu; é o que os testes usam (RNF06: sem rede).
+
+Código: `app/llm/` (`cliente.py`, `adaptadores.py`, `decoradores.py`, `fabrica.py`). Testes: `tests/test_llm.py`.
 
 ### 4.3 Factory — escolher a implementação pela configuração
 
@@ -137,8 +143,8 @@ Igual ao `create_mailer()`: uma função lê a configuração e devolve a implem
 
 | Variável | Valores | Por omissão |
 |---|---|---|
-| `LLM_BACKEND` | `falso`, `anthropic`, `ollama` | `falso` |
-| `LLM_MODELO` | nome do modelo do fornecedor | depende do fornecedor |
+| `LLM_BACKEND` | `falso`, `gemini`, `groq` | `falso` |
+| `LLM_MODELO` | nome do modelo do fornecedor | `gemini-3.5-flash-lite` (Gemini), `openai/gpt-oss-120b` (Groq) |
 | `ESTRATEGIA_RECOMENDACAO` | `popularidade`, `user_based` | `popularidade` |
 
 Com `falso` por omissão, quem clona o projeto consegue correr tudo sem chaves nem custos.
@@ -149,7 +155,8 @@ Comportamentos que envolvem o LLM sem alterar os adaptadores:
 
 | Decorator | Faz |
 |---|---|
-| `ValidarContraCatalogo` | Descarta cursos que não estão no catálogo (RN09). Se nenhum sobrar, devolve um resultado vazio com aviso |
+| `ProtegerDadosPessoais` (feito no spike) | Apaga emails e números longos do que o utilizador escreve antes de cada envio (RNF12). A fábrica embrulha sempre o cliente com ele |
+| `ValidarContraCatalogo` (feito no spike, como função) | Descarta cursos que não estão no catálogo (RN09). Ficou como a função `validar_contra_catalogo` em `app/orientacao/conversa.py`, e não como decorator do `ClienteLLM`: o cliente devolve texto, e a validação precisa da resposta já lida e do catálogo |
 | `RegistarSugestao` | Grava a sugestão (respostas, cursos sugeridos, data) para a linha do tempo do percurso (US31) |
 | `CacheRespostas` | Respostas iguais ao mesmo catálogo devolvem a sugestão guardada, sem nova chamada |
 
@@ -168,33 +175,38 @@ O utilizador está num de três estados (sem curso, com curso, a escolher opcion
 ```
 app/
   catalogo/        US04, US05 — instituições, cursos e UCs (routes, services, repository)
-  orientacao/      US29, US30 — questionário e sugestão de cursos
+  orientacao/      US29, US30 — conversa conduzida pelo LLM e sugestão de cursos
+    conversa.py      próximo passo (pergunta ou sugestão), validação contra o catálogo
+    instrucoes.md    instruções enviadas ao LLM (versionadas, revistas como código)
+    cli.py           flask llm-teste (experimentar com a chave real)
   percurso/        US06, US31 — decisões e UCs concluídas
   recomendacao/    US11 em diante
     estrategias.py   interface e estratégias (Strategy)
     filtros.py       cadeia de filtros (Chain of Responsibility)
     fabrica.py       escolha da estratégia (Factory)
-  llm/             US30
-    cliente.py       interface ClienteLLM
-    adaptadores.py   Anthropic, Ollama, Falso (Adapter)
-    decoradores.py   validar, registar, cache (Decorator)
-    fabrica.py       create_cliente_llm() (Factory)
+  llm/             spike de 14/10 (US29, US30)
+    cliente.py       interface ClienteLLM, Mensagem e erros
+    adaptadores.py   Gemini, Groq, Falso (Adapter)
+    decoradores.py   ProtegerDadosPessoais (Decorator); registar e cache entram com a US30/US31
+    fabrica.py       criar_cliente_llm() (Factory)
 ```
 
 Cada pasta nasce com a story que a usa: nada de pacotes vazios «para o futuro» (princípio 5 de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md)).
 
-## 6. O pedido ao LLM (US30)
+## 6. A conversa com o LLM (US29, US30; decisão do PO de 14/10)
 
-1. A aplicação **filtra primeiro** os cursos candidatos (cadeia de filtros).
-2. Envia ao LLM: instruções fixas, as respostas do questionário e a lista de candidatos (código DGES, nome, instituição, descrição, saídas). Nunca email, nome ou identificadores do utilizador (RNF12).
-3. Pede uma resposta em JSON: códigos dos cursos escolhidos e uma explicação curta para cada um.
-4. Os decorators validam contra o catálogo, registam a sugestão e guardam em cache.
-5. O utilizador vê 2 a 3 cursos com explicação e escolhe (RN10).
+As perguntas deixaram de ser fixas: o LLM conduz a conversa.
 
-As instruções enviadas ao LLM ficam num ficheiro de texto versionado, para poderem ser revistas como qualquer outro código.
+1. Em cada passo, a aplicação envia: as instruções (`app/orientacao/instrucoes.md`, com o catálogo: identificador `instituição-curso`, nome, instituição, localidade, área, nota do último colocado, descrição e saídas) e a conversa até agora. Nunca email, nome ou identificadores da conta (RNF12).
+2. O LLM responde em JSON: `{"tipo": "pergunta", ...}` ou `{"tipo": "sugestao", "cursos": [{"id", "explicacao"}]}`.
+3. Ao fim de 6 respostas do utilizador, as instruções passam a exigir a sugestão (poupa pedidos ao plano gratuito).
+4. A sugestão é validada contra o catálogo (RN09): no máximo 3 cursos, sem repetidos, sem inventados.
+5. O utilizador vê 2 a 3 cursos com explicação e escolhe (RN10); registar a sugestão e guardar em cache entram com a US30 e a US31.
+
+Com 30 cursos, o catálogo inteiro vai em cada pedido (cerca de 4 mil tokens). Quando o catálogo crescer, ou para usar o Groq a sério, a aplicação **filtra primeiro** os candidatos (cadeia de filtros, secção 4.5) e só envia esses.
 
 ## 7. Como verificar que o código respeita estes padrões
 
 - Os testes das estratégias e dos adaptadores usam a interface, não a classe concreta.
-- Nenhum ficheiro fora de `app/llm/adaptadores.py` importa a biblioteca de um fornecedor.
+- Nenhum ficheiro fora de `app/llm/adaptadores.py` fala com um fornecedor (há um teste que o verifica, em `tests/test_llm.py`).
 - A checklist do Pull Request (secção 10 de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md)) inclui: «a funcionalidade nova segue os padrões de 03-arquitetura-e-padroes.md, ou o PR explica porque não».

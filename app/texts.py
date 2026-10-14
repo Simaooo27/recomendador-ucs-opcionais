@@ -61,7 +61,7 @@ LANDING_STEPS = [
     {"titulo": "Escolha e registe o seu percurso", "texto": "A decisão fica guardada. Mais tarde, as opcionais são sugeridas com base em quem fez escolhas parecidas."},
 ]
 
-LANDING_FOR_TITLE = "Para quem é"
+LANDING_FOR_TITLE = "Para quem:"
 LANDING_FOR = [
     {"titulo": "Ainda não escolheu o curso", "texto": "Explore cursos de várias instituições e receba sugestões a partir dos seus interesses."},
     {"titulo": "Já é aluno e vai escolher opcionais", "texto": "Veja como outros alunos avaliaram cada opcional em interesse, carga de trabalho e dificuldade, sempre de forma anónima."},

@@ -20,12 +20,12 @@
 
 | ID | Requisito |
 |---|---|
-| **RF04.1** | Os administradores têm contas próprias (tabela `admins`), com nome de utilizador e palavra-passe, **sem email**. Não são contas de aluno e não entram pelo início de sessão dos alunos. |
+| **RF04.1** | Os administradores têm contas próprias (tabela `admins`), com nome de utilizador e palavra-passe, **sem email**. Não são contas de aluno. |
 | **RF04.2** | O registo público cria sempre contas de aluno; não há forma de, a partir dele, criar um administrador. |
 | **RF04.3** | O comando `flask --app app create-admin` cria um administrador. Pede o nome e a palavra-passe (duas vezes, sem a mostrar no ecrã). Serve para o **primeiro** administrador; fica registado como «criado no terminal». |
 | **RF04.4** | Nome de utilizador: 3 a 30 caracteres (letras minúsculas, números, ponto, hífen ou sublinhado), único sem distinguir maiúsculas. Palavra-passe: as mesmas regras dos alunos (RF01.4), guardada só como hash. |
-| **RF04.5** | A área de gestão tem início de sessão próprio (`/gestao/entrar`), com a mesma mensagem genérica para nome inexistente e palavra-passe errada. Regista a data da última entrada. |
-| **RF04.6** | As páginas da gestão, sem sessão de administrador, levam ao início de sessão da gestão. Uma sessão de aluno não dá acesso. A sessão de um administrador removido termina no pedido seguinte. |
+| **RF04.5** | Alunos e administradores entram pela **mesma página** (`/auth/entrar`): com um email é aluno, com um nome de utilizador (nunca tem «@») é administrador, e cada um vai para a sua página inicial. A mensagem de erro é a mesma para todos e não revela que a gestão existe. Regista a data da última entrada. `/gestao/entrar` leva a esta página. *(Revisto a 14/10/2026.)* |
+| **RF04.6** | As páginas da gestão, sem sessão de administrador, levam ao início de sessão. Uma sessão de aluno não dá acesso. A sessão de um administrador removido termina no pedido seguinte. |
 | **RF04.7** | A área de gestão está **escondida**: nenhuma página dos alunos tem ligações para ela; o endereço é configurável (`ADMIN_URL_PREFIX`, por omissão `/gestao`); as páginas pedem para não ser indexadas (`noindex`). |
 | **RF04.8** | Um administrador vê a lista de administradores (nome, data de criação, quem o criou, última entrada) e cria outros administradores, com as regras do RF04.4. |
 | **RF04.9** | Um administrador remove outros administradores, mas **não a si próprio** (assim fica sempre pelo menos um). |
@@ -37,12 +37,12 @@ Os textos em uso estão em [`app/texts.py`](../../app/texts.py), secção «Áre
 
 | Situação | Mensagem |
 |---|---|
-| Credenciais erradas | Nome de utilizador ou palavra-passe incorretos. |
+| Credenciais erradas | Email ou palavra-passe incorretos. (a mesma dos alunos) |
 | Nome inválido | Use 3 a 30 caracteres: letras minúsculas, números, ponto, hífen ou sublinhado. |
 | Nome repetido | Já existe um administrador com este nome. |
 | Criado / removido | Administrador «*nome*» criado. / Administrador «*nome*» removido. |
 | Remover-se a si próprio | Não pode remover a sua própria conta. Peça a outro administrador. |
-| Terminal: criado | Administrador «*nome*» criado. Entre em /gestao/entrar. |
+| Terminal: criado | Administrador «*nome*» criado. Inicie sessão em /auth/entrar com este nome no campo do email. |
 
 ## 4. Dados
 
@@ -54,10 +54,10 @@ A coluna `role` da tabela `users` mantém-se (todos os alunos ficam `aluno`) mas
 
 | Critério da story | Requisitos | Testes automáticos (`tests/test_gestao.py`) |
 |---|---|---|
-| Os administradores têm contas próprias, sem email e separadas dos alunos. | RF04.1, RF04.2, RF04.4 | `SeparateAccountsTests` (5 testes) |
+| Os administradores têm contas próprias, sem email e separadas dos alunos. | RF04.1, RF04.2, RF04.4 | `SeparateAccountsTests` (6 testes) |
 | O primeiro administrador é criado no terminal. | RF04.3, RF04.4 | `FirstAdminCommandTests` (5 testes, incl. a palavra-passe não aparecer no ecrã) |
-| A gestão tem início de sessão próprio, com mensagem genérica. | RF04.5, RF04.6 | `AdminLoginTests` (6 testes) |
-| A área de gestão está escondida dos alunos. | RF04.6, RF04.7 | `HiddenAreaTests` (5 testes) |
+| Os administradores entram pelo mesmo início de sessão, com mensagem genérica. | RF04.5, RF04.6 | `AdminLoginTests` (6 testes); `tests/test_perfis.py` (7 testes dos padrões) |
+| A área de gestão está escondida dos alunos. | RF04.6, RF04.7 | `HiddenAreaTests` (6 testes) |
 | Um administrador cria e remove outros administradores. | RF04.8, RF04.9, RF04.10 | `ManageAdminsTests` (8 testes) |
 
 ## 6. Requisitos não funcionais aplicáveis
@@ -71,4 +71,5 @@ RNF02 (hash, CSRF em todos os formulários, mensagem genérica, contas separadas
 | 1 | Administradores como contas independentes, sem email, em vez de alunos promovidos. | **Decidido** pelo PO (07/10/2026) |
 | 2 | Área de gestão escondida, num endereço configurável e sem ligações nas páginas dos alunos. Esconder o endereço não substitui a autenticação: é uma camada extra. | **Decidido** pelo PO (07/10/2026) |
 | 3 | O primeiro administrador tem de ser criado fora da aplicação (terminal), por quem a instala. | Aceite |
-| 4 | Limite de tentativas no início de sessão da gestão. | Fora do Sprint 1; a propor como story |
+| 4 | Limite de tentativas no início de sessão. | Fora do Sprint 1; a propor como story |
+| 5 | Um só início de sessão para alunos e administradores, em vez de uma página de entrada separada para a gestão. Feito com os padrões Strategy, Chain of Responsibility e Factory (`app/auth/perfis.py`, ver [03-arquitetura-e-padroes.md](../geral/03-arquitetura-e-padroes.md)). O campo continua a dizer só «Email», para a gestão não se notar. | **Decidido** pelos PO (14/10/2026) |

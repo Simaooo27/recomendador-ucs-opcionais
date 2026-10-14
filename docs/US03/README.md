@@ -37,7 +37,7 @@ flask --app app create-admin    # pede o nome e a palavra-passe (não aparece no
 flask --app app list-admins     # mostra os administradores
 ```
 
-Depois, entrar em `http://127.0.0.1:5000/gestao/entrar`.
+Depois, entrar em `http://127.0.0.1:5000/auth/entrar` (a mesma página dos alunos), com o nome de utilizador no campo do email.
 
 ## Código
 
@@ -45,8 +45,9 @@ Depois, entrar em `http://127.0.0.1:5000/gestao/entrar`.
 |---|---|
 | [`app/schema.sql`](../../app/schema.sql) | Tabela `admins` (nome, hash da palavra-passe, quem criou, última entrada) |
 | [`app/gestao/services.py`](../../app/gestao/services.py) | Criar, autenticar e remover administradores (regras e validação) |
+| [`app/auth/perfis.py`](../../app/auth/perfis.py) | Um só início de sessão: perfis aluno e administrador (Strategy), cadeia que escolhe o perfil (Chain of Responsibility) e `criar_cadeia_de_perfis()` (Factory) |
 | [`app/gestao/sessions.py`](../../app/gestao/sessions.py) | Sessão de administrador e `admin_required` |
-| [`app/gestao/routes.py`](../../app/gestao/routes.py) | Páginas da gestão: entrar, sair, painel, administradores |
+| [`app/gestao/routes.py`](../../app/gestao/routes.py) | Páginas da gestão: painel e administradores (`/gestao/entrar` leva ao início de sessão único) |
 | [`app/gestao/cli.py`](../../app/gestao/cli.py) | Comandos `create-admin` e `list-admins` |
 | [`app/templates/gestao/`](../../app/templates/gestao/) | Páginas da área de gestão |
 | [`app/config.py`](../../app/config.py) | `ADMIN_URL_PREFIX` (endereço da área) |
@@ -54,4 +55,4 @@ Depois, entrar em `http://127.0.0.1:5000/gestao/entrar`.
 
 ## Testes
 
-[`tests/test_gestao.py`](../../tests/test_gestao.py): 29 testes. A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).
+[`tests/test_gestao.py`](../../tests/test_gestao.py): 31 testes, e [`tests/test_perfis.py`](../../tests/test_perfis.py): 7 testes dos padrões. A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).

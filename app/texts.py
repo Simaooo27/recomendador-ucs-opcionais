@@ -19,6 +19,12 @@ Os textos estão agrupados pela página onde aparecem, pela ordem em que surgem 
 # Nome da aplicação: barra do topo e separador do navegador.
 APP_NAME = "Recomendador de UCs opcionais"
 
+# Marca: nome curto na barra do topo e no painel das páginas de entrada.
+BRAND_NAME = "OptaBem"
+# Frase grande e frase de apoio no painel com o percurso (criar conta, iniciar sessão, confirmar email).
+BRAND_TAGLINE = "Escolha o curso e as opcionais com a experiência de quem já lá esteve."
+BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opinião de outros alunos."
+
 # Como o título de cada página aparece no separador do navegador.
 PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 

@@ -43,8 +43,10 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 ├── mailer.py                         envio de email (no terminal em desenvolvimento, ou SMTP)
 ├── main.py                           página inicial do aluno (/inicio) e política de privacidade
 │
-├── auth/                             CONTAS DOS ALUNOS (US01 registo, US02 sessão)
+├── auth/                             CONTAS E INÍCIO DE SESSÃO (US01 registo, US02 sessão, US03 perfis)
 │   ├── routes.py                     páginas /auth/registo, /auth/entrar, /auth/sair, /auth/confirmar
+│   ├── perfis.py                     um só início de sessão: aluno ou administrador (padrões Strategy,
+│   │                                 Chain of Responsibility e Factory — ver 03-arquitetura-e-padroes.md)
 │   ├── services.py                   regras: registar, confirmar o email, autenticar
 │   ├── validators.py                 validação do email e da palavra-passe
 │   ├── repository.py                 consultas SQL à tabela users
@@ -52,27 +54,29 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   └── tokens.py                     ligações de confirmação assinadas (24 horas)
 │
 ├── gestao/                           ÁREA DE GESTÃO / ADMINISTRADORES (US03)
-│   ├── routes.py                     páginas /gestao/entrar, /gestao/, /gestao/administradores
+│   ├── routes.py                     páginas /gestao/ e /gestao/administradores (/gestao/entrar leva a /auth/entrar)
 │   ├── services.py                   regras: criar, autenticar e remover administradores
 │   ├── repository.py                 consultas SQL à tabela admins
 │   ├── sessions.py                   sessão de administrador; protege as páginas da gestão
 │   └── cli.py                        comandos de terminal: create-admin, list-admins
 │
 ├── templates/                        AS PÁGINAS (HTML)
-│   ├── base.html                     moldura comum: barra do topo, menu, painel central
+│   ├── base.html                     moldura comum: painel do percurso (páginas de entrada) ou barra do topo
 │   ├── home.html                     página inicial do aluno
 │   ├── privacy.html                  política de privacidade
 │   ├── error.html                    páginas de erro (404, pedido inválido)
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
+│   ├── macros/marca.html             o símbolo da marca e a ilustração do percurso
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
-│   └── gestao/                       início de sessão da gestão, painel, lista de administradores
+│   └── gestao/                       painel e lista de administradores
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR
     ├── style.css                     O ASPETO DE TODAS AS PÁGINAS (secção 4 deste guia)
+    ├── fonts/                        tipos de letra (Bricolage Grotesque e Atkinson Hyperlegible Next, licença OFL)
     └── password-toggle.js            o clique no ícone de olho (mostrar/esconder a palavra-passe)
 
 tests/                                um ficheiro por área: test_registration, test_confirmation,
-                                      test_validators, test_login, test_gestao, test_texts…
+                                      test_validators, test_login, test_gestao, test_perfis, test_texts…
 docs/
 ├── geral/                            requisitos, regras de código, este guia, backlog (Excel), registo de IA
 └── US01/, US02/, US03/               uma pasta por story: requisitos, use case, BPMN, prompt, diagramas
@@ -85,9 +89,11 @@ docs/
 | Quero mudar… | Ficheiro | Como |
 |---|---|---|
 | Um texto do ecrã (título, botão, mensagem, email) | `app/texts.py` | Procurar o texto com Ctrl+F e mudar só o que está entre aspas |
-| O nome da aplicação | `app/texts.py` | `APP_NAME` |
-| Uma cor | `app/static/style.css`, secção 1 | Mudar o código `#rrggbb` da cor (modo escuro: secção 9) |
-| Largura do painel, tamanho da letra, espaços | `app/static/style.css`, secções 2 a 5 | Ver os exemplos na secção 4 deste guia |
+| O nome na barra do topo e no painel verde | `app/texts.py` | `BRAND_NAME` (hoje «OptaBem») |
+| O nome no separador do navegador | `app/texts.py` | `APP_NAME` |
+| A frase grande do painel verde | `app/texts.py` | `BRAND_TAGLINE` e `BRAND_SUPPORT` |
+| Uma cor | `app/static/style.css`, secção 1 | Mudar o código `#rrggbb` da cor (modo escuro: secção 12) |
+| Largura, tamanho da letra, espaços | `app/static/style.css`, secções 3 a 8 | Ver os exemplos na secção 4 deste guia |
 | O que aparece numa página (ordem dos campos, um parágrafo novo) | `app/templates/…` | O ficheiro com o nome da página; o texto vai para `texts.py` |
 | O endereço da área de gestão | `.env` | `ADMIN_URL_PREFIX=outro-nome` (por omissão `gestao`) |
 | Exigir outra vez o email institucional | `.env` | `ALLOWED_EMAIL_DOMAINS=iscap.ipp.pt` |
@@ -101,31 +107,38 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 
 | Secção | Linha (aprox.) | O que controla |
 |---|---|---|
-| 1. Cores | 26 | Todas as cores (texto, fundo, barra do topo, botões, erros, sucesso) e o tipo de letra |
-| 2. Página e painel | 51 | Fundo da página, largura do painel central (alunos e gestão), cantos e margens |
-| 3. Barra do topo | 81 | Barra azul, menu, etiqueta do perfil, botão «Terminar sessão», versão telemóvel |
-| 4. Texto | 123 | Títulos, parágrafos, ligações, listas, contorno do teclado |
-| 5. Formulários | 144 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
-| 6. Botões | 201 | Botão principal e botão pequeno «Remover» |
-| 7. Caixas de mensagem | 223 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
-| 8. Tabelas | 239 | Lista de administradores na gestão |
-| 9. Modo escuro | 250 | Cores quando o computador está em modo escuro (fica sempre no fim) |
+| 1. Cores | 29 | Todas as cores: texto, fundos, verde dos botões, verde-escuro do painel, amarelo do caminho escolhido, erros, sucesso |
+| 2. Tipos de letra | 56 | Letra dos títulos (Bricolage Grotesque) e do texto (Atkinson Hyperlegible Next), em `app/static/fonts/` |
+| 3. Página e colunas | 90 | Fundo da página, tamanho base da letra, largura da coluna (alunos e gestão) |
+| 4. Barra do topo | 116 | Marca «OptaBem», «Gestão», menu, nome do administrador, «Terminar sessão», versão telemóvel |
+| 5. Páginas de entrada | 192 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
+| 6. Texto | 265 | Títulos, parágrafos, ligações, listas, contorno do teclado |
+| 7. Formulários | 294 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
+| 8. Botões | 365 | Botão principal, «Terminar sessão» e «Remover» |
+| 9. Caixas de mensagem | 417 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
+| 10. Tabelas | 433 | Lista de administradores na gestão |
+| 11. Movimento | 444 | A linha do percurso a desenhar-se ao abrir a página (desligada para quem pede menos animação) |
+| 12. Modo escuro | 467 | Cores quando o computador está em modo escuro (fica sempre no fim) |
 
 **Exemplos de alterações comuns:**
 
 | Para… | Na secção | Mudar |
 |---|---|---|
-| Barra do topo e botões de outra cor | 1 | `--accent: #1f3864;` para outra cor; `--accent-hover` é a cor ao passar o rato |
-| Fundo da página branco | 1 | `--page: #f3f5f8;` para `#ffffff` |
-| Painel dos alunos mais largo | 2 | `main { max-width: 32rem; }` para, por exemplo, `40rem` |
-| Letra maior em todas as páginas | 2 | `body { font-size: 1rem; }` para `1.1rem` |
-| Cantos menos arredondados | 2 | `.panel { border-radius: 0.5rem; }` para `0.2rem` |
-| Títulos maiores | 4 | `h1 { font-size: 1.5rem; }` |
-| Outro tipo de letra | 1 | `font-family: …` (ex.: `Georgia, serif`) |
+| Botões e ligações de outra cor | 1 | `--accent: #0e6b57;`; `--accent-hover` é a cor ao passar o rato |
+| Painel das páginas de entrada de outra cor | 1 | `--forest: #0f2e27;` |
+| Cor do caminho escolhido na ilustração | 1 | `--marigold: #f2b33d;` |
+| Fundo da página branco | 1 | `--page: #eef3f0;` para `#ffffff` |
+| Cantos menos arredondados | 1 | `--radius: 10px;` para, por exemplo, `4px` |
+| Coluna dos alunos mais larga | 3 | `.conteudo { max-width: 40rem; }` |
+| Letra maior em todas as páginas | 3 | `body { font-size: 1.0625rem; }` para `1.15rem` |
+| Títulos maiores | 6 | `h1 { font-size: clamp(…); }` |
+| Outro tipo de letra | 2 | `--font-display` (títulos) e `--font-text` (texto) |
+| Desligar a animação do percurso | 11 | Apagar o bloco `@media (prefers-reduced-motion: no-preference) { … }` |
 
 **Cuidados:**
 - `rem` é uma medida relativa ao tamanho da letra (1rem ≈ 16 píxeis); prefira-a a píxeis para a página continuar a funcionar no telemóvel.
-- Se mudar cores na secção 1, veja também a secção 9 (modo escuro), que tem as suas próprias cores.
+- Se mudar cores na secção 1, veja também a secção 12 (modo escuro), que tem as suas próprias cores.
+- Os tipos de letra estão na própria aplicação (`app/static/fonts/`), porque a política de segurança não deixa carregar letras de outros sites.
 - Não mude a ordem das secções: o modo escuro tem de ficar no fim para se sobrepor ao resto.
 - Não escreva estilos dentro dos ficheiros HTML (`style="…"`): a política de segurança da aplicação (CSP, em `app/security.py`) bloqueia-os. Tudo vai para `style.css`.
 
@@ -140,7 +153,7 @@ Exemplo: o aluno carrega em «Criar conta».
 5. A rota envia o email (`app/mailer.py`) e mostra a página `templates/auth/pending.html`.
 6. A página usa `templates/base.html` (moldura), os textos de `app/texts.py` e o aspeto de `app/static/style.css`.
 
-Os outros fluxos seguem o mesmo caminho: início de sessão em `auth/routes.py` → `auth/services.py` → `auth/sessions.py`; gestão em `gestao/routes.py` → `gestao/services.py` → `gestao/sessions.py`.
+Os outros fluxos seguem o mesmo caminho: início de sessão em `auth/routes.py` → `auth/perfis.py` (escolhe aluno ou administrador) → `auth/services.py` ou `gestao/services.py` → `auth/sessions.py` ou `gestao/sessions.py`; gestão em `gestao/routes.py` → `gestao/services.py` → `gestao/sessions.py`.
 
 ## 6. Quem escreveu o quê e quando
 
@@ -157,7 +170,9 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 07/10 · PR #6 | Replaneamento do Sprint 1 e Product Backlog | `docs/geral/product-backlog.xlsx`, README | PR #6 |
 | 07/10 · PR #7 | US03: administradores e área de gestão | `app/gestao/`, `app/templates/gestao/`, `app/schema.sql`, `docs/US03/` | PR #7 |
 | 08/10 · PR #8 | Sprint 1 concluído | README, `docs/US02/`, `docs/US03/`, Excel | PR #8 |
-| 08/10 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/04-guia-do-codigo.md` | PR deste guia |
+| 08/10 · PR #9 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/04-guia-do-codigo.md` | PR #9 |
+| 13/10 · PR #10 | Nova visão do produto, padrões de desenho previstos, catálogo de cursos | `docs/geral/00-…`, `docs/geral/03-…`, `dados/` | PR #10 |
+| 14/10 | Um só início de sessão (Strategy, Chain of Responsibility, Factory); novo aspeto visual | `app/auth/perfis.py`, `app/templates/`, `app/static/` | PR do início de sessão único |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 
@@ -168,5 +183,5 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
    .venv\Scripts\python.exe -m unittest discover -s tests -t .
    ```
    No fim tem de aparecer `OK`. Se aparecer `FAILED`, o nome do teste diz o que deixou de funcionar.
-2. **A aplicação:** `.\ferramentas\arrancar.bat` e abrir http://127.0.0.1:5000 (alunos) e http://127.0.0.1:5000/gestao/entrar (gestão).
+2. **A aplicação:** `.\ferramentas\arrancar.bat` e abrir http://127.0.0.1:5000. Alunos e administradores entram na mesma página: com o email (aluno) ou com o nome de utilizador (administrador).
 3. **Os documentos:** os requisitos de cada story têm, na secção 5, a tabela critério de aceitação → teste que o verifica.

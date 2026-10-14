@@ -1,5 +1,11 @@
 <!doctype html>
-{#- Moldura comum a todas as páginas. Os textos vêm de app/texts.py. -#}
+{#- Moldura comum a todas as páginas. Os textos vêm de app/texts.py e o aspeto de app/static/style.css.
+
+    Dois formatos:
+    - páginas de entrada (criar conta, iniciar sessão, confirmar email): definem
+      {% set layout = "entrada" %} e mostram o painel com o percurso ao lado do formulário;
+    - restantes páginas: barra do topo e conteúdo numa coluna. -#}
+{% import "macros/marca.html" as marca %}
 <html lang="pt-PT">
 <head>
   <meta charset="utf-8">
@@ -12,36 +18,50 @@
     {%- endif -%}
   </title>
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+  <link rel="preload" href="{{ url_for('static', filename='fonts/atkinson-hyperlegible-next.woff') }}" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+{% if layout == "entrada" %}
+  <div class="entrada">
+    <aside class="entrada-marca">
+      <p class="marca">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></p>
+      {{ marca.percurso() }}
+      <p class="entrada-frase">{{ texts.BRAND_TAGLINE }}</p>
+      <p class="entrada-apoio">{{ texts.BRAND_SUPPORT }}</p>
+    </aside>
+    <main class="entrada-conteudo">
+      <div class="entrada-coluna">
+{% else %}
   <header class="site-header">
-    <span>{{ texts.APP_NAME }}{% if g.admin %} · {{ texts.ADMIN_AREA_NAME }}{% endif %}</span>
+    <p class="marca">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span>{% if g.admin %}<span class="marca-area">{{ texts.ADMIN_AREA_NAME }}</span>{% endif %}</p>
     {% if g.admin %}
       <nav class="user-nav" aria-label="{{ texts.NAV_LABEL }}">
-        <a href="{{ url_for('gestao.dashboard') }}">{{ texts.ADMIN_NAV_DASHBOARD }}</a>
-        <a href="{{ url_for('gestao.admins') }}">{{ texts.ADMIN_NAV_ADMINS }}</a>
+        <a href="{{ url_for('gestao.dashboard') }}"{% if request.endpoint == 'gestao.dashboard' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_DASHBOARD }}</a>
+        <a href="{{ url_for('gestao.admins') }}"{% if request.endpoint == 'gestao.admins' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_ADMINS }}</a>
         <span class="role-badge">{{ g.admin["username"] }}</span>
       </nav>
-      <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
-        <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
-        <button type="submit">{{ texts.LOGOUT_BUTTON }}</button>
-      </form>
-    {% elif g.user %}
+    {% endif %}
+    {% if g.admin or g.user %}
       <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
         <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
         <button type="submit">{{ texts.LOGOUT_BUTTON }}</button>
       </form>
     {% endif %}
   </header>
-  <main{% if g.admin %} class="wide"{% endif %}>
-    <div class="panel">
-      {% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
-      {% endfor %}
-      {% block content %}{% endblock %}
-    </div>
+  <main class="conteudo{% if g.admin %} wide{% endif %}">
+{% endif %}
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+{% if layout == "entrada" %}
+      </div>
+    </main>
+  </div>
+{% else %}
   </main>
+{% endif %}
   <script src="{{ url_for('static', filename='password-toggle.js') }}" defer></script>
 </body>
 </html>

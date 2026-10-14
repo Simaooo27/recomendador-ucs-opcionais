@@ -28,6 +28,9 @@ def create_app(config: dict | None = None) -> Flask:
     from .gestao import cli as gestao_cli
 
     gestao_cli.init_app(app)
+    from .orientacao import cli as orientacao_cli
+
+    orientacao_cli.init_app(app)
     init_security(app)
     app.extensions["mailer"] = create_mailer(app.config)
 

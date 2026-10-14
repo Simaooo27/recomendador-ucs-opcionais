@@ -67,7 +67,10 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── decoradores.py                apaga emails e números do que o utilizador escreve, antes de enviar (RNF12)
 │   └── fabrica.py                    escolhe o fornecedor pela variável LLM_BACKEND do .env
 │
-├── orientacao/                       CONVERSA DE ORIENTAÇÃO (US29, US30; por agora sem páginas)
+├── orientacao/                       CONVERSA DE ORIENTAÇÃO (US29, US30)
+│   ├── routes.py                     página /orientacao/ e os botões Começar, Enviar, Tentar de novo, Recomeçar
+│   ├── services.py                   regras da conversa: começar, responder, tentar de novo, recomeçar
+│   ├── repository.py                 consultas SQL à tabela conversas_orientacao
 │   ├── instrucoes.md                 o que se diz ao LLM: como conduzir a conversa, regras, formato, catálogo
 │   ├── conversa.py                   próximo passo (pergunta ou sugestão) e validação contra o catálogo (RN09)
 │   └── cli.py                        comando flask llm-teste (experimentar com a chave real)
@@ -88,6 +91,7 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
 │   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow»
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
+│   ├── orientacao/conversa.html      a conversa com o assistente (US29)
 │   └── gestao/                       painel e lista de administradores
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR
@@ -147,7 +151,7 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 | 9. Caixas de mensagem | 420 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
 | 10. Tabelas | 436 | Lista de administradores na gestão |
 | 11. Página de apresentação | 447 | A página inicial pública: caixa de pesquisa, nota escrita à mão, fichas dos cursos, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
-| 12. O meu percurso | 747 | A linha do tempo da página inicial do aluno |
+| 12. O meu percurso | 747 | A linha do tempo da página inicial do aluno e a conversa de orientação (mensagens, aviso, «Recomeçar») |
 | 13. Gestão, erros e detalhes | 793 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
 | 14. Movimento | 873 | Todas as animações (e o que acontece a quem pede menos movimento) |
 | 15. Modo escuro | 914 | Cores quando o computador está em modo escuro (fica sempre no fim) |
@@ -207,7 +211,8 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 08/10 · PR #9 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/04-guia-do-codigo.md` | PR #9 |
 | 13/10 · PR #10 | Nova visão do produto, padrões de desenho previstos, catálogo de cursos | `docs/geral/00-…`, `docs/geral/03-…`, `dados/` | PR #10 |
 | 14/10 | Um só início de sessão (Strategy, Chain of Responsibility, Factory); novo aspeto visual | `app/auth/perfis.py`, `app/templates/`, `app/static/` | PR do início de sessão único |
-| 14/10 | Spike do LLM: Gemini e Groq atrás de `ClienteLLM` (Adapter, Factory, Decorator), conversa de orientação sem páginas, comando `llm-teste` | `app/llm/`, `app/orientacao/`, `docs/geral/05-spike-llm.md` | PR do spike |
+| 14/10 | Spike do LLM: Gemini e Groq atrás de `ClienteLLM` (Adapter, Factory, Decorator), conversa de orientação sem páginas, comando `llm-teste` | `app/llm/`, `app/orientacao/`, `docs/geral/05-spike-llm.md` | PR #17 |
+| 14/10 | US29: página da conversa de orientação com o LLM | `app/orientacao/`, `app/templates/orientacao/`, `docs/US29/` | PR #19 |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

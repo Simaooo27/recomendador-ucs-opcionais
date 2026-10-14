@@ -174,6 +174,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Manter o plano e rever na Sprint Review do Sprint 2; se a velocidade se mantiver, a US09 ou a US11 passa para o backlog. | Por decidir |
 | 11 | A exportação e o apagamento de dados (US17, RF17) ficam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | Por decidir |
 | 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições de `dados/catalogo-cursos-mvp.csv` antes da US30; a Gestão da Universidade de Aveiro ainda não tem descrição. | Por decidir |
+| 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar: talvez como evolução da US29/US30, reutilizando o adaptador `ClienteLLM` e as validações previstas em 03-arquitetura-e-padroes.md. | Por avaliar (pedido do PO, 14/10/2026) |
 
 ## 6. Histórico de alterações
 

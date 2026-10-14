@@ -35,15 +35,23 @@ LANDING_NAV_REGISTER = "Criar conta"
 LANDING_CTA_PRIMARY = "Criar conta"
 LANDING_CTA_SECONDARY = "Já tenho conta"
 
-# O percurso interativo: cada opção é um ramo. «nome» aparece no ramo e no botão;
-# «porque» aparece por baixo quando a opção é escolhida. São exemplos ilustrativos.
-LANDING_TRY_LABEL = "Experimente escolher um caminho"
-LANDING_PATH_OPTIONS = [
-    {"nome": "Informática", "porque": "Gosta de resolver problemas e de perceber como a tecnologia funciona."},
-    {"nome": "Gestão", "porque": "Quer perceber como as organizações tomam decisões e usam os recursos."},
-    {"nome": "Ciência da Informação", "porque": "Gosta de organizar, encontrar e dar sentido à informação."},
-    {"nome": "Ainda não sei", "porque": "Comece pelo questionário: o OptaBem sugere cursos e explica porquê."},
-]
+# Pesquisa de cursos (dados reais do catálogo da DGES, dados/catalogo-cursos-mvp.csv).
+LANDING_SEARCH_NOTE = "comece por aqui"   # escrito à mão por cima da caixa de pesquisa
+LANDING_SEARCH_LABEL = "Procure um curso, uma instituição ou uma cidade"
+LANDING_SEARCH_PLACEHOLDER = "Ex.: informática, gestão, Porto…"
+LANDING_SEARCH_BUTTON = "Procurar"
+LANDING_SEARCH_AREAS = "Ou veja por área:"
+# Os números {cursos}, {instituicoes} e {vagas} são contados a partir do catálogo.
+LANDING_STATS = "{cursos} licenciaturas de {instituicoes} instituições, com {vagas} vagas no concurso de 2026."
+LANDING_RESULTS_SAMPLE = "Alguns cursos do catálogo"
+LANDING_RESULTS_FOUND = "Resultados para «{termo}»"
+LANDING_RESULTS_COUNT = "A mostrar {mostrados} de {total}."
+LANDING_NO_RESULTS = "Nenhum curso encontrado para «{termo}». Experimente uma área ou uma cidade."
+LANDING_CARD_VAGAS = "Vagas em 2026"
+LANDING_CARD_NOTA = "Último colocado em 2025"
+LANDING_CARD_NO_NOTA = "Sem dados"
+LANDING_CARD_SOURCE = "Ver na DGES"
+LANDING_DATA_SOURCE = "Dados públicos da DGES: vagas do concurso nacional de 2026 e nota do último colocado na 1.ª fase de 2025 (escala 0–200)."
 
 LANDING_HOW_TITLE = "Como funciona"
 # Os três passos, pela ordem em que acontecem.
@@ -53,7 +61,7 @@ LANDING_STEPS = [
     {"titulo": "Escolha e registe o seu percurso", "texto": "A decisão fica guardada. Mais tarde, as opcionais são sugeridas com base em quem fez escolhas parecidas."},
 ]
 
-LANDING_FOR_TITLE = "Para quem é"
+LANDING_FOR_TITLE = "Para quem:"
 LANDING_FOR = [
     {"titulo": "Ainda não escolheu o curso", "texto": "Explore cursos de várias instituições e receba sugestões a partir dos seus interesses."},
     {"titulo": "Já é aluno e vai escolher opcionais", "texto": "Veja como outros alunos avaliaram cada opcional em interesse, carga de trabalho e dificuldade, sempre de forma anónima."},

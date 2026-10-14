@@ -56,6 +56,11 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── sessions.py                   quem tem sessão iniciada; protege as páginas privadas
 │   └── tokens.py                     ligações de confirmação assinadas (24 horas)
 │
+├── catalogo/                         CATÁLOGO DE CURSOS (base da US04 e da US05)
+│   ├── repository.py                 lê os cursos de dados/catalogo-cursos-mvp.csv (a US04 troca por SQL)
+│   ├── services.py                   pesquisa sem acentos, amostra e totais
+│   └── routes.py                     /cursos/pesquisa (resultados em JSON para a pesquisa ao vivo)
+│
 ├── gestao/                           ÁREA DE GESTÃO / ADMINISTRADORES (US03)
 │   ├── routes.py                     páginas /gestao/ e /gestao/administradores (/gestao/entrar leva a /auth/entrar)
 │   ├── services.py                   regras: criar, autenticar e remover administradores
@@ -65,12 +70,12 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │
 ├── templates/                        AS PÁGINAS (HTML)
 │   ├── base.html                     moldura comum: painel do percurso (páginas de entrada) ou barra do topo
-│   ├── landing.html                  apresentação pública (/): mapa interativo, como funciona, para quem
+│   ├── landing.html                  apresentação pública (/): pesquisa de cursos, como funciona, para quem
 │   ├── home.html                     página inicial do aluno, com «O seu percurso»
 │   ├── privacy.html                  política de privacidade
 │   ├── error.html                    páginas de erro (404, pedido inválido)
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
-│   ├── macros/marca.html             símbolo, ilustração do percurso, mapa, escrita à mão, botão «flow»
+│   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow»
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
 │   └── gestao/                       painel e lista de administradores
 │
@@ -78,7 +83,7 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
     ├── style.css                     O ASPETO DE TODAS AS PÁGINAS (secção 4 deste guia)
     ├── fonts/                        tipos de letra (Bricolage Grotesque e Atkinson Hyperlegible Next, licença OFL)
     ├── favicon.svg                   ícone no separador do navegador
-    ├── app.js                        interações: mapa, escrita à mão, linha dos passos, regras da palavra-passe, números
+    ├── app.js                        interações: pesquisa ao vivo, escrita à mão, linha dos passos, regras da palavra-passe, números
     └── password-toggle.js            o clique no ícone de olho (mostrar/esconder a palavra-passe)
 
 tests/                                um ficheiro por área: test_registration, test_confirmation,
@@ -98,7 +103,8 @@ docs/
 | O nome na barra do topo e no painel verde | `app/texts.py` | `BRAND_NAME` (hoje «OptaBem») |
 | O nome no separador do navegador | `app/texts.py` | `APP_NAME` |
 | A frase grande do painel verde | `app/texts.py` | `BRAND_TAGLINE` e `BRAND_SUPPORT` |
-| Os caminhos do mapa, os passos e «Para quem é» | `app/texts.py` | `LANDING_PATH_OPTIONS`, `LANDING_STEPS`, `LANDING_FOR` |
+| Os textos da pesquisa, os passos e «Para quem é» | `app/texts.py` | `LANDING_SEARCH_*`, `LANDING_RESULTS_*`, `LANDING_STEPS`, `LANDING_FOR` |
+| Os cursos que aparecem na pesquisa | `dados/catalogo-cursos-mvp.csv` | Acrescentar ou corrigir linhas; a página lê o ficheiro de novo quando ele muda |
 | Os passos de «O seu percurso» | `app/texts.py` | `HOME_PATH_STEPS` |
 | Uma cor | `app/static/style.css`, secção 1 | Mudar o código `#rrggbb` da cor (modo escuro: secção 12) |
 | Largura, tamanho da letra, espaços | `app/static/style.css`, secções 3 a 8 | Ver os exemplos na secção 4 deste guia |
@@ -125,11 +131,11 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 | 8. Botões | 368 | Botão principal, «Terminar sessão» e «Remover» |
 | 9. Caixas de mensagem | 420 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
 | 10. Tabelas | 436 | Lista de administradores na gestão |
-| 11. Página de apresentação | 447 | A página inicial pública: mapa interativo, nome escrito à mão, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
-| 12. O meu percurso | 710 | A linha do tempo da página inicial do aluno |
-| 13. Gestão, erros e detalhes | 756 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
-| 14. Movimento | 836 | Todas as animações (e o que acontece a quem pede menos movimento) |
-| 15. Modo escuro | 881 | Cores quando o computador está em modo escuro (fica sempre no fim) |
+| 11. Página de apresentação | 447 | A página inicial pública: caixa de pesquisa, nota escrita à mão, fichas dos cursos, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
+| 12. O meu percurso | 747 | A linha do tempo da página inicial do aluno |
+| 13. Gestão, erros e detalhes | 793 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
+| 14. Movimento | 873 | Todas as animações (e o que acontece a quem pede menos movimento) |
+| 15. Modo escuro | 914 | Cores quando o computador está em modo escuro (fica sempre no fim) |
 
 **Exemplos de alterações comuns:**
 
@@ -145,7 +151,7 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 | Títulos maiores | 6 | `h1 { font-size: clamp(…); }` |
 | Outro tipo de letra | 2 | `--font-display` (títulos) e `--font-text` (texto) |
 | Desligar as animações | 14 | Apagar os blocos `@media (prefers-reduced-motion: no-preference) { … }` |
-| Cor da palavra escrita à mão | 11 | `.mapa-escrita { color: … }` |
+| Cor da nota escrita à mão | 11 | `.procura-nota { color: … }` |
 | Cor do círculo do botão «flow» | 11 | `--flow-cor` em `.flow-button` (e em `.flow-button-claro`) |
 
 **Cuidados:**

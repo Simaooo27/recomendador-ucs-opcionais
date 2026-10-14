@@ -47,6 +47,7 @@ Estes padrões existem desde o Sprint 1. Documentá-los ajuda a manter o código
 | **Strategy** | `PerfilAluno` e `PerfilAdministrador` em `app/auth/perfis.py` | Cada perfil sabe reconhecer quem é dele, verificar a palavra-passe na sua tabela, abrir a sua sessão e para onde vai depois de entrar. A rota de início de sessão não conhece os perfis |
 | **Chain of Responsibility** | `CadeiaDePerfis` em `app/auth/perfis.py` | Um só início de sessão para alunos e administradores: o pedido passa pelos perfis até um dizer «é comigo» (email → aluno; nome sem «@» → administrador). Um perfil novo entra na cadeia sem mexer nos outros |
 | **Factory** | `criar_cadeia_de_perfis()` em `app/auth/perfis.py` | Monta a cadeia (que perfis existem e por que ordem) num só sítio |
+| **Repository** | `app/catalogo/repository.py` | Por agora lê o catálogo do CSV da DGES; na US04 passa a ler da base de dados sem mudar `services.py` nem as páginas |
 
 ### 3.1 Um só início de sessão (US03, revisão de 14/10/2026)
 

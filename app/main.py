@@ -1,7 +1,8 @@
 """Páginas gerais."""
-from flask import Blueprint, g, redirect, render_template, url_for
+from flask import Blueprint, current_app, g, redirect, render_template, request, url_for
 
 from . import percurso
+from .catalogo import services as catalogo
 from .auth.sessions import login_required
 
 bp = Blueprint("main", __name__)
@@ -14,7 +15,13 @@ def index():
         return redirect(url_for("main.home"))
     if g.get("admin") is not None:
         return redirect(url_for("gestao.dashboard"))
-    return render_template("landing.html")
+    termo = request.args.get("q", "")[:80]
+    return render_template(
+        "landing.html",
+        termo=termo,
+        resultado=catalogo.pesquisar(current_app.config, termo),
+        resumo=catalogo.resumo(current_app.config),
+    )
 
 
 @bp.get("/inicio")

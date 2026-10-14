@@ -38,9 +38,9 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
-| US03 | Perfis de aluno e administrador | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
+| US03 | Perfis de aluno e administrador (revista a 14/10: um só início de sessão) | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
 | US04 | Importar catálogo de instituições e cursos | Sprint 2 | Por fazer | — |
-| US05 | Consultar e comparar cursos | Sprint 2 | Por fazer | — |
+| US05 | Consultar e comparar cursos | Sprint 2 | Em curso (pesquisa feita; faltam filtros, ficha e comparação) | `app/catalogo/` |
 | US29 | Questionário de orientação | Sprint 2 | Por fazer | — |
 | US30 | Sugestão de cursos com LLM | Sprint 3 | Por fazer | — |
 | US31 | Escolher curso e linha do tempo do percurso | Sprint 3 | Por fazer | — |
@@ -67,6 +67,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US26 | Filtragem baseada em itens | Backlog | Por fazer | — |
 | US27 | Evitar conflitos de horário | Backlog | Por fazer | — |
 | US28 | Lembretes de avaliação | Backlog | Por fazer | — |
+| US32 | Assistente LLM que conversa com o utilizador | Backlog | Por avaliar | ponto em aberto 13 dos requisitos |
 
 Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US03).
 

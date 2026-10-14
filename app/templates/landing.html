@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "macros/marca.html" as marca %}
+{% import "macros/marca.html" as marca with context %}
 {% set layout = "apresentacao" %}
 {% set page_title = texts.LANDING_TITLE %}
 
@@ -14,28 +14,60 @@
     </p>
   </div>
 
-  {#- O percurso interativo. Sem JavaScript mostra o primeiro caminho e a explicação. -#}
-  <div class="mapa" data-mapa data-ativo="0">
-    {{ marca.mapa(texts.LANDING_PATH_OPTIONS) }}
-    {#- O nome do caminho escolhido, escrito à mão. Decorativo: os botões já dizem o nome. -#}
-    <div class="mapa-escrita" data-escrita aria-hidden="true">
-      {% for opcao in texts.LANDING_PATH_OPTIONS[:4] %}
-        <div class="mapa-escrita-item" data-escrita-item="{{ loop.index0 }}"{% if not loop.first %} hidden{% endif %}>
-          {{ marca.escrita(opcao.nome, manuscrito(opcao.nome)) }}
-        </div>
-      {% endfor %}
+  {#- Pesquisa no catálogo real (app/catalogo). Sem JavaScript, o formulário recarrega a
+      página com ?q=; com JavaScript, os resultados mudam enquanto se escreve. -#}
+  <div class="procura" data-procura>
+    <div class="procura-nota" aria-hidden="true">
+      {{ marca.escrita(texts.LANDING_SEARCH_NOTE, manuscrito(texts.LANDING_SEARCH_NOTE)) }}
+      <svg class="procura-seta" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path d="M8 6c18 2 34 12 38 34" /><path d="M36 34l10 8 6-12" /></svg>
     </div>
-    <p class="mapa-porque" data-mapa-porque aria-live="polite">{{ texts.LANDING_PATH_OPTIONS[0].porque }}</p>
-    <div class="mapa-controlos" data-mapa-controlos hidden>
-      <p class="mapa-legenda" id="mapa-legenda">{{ texts.LANDING_TRY_LABEL }}</p>
-      <div class="mapa-opcoes" role="group" aria-labelledby="mapa-legenda">
-        {% for opcao in texts.LANDING_PATH_OPTIONS[:4] %}
-          <button type="button" class="mapa-opcao" data-opcao="{{ loop.index0 }}" data-porque="{{ opcao.porque }}"
-                  aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ opcao.nome }}</button>
-        {% endfor %}
+    <form class="procura-form" method="get" action="{{ url_for('main.index') }}#resultados" role="search">
+      <label for="q" class="procura-etiqueta">{{ texts.LANDING_SEARCH_LABEL }}</label>
+      <div class="procura-campo">
+        <svg class="procura-lupa" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+        <input id="q" name="q" type="search" value="{{ termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
+               autocomplete="off" spellcheck="false" aria-controls="lista-cursos" data-procura-campo>
+        <button type="submit" class="procura-botao">{{ texts.LANDING_SEARCH_BUTTON }}</button>
       </div>
-    </div>
+    </form>
+    <p class="procura-areas">
+      <span>{{ texts.LANDING_SEARCH_AREAS }}</span>
+      {% for area in resumo.areas %}
+        <a class="procura-area" href="{{ url_for('main.index', q=area) }}#resultados" data-termo="{{ area }}">{{ area }}</a>
+      {% endfor %}
+    </p>
+    <p class="procura-numeros">
+      {{- texts.LANDING_STATS.format(
+            cursos='<strong data-contar="%d">%d</strong>'|format(resumo.cursos, resumo.cursos),
+            instituicoes='<strong data-contar="%d">%d</strong>'|format(resumo.instituicoes, resumo.instituicoes),
+            vagas='<strong data-contar="%d">%d</strong>'|format(resumo.vagas, resumo.vagas))|safe -}}
+    </p>
   </div>
+</section>
+
+<section class="seccao resultados" id="resultados" aria-labelledby="resultados-titulo">
+  <div class="resultados-cabecalho" aria-live="polite" data-resultados-cabecalho>
+    <h2 id="resultados-titulo" data-resultados-titulo>
+      {%- if resultado.amostra %}{{ texts.LANDING_RESULTS_SAMPLE }}{% else %}{{ texts.LANDING_RESULTS_FOUND.format(termo=termo) }}{% endif -%}
+    </h2>
+    <p class="resultados-conta" data-resultados-conta>
+      {%- if not resultado.amostra and resultado.total -%}
+        {{ texts.LANDING_RESULTS_COUNT.format(mostrados=resultado.cursos|length, total=resultado.total) }}
+      {%- endif -%}
+    </p>
+  </div>
+  <p class="resultados-vazio" data-resultados-vazio {% if resultado.cursos or resultado.amostra %}hidden{% endif %}>
+    {{- texts.LANDING_NO_RESULTS.format(termo=termo) -}}
+  </p>
+  <ul class="cursos" id="lista-cursos" data-cursos
+      data-texto-amostra="{{ texts.LANDING_RESULTS_SAMPLE }}"
+      data-texto-encontrados="{{ texts.LANDING_RESULTS_FOUND }}"
+      data-texto-conta="{{ texts.LANDING_RESULTS_COUNT }}"
+      data-texto-vazio="{{ texts.LANDING_NO_RESULTS }}">
+    {% for curso in resultado.cursos %}{{ marca.cartao_curso(curso) }}{% endfor %}
+  </ul>
+  <template data-modelo-curso>{{ marca.cartao_curso(none) }}</template>
+  <p class="resultados-fonte">{{ texts.LANDING_DATA_SOURCE }}</p>
 </section>
 
 <section class="seccao como-funciona" aria-labelledby="como-funciona">

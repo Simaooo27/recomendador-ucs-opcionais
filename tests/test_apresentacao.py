@@ -14,8 +14,7 @@ class LandingPageTests(AppTestCase):
     def test_sem_sessao_mostra_a_apresentacao(self):
         html = self.client.get("/").get_data(as_text=True)
         self.assertIn(texts.LANDING_HOW_TITLE, html)
-        for opcao in texts.LANDING_PATH_OPTIONS:
-            self.assertIn(opcao["nome"], html)
+        self.assertIn(texts.LANDING_SEARCH_LABEL, html)
         for passo in texts.LANDING_STEPS:
             self.assertIn(passo["titulo"], html)
 
@@ -39,14 +38,57 @@ class LandingPageTests(AppTestCase):
         self.client.post("/auth/entrar", data={"csrf_token": CSRF_TOKEN, "email": "gestor", "password": "gestao-segura-1"})
         self.assertTrue(_location(self.client.get("/")).endswith("/gestao/"))
 
-    def test_os_controlos_do_mapa_so_aparecem_com_javascript(self):
+    def test_mostra_numeros_reais_do_catalogo(self):
         html = self.client.get("/").get_data(as_text=True)
-        self.assertIn("data-mapa-controlos hidden", html)
-        self.assertIn(texts.LANDING_PATH_OPTIONS[0]["porque"], html)  # explicação visível sem JavaScript
+        self.assertIn('<strong data-contar="30">30</strong> licenciaturas', html)
+        self.assertIn('<strong data-contar="12">12</strong> instituições', html)
+
+
+class CourseSearchTests(AppTestCase):
+    """Pesquisa no catálogo real (app/catalogo), na página de apresentação."""
+
+    def test_sem_termo_mostra_uma_amostra_de_cursos(self):
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertIn(texts.LANDING_RESULTS_SAMPLE, html)
+        self.assertEqual(html.count('class="curso" data-chave='), 6)
+
+    def test_pesquisa_sem_javascript_com_q(self):
+        html = self.client.get("/?q=coimbra").get_data(as_text=True)
+        self.assertIn(texts.LANDING_RESULTS_FOUND.format(termo="coimbra"), html)
+        self.assertEqual(html.count('class="curso" data-chave='), 3)  # Coimbra tem 3 cursos no catálogo
+        self.assertNotIn("Universidade do Minho", html.split('id="lista-cursos"')[1].split("</ul>")[0])
+
+    def test_pesquisa_ignora_acentos_e_maiusculas(self):
+        dados = self.client.get("/cursos/pesquisa?q=CIENCIA informacao").get_json()
+        self.assertGreater(dados["total"], 0)
+        self.assertTrue(all("Informação" in c["curso"] or c["area"] == "Ciência da Informação" for c in dados["cursos"]))
+
+    def test_todas_as_palavras_tem_de_aparecer(self):
+        dados = self.client.get("/cursos/pesquisa?q=informatica porto").get_json()
+        self.assertTrue(dados["cursos"])
+        self.assertTrue(all(c["localidade"] == "Porto" or "Porto" in c["instituicao"] for c in dados["cursos"]))
+
+    def test_sem_resultados_mostra_mensagem(self):
+        html = self.client.get("/?q=medicina").get_data(as_text=True)
+        self.assertIn(texts.LANDING_NO_RESULTS.format(termo="medicina"), html)
+        self.assertNotIn('data-resultados-vazio hidden', html)
+
+    def test_resposta_json_tem_os_campos_da_ficha(self):
+        dados = self.client.get("/cursos/pesquisa?q=gestao").get_json()
+        self.assertEqual(set(dados), {"termo", "total", "amostra", "cursos"})
+        self.assertEqual(
+            set(dados["cursos"][0]),
+            {"curso", "instituicao", "unidade", "localidade", "area", "vagas", "ultimo_colocado", "fonte", "chave"},
+        )
+        self.assertTrue(dados["cursos"][0]["fonte"].startswith("https://www.dges.gov.pt/"))
+
+    def test_termo_muito_longo_e_cortado(self):
+        dados = self.client.get("/cursos/pesquisa?q=" + "a" * 500).get_json()
+        self.assertEqual(len(dados["termo"]), 80)
 
 
 class HandwritingTests(AppTestCase):
-    """O nome do caminho é escrito à mão; sem fontTools aparece texto normal."""
+    """A nota «comece por aqui» é escrita à mão; sem fontTools aparece texto normal."""
 
     def test_desenha_um_caminho_por_contorno(self):
         desenho = manuscrito.desenhar("Gestão")
@@ -61,7 +103,7 @@ class HandwritingTests(AppTestCase):
     def test_apresentacao_tem_a_palavra_escrita_com_nome_acessivel(self):
         html = self.client.get("/").get_data(as_text=True)
         self.assertIn('class="manuscrito"', html)
-        self.assertIn(f'aria-label="{texts.LANDING_PATH_OPTIONS[0]["nome"]}"', html)
+        self.assertIn(f'aria-label="{texts.LANDING_SEARCH_NOTE}"', html)
 
     def test_sem_fonttools_mostra_texto_normal(self):
         with mock.patch.object(manuscrito, "desenhar", return_value=None):

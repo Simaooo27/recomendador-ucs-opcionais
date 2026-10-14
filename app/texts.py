@@ -72,7 +72,9 @@ ERROR_PRIVACY_REQUIRED = "É necessário aceitar a política de privacidade para
 ERROR_EMAIL_SEND_FAILED = "Não foi possível enviar o email de confirmação. Tente de novo dentro de alguns minutos."
 
 # ---------------------------------------------------------------------------
-# Página «Iniciar sessão» (/auth/entrar)
+# Página «Iniciar sessão» (/auth/entrar) — a mesma para alunos e administradores
+# Os administradores escrevem o nome de utilizador no campo «Email». O rótulo diz só «Email»
+# para a gestão continuar invisível aos alunos; pode mudar-se para «Email ou nome de utilizador».
 # ---------------------------------------------------------------------------
 
 LOGIN_TITLE = "Iniciar sessão"
@@ -84,6 +86,7 @@ LOGIN_NO_ACCOUNT = "Ainda não tem conta? "
 LOGIN_REGISTER_LINK = "Crie uma conta"
 
 # A mesma mensagem para email inexistente e palavra-passe errada (não revela que emails têm conta).
+# Também é a mensagem dos administradores, para o formulário não revelar que a gestão existe.
 ERROR_LOGIN_INVALID = "Email ou palavra-passe incorretos."
 ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que lhe enviámos para ativar a conta."
 
@@ -104,12 +107,10 @@ ADMIN_AREA_NAME = "Gestão"
 ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
 
-ADMIN_LOGIN_TITLE = "Gestão — iniciar sessão"
-ADMIN_LOGIN_INTRO = "Área reservada aos administradores."
+# Os administradores entram pela página «Iniciar sessão» dos alunos, com o nome de utilizador
+# no campo do email (app/auth/perfis.py). Estes rótulos são do formulário «Novo administrador».
 ADMIN_USERNAME_LABEL = "Nome de utilizador"
 ADMIN_PASSWORD_LABEL = "Palavra-passe"
-ADMIN_LOGIN_BUTTON = "Entrar"
-ERROR_ADMIN_LOGIN_INVALID = "Nome de utilizador ou palavra-passe incorretos."
 
 ADMIN_DASHBOARD_TITLE = "Painel de gestão"
 ADMIN_DASHBOARD_GREETING = "Olá, {nome}."
@@ -147,7 +148,7 @@ ERROR_ADMIN_USERNAME_TAKEN = "Já existe um administrador com este nome."
 CLI_ADMIN_USERNAME_PROMPT = "Nome de utilizador"
 CLI_ADMIN_PASSWORD_PROMPT = "Palavra-passe"
 CLI_ADMIN_PASSWORD_CONFIRM_PROMPT = "Repita a palavra-passe"
-CLI_ADMIN_CREATED = "Administrador «{nome}» criado. Entre em {endereco}."
+CLI_ADMIN_CREATED = "Administrador «{nome}» criado. Inicie sessão em {endereco} com este nome no campo do email."
 CLI_NO_ADMINS = "Ainda não há administradores. Use: flask --app app create-admin"
 
 # ---------------------------------------------------------------------------

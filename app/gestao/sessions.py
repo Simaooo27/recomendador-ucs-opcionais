@@ -31,17 +31,13 @@ def login_admin(admin_id: int) -> None:
     session[_ADMIN_ID_KEY] = admin_id
 
 
-def logout_admin() -> None:
-    session.clear()
-
-
 def admin_required(view: Callable) -> Callable:
-    """Páginas da área de gestão: sem sessão de administrador, vai para o início de sessão da gestão."""
+    """Páginas da área de gestão: sem sessão de administrador, vai para o início de sessão (o mesmo dos alunos)."""
 
     @wraps(view)
     def wrapped(*args, **kwargs):
         if g.get("admin") is None:
-            return redirect(url_for("gestao.login_form"))
+            return redirect(url_for("auth.login_form"))
         return view(*args, **kwargs)
 
     return wrapped

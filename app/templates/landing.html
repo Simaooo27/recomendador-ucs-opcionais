@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "macros/marca.html" as marca %}
+{% set layout = "apresentacao" %}
+{% set page_title = texts.LANDING_TITLE %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-texto">
+    <h1 class="hero-titulo">{{ texts.BRAND_TAGLINE }}</h1>
+    <p class="hero-apoio">{{ texts.BRAND_SUPPORT }}</p>
+    <p class="hero-acoes">
+      {{ marca.flow(texts.LANDING_CTA_PRIMARY, url_for('auth.register_form'), "claro") }}
+      <a class="hero-secundaria" href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_CTA_SECONDARY }}</a>
+    </p>
+  </div>
+
+  {#- O percurso interativo. Sem JavaScript mostra o primeiro caminho e a explicação. -#}
+  <div class="mapa" data-mapa data-ativo="0">
+    {{ marca.mapa(texts.LANDING_PATH_OPTIONS) }}
+    {#- O nome do caminho escolhido, escrito à mão. Decorativo: os botões já dizem o nome. -#}
+    <div class="mapa-escrita" data-escrita aria-hidden="true">
+      {% for opcao in texts.LANDING_PATH_OPTIONS[:4] %}
+        <div class="mapa-escrita-item" data-escrita-item="{{ loop.index0 }}"{% if not loop.first %} hidden{% endif %}>
+          {{ marca.escrita(opcao.nome, manuscrito(opcao.nome)) }}
+        </div>
+      {% endfor %}
+    </div>
+    <p class="mapa-porque" data-mapa-porque aria-live="polite">{{ texts.LANDING_PATH_OPTIONS[0].porque }}</p>
+    <div class="mapa-controlos" data-mapa-controlos hidden>
+      <p class="mapa-legenda" id="mapa-legenda">{{ texts.LANDING_TRY_LABEL }}</p>
+      <div class="mapa-opcoes" role="group" aria-labelledby="mapa-legenda">
+        {% for opcao in texts.LANDING_PATH_OPTIONS[:4] %}
+          <button type="button" class="mapa-opcao" data-opcao="{{ loop.index0 }}" data-porque="{{ opcao.porque }}"
+                  aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ opcao.nome }}</button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccao como-funciona" aria-labelledby="como-funciona">
+  <h2 id="como-funciona">{{ texts.LANDING_HOW_TITLE }}</h2>
+  <ol class="passos" data-passos>
+    {% for passo in texts.LANDING_STEPS %}
+      <li class="passo">
+        <span class="passo-no" aria-hidden="true">{{ loop.index }}</span>
+        <h3>{{ passo.titulo }}</h3>
+        <p>{{ passo.texto }}</p>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="seccao para-quem" aria-labelledby="para-quem">
+  <h2 id="para-quem">{{ texts.LANDING_FOR_TITLE }}</h2>
+  <div class="para-quem-lista">
+    {% for publico in texts.LANDING_FOR %}
+      <div class="publico">
+        <h3>{{ publico.titulo }}</h3>
+        <p>{{ publico.texto }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="para-quem-acao">{{ marca.flow(texts.LANDING_CTA_PRIMARY, url_for('auth.register_form')) }}</p>
+</section>
+
+<footer class="rodape">
+  <p>{{ texts.LANDING_FOOTER }}</p>
+  <p><a href="{{ url_for('main.privacy') }}">{{ texts.LANDING_PRIVACY_LINK }}</a></p>
+</footer>
+{% endblock %}

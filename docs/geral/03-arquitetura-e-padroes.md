@@ -30,6 +30,8 @@ As caixas `recomendacao/`, `orientacao/` e `llm/` ainda não existem: entram com
 | Testes | `unittest` | Biblioteca padrão; corre com um único comando e sem rede |
 | Motor de recomendação | `pandas` e `numpy` (a partir da US11) | Cálculos de médias e similaridades sobre matrizes |
 | LLM | Atrás de uma interface própria (secção 4.2); fornecedor escolhido na US30 | Não ficar preso a um fornecedor; testes sem rede nem custos |
+| Interface | HTML (Jinja), CSS e JavaScript próprios, sem React nem Tailwind | Componentes de bibliotecas React (ex.: FlowButton, HandwritingText) são **adaptados** a este formato em vez de mudar o projeto para React: a política de segurança (CSP) só aceita ficheiros do próprio site e o código fica legível para os dois elementos |
+| Letras «escritas à mão» | `fontTools` no servidor (`app/manuscrito.py`) | Converte as letras em traços SVG sem carregar bibliotecas de outros sites; sem ele, a página mostra texto normal |
 
 ## 3. Padrões que o código já usa
 

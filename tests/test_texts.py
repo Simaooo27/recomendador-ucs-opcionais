@@ -18,6 +18,7 @@ REQUIRED_PLACEHOLDERS = {
     "CLI_ADMIN_CREATED": {"nome", "endereco"},
     "REGISTER_EMAIL_HINT": {"dominios"},
     "REGISTER_PASSWORD_HINT": {"minimo"},
+    "REGISTER_RULE_LENGTH": {"minimo"},
     "ERROR_EMAIL_DOMAIN": {"dominios"},
     "ERROR_PASSWORD_TOO_SHORT": {"minimo"},
     "ERROR_PASSWORD_TOO_LONG": {"maximo"},
@@ -27,13 +28,17 @@ REQUIRED_PLACEHOLDERS = {
 
 
 def _all_texts() -> dict[str, str]:
-    """Todos os textos; os que são listas (ex.: ADMIN_UPCOMING) contam linha a linha."""
+    """Todos os textos; as listas (ex.: ADMIN_UPCOMING, LANDING_STEPS) contam item a item."""
     result = {}
     for name, value in vars(texts).items():
         if not name.isupper():
             continue
         if isinstance(value, list):
-            result.update({f"{name}[{i}]": item for i, item in enumerate(value)})
+            for i, item in enumerate(value):
+                if isinstance(item, dict):  # ex.: LANDING_STEPS, com «titulo» e «texto»
+                    result.update({f"{name}[{i}].{key}": text for key, text in item.items()})
+                else:
+                    result[f"{name}[{i}]"] = item
         else:
             result[name] = value
     return result
@@ -71,10 +76,10 @@ class TextsFileTests(unittest.TestCase):
 
 class TextsInPagesTests(AppTestCase):
     def test_nome_da_aplicacao_aparece_no_topo_e_no_separador(self):
-        with mock.patch.object(texts, "APP_NAME", "OptaBem"):
+        with mock.patch.object(texts, "APP_NAME", "Recomendador"), mock.patch.object(texts, "BRAND_NAME", "Marca"):
             html = self.client.get("/auth/registo").get_data(as_text=True)
-        self.assertIn("<span>OptaBem</span>", html)
-        self.assertIn("<title>Criar conta · OptaBem</title>", html)
+        self.assertIn("<span>Marca</span>", html)  # marca no painel / barra do topo (BRAND_NAME)
+        self.assertIn("<title>Criar conta · Recomendador</title>", html)  # separador (APP_NAME)
 
     def test_titulo_da_pagina_vem_dos_textos(self):
         with mock.patch.object(texts, "REGISTER_TITLE", "Registo"):

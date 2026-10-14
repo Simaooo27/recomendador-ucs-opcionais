@@ -18,7 +18,7 @@ def login_form():
 @bp.get("/")
 @sessions.admin_required
 def dashboard():
-    return render_template("gestao/painel.html")
+    return render_template("gestao/painel.html", indicadores=services.indicadores(get_db()))
 
 
 def _render_admins(values: dict | None = None, errors: dict | None = None, status: int = 200):

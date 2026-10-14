@@ -55,3 +55,16 @@ def refresh_pending_user(
 
 def activate_user(db: sqlite3.Connection, user_id: int, now: str) -> None:
     db.execute("UPDATE users SET is_active = 1, confirmed_at = ? WHERE id = ?", (now, user_id))
+
+
+def count_by_status(db: sqlite3.Connection) -> tuple[int, int]:
+    """Número de contas ativas e de contas por confirmar (painel de gestão)."""
+    row = db.execute(
+        "SELECT COALESCE(SUM(is_active), 0) AS ativas, COALESCE(SUM(1 - is_active), 0) AS pendentes FROM users"
+    ).fetchone()
+    return int(row["ativas"]), int(row["pendentes"])
+
+
+def last_created_at(db: sqlite3.Connection) -> str | None:
+    """Data do registo mais recente (UTC, ISO 8601), ou ``None`` se não houver contas."""
+    return db.execute("SELECT MAX(created_at) AS ultimo FROM users").fetchone()["ultimo"]

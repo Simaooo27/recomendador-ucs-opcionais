@@ -41,7 +41,10 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 ├── db.py                             ligação à base de dados SQLite
 ├── security.py                       proteção CSRF dos formulários e cabeçalhos de segurança
 ├── mailer.py                         envio de email (no terminal em desenvolvimento, ou SMTP)
-├── main.py                           página inicial do aluno (/inicio) e política de privacidade
+├── main.py                           apresentação (/), página inicial do aluno (/inicio), privacidade
+├── percurso.py                       em que passo do percurso está cada aluno (padrão State)
+├── manuscrito.py                     converte palavras em traços «escritos à mão» (fontTools)
+├── recursos/                         tipo de letra manuscrito Caveat, usado pelo servidor (licença OFL)
 │
 ├── auth/                             CONTAS E INÍCIO DE SESSÃO (US01 registo, US02 sessão, US03 perfis)
 │   ├── routes.py                     páginas /auth/registo, /auth/entrar, /auth/sair, /auth/confirmar
@@ -62,21 +65,24 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │
 ├── templates/                        AS PÁGINAS (HTML)
 │   ├── base.html                     moldura comum: painel do percurso (páginas de entrada) ou barra do topo
-│   ├── home.html                     página inicial do aluno
+│   ├── landing.html                  apresentação pública (/): mapa interativo, como funciona, para quem
+│   ├── home.html                     página inicial do aluno, com «O seu percurso»
 │   ├── privacy.html                  política de privacidade
 │   ├── error.html                    páginas de erro (404, pedido inválido)
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
-│   ├── macros/marca.html             o símbolo da marca e a ilustração do percurso
+│   ├── macros/marca.html             símbolo, ilustração do percurso, mapa, escrita à mão, botão «flow»
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
 │   └── gestao/                       painel e lista de administradores
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR
     ├── style.css                     O ASPETO DE TODAS AS PÁGINAS (secção 4 deste guia)
     ├── fonts/                        tipos de letra (Bricolage Grotesque e Atkinson Hyperlegible Next, licença OFL)
+    ├── favicon.svg                   ícone no separador do navegador
+    ├── app.js                        interações: mapa, escrita à mão, linha dos passos, regras da palavra-passe, números
     └── password-toggle.js            o clique no ícone de olho (mostrar/esconder a palavra-passe)
 
 tests/                                um ficheiro por área: test_registration, test_confirmation,
-                                      test_validators, test_login, test_gestao, test_perfis, test_texts…
+                                      test_validators, test_login, test_gestao, test_perfis, test_apresentacao, test_texts…
 docs/
 ├── geral/                            requisitos, regras de código, este guia, backlog (Excel), registo de IA
 └── US01/, US02/, US03/               uma pasta por story: requisitos, use case, BPMN, prompt, diagramas
@@ -92,6 +98,8 @@ docs/
 | O nome na barra do topo e no painel verde | `app/texts.py` | `BRAND_NAME` (hoje «OptaBem») |
 | O nome no separador do navegador | `app/texts.py` | `APP_NAME` |
 | A frase grande do painel verde | `app/texts.py` | `BRAND_TAGLINE` e `BRAND_SUPPORT` |
+| Os caminhos do mapa, os passos e «Para quem é» | `app/texts.py` | `LANDING_PATH_OPTIONS`, `LANDING_STEPS`, `LANDING_FOR` |
+| Os passos de «O seu percurso» | `app/texts.py` | `HOME_PATH_STEPS` |
 | Uma cor | `app/static/style.css`, secção 1 | Mudar o código `#rrggbb` da cor (modo escuro: secção 12) |
 | Largura, tamanho da letra, espaços | `app/static/style.css`, secções 3 a 8 | Ver os exemplos na secção 4 deste guia |
 | O que aparece numa página (ordem dos campos, um parágrafo novo) | `app/templates/…` | O ficheiro com o nome da página; o texto vai para `texts.py` |
@@ -107,18 +115,21 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 
 | Secção | Linha (aprox.) | O que controla |
 |---|---|---|
-| 1. Cores | 29 | Todas as cores: texto, fundos, verde dos botões, verde-escuro do painel, amarelo do caminho escolhido, erros, sucesso |
-| 2. Tipos de letra | 56 | Letra dos títulos (Bricolage Grotesque) e do texto (Atkinson Hyperlegible Next), em `app/static/fonts/` |
-| 3. Página e colunas | 90 | Fundo da página, tamanho base da letra, largura da coluna (alunos e gestão) |
-| 4. Barra do topo | 116 | Marca «OptaBem», «Gestão», menu, nome do administrador, «Terminar sessão», versão telemóvel |
-| 5. Páginas de entrada | 192 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
-| 6. Texto | 265 | Títulos, parágrafos, ligações, listas, contorno do teclado |
-| 7. Formulários | 294 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
-| 8. Botões | 365 | Botão principal, «Terminar sessão» e «Remover» |
-| 9. Caixas de mensagem | 417 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
-| 10. Tabelas | 433 | Lista de administradores na gestão |
-| 11. Movimento | 444 | A linha do percurso a desenhar-se ao abrir a página (desligada para quem pede menos animação) |
-| 12. Modo escuro | 467 | Cores quando o computador está em modo escuro (fica sempre no fim) |
+| 1. Cores | 32 | Todas as cores: texto, fundos, verde dos botões, verde-escuro do painel, amarelo do caminho escolhido, erros, sucesso |
+| 2. Tipos de letra | 59 | Letra dos títulos (Bricolage Grotesque) e do texto (Atkinson Hyperlegible Next), em `app/static/fonts/` |
+| 3. Página e colunas | 93 | Fundo da página, tamanho base da letra, largura da coluna (alunos e gestão) |
+| 4. Barra do topo | 119 | Marca «OptaBem», «Gestão», menu, nome do administrador, «Terminar sessão», versão telemóvel |
+| 5. Páginas de entrada | 195 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
+| 6. Texto | 268 | Títulos, parágrafos, ligações, listas, contorno do teclado |
+| 7. Formulários | 297 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
+| 8. Botões | 368 | Botão principal, «Terminar sessão» e «Remover» |
+| 9. Caixas de mensagem | 420 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
+| 10. Tabelas | 436 | Lista de administradores na gestão |
+| 11. Página de apresentação | 447 | A página inicial pública: mapa interativo, nome escrito à mão, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
+| 12. O meu percurso | 710 | A linha do tempo da página inicial do aluno |
+| 13. Gestão, erros e detalhes | 756 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
+| 14. Movimento | 836 | Todas as animações (e o que acontece a quem pede menos movimento) |
+| 15. Modo escuro | 881 | Cores quando o computador está em modo escuro (fica sempre no fim) |
 
 **Exemplos de alterações comuns:**
 
@@ -133,11 +144,13 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 | Letra maior em todas as páginas | 3 | `body { font-size: 1.0625rem; }` para `1.15rem` |
 | Títulos maiores | 6 | `h1 { font-size: clamp(…); }` |
 | Outro tipo de letra | 2 | `--font-display` (títulos) e `--font-text` (texto) |
-| Desligar a animação do percurso | 11 | Apagar o bloco `@media (prefers-reduced-motion: no-preference) { … }` |
+| Desligar as animações | 14 | Apagar os blocos `@media (prefers-reduced-motion: no-preference) { … }` |
+| Cor da palavra escrita à mão | 11 | `.mapa-escrita { color: … }` |
+| Cor do círculo do botão «flow» | 11 | `--flow-cor` em `.flow-button` (e em `.flow-button-claro`) |
 
 **Cuidados:**
 - `rem` é uma medida relativa ao tamanho da letra (1rem ≈ 16 píxeis); prefira-a a píxeis para a página continuar a funcionar no telemóvel.
-- Se mudar cores na secção 1, veja também a secção 12 (modo escuro), que tem as suas próprias cores.
+- Se mudar cores na secção 1, veja também a secção 15 (modo escuro), que tem as suas próprias cores.
 - Os tipos de letra estão na própria aplicação (`app/static/fonts/`), porque a política de segurança não deixa carregar letras de outros sites.
 - Não mude a ordem das secções: o modo escuro tem de ficar no fim para se sobrepor ao resto.
 - Não escreva estilos dentro dos ficheiros HTML (`style="…"`): a política de segurança da aplicação (CSP, em `app/security.py`) bloqueia-os. Tudo vai para `style.css`.

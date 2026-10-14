@@ -17,7 +17,7 @@
      8. Botões ....................... botão principal, «Terminar sessão», «Remover»
      9. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
     10. Tabelas ...................... lista de administradores (gestão)
-    11. Página de apresentação ....... a página inicial pública (/): mapa interativo, passos, para quem
+    11. Página de apresentação ....... a página inicial pública (/): pesquisa de cursos, passos, para quem
     12. O meu percurso ............... linha do tempo na página inicial do aluno
     13. Gestão, erros e detalhes ..... números do painel, página não encontrada, regras da palavra-passe
     14. Movimento .................... animações (e o que acontece a quem pede menos movimento)
@@ -445,7 +445,7 @@ td form { margin: 0; }
 
 /* --------------------------------------------------------------------------
    11. Página de apresentação (/)
-   Painel verde com o mapa interativo, «Como funciona» e «Para quem é».
+   Painel verde com a pesquisa de cursos, fichas dos cursos, «Como funciona» e «Para quem é».
    -------------------------------------------------------------------------- */
 /* Botão feito com uma ligação («Criar conta» na barra e na apresentação). */
 .button-link {
@@ -500,59 +500,6 @@ td form { margin: 0; }
 .hero-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin: 2rem 0 0; }
 .hero-secundaria { color: #ffffff; padding: 0.6rem 0; }
 
-/* O mapa: ramos cinzentos, o ramo escolhido a amarelo. */
-.mapa-svg { display: block; width: 100%; overflow: visible; }
-.mapa-base path { fill: none; stroke: rgba(255, 255, 255, 0.22); stroke-width: 2; stroke-linecap: round; }
-.mapa-inicio { fill: #ffffff; }
-.mapa-ramo-linha {
-  fill: none;
-  stroke: var(--marigold);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-.mapa-ramo-no {
-  fill: var(--forest);
-  stroke: rgba(255, 255, 255, 0.5);
-  stroke-width: 2;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.mapa-ramo-nome { fill: rgba(255, 255, 255, 0.6); font-family: var(--font-text); font-size: 16px; }
-.mapa[data-ativo="0"] [data-ramo="0"],
-.mapa[data-ativo="1"] [data-ramo="1"],
-.mapa[data-ativo="2"] [data-ramo="2"],
-.mapa[data-ativo="3"] [data-ramo="3"] { --ramo-ativo: 1; }
-.mapa [data-ramo] .mapa-ramo-linha { stroke-dashoffset: calc(1 - var(--ramo-ativo, 0)); }
-.mapa [data-ramo] .mapa-ramo-no {
-  fill: color-mix(in srgb, var(--marigold) calc(var(--ramo-ativo, 0) * 100%), var(--forest));
-  stroke: color-mix(in srgb, var(--marigold) calc(var(--ramo-ativo, 0) * 100%), rgba(255, 255, 255, 0.5));
-  transform: scale(calc(1 + var(--ramo-ativo, 0) * 0.35));
-}
-.mapa [data-ramo] .mapa-ramo-nome { fill: color-mix(in srgb, #ffffff calc(40% + var(--ramo-ativo, 0) * 60%), transparent); font-weight: 700; }
-
-.mapa-controlos { margin-top: 1.25rem; }
-.mapa-legenda { margin: 0 0 0.6rem; font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); }
-.mapa-opcoes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.mapa-opcao {
-  width: auto;
-  min-height: 2.5rem;
-  padding: 0.4rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: transparent;
-  border-radius: 999px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-}
-.mapa-opcao[aria-pressed="true"] { background: var(--marigold); color: #13221e; box-shadow: none; }
-@media (hover: hover) {
-  .mapa-opcao:hover { background: rgba(255, 255, 255, 0.1); }
-  .mapa-opcao[aria-pressed="true"]:hover { background: var(--marigold); }
-}
-.mapa-porque { min-height: 3.2em; margin: 1rem 0 0; font-size: 1.05rem; color: #ffffff; }
 .hero :focus-visible { outline-color: var(--marigold); }
 
 /* Secções por baixo do painel. */
@@ -614,12 +561,102 @@ td form { margin: 0; }
 }
 .rodape p { margin: 0; }
 
-/* Nome do caminho escolhido, escrito à mão (app/manuscrito.py). */
-.mapa-escrita { min-height: 3.4rem; margin-top: 0.75rem; color: var(--marigold); }
-.manuscrito { display: block; height: 3.2rem; width: auto; max-width: 100%; overflow: visible; }
+/* Pesquisa de cursos (lado direito do painel verde). */
+.procura { position: relative; }
+.procura-nota { display: flex; align-items: flex-end; gap: 0.25rem; margin: 0 0 0.35rem 0.5rem; color: var(--marigold); }
+.manuscrito { display: block; height: 2.6rem; width: auto; overflow: visible; }
 .manuscrito-tinta { fill: currentColor; }
 .manuscrito-traco { fill: none; stroke: currentColor; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
-.manuscrito-texto { font-family: var(--font-display); font-size: 2rem; font-weight: 600; }
+.manuscrito-texto { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+.procura-seta { width: 2.6rem; height: 2.6rem; margin-bottom: -1.2rem; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+.procura-etiqueta { margin-bottom: 0.6rem; font-weight: 400; color: rgba(255, 255, 255, 0.8); }
+.procura-campo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.4rem 0.4rem 1rem;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #13221e;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 200ms ease;
+}
+.procura-campo:focus-within { box-shadow: 0 0 0 4px rgba(242, 179, 61, 0.55), 0 10px 30px rgba(0, 0, 0, 0.25); }
+.procura-lupa { flex: none; fill: none; stroke: #4c5f59; stroke-width: 2; stroke-linecap: round; }
+.procura-campo input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.5rem 0.25rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.1rem;
+  box-shadow: none;
+}
+.procura-campo input[type="search"]:focus { outline: none; box-shadow: none; }
+.procura-campo input::placeholder { color: #6b7d76; }
+.procura-botao { width: auto; min-height: 2.75rem; padding: 0.5rem 1.1rem; border-radius: 12px; }
+
+.procura-areas { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1.1rem 0 0; font-size: 0.95rem; color: rgba(255, 255, 255, 0.75); }
+.procura-area {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .procura-area:hover { background: var(--marigold); color: #13221e; text-decoration: none; box-shadow: none; }
+}
+.procura-numeros { margin: 1.5rem 0 0; color: rgba(255, 255, 255, 0.8); }
+.procura-numeros strong { color: #ffffff; font-variant-numeric: tabular-nums; }
+
+/* Resultados: fichas dos cursos. */
+.resultados { padding-top: clamp(2.5rem, 5vw, 4rem); max-width: none; }
+.resultados-cabecalho { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; }
+.resultados-conta { margin: 0; color: var(--muted); }
+.resultados-vazio { margin: 1.5rem 0 0; padding: 1.25rem; border-radius: var(--radius); background: var(--paper); color: var(--muted); }
+.resultados-fonte { margin: 1.5rem 0 0; font-size: 0.875rem; color: var(--muted); }
+.cursos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.curso {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 1rem;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), 0 2px 8px rgba(19, 34, 30, 0.05);
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+@media (hover: hover) {
+  .curso:hover { box-shadow: 0 0 0 1px var(--field-line), 0 10px 24px rgba(19, 34, 30, 0.1); transform: translateY(-2px); }
+}
+.curso-area { display: flex; align-items: center; gap: 0.45rem; margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--muted); }
+.curso-area-ponto { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--marigold); }
+.curso-nome { margin: 0 0 0.35rem; font-family: var(--font-display); font-size: 1.3rem; font-weight: 650; font-stretch: 90%; line-height: 1.15; text-wrap: balance; }
+.curso-instituicao { margin: 0; color: var(--ink); }
+.curso-local { display: flex; align-items: center; gap: 0.35rem; margin: 0.3rem 0 0; font-size: 0.92rem; color: var(--muted); }
+.curso-local svg { flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.curso mark { background: rgba(242, 179, 61, 0.45); color: inherit; border-radius: 3px; padding: 0 0.05em; }
+.curso-numeros { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0 0.75rem; padding-top: 0.85rem; box-shadow: inset 0 1px 0 var(--line); }
+.curso-numeros > div { display: flex; flex-direction: column; justify-content: space-between; }
+.curso-numeros dt { font-size: 0.8rem; color: var(--muted); }
+.curso-numeros dd.sem-dados { font-family: var(--font-text); font-size: 0.95rem; font-weight: 400; color: var(--muted); padding-top: 0.35rem; }
+.curso-numeros dd { margin: 0.1rem 0 0; font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.curso-fonte { margin-top: auto; align-self: flex-start; padding: 0.4rem 0; font-size: 0.92rem; }
 
 /* Botão «flow» (adaptado do componente FlowButton): ao passar o rato, um círculo
    enche o botão, os cantos ficam menos redondos e as setas trocam de lado. */
@@ -699,7 +736,7 @@ td form { margin: 0; }
   .para-quem-lista { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 @media (max-width: 40rem) {
-  .mapa-ramo-nome { font-size: 24px; }   /* o mapa encolhe no telemóvel: nomes maiores para se lerem */
+  .procura-botao { display: none; }   /* no telemóvel pesquisa-se ao escrever; o teclado tem «Ir» */
 }
 @media (max-width: 30rem) {
   .landing-nav > a:not(.button-link) { display: none; }   /* no telemóvel fica só «Criar conta» */
@@ -850,10 +887,6 @@ button.a-enviar::before {
   to { opacity: 1; transform: scale(1); }
 }
 @media (prefers-reduced-motion: no-preference) {
-  /* Mapa da apresentação: o caminho escolhido desenha-se; o anterior recolhe. */
-  .mapa-ramo-linha { transition: stroke-dashoffset 750ms cubic-bezier(0.65, 0, 0.35, 1); }
-  .mapa-ramo-no { transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1) 450ms, fill 200ms ease 450ms, stroke 200ms ease 450ms; }
-  .mapa-ramo-nome { transition: fill 300ms ease; }
   /* O meu percurso: a linha dos passos feitos cresce ao abrir a página. */
   .etapa-feito::before { animation: crescer 700ms cubic-bezier(0.65, 0, 0.35, 1) 150ms both; }
   .etapa-atual .etapa-no { animation: chegar 450ms cubic-bezier(0.34, 1.56, 0.64, 1) 750ms both; }

@@ -33,6 +33,11 @@ def default_config() -> dict:
         "PRIVACY_POLICY_VERSION": "1.0",
         # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
         "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),
+        # Catálogo de cursos (dados públicos da DGES). A US04 vai importá-lo para a base de dados.
+        "CATALOGO_CSV": os.environ.get(
+            "CATALOGO_CSV",
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dados", "catalogo-cursos-mvp.csv"),
+        ),
         # Email
         "MAIL_BACKEND": os.environ.get("MAIL_BACKEND", "console"),
         "MAIL_SERVER": os.environ.get("MAIL_SERVER", ""),

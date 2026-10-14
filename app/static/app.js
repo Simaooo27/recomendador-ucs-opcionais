@@ -3,8 +3,8 @@
  * Tudo o que está aqui é um extra: sem JavaScript as páginas funcionam e mostram a
  * mesma informação. Quem pediu ao sistema menos animação não vê movimento.
  *
- *   1. Mapa interativo da página de apresentação (escolher um caminho), com o nome
- *      do caminho escrito à mão (as letras vêm de app/manuscrito.py)
+ *   1. Pesquisa de cursos da página de apresentação: resultados enquanto se escreve,
+ *      com as fichas a deslizar para o novo lugar (e a nota «comece por aqui» escrita à mão)
  *   2. Linha de «Como funciona» que se desenha ao descer a página
  *   3. Regras da palavra-passe marcadas enquanto escreve (criar conta)
  *   4. Botões que mostram «a enviar» e evitam envios repetidos
@@ -46,48 +46,160 @@
     });
   }
 
-  /* 1. Mapa interativo ---------------------------------------------------- */
-  document.querySelectorAll("[data-mapa]").forEach(function (mapa) {
-    var controlos = mapa.querySelector("[data-mapa-controlos]");
-    var porque = mapa.querySelector("[data-mapa-porque]");
-    var botoes = Array.prototype.slice.call(mapa.querySelectorAll("[data-opcao]"));
-    if (!controlos || !botoes.length) return;
-    controlos.hidden = false;
+  /* 1. Pesquisa de cursos ------------------------------------------------- */
+  // Os resultados vêm de /cursos/pesquisa (Python, app/catalogo). Aqui só se desenham as
+  // fichas: as que ficam deslizam para o novo lugar, as novas aparecem uma a uma.
+  function semAcentos(texto) {
+    return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  }
 
-    function escolher(indice) {
-      mapa.setAttribute("data-ativo", String(indice));
-      botoes.forEach(function (botao, i) {
-        botao.setAttribute("aria-pressed", i === indice ? "true" : "false");
-      });
-      porque.textContent = botoes[indice].getAttribute("data-porque");
-      mapa.querySelectorAll("[data-escrita-item]").forEach(function (item, i) {
-        item.hidden = i !== indice;
-        if (i === indice) escrever(item.querySelector("svg"));
-      });
+  // Põe <mark> à volta das palavras pesquisadas, sem mexer nos acentos do texto original.
+  function realcar(elemento, texto, palavras) {
+    elemento.textContent = "";
+    if (!palavras.length) { elemento.textContent = texto; return; }
+    var normal = "", mapa = [];
+    for (var i = 0; i < texto.length; i++) {
+      var letra = semAcentos(texto[i]);
+      for (var j = 0; j < letra.length; j++) { normal += letra[j]; mapa.push(i); }
     }
-
-    // Enquanto ninguém mexe, o mapa mostra os caminhos um a um.
-    var automatico = null;
-    function parar() {
-      if (automatico) window.clearInterval(automatico);
-      automatico = null;
-    }
-    botoes.forEach(function (botao, i) {
-      botao.addEventListener("click", function () { parar(); escolher(i); });
+    var marcas = new Array(texto.length).fill(false);
+    palavras.forEach(function (palavra) {
+      var desde = 0, pos;
+      while (palavra && (pos = normal.indexOf(palavra, desde)) !== -1) {
+        for (var k = pos; k < pos + palavra.length; k++) marcas[mapa[k]] = true;
+        desde = pos + palavra.length;
+      }
     });
-    mapa.addEventListener("pointerenter", parar);
-    mapa.addEventListener("focusin", parar);
-
-    escrever(mapa.querySelector('[data-escrita-item="0"] svg'));
-
-    if (!menosMovimento) {
-      var atual = 0;
-      automatico = window.setInterval(function () {
-        if (document.hidden) return;
-        atual = (atual + 1) % botoes.length;
-        escolher(atual);
-      }, 4200);
+    var atual = null, marcado = null;
+    for (var n = 0; n < texto.length; n++) {
+      if (marcas[n] !== marcado) {
+        atual = marcas[n] ? document.createElement("mark") : document.createTextNode("");
+        elemento.appendChild(atual);
+        marcado = marcas[n];
+      }
+      if (atual.nodeType === 3) atual.appendData(texto[n]); else atual.textContent += texto[n];
     }
+  }
+
+  document.querySelectorAll("[data-procura]").forEach(function (procura) {
+    var campo = procura.querySelector("[data-procura-campo]");
+    var lista = document.querySelector("[data-cursos]");
+    var modelo = document.querySelector("[data-modelo-curso]");
+    var titulo = document.querySelector("[data-resultados-titulo]");
+    var conta = document.querySelector("[data-resultados-conta]");
+    var vazio = document.querySelector("[data-resultados-vazio]");
+    if (!campo || !lista || !modelo || !window.fetch) return;
+
+    var pedidoAtual = 0;
+    var espera = null;
+
+    function preencher(item, curso, palavras) {
+      item.setAttribute("data-chave", curso.chave);
+      item.querySelectorAll("[data-campo]").forEach(function (el) {
+        var nome = el.getAttribute("data-campo");
+        var valor = curso[nome];
+        var semValor = valor === null || valor === undefined || valor === "";
+        el.classList.toggle("sem-dados", semValor && el.hasAttribute("data-vazio"));
+        if (semValor) {
+          el.textContent = el.getAttribute("data-vazio") || "—";
+        } else if (nome === "curso" || nome === "instituicao" || nome === "localidade") {
+          realcar(el, String(valor), palavras);
+        } else {
+          el.textContent = String(valor);
+        }
+      });
+      var fonte = item.querySelector("[data-campo-href]");
+      if (fonte) fonte.href = curso.fonte;
+    }
+
+    function mostrar(dados) {
+      var palavras = semAcentos(dados.termo || "").split(/\s+/).filter(Boolean);
+      // FLIP: guardar onde estava cada ficha antes de mudar a lista.
+      var antes = {};
+      lista.querySelectorAll("[data-chave]").forEach(function (el) {
+        antes[el.getAttribute("data-chave")] = el.getBoundingClientRect();
+      });
+      var existentes = {};
+      lista.querySelectorAll("[data-chave]").forEach(function (el) { existentes[el.getAttribute("data-chave")] = el; });
+
+      var novas = [];
+      var fragmento = document.createDocumentFragment();
+      dados.cursos.forEach(function (curso) {
+        var item = existentes[curso.chave];
+        if (!item) {
+          item = modelo.content.firstElementChild.cloneNode(true);
+          novas.push(item);
+        }
+        preencher(item, curso, palavras);
+        fragmento.appendChild(item);
+      });
+      lista.textContent = "";
+      lista.appendChild(fragmento);
+
+      // Títulos e mensagens.
+      if (dados.amostra) {
+        titulo.textContent = lista.getAttribute("data-texto-amostra");
+        conta.textContent = "";
+      } else {
+        titulo.textContent = lista.getAttribute("data-texto-encontrados").replace("{termo}", dados.termo);
+        conta.textContent = dados.total
+          ? lista.getAttribute("data-texto-conta").replace("{mostrados}", dados.cursos.length).replace("{total}", dados.total)
+          : "";
+      }
+      vazio.hidden = dados.cursos.length > 0 || dados.amostra;
+      vazio.textContent = lista.getAttribute("data-texto-vazio").replace("{termo}", dados.termo);
+
+      if (menosMovimento || !lista.animate) return;
+      // As que já existiam deslizam da posição antiga para a nova.
+      lista.querySelectorAll("[data-chave]").forEach(function (el) {
+        var antiga = antes[el.getAttribute("data-chave")];
+        if (!antiga || novas.indexOf(el) !== -1) return;
+        var nova = el.getBoundingClientRect();
+        var dx = antiga.left - nova.left, dy = antiga.top - nova.top;
+        if (dx || dy) {
+          el.animate([{ transform: "translate(" + dx + "px," + dy + "px)" }, { transform: "none" }],
+                     { duration: 420, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+        }
+      });
+      // As novas aparecem uma a uma.
+      novas.forEach(function (el, i) {
+        el.animate([{ opacity: 0, transform: "translateY(14px) scale(0.98)" }, { opacity: 1, transform: "none" }],
+                   { duration: 360, delay: Math.min(i, 8) * 45, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)", fill: "backwards" });
+      });
+    }
+
+    function pesquisar(termo) {
+      var numero = ++pedidoAtual;
+      fetch("/cursos/pesquisa?q=" + encodeURIComponent(termo), { headers: { Accept: "application/json" } })
+        .then(function (resposta) { return resposta.ok ? resposta.json() : null; })
+        .then(function (dados) {
+          if (!dados || numero !== pedidoAtual) return; // chegou uma resposta mais recente
+          mostrar(dados);
+          var endereco = termo ? "?q=" + encodeURIComponent(termo) : window.location.pathname;
+          window.history.replaceState(null, "", endereco);
+        })
+        .catch(function () { /* sem rede: fica o que estava */ });
+    }
+
+    campo.addEventListener("input", function () {
+      window.clearTimeout(espera);
+      espera = window.setTimeout(function () { pesquisar(campo.value.trim()); }, 160);
+    });
+    campo.form.addEventListener("submit", function (evento) {
+      evento.preventDefault();
+      pesquisar(campo.value.trim());
+      document.getElementById("resultados").scrollIntoView({ behavior: menosMovimento ? "auto" : "smooth" });
+    });
+    procura.querySelectorAll("[data-termo]").forEach(function (ligacao) {
+      ligacao.addEventListener("click", function (evento) {
+        evento.preventDefault();
+        campo.value = ligacao.getAttribute("data-termo");
+        pesquisar(campo.value);
+        campo.focus();
+      });
+    });
+
+    escrever(procura.querySelector(".procura-nota svg.manuscrito"));
   });
 
   /* 2. Linha de «Como funciona» ------------------------------------------- */

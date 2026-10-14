@@ -13,7 +13,7 @@ flowchart LR
     S --> Rep[repository.py<br>SQL]
     Rep --> DB[(SQLite)]
     S --> Rec[recomendacao/<br>estratégias]
-    S --> O[orientacao/<br>questionário e sugestões]
+    S --> O[orientacao/<br>conversa e sugestões]
     O --> L[llm/<br>adaptadores]
     L -.-> API[(Fornecedor de LLM<br>ou modelo local)]
 ```

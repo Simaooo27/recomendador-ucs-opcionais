@@ -6,7 +6,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · a seguir: Sprint 2 (catálogo de cursos e questionário de orientação) |
+| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · spike do LLM feito a 14/10 · a seguir: Sprint 2 (conversa de orientação com o LLM e sugestão de cursos) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
 | **Testes automáticos** | 210, todos a passar |
 
@@ -30,24 +30,26 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | Sprint | Sprint Goal |
 |---|---|
-| Sprint 2 | Uma pessoa indecisa descobre e compara cursos de várias instituições e responde ao questionário de orientação. |
-| Sprint 3 | O OptaBem sugere cursos com explicação e o utilizador escolhe, ficando a decisão registada no percurso. |
-| Sprint 4 | Quem já é aluno regista o percurso, avalia opcionais de forma anónima e recebe sugestões por popularidade. |
+| Sprint 2 (8 SP) | Uma pessoa indecisa conversa com o assistente (LLM), que lhe faz perguntas e lhe sugere 2 a 3 cursos do catálogo com explicação. |
+| Sprint 3 (10 SP) | O utilizador escolhe um curso sugerido (fica registado no percurso) e consulta e compara cursos de várias instituições. |
+| Sprint 4 (10 SP) | Quem já é aluno regista as UCs que concluiu e avalia as opcionais que fez, com as avaliações pseudonimizadas desde o início. |
+
+**Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
 | US03 | Perfis de aluno e administrador (revista a 14/10: um só início de sessão) | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
-| US04 | Importar catálogo de instituições e cursos | Sprint 2 | Por fazer | — |
-| US05 | Consultar e comparar cursos | Sprint 2 | Em curso (pesquisa feita; faltam filtros, ficha e comparação) | `app/catalogo/` |
-| US29 | Questionário de orientação | Sprint 2 | Por fazer | — |
-| US30 | Sugestão de cursos com LLM | Sprint 3 | Por fazer | — |
+| US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Por fazer (base feita no spike, PR #17) | `app/llm/`, `app/orientacao/` |
+| US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Por fazer (validação RN09 feita no spike) | `app/orientacao/` |
 | US31 | Escolher curso e linha do tempo do percurso | Sprint 3 | Por fazer | — |
+| US05 | Consultar e comparar cursos | Sprint 3 | Em curso (pesquisa feita; faltam filtros, ficha e comparação) | `app/catalogo/` |
 | US06 | Registar percurso | Sprint 4 | Por fazer | — |
-| US07 | Avaliar opcional concluída | Sprint 4 | Por fazer | — |
-| US09 | Avaliações pseudonimizadas | Sprint 4 | Por fazer | — |
-| US11 | Recomendações de popularidade | Sprint 4 | Por fazer | — |
+| US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Sprint 4 | Por fazer | — |
+| US04 | Importar catálogo de instituições e cursos | Backlog | Por fazer | — |
+| US09 | Avaliações pseudonimizadas | Backlog | Por fazer | — |
+| US11 | Recomendações de popularidade | Backlog | Por fazer | — |
 | US08 | Avaliação rápida de obrigatórias | Backlog | Por fazer | — |
 | US10 | Dataset sintético | Backlog | Por fazer | — |
 | US12 | Recomendações user-based | Backlog | Por fazer | — |
@@ -67,7 +69,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US26 | Filtragem baseada em itens | Backlog | Por fazer | — |
 | US27 | Evitar conflitos de horário | Backlog | Por fazer | — |
 | US28 | Lembretes de avaliação | Backlog | Por fazer | — |
-| US32 | Assistente LLM que conversa com o utilizador | Backlog | Por avaliar | ponto em aberto 13 dos requisitos |
+| US32 | Assistente LLM que conversa com o utilizador | — | Fundida na US29 (14/10) | issue #15 |
 
 Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US03).
 

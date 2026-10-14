@@ -1,21 +1,27 @@
 /* ==========================================================================
-   Aspeto da aplicação (Recomendador de UCs opcionais)
+   Aspeto da aplicação (OptaBem — Recomendador de UCs opcionais)
    ==========================================================================
 
    Este é o único ficheiro de estilos. Todas as páginas o usam (ver
    app/templates/base.html). Para encontrar uma secção, use Ctrl+F no VS Code
-   e procure pelo número, por exemplo «2.».
+   e procure pelo número e nome, por exemplo «4. Barra do topo».
 
    ÍNDICE
      1. Cores ........................ mudar as cores de todas as páginas
-     2. Página e painel .............. fundo, largura do painel central
-     3. Barra do topo ................ nome da aplicação, menu, «Terminar sessão»
-     4. Texto ........................ títulos, parágrafos, ligações, listas
-     5. Formulários .................. campos, etiquetas, ajudas, erros, ícone de olho
-     6. Botões ....................... botão principal e botão pequeno («Remover»)
-     7. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
-     8. Tabelas ...................... lista de administradores (gestão)
-     9. Modo escuro .................. cores quando o computador está em modo escuro
+     2. Tipos de letra ............... letra dos títulos e do texto
+     3. Página e colunas ............. fundo, largura do conteúdo
+     4. Barra do topo ................ marca, menu, «Terminar sessão»
+     5. Páginas de entrada ........... painel verde com o percurso (criar conta, iniciar sessão)
+     6. Texto ........................ títulos, parágrafos, ligações, listas
+     7. Formulários .................. campos, etiquetas, ajudas, erros, ícone de olho
+     8. Botões ....................... botão principal, «Terminar sessão», «Remover»
+     9. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
+    10. Tabelas ...................... lista de administradores (gestão)
+    11. Página de apresentação ....... a página inicial pública (/): mapa interativo, passos, para quem
+    12. O meu percurso ............... linha do tempo na página inicial do aluno
+    13. Gestão, erros e detalhes ..... números do painel, página não encontrada, regras da palavra-passe
+    14. Movimento .................... animações (e o que acontece a quem pede menos movimento)
+    15. Modo escuro .................. cores quando o computador está em modo escuro
 
    Dica: para ver o efeito de uma alteração, guarde o ficheiro e recarregue a
    página no navegador com Ctrl+F5 (força o navegador a ler o CSS novo).
@@ -26,243 +32,867 @@
    1. Cores
    Mude aqui e a alteração aplica-se a todas as páginas. Cada cor é um código
    hexadecimal (#rrggbb); pode escolher cores em https://htmlcolorcodes.com
-   As cores do modo escuro estão na secção 9.
+   As cores do modo escuro estão na secção 15.
    -------------------------------------------------------------------------- */
 :root {
-  --ink: #1b2430;          /* texto principal */
-  --muted: #5b6675;        /* texto secundário (ajudas e introduções) */
-  --line: #cfd6df;         /* contornos dos campos e do painel */
-  --paper: #ffffff;        /* fundo do painel central */
-  --page: #f3f5f8;         /* fundo da página */
-  --accent: #1f3864;       /* barra do topo, botões e ligações */
-  --accent-hover: #162a4d; /* botões quando o rato passa por cima */
+  --ink: #13221e;          /* texto principal */
+  --muted: #4c5f59;        /* texto secundário (ajudas e introduções) */
+  --line: #cad6d0;         /* linhas finas e contornos */
+  --field-line: #8fa39b;   /* contorno das caixas de texto */
+  --paper: #ffffff;        /* fundo dos formulários e da barra do topo */
+  --page: #eef3f0;         /* fundo da página */
+  --accent: #0e6b57;       /* botões, ligações e campo selecionado */
+  --accent-hover: #0a5546; /* botões quando o rato passa por cima */
   --accent-ink: #ffffff;   /* texto sobre a cor de destaque */
-  --danger: #a4161a;       /* mensagens de erro */
-  --danger-bg: #fdecec;    /* fundo das caixas de erro */
-  --ok: #17603a;           /* mensagens de sucesso */
-  --ok-bg: #e8f5ee;        /* fundo das caixas de sucesso */
-  /* Tipo de letra de todas as páginas e espaço entre linhas. */
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.5;
+  --forest: #0f2e27;       /* fundo do painel das páginas de entrada */
+  --marigold: #f2b33d;     /* o caminho escolhido na ilustração */
+  --danger: #b3261e;       /* mensagens de erro */
+  --danger-bg: #fdedec;    /* fundo das caixas de erro */
+  --ok: #17663f;           /* mensagens de sucesso */
+  --ok-bg: #e7f4ec;        /* fundo das caixas de sucesso */
+
+  --radius: 10px;          /* cantos dos campos, botões e caixas */
 }
 
 
 /* --------------------------------------------------------------------------
-   2. Página e painel
-   O conteúdo de cada página fica num painel branco ao centro (.panel).
+   2. Tipos de letra
+   Ficheiros em app/static/fonts/ (licença OFL, ficheiros OFL-*.txt na mesma pasta).
+   - Bricolage Grotesque: títulos e marca.
+   - Atkinson Hyperlegible Next: todo o resto (feita para ser fácil de ler).
    -------------------------------------------------------------------------- */
-* { box-sizing: border-box; }
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("fonts/bricolage-grotesque.woff") format("woff");
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("fonts/atkinson-hyperlegible-next.woff") format("woff");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("fonts/atkinson-hyperlegible-next-italic.woff") format("woff");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-text: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Página e colunas
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--page);
   color: var(--ink);
-  font-size: 1rem;         /* tamanho base da letra; aumentar aqui aumenta tudo */
+  font-family: var(--font-text);
+  font-size: 1.0625rem;    /* tamanho base da letra (17 px); aumentar aqui aumenta tudo */
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-main {
-  max-width: 32rem;        /* largura máxima do painel nas páginas dos alunos */
-  margin: 2rem auto;
+/* Coluna das páginas com barra do topo (página inicial, privacidade, gestão). */
+.conteudo {
+  max-width: 40rem;        /* largura máxima nas páginas dos alunos */
+  margin: 3rem auto;
   padding: 0 1.25rem 3rem;
 }
-
-/* As páginas da gestão usam um painel mais largo, por causa das tabelas. */
-main.wide { max-width: 52rem; }
-
-.panel {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;   /* cantos arredondados */
-  padding: 1.5rem;
-}
+/* As páginas da gestão usam uma coluna mais larga, por causa das tabelas. */
+.conteudo.wide { max-width: 60rem; }
 
 
 /* --------------------------------------------------------------------------
-   3. Barra do topo
-   Nome da aplicação à esquerda; com sessão iniciada, o menu e o botão
-   «Terminar sessão» à direita (templates/base.html).
+   4. Barra do topo
+   Marca à esquerda; com sessão iniciada, o menu e «Terminar sessão» à direita.
    -------------------------------------------------------------------------- */
 .site-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;   /* altura da barra */
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
+  gap: 1.5rem;
+  min-height: 4rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--line);
 }
-.site-header > span { margin-right: auto; }   /* nome da aplicação */
 
-/* Menu (Início, Painel, Administradores) e etiqueta com o nome do administrador. */
-.user-nav { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
-.user-nav a { color: var(--accent-ink); }
-.role-badge { padding: 0.15rem 0.5rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+/* Marca: símbolo do caminho + «OptaBem» (o nome está em app/texts.py, BRAND_NAME). */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto 0 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-stretch: 90%;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.marca-simbolo { flex: none; }
+.marca-simbolo path { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.simbolo-tronco { stroke: var(--accent); }
+.simbolo-ramo { stroke: var(--line); }
+.simbolo-no { fill: var(--marigold); }
 
-/* Botão «Terminar sessão». */
+/* «Gestão», ao lado da marca, quando é um administrador. */
+.marca-area {
+  margin-left: 0.25rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--line);
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+  font-weight: 400;
+  font-stretch: 100%;
+  color: var(--muted);
+}
+
+/* Menu da gestão (Painel, Administradores) e nome do administrador. */
+.user-nav { display: flex; align-items: center; gap: 1.25rem; font-size: 0.95rem; }
+.user-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.6rem 0;        /* área de toque maior sem mudar o aspeto */
+}
+.user-nav a[aria-current="page"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--marigold);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.45em;
+}
+.role-badge {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .logout { margin: 0; }
-.logout button {
-  width: auto;
-  white-space: nowrap;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  background: transparent;
-  color: var(--accent-ink);
-  border: 1px solid currentColor;
-}
-.logout button:hover { background: rgba(255, 255, 255, 0.15); }
 
 /* Ecrãs estreitos (telemóvel): o menu passa para uma segunda linha. */
-@media (max-width: 30rem) {
-  .site-header { flex-wrap: wrap; }
+@media (max-width: 40rem) {
+  .site-header { flex-wrap: wrap; gap: 0.25rem 1rem; }
   .user-nav { order: 3; width: 100%; }
 }
 
 
 /* --------------------------------------------------------------------------
-   4. Texto
+   5. Páginas de entrada (criar conta, iniciar sessão, confirmar email)
+   Painel verde com o percurso à esquerda, formulário à direita.
+   No telemóvel o painel fica em cima, mais baixo.
    -------------------------------------------------------------------------- */
-h1 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 0.5rem; }   /* título da página */
-h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }                /* subtítulo */
-p { margin: 0 0 1rem; }
-.lead { color: var(--muted); }                                      /* frase de introdução */
-.plain-list { margin: 0 0 1rem; padding-left: 1.2rem; }
+.entrada {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
-a { color: var(--accent); }
+.entrada-marca {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--forest);
+  color: #ffffff;
+}
+.entrada-marca .simbolo-tronco { stroke: #ffffff; }
+.entrada-marca .simbolo-ramo { stroke: rgba(255, 255, 255, 0.35); }
 
-/* Ligação entre «Criar conta» e «Iniciar sessão», por baixo do formulário. */
-.switch { margin: 1.25rem 0 0; text-align: center; }
+/* A ilustração do percurso (app/templates/macros/marca.html). */
+.percurso { display: block; width: 100%; max-width: 26rem; margin-top: auto; overflow: visible; }
+.percurso-opcoes path { fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 2; stroke-linecap: round; }
+.percurso-opcoes circle { fill: var(--forest); stroke: rgba(255, 255, 255, 0.45); stroke-width: 2; }
+.percurso-escolhido {
+  fill: none;
+  stroke: var(--marigold);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.percurso-inicio { fill: #ffffff; }
+.percurso-destino { fill: var(--marigold); transform-box: fill-box; transform-origin: center; }
 
-/* Texto só para leitores de ecrã (invisível no ecrã). */
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Frase grande do painel (BRAND_TAGLINE) e frase de apoio (BRAND_SUPPORT). */
+.entrada-frase {
+  max-width: 18ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.1rem + 2vw, 2.6rem);
+  font-weight: 650;
+  font-stretch: 88%;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.entrada-apoio { max-width: 34ch; margin: 0; color: rgba(255, 255, 255, 0.78); }
 
-/* Contorno azul à volta do elemento selecionado com o teclado (Tab). */
-:focus-visible { outline: 3px solid #2f6fdb; outline-offset: 2px; }
+/* Lado do formulário: centrado na vertical, texto alinhado à esquerda. */
+.entrada-conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 4rem) 1.25rem;
+  background: var(--paper);
+}
+.entrada-coluna { width: 100%; max-width: 26rem; }
+
+@media (max-width: 56rem) {
+  .entrada { grid-template-columns: 1fr; min-height: 0; }
+  .entrada-marca { gap: 1rem; padding: 1.25rem 1.25rem 1.5rem; }
+  .percurso { max-width: 16rem; margin-top: 0.5rem; }
+  .entrada-frase { max-width: 22ch; font-size: 1.6rem; }
+  .entrada-apoio { display: none; }
+  .entrada-conteudo { align-items: flex-start; padding-top: 2rem; }
+}
 
 
 /* --------------------------------------------------------------------------
-   5. Formulários
+   6. Texto
    -------------------------------------------------------------------------- */
-.field { margin-bottom: 1.25rem; }                                   /* espaço entre campos */
-label { display: block; font-weight: 600; margin-bottom: 0.25rem; }  /* nome do campo */
-.hint { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0; }  /* ajuda por baixo do campo */
+h1, h2 {
+  font-family: var(--font-display);
+  font-stretch: 90%;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(1.9rem, 1.5rem + 1.2vw, 2.4rem); font-weight: 700; line-height: 1.08; margin: 0 0 0.75rem; }   /* título da página */
+h2 { font-size: 1.3rem; font-weight: 650; line-height: 1.2; margin: 2.25rem 0 0.5rem; }                              /* subtítulo */
+p { margin: 0 0 1rem; text-wrap: pretty; }
+.lead { color: var(--muted); margin-bottom: 1.75rem; }   /* frase de introdução */
+.plain-list { margin: 0 0 1rem; padding-left: 1.2rem; }
+.plain-list li + li { margin-top: 0.35rem; }
 
-/* Caixas de texto (email, nome de utilizador, palavra-passe). */
+a { color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+
+/* Ligação entre «Criar conta» e «Iniciar sessão», por baixo do formulário. */
+.switch { margin: 1.5rem 0 0; color: var(--muted); }
+
+/* Texto só para leitores de ecrã (invisível no ecrã). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Contorno à volta do elemento selecionado com o teclado (Tab). */
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+
+/* --------------------------------------------------------------------------
+   7. Formulários
+   -------------------------------------------------------------------------- */
+.field { margin-bottom: 1.25rem; }                                       /* espaço entre campos */
+label { display: block; font-weight: 700; margin-bottom: 0.35rem; }      /* nome do campo */
+.hint { color: var(--muted); font-size: 0.92rem; margin: 0.4rem 0 0; }   /* ajuda por baixo do campo */
+
+/* Caixas de texto (email, nome de utilizador, palavra-passe).
+   A letra tem pelo menos 16 px para o iPhone não aproximar a página ao tocar. */
 input[type="email"],
 input[type="password"],
-input[type="text"],
-.password-field input {
+input[type="text"] {
   width: 100%;
-  padding: 0.65rem 0.75rem;
+  min-height: 3rem;
+  padding: 0.6rem 0.85rem;
   font: inherit;
   color: inherit;
   background: var(--paper);
-  border: 1px solid #8a94a3;
-  border-radius: 0.375rem;
+  border: 1.5px solid var(--field-line);
+  border-radius: var(--radius);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(14, 107, 87, 0.18);
 }
 
-/* Campo com erro: contorno vermelho mais grosso. */
-input[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; }
+/* Campo com erro: contorno vermelho. */
+input[aria-invalid="true"] { border-color: var(--danger); }
+input[aria-invalid="true"]:focus { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.16); }
 
 /* Mensagem de erro por baixo do campo. */
-.error { color: var(--danger); font-size: 0.95rem; margin: 0.35rem 0 0; }
+.error { color: var(--danger); font-size: 0.95rem; margin: 0.4rem 0 0; }
 
 /* Caixa de aceitação (política de privacidade). */
-.check { display: flex; gap: 0.6rem; align-items: flex-start; }
-.check input { margin-top: 0.3rem; width: 1.1rem; height: 1.1rem; }
+.check { display: flex; gap: 0.7rem; align-items: flex-start; }
+.check input { flex: none; margin: 0.2rem 0 0; width: 1.25rem; height: 1.25rem; accent-color: var(--accent); }
 .check label { font-weight: 400; margin: 0; }
 
 /* Campo de palavra-passe com o ícone de olho (mostrar/esconder) do lado direito.
    O ícone vem de templates/macros/password.html e o clique de static/password-toggle.js. */
 .password-field { position: relative; }
-.password-field input { padding-right: 3rem; }
+.password-field input { padding-right: 3.25rem; }
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: 0.35rem;
+  right: 0.25rem;
   transform: translateY(-50%);
-  width: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
   color: var(--muted);
   background: transparent;
-  border-radius: 0.375rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 3px);
 }
-.password-toggle:hover { color: var(--ink); background: transparent; }
 .password-toggle[hidden] { display: none; }
 .password-toggle .icon-hide { display: none; }
 .password-toggle[aria-pressed="true"] .icon-show { display: none; }
 .password-toggle[aria-pressed="true"] .icon-hide { display: block; }
+@media (hover: hover) {
+  .password-toggle:hover { color: var(--ink); background: var(--page); }
+}
 
 
 /* --------------------------------------------------------------------------
-   6. Botões
+   8. Botões
    -------------------------------------------------------------------------- */
-/* Botão principal («Criar conta», «Entrar», «Criar administrador»). */
+/* Botão principal («Entrar», «Criar conta», «Criar administrador»). */
 button {
   width: 100%;
-  padding: 0.75rem 1rem;
+  min-height: 3rem;
+  padding: 0.7rem 1.25rem;
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent-ink);
   background: var(--accent);
   border: 0;
-  border-radius: 0.375rem;
+  border-radius: var(--radius);
   cursor: pointer;
+  transition: background-color 150ms ease, transform 120ms ease-out;
 }
-button:hover { background: var(--accent-hover); }
+button:active { transform: scale(0.97); }   /* pequena reação ao clique */
+@media (hover: hover) {
+  button:hover { background: var(--accent-hover); }
+}
+
+/* «Terminar sessão», na barra do topo: botão discreto. */
+.logout button {
+  width: auto;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+@media (hover: hover) {
+  .logout button:hover { background: var(--page); }
+}
 
 /* Botão pequeno e vermelho («Remover» na lista de administradores). */
-.button-small { width: auto; padding: 0.35rem 0.7rem; font-size: 0.85rem; background: transparent; color: var(--danger); border: 1px solid var(--danger); }
-.button-small:hover { background: var(--danger-bg); }
+.button-small {
+  width: auto;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--danger);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+@media (hover: hover) {
+  .button-small:hover { background: var(--danger-bg); }
+}
 
 
 /* --------------------------------------------------------------------------
-   7. Caixas de mensagem
+   9. Caixas de mensagem
    -------------------------------------------------------------------------- */
 .alert {
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
   border: 1px solid;
 }
-.alert-error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }  /* erro */
-.alert-ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }                 /* sucesso */
+.alert-error { background: var(--danger-bg); color: var(--danger); border-color: rgba(179, 38, 30, 0.35); }  /* erro */
+.alert-ok { background: var(--ok-bg); color: var(--ok); border-color: rgba(23, 102, 63, 0.3); }               /* sucesso */
 /* Caixa amarela só de desenvolvimento, com a ligação de confirmação. */
-.alert-dev { background: #fff8e1; color: #5c4400; border-color: #c99a00; border-style: dashed; }
+.alert-dev { background: #fff6dc; color: #5c4400; border-color: #d9a520; border-style: dashed; overflow-wrap: anywhere; }
 .alert-dev p:last-child { margin: 0; }
 
 
 /* --------------------------------------------------------------------------
-   8. Tabelas (lista de administradores, na gestão)
+   10. Tabelas (lista de administradores, na gestão)
    -------------------------------------------------------------------------- */
-.table-wrap { overflow-x: auto; margin-bottom: 1rem; }   /* em ecrãs estreitos, a tabela desliza para o lado */
-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-th, td { text-align: left; padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { font-weight: 600; }
+.table-wrap { position: relative; overflow-x: auto; margin-bottom: 1.5rem; }   /* em ecrãs estreitos, a tabela desliza para o lado */
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 700; font-size: 0.875rem; color: var(--muted); }
 td.nowrap { white-space: nowrap; }                       /* datas numa só linha */
 td form { margin: 0; }
 
 
 /* --------------------------------------------------------------------------
-   9. Modo escuro
+   11. Página de apresentação (/)
+   Painel verde com o mapa interativo, «Como funciona» e «Para quem é».
+   -------------------------------------------------------------------------- */
+/* Botão feito com uma ligação («Criar conta» na barra e na apresentação). */
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 150ms ease, transform 120ms ease-out;
+}
+.button-link:active { transform: scale(0.97); }
+.button-link-claro { background: var(--marigold); color: #13221e; }
+@media (hover: hover) {
+  .button-link:hover { background: var(--accent-hover); text-decoration: none; }
+  .button-link-claro:hover { background: #f7c766; }
+}
+
+/* Barra do topo da apresentação: sobre o verde do painel. */
+.site-header-apresentacao { background: var(--forest); color: #ffffff; box-shadow: none; padding-inline: max(1.25rem, calc((100% - 72rem) / 2)); }
+.site-header-apresentacao .simbolo-tronco { stroke: #ffffff; }
+.site-header-apresentacao .simbolo-ramo { stroke: rgba(255, 255, 255, 0.35); }
+.landing-nav { display: flex; align-items: center; gap: 1.25rem; }
+.landing-nav > a:not(.button-link) { color: #ffffff; text-decoration: none; padding: 0.6rem 0; }
+.landing-nav > a:not(.button-link):hover { text-decoration: underline; }
+
+.apresentacao { display: block; }
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  padding: clamp(2rem, 6vw, 4.5rem) max(1.25rem, calc((100% - 72rem) / 2)) clamp(3rem, 7vw, 6rem);
+  background: var(--forest);
+  color: #ffffff;
+}
+.hero-titulo {
+  max-width: 13ch;
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
+  font-weight: 700;
+  font-stretch: 84%;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+.hero-apoio { max-width: 36ch; margin: 0; font-size: 1.15rem; color: rgba(255, 255, 255, 0.8); }
+.hero-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin: 2rem 0 0; }
+.hero-secundaria { color: #ffffff; padding: 0.6rem 0; }
+
+/* O mapa: ramos cinzentos, o ramo escolhido a amarelo. */
+.mapa-svg { display: block; width: 100%; overflow: visible; }
+.mapa-base path { fill: none; stroke: rgba(255, 255, 255, 0.22); stroke-width: 2; stroke-linecap: round; }
+.mapa-inicio { fill: #ffffff; }
+.mapa-ramo-linha {
+  fill: none;
+  stroke: var(--marigold);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.mapa-ramo-no {
+  fill: var(--forest);
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mapa-ramo-nome { fill: rgba(255, 255, 255, 0.6); font-family: var(--font-text); font-size: 16px; }
+.mapa[data-ativo="0"] [data-ramo="0"],
+.mapa[data-ativo="1"] [data-ramo="1"],
+.mapa[data-ativo="2"] [data-ramo="2"],
+.mapa[data-ativo="3"] [data-ramo="3"] { --ramo-ativo: 1; }
+.mapa [data-ramo] .mapa-ramo-linha { stroke-dashoffset: calc(1 - var(--ramo-ativo, 0)); }
+.mapa [data-ramo] .mapa-ramo-no {
+  fill: color-mix(in srgb, var(--marigold) calc(var(--ramo-ativo, 0) * 100%), var(--forest));
+  stroke: color-mix(in srgb, var(--marigold) calc(var(--ramo-ativo, 0) * 100%), rgba(255, 255, 255, 0.5));
+  transform: scale(calc(1 + var(--ramo-ativo, 0) * 0.35));
+}
+.mapa [data-ramo] .mapa-ramo-nome { fill: color-mix(in srgb, #ffffff calc(40% + var(--ramo-ativo, 0) * 60%), transparent); font-weight: 700; }
+
+.mapa-controlos { margin-top: 1.25rem; }
+.mapa-legenda { margin: 0 0 0.6rem; font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); }
+.mapa-opcoes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.mapa-opcao {
+  width: auto;
+  min-height: 2.5rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: transparent;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+.mapa-opcao[aria-pressed="true"] { background: var(--marigold); color: #13221e; box-shadow: none; }
+@media (hover: hover) {
+  .mapa-opcao:hover { background: rgba(255, 255, 255, 0.1); }
+  .mapa-opcao[aria-pressed="true"]:hover { background: var(--marigold); }
+}
+.mapa-porque { min-height: 3.2em; margin: 1rem 0 0; font-size: 1.05rem; color: #ffffff; }
+.hero :focus-visible { outline-color: var(--marigold); }
+
+/* Secções por baixo do painel. */
+.seccao { padding: clamp(3rem, 7vw, 5.5rem) max(1.25rem, calc((100% - 64rem) / 2)); }
+.seccao h2 { margin: 0; font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.7rem); font-weight: 700; }
+.seccao h3 { margin: 0.15rem 0 0.4rem; font-family: var(--font-display); font-size: 1.3rem; font-weight: 650; font-stretch: 92%; line-height: 1.2; }
+
+/* «Como funciona»: os passos ligados por uma linha que se desenha ao descer a página. */
+.passos { position: relative; max-width: 40rem; margin: 2.25rem 0 0; padding: 0 0 0 3.5rem; list-style: none; }
+.passos::before,
+.passos::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 2.5rem;
+  left: 1.05rem;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--line);
+}
+.passos::after { background: var(--accent); transform-origin: top; transform: scaleY(var(--progresso, 1)); }
+.passo { position: relative; padding-bottom: 2.25rem; }
+.passo:last-child { padding-bottom: 0; }
+.passo p { margin: 0; color: var(--muted); max-width: 52ch; }
+.passo-no {
+  position: absolute;
+  top: 0;
+  left: -3.5rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: background-color 300ms ease, color 300ms ease, box-shadow 300ms ease;
+}
+.passos-animados .passo-no { background: var(--page); color: var(--muted); box-shadow: inset 0 0 0 2px var(--line); }
+.passos-animados .passo.alcancado .passo-no { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+
+/* «Para quem é». */
+.para-quem { background: var(--paper); }
+.para-quem-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; margin-top: 2rem; }
+.publico { padding-top: 1rem; box-shadow: inset 0 3px 0 var(--marigold); }
+.publico p { margin: 0; color: var(--muted); }
+.para-quem-acao { margin: 2.5rem 0 0; }
+
+.rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding: 2rem max(1.25rem, calc((100% - 64rem) / 2));
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.rodape p { margin: 0; }
+
+/* Nome do caminho escolhido, escrito à mão (app/manuscrito.py). */
+.mapa-escrita { min-height: 3.4rem; margin-top: 0.75rem; color: var(--marigold); }
+.manuscrito { display: block; height: 3.2rem; width: auto; max-width: 100%; overflow: visible; }
+.manuscrito-tinta { fill: currentColor; }
+.manuscrito-traco { fill: none; stroke: currentColor; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+.manuscrito-texto { font-family: var(--font-display); font-size: 2rem; font-weight: 600; }
+
+/* Botão «flow» (adaptado do componente FlowButton): ao passar o rato, um círculo
+   enche o botão, os cantos ficam menos redondos e as setas trocam de lado. */
+.flow-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.75rem 2.4rem;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 100px;
+  border: 1.5px solid rgba(19, 34, 30, 0.4);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-radius 600ms cubic-bezier(0.23, 1, 0.32, 1), border-color 600ms cubic-bezier(0.23, 1, 0.32, 1),
+              color 600ms cubic-bezier(0.23, 1, 0.32, 1), transform 120ms ease-out;
+  --flow-cor: var(--accent);      /* cor do círculo */
+  --flow-texto: var(--accent-ink); /* cor do texto por cima do círculo */
+}
+.flow-button-claro { border-color: rgba(255, 255, 255, 0.45); color: #ffffff; --flow-cor: var(--marigold); --flow-texto: #13221e; }
+.flow-texto { position: relative; z-index: 1; transform: translateX(-0.6rem); transition: transform 800ms ease-out; }
+.flow-circulo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--flow-cor);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 800ms cubic-bezier(0.19, 1, 0.22, 1), opacity 800ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.flow-seta {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.flow-seta-entra { left: 1rem; transform: translate(-3.5rem, -50%); }
+.flow-seta-sai { right: 1rem; transform: translate(0, -50%); }
+.flow-button:active { transform: scale(0.95); }
+.flow-button:focus-visible,
+.flow-button:hover { border-color: transparent; border-radius: 12px; color: var(--flow-texto); text-decoration: none; }
+.flow-button:focus-visible .flow-circulo,
+.flow-button:hover .flow-circulo { opacity: 1; transform: translate(-50%, -50%) scale(16); }
+.flow-button:focus-visible .flow-texto,
+.flow-button:hover .flow-texto { transform: translateX(0.6rem); }
+.flow-button:focus-visible .flow-seta-entra,
+.flow-button:hover .flow-seta-entra { transform: translate(0, -50%); }
+.flow-button:focus-visible .flow-seta-sai,
+.flow-button:hover .flow-seta-sai { transform: translate(3.5rem, -50%); }
+@media (hover: none) {
+  /* Nos ecrãs de toque não há «passar o rato»: o botão já aparece cheio. */
+  .flow-button { border-color: transparent; border-radius: 12px; color: var(--flow-texto); }
+  .flow-circulo { opacity: 1; transform: translate(-50%, -50%) scale(16); }
+  .flow-texto { transform: translateX(0.6rem); }
+  .flow-seta-entra { transform: translate(0, -50%); }
+  .flow-seta-sai { transform: translate(3.5rem, -50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-button, .flow-texto, .flow-circulo, .flow-seta { transition-duration: 1ms; }
+}
+
+@media (max-width: 56rem) {
+  .hero { grid-template-columns: 1fr; }
+  .para-quem-lista { grid-template-columns: 1fr; gap: 1.75rem; }
+}
+@media (max-width: 40rem) {
+  .mapa-ramo-nome { font-size: 24px; }   /* o mapa encolhe no telemóvel: nomes maiores para se lerem */
+}
+@media (max-width: 30rem) {
+  .landing-nav > a:not(.button-link) { display: none; }   /* no telemóvel fica só «Criar conta» */
+}
+
+
+/* --------------------------------------------------------------------------
+   12. O meu percurso (página inicial do aluno)
+   Linha do tempo com os passos feitos, o atual e os seguintes (app/percurso.py).
+   -------------------------------------------------------------------------- */
+.meu-percurso h2 { margin-top: 0.5rem; }
+.linha-tempo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.etapa { position: relative; padding: 2.25rem 0.75rem 0 0; }
+.etapa-no {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--page);
+  box-shadow: inset 0 0 0 2px var(--field-line);
+}
+/* Ligação entre um passo e o seguinte. */
+.etapa:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 0.53rem;
+  left: 1.6rem;
+  right: -0.6rem;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--line);
+}
+.etapa-feito::before { background: var(--accent) !important; transform-origin: left; }
+.etapa-feito .etapa-no { background: var(--accent); box-shadow: none; }
+.etapa-atual .etapa-no { background: var(--marigold); box-shadow: 0 0 0 6px rgba(242, 179, 61, 0.25); }
+.etapa-estado { margin: 0 0 0.2rem; font-size: 0.85rem; color: var(--muted); }
+.etapa-atual .etapa-estado { color: var(--accent); font-weight: 700; }
+.etapa h3 { margin: 0 0 0.35rem; font-family: var(--font-display); font-size: 1.15rem; font-weight: 650; font-stretch: 92%; line-height: 1.2; }
+.etapa-texto { margin: 0; font-size: 0.95rem; color: var(--muted); }
+.etapa-depois h3 { color: var(--muted); }
+.etapa-breve { margin: 0.6rem 0 0; font-size: 0.9rem; font-style: italic; color: var(--muted); }
+
+@media (max-width: 40rem) {
+  .linha-tempo { grid-template-columns: 1fr; gap: 0; }
+  .etapa { padding: 0 0 1.75rem 2.25rem; }
+  .etapa:not(:last-child)::before { top: 1.6rem; bottom: 0.3rem; left: 0.53rem; right: auto; width: 3px; height: auto; }
+  .etapa-feito::before { transform-origin: top; }
+}
+
+
+/* --------------------------------------------------------------------------
+   13. Gestão, erros e detalhes
+   -------------------------------------------------------------------------- */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; margin: 1rem 0 2.5rem; }
+.indicador {
+  padding: 1.1rem 1.25rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), 0 2px 6px rgba(19, 34, 30, 0.05);
+}
+.indicador dt { font-size: 0.9rem; color: var(--muted); }
+.indicador dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-stretch: 88%;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.indicador dd.indicador-data { font-size: 1.4rem; padding-top: 0.6rem; }
+
+/* Página não encontrada: o caminho que acaba num tracejado. */
+.perdido { display: block; width: 100%; max-width: 20rem; margin: 0 0 1.5rem; }
+.perdido-linha { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
+.perdido-fim { fill: none; stroke: var(--field-line); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 2 10; }
+.perdido-inicio { fill: var(--accent); }
+.perdido-sinal { fill: var(--marigold); font-family: var(--font-display); font-size: 44px; font-weight: 700; }
+
+/* Regras da palavra-passe (criar conta): marcadas enquanto escreve. */
+.regras { margin: -0.5rem 0 1.25rem; padding: 0; list-style: none; font-size: 0.92rem; color: var(--muted); }
+.regras li { position: relative; padding-left: 1.75rem; transition: color 150ms ease; }
+.regras li + li { margin-top: 0.25rem; }
+.regras li::before {
+  content: "";
+  position: absolute;
+  top: 0.22rem;
+  left: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--field-line);
+  transition: background-color 150ms ease, box-shadow 150ms ease, transform 150ms ease-out;
+}
+.regras li::after {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  left: 0.36rem;
+  width: 0.32rem;
+  height: 0.55rem;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 150ms ease-out;
+}
+.regras li.cumprida { color: var(--ok); }
+.regras li.cumprida::before { background: var(--ok); box-shadow: none; transform: scale(1.08); }
+.regras li.cumprida::after { transform: rotate(45deg) scale(1); }
+
+/* Ligação da marca nas páginas de entrada (volta à apresentação). */
+.marca-ligacao { display: inline-flex; align-items: center; gap: 0.5rem; color: inherit; text-decoration: none; }
+
+/* Botão enquanto o formulário está a ser enviado. */
+button.a-enviar { cursor: progress; opacity: 0.85; }
+button.a-enviar::before {
+  content: "";
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  margin-right: 0.55em;
+  vertical-align: -0.12em;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: girar 700ms linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+
+/* --------------------------------------------------------------------------
+   14. Movimento
+   Ao abrir uma página de entrada, o caminho escolhido desenha-se e o ponto de
+   chegada aparece. Acontece uma vez. Quem pediu ao sistema menos animação não vê nada.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .percurso-escolhido { animation: percurso-desenhar 1100ms cubic-bezier(0.65, 0, 0.35, 1) 200ms both; }
+  .percurso-destino { animation: percurso-chegar 450ms cubic-bezier(0.34, 1.56, 0.64, 1) 1200ms both; }
+}
+@keyframes percurso-desenhar {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes percurso-chegar {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Mapa da apresentação: o caminho escolhido desenha-se; o anterior recolhe. */
+  .mapa-ramo-linha { transition: stroke-dashoffset 750ms cubic-bezier(0.65, 0, 0.35, 1); }
+  .mapa-ramo-no { transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1) 450ms, fill 200ms ease 450ms, stroke 200ms ease 450ms; }
+  .mapa-ramo-nome { transition: fill 300ms ease; }
+  /* O meu percurso: a linha dos passos feitos cresce ao abrir a página. */
+  .etapa-feito::before { animation: crescer 700ms cubic-bezier(0.65, 0, 0.35, 1) 150ms both; }
+  .etapa-atual .etapa-no { animation: chegar 450ms cubic-bezier(0.34, 1.56, 0.64, 1) 750ms both; }
+  /* Mensagens (sucesso e erro) aparecem com um pequeno deslize. */
+  .alert { animation: alerta-entrar 260ms ease-out both; }
+  /* Mudar de página: transição suave; o painel verde fica parado entre «Criar conta» e «Iniciar sessão». */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+  .entrada-marca { view-transition-name: painel-marca; }
+}
+@keyframes crescer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes chegar { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes alerta-entrar { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 40rem) {
+  @keyframes crescer { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  button, .button-link { transition: none; }
+  button:active, .button-link:active { transform: none; }
+  button.a-enviar::before { animation: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   15. Modo escuro
    Usado automaticamente quando o computador ou o telemóvel está em modo
    escuro. Fica no fim do ficheiro para se sobrepor às regras de cima.
    -------------------------------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #e7ebf1; --muted: #a5afbd; --line: #3a4453;
-    --paper: #1a212b; --page: #11161d; --accent: #8db4ff; --accent-ink: #0d1b33;
-    --danger: #ff9a9d; --danger-bg: #3a1618; --ok: #8be0b0; --ok-bg: #12301f;
+    --ink: #e4ece8; --muted: #a3b5ae; --line: #2e403a; --field-line: #566b63;
+    --paper: #16211e; --page: #0f1715; --accent: #5cc9a7; --accent-hover: #7dd8bb; --accent-ink: #08261e;
+    --forest: #0b231d; --marigold: #f5c15c;
+    --danger: #ff9c94; --danger-bg: #3a1715; --ok: #7fd9a6; --ok-bg: #10301f;
   }
-  .site-header { background: #0d1b33; color: #e7ebf1; }
-  .logout button { color: #e7ebf1; }
-  .user-nav a { color: #e7ebf1; }
-  .button-small:hover { background: var(--danger-bg); }
+  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
+  .alert-error { border-color: rgba(255, 156, 148, 0.35); }
+  .alert-ok { border-color: rgba(127, 217, 166, 0.3); }
   .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }
-  button:hover { background: #b6cdff; }
-  input[type="email"], input[type="password"], input[type="text"], .password-field input { border-color: #6b778a; }
-  .password-toggle:hover { background: transparent; }
+  .indicador { box-shadow: 0 0 0 1px var(--line); }
+  .regras li::after { border-color: #08261e; }
 }

@@ -115,3 +115,21 @@ def remove_admin(db: sqlite3.Connection, admin_id: int, *, removed_by: int) -> R
     repository.delete(db, admin_id)
     db.commit()
     return RemoveResult(RemoveOutcome.REMOVED, admin["username"])
+
+
+@dataclass(frozen=True)
+class Indicadores:
+    """Números do painel de gestão (nunca dados de alunos individuais)."""
+
+    alunos_ativos: int
+    contas_por_confirmar: int
+    administradores: int
+    ultimo_registo: str | None  # data (AAAA-MM-DD) do registo mais recente
+
+
+def indicadores(db: sqlite3.Connection) -> Indicadores:
+    from ..auth import repository as alunos  # import local: evita dependência circular
+
+    ativas, pendentes = alunos.count_by_status(db)
+    ultimo = alunos.last_created_at(db)
+    return Indicadores(ativas, pendentes, repository.count(db), ultimo[:10] if ultimo else None)

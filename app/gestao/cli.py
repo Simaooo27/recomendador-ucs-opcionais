@@ -28,7 +28,7 @@ def create_admin_command(username: str, password: str) -> None:
         services.create_admin(db, username, password, password, current_app.config, created_by=None)
     except services.AdminRejected as rejected:
         raise click.ClickException(" ".join(rejected.errors.values())) from rejected
-    click.echo(texts.CLI_ADMIN_CREATED.format(nome=services.normalize_username(username), endereco=current_app.config["ADMIN_URL_PREFIX"] + "/entrar"))
+    click.echo(texts.CLI_ADMIN_CREATED.format(nome=services.normalize_username(username), endereco="/auth/entrar"))
 
 
 @click.command("list-admins")

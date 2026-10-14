@@ -4,4 +4,24 @@
 {% block content %}
 <h1>{{ texts.HOME_GREETING.format(email=g.user["email"]) }}</h1>
 <p class="lead">{{ texts.HOME_INTRO }}</p>
+
+{#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso.py. -#}
+<section class="meu-percurso" aria-labelledby="meu-percurso">
+  <h2 id="meu-percurso">{{ texts.HOME_PATH_TITLE }}</h2>
+  <ol class="linha-tempo" data-linha-tempo>
+    {% for passo in passos %}
+      <li class="etapa etapa-{{ passo.situacao }}"{% if passo.situacao == "atual" %} aria-current="step"{% endif %}>
+        <span class="etapa-no" aria-hidden="true"></span>
+        <p class="etapa-estado">
+          {%- if passo.situacao == "feito" %}{{ texts.HOME_STEP_DONE }}
+          {%- elif passo.situacao == "atual" %}{{ texts.HOME_STEP_CURRENT }}
+          {%- else %}{{ texts.HOME_STEP_LATER }}{% endif -%}
+        </p>
+        <h3>{{ passo.titulo }}</h3>
+        <p class="etapa-texto">{{ passo.texto }}</p>
+        {% if passo.situacao == "atual" %}<p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>
 {% endblock %}

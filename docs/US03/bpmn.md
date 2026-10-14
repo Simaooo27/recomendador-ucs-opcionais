@@ -25,8 +25,8 @@ O ficheiro editável é [diagramas/bpmn.bpmn](diagramas/bpmn.bpmn) (BPMN 2.0), c
 | Validar nome e palavra-passe / Nome livre? | `services.validate_new_admin`, `services.create_admin` |
 | Guardar o administrador | `repository.create` |
 | Sessão de administrador? | `sessions.load_current_admin`, `sessions.admin_required` |
-| Mostrar o início de sessão | `GET /gestao/entrar` → `templates/gestao/login.html` |
-| Credenciais corretas? | `services.authenticate` |
+| Mostrar o início de sessão | `GET /auth/entrar` → `templates/auth/login.html` (o mesmo dos alunos) |
+| Credenciais corretas? | `app/auth/perfis.py`: a cadeia escolhe `PerfilAdministrador`, que chama `services.authenticate` |
 | Criar sessão de administrador | `sessions.login_admin` |
 | Mostrar o painel | `GET /gestao/` → `templates/gestao/painel.html` |
 | Criar ou remover administradores | `GET/POST /gestao/administradores` → `templates/gestao/administradores.html` |

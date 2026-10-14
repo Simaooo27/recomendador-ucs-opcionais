@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "macros/password.html" as password with context %}
+{% set layout = "entrada" %}
 {% set page_title = texts.LOGIN_TITLE %}
 
 {% block content %}
@@ -15,7 +16,7 @@
 
   <div class="field">
     <label for="email">{{ texts.LOGIN_EMAIL_LABEL }}</label>
-    <input id="email" name="email" type="email" autocomplete="username" required value="{{ email }}"
+    <input id="email" name="email" type="text" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" required value="{{ email }}"
            {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
   </div>
 

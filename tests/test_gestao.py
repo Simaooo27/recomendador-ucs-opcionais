@@ -17,7 +17,7 @@ class GestaoTestCase(AppTestCase):
     def admin_login(self, client=None, username=ADMIN, password=ADMIN_PASSWORD):
         client = client or self.client
         self.set_csrf(client)
-        return client.post("/gestao/entrar", data={"csrf_token": CSRF_TOKEN, "username": username, "password": password})
+        return client.post("/auth/entrar", data={"csrf_token": CSRF_TOKEN, "email": username, "password": password})
 
     def post(self, url, **data):
         self.set_csrf()
@@ -44,14 +44,22 @@ class SeparateAccountsTests(GestaoTestCase):
         self.assertEqual(self.admins_in_db(), [])
         self.assertEqual(self.fetch_user()["role"], "aluno")
 
-    def test_aluno_nao_entra_na_gestao_com_as_suas_credenciais(self):
+    def test_aluno_entra_como_aluno_e_nao_tem_acesso_a_gestao(self):
         self.create_active_user()
-        response = self.admin_login(username="aluno@gmail.com", password="palavra-passe-1")
-        self.assertEqual(response.status_code, 401)
+        response = self.login()
+        self.assertTrue(response.headers["Location"].endswith("/inicio"))
+        self.assertEqual(self.client.get("/gestao/").status_code, 302)
 
-    def test_administrador_nao_entra_no_login_dos_alunos(self):
+    def test_administrador_entra_como_administrador_e_nao_como_aluno(self):
         self.cli_create()
-        response = self.login(email=ADMIN, password=ADMIN_PASSWORD)
+        response = self.admin_login()
+        self.assertTrue(response.headers["Location"].endswith("/gestao/"))
+        self.assertTrue(self.client.get("/inicio").headers["Location"].endswith("/auth/entrar"))
+
+    def test_palavra_passe_de_aluno_nao_serve_para_um_administrador_com_o_mesmo_nome(self):
+        self.cli_create(username="aluno")
+        self.create_active_user()
+        response = self.admin_login(username="aluno", password="palavra-passe-1")
         self.assertEqual(response.status_code, 401)
 
     def test_palavra_passe_guardada_com_hash(self):
@@ -70,7 +78,7 @@ class FirstAdminCommandTests(GestaoTestCase):
         result = self.cli_create()
         self.assertEqual(result.exit_code, 0)
         self.assertIn("criado", result.output)
-        self.assertIn("/gestao/entrar", result.output)
+        self.assertIn("/auth/entrar", result.output)
 
     def test_pede_o_nome_e_a_palavra_passe_quando_nao_sao_dados(self):
         runner = self.app.test_cli_runner()
@@ -98,7 +106,7 @@ class FirstAdminCommandTests(GestaoTestCase):
 
 
 class AdminLoginTests(GestaoTestCase):
-    """Critério 3: a gestão tem início de sessão próprio, com mensagem genérica."""
+    """Critério 3: os administradores entram pelo mesmo início de sessão, com mensagem genérica."""
 
     def setUp(self) -> None:
         super().setUp()
@@ -118,7 +126,7 @@ class AdminLoginTests(GestaoTestCase):
             with self.subTest(username=username):
                 response = self.admin_login(username=username, password=password)
                 self.assertEqual(response.status_code, 401)
-                self.assertIn("Nome de utilizador ou palavra-passe incorretos.", response.get_data(as_text=True))
+                self.assertIn("Email ou palavra-passe incorretos.", response.get_data(as_text=True))
 
     def test_regista_a_ultima_entrada(self):
         self.admin_login()
@@ -129,12 +137,12 @@ class AdminLoginTests(GestaoTestCase):
 
     def test_terminar_sessao(self):
         self.admin_login()
-        response = self.post("/gestao/sair")
-        self.assertTrue(response.headers["Location"].endswith("/gestao/entrar"))
-        self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/gestao/entrar"))
+        response = self.post("/auth/sair")
+        self.assertTrue(response.headers["Location"].endswith("/auth/entrar"))
+        self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/auth/entrar"))
 
     def test_login_sem_token_csrf_e_rejeitado(self):
-        response = self.client.post("/gestao/entrar", data={"username": ADMIN, "password": ADMIN_PASSWORD})
+        response = self.client.post("/auth/entrar", data={"email": ADMIN, "password": ADMIN_PASSWORD})
         self.assertEqual(response.status_code, 400)
 
 
@@ -150,20 +158,25 @@ class HiddenAreaTests(GestaoTestCase):
         self.assertNotIn("/gestao", html)
         self.assertNotIn("Gestão", html)
 
-    def test_paginas_da_gestao_sem_sessao_vao_para_o_login_da_gestao(self):
+    def test_endereco_antigo_da_gestao_leva_ao_inicio_de_sessao_unico(self):
+        self.assertTrue(self.client.get("/gestao/entrar").headers["Location"].endswith("/auth/entrar"))
+
+    def test_paginas_da_gestao_sem_sessao_vao_para_o_inicio_de_sessao(self):
         for url in ("/gestao/", "/gestao/administradores"):
             with self.subTest(url=url):
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 302)
-                self.assertTrue(response.headers["Location"].endswith("/gestao/entrar"))
+                self.assertTrue(response.headers["Location"].endswith("/auth/entrar"))
 
     def test_sessao_de_aluno_nao_da_acesso_a_gestao(self):
         self.create_active_user()
         self.login()
-        self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/gestao/entrar"))
+        self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/auth/entrar"))
 
     def test_paginas_da_gestao_pedem_para_nao_ser_indexadas(self):
-        html = self.client.get("/gestao/entrar").get_data(as_text=True)
+        self.cli_create()
+        self.admin_login()
+        html = self.client.get("/gestao/").get_data(as_text=True)
         self.assertIn('<meta name="robots" content="noindex, nofollow">', html)
         self.assertNotIn("noindex", self.client.get("/auth/entrar").get_data(as_text=True))
 
@@ -172,8 +185,8 @@ class HiddenAreaTests(GestaoTestCase):
         with app.app_context():
             init_db()
         client = app.test_client()
-        self.assertEqual(client.get("/painel-interno/entrar").status_code, 200)
-        self.assertEqual(client.get("/gestao/entrar").status_code, 404)
+        self.assertEqual(client.get("/painel-interno/").status_code, 302)
+        self.assertEqual(client.get("/gestao/").status_code, 404)
 
 
 class ManageAdminsTests(GestaoTestCase):
@@ -219,7 +232,7 @@ class ManageAdminsTests(GestaoTestCase):
         connection.close()
         self.post(f"/gestao/administradores/{ana_id}/remover")
         self.assertEqual(self.admins_in_db(), [ADMIN])
-        self.assertTrue(other.get("/gestao/").headers["Location"].endswith("/gestao/entrar"))
+        self.assertTrue(other.get("/gestao/").headers["Location"].endswith("/auth/entrar"))
 
     def test_quem_criou_continua_registado_depois_de_ser_removido(self):
         self.post("/gestao/administradores", username="ana.gestora", password="outra-senha-2", password_confirm="outra-senha-2")

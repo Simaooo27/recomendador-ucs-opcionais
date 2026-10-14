@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.0 · proposta para validação da equipa · 2026-10-13.** Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
+**Versão 1.1 · 2026-10-14** (1.0 de 13/10: proposta inicial; 1.1: início de sessão único com Strategy, Chain of Responsibility e Factory). Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
 
 ## 1. Visão geral
 
@@ -30,6 +30,8 @@ As caixas `recomendacao/`, `orientacao/` e `llm/` ainda não existem: entram com
 | Testes | `unittest` | Biblioteca padrão; corre com um único comando e sem rede |
 | Motor de recomendação | `pandas` e `numpy` (a partir da US11) | Cálculos de médias e similaridades sobre matrizes |
 | LLM | Atrás de uma interface própria (secção 4.2); fornecedor escolhido na US30 | Não ficar preso a um fornecedor; testes sem rede nem custos |
+| Interface | HTML (Jinja), CSS e JavaScript próprios, sem React nem Tailwind | Componentes de bibliotecas React (ex.: FlowButton, HandwritingText) são **adaptados** a este formato em vez de mudar o projeto para React: a política de segurança (CSP) só aceita ficheiros do próprio site e o código fica legível para os dois elementos |
+| Letras «escritas à mão» | `fontTools` no servidor (`app/manuscrito.py`) | Converte as letras em traços SVG sem carregar bibliotecas de outros sites; sem ele, a página mostra texto normal |
 
 ## 3. Padrões que o código já usa
 
@@ -42,6 +44,39 @@ Estes padrões existem desde o Sprint 1. Documentá-los ajuda a manter o código
 | **Application Factory** | `create_app()` em `app/__init__.py` | Cada teste cria uma aplicação limpa, com a sua própria configuração e base de dados |
 | **Decorator** | `login_required` (`app/auth/sessions.py`), `admin_required` (`app/gestao/sessions.py`) | Proteger páginas sem repetir a verificação em cada rota |
 | **Strategy + Factory** | `Mailer` (interface), `ConsoleMailer`, `SmtpMailer` e `create_mailer()` em `app/mailer.py` | Mudar a forma de enviar emails só com uma variável (`MAIL_BACKEND`), sem tocar no registo. **É o modelo a seguir para o LLM.** |
+| **Strategy** | `PerfilAluno` e `PerfilAdministrador` em `app/auth/perfis.py` | Cada perfil sabe reconhecer quem é dele, verificar a palavra-passe na sua tabela, abrir a sua sessão e para onde vai depois de entrar. A rota de início de sessão não conhece os perfis |
+| **Chain of Responsibility** | `CadeiaDePerfis` em `app/auth/perfis.py` | Um só início de sessão para alunos e administradores: o pedido passa pelos perfis até um dizer «é comigo» (email → aluno; nome sem «@» → administrador). Um perfil novo entra na cadeia sem mexer nos outros |
+| **Factory** | `criar_cadeia_de_perfis()` em `app/auth/perfis.py` | Monta a cadeia (que perfis existem e por que ordem) num só sítio |
+
+### 3.1 Um só início de sessão (US03, revisão de 14/10/2026)
+
+Antes, a gestão tinha uma página de entrada própria (`/gestao/entrar`). Agora todos entram em `/auth/entrar` e a aplicação decide o perfil. As contas continuam em tabelas separadas e a gestão continua sem ligações nas páginas dos alunos.
+
+```mermaid
+classDiagram
+    class Perfil {
+        <<interface>>
+        +reconhece(identificador) bool
+        +autenticar(db, identificador, palavra_passe) Entrada
+        +iniciar_sessao(conta_id)
+        +pagina_inicial
+    }
+    class PerfilAluno
+    class PerfilAdministrador
+    Perfil <|.. PerfilAluno
+    Perfil <|.. PerfilAdministrador
+    CadeiaDePerfis --> "1..*" Perfil : pergunta por ordem
+    login_submit ..> CadeiaDePerfis : criar_cadeia_de_perfis()
+```
+
+```python
+entrada = criar_cadeia_de_perfis().entrar(db, identificador, palavra_passe)
+if entrada.outcome is LoginOutcome.SUCCESS:
+    entrada.perfil.iniciar_sessao(entrada.conta_id)
+    return redirect(url_for(entrada.perfil.pagina_inicial))
+```
+
+Testes: `tests/test_perfis.py` testa cada padrão isoladamente (incluindo um perfil falso, para mostrar que a cadeia aceita qualquer perfil com a mesma interface); `tests/test_gestao.py` testa o comportamento.
 
 ## 4. Padrões para as funcionalidades novas
 

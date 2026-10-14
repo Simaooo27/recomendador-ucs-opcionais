@@ -7,6 +7,7 @@ from .. import texts
 from ..db import get_db
 from ..mailer import Message
 from . import bp, services, sessions
+from .perfis import criar_cadeia_de_perfis
 from .services import ConfirmationOutcome, LoginOutcome
 from .validators import RegistrationInput, domains_hint
 
@@ -91,7 +92,7 @@ def confirm(token: str):
     return response
 
 
-# -- US02: iniciar e terminar sessão -------------------------------------------------
+# -- US02 e US03: iniciar e terminar sessão (alunos e administradores) -------------------------------------------------
 
 _LOGIN_ERRORS = {
     LoginOutcome.INVALID_CREDENTIALS: (texts.ERROR_LOGIN_INVALID, 401),
@@ -107,19 +108,22 @@ def _render_login(email: str = "", error: str | None = None, status: int = 200):
 def login_form():
     if g.user is not None:
         return redirect(url_for("main.home"))
+    if g.get("admin") is not None:
+        return redirect(url_for("gestao.dashboard"))
     return _render_login()
 
 
 @bp.post("/entrar")
 def login_submit():
-    email = request.form.get("email", "")
-    result = services.authenticate(get_db(), email, request.form.get("password", ""))
-    if result.outcome is LoginOutcome.SUCCESS:
-        sessions.login_user(result.user_id)
-        return redirect(url_for("main.home"))
-    message, status = _LOGIN_ERRORS[result.outcome]
-    # A palavra-passe nunca volta ao navegador; o email sim, para não o reescrever.
-    return _render_login(email=email.strip(), error=message, status=status)
+    """Um só início de sessão: a cadeia de perfis decide se é aluno ou administrador (app/auth/perfis.py)."""
+    identificador = request.form.get("email", "")
+    entrada = criar_cadeia_de_perfis().entrar(get_db(), identificador, request.form.get("password", ""))
+    if entrada.outcome is LoginOutcome.SUCCESS:
+        entrada.perfil.iniciar_sessao(entrada.conta_id)
+        return redirect(url_for(entrada.perfil.pagina_inicial))
+    message, status = _LOGIN_ERRORS[entrada.outcome]
+    # A palavra-passe nunca volta ao navegador; o identificador sim, para não o reescrever.
+    return _render_login(email=identificador.strip(), error=message, status=status)
 
 
 @bp.post("/sair")

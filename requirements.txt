@@ -1,1 +1,3 @@
 Flask>=3.1,<4
+# Letras «escritas à mão» da página de apresentação (app/manuscrito.py). Sem ele, aparece texto normal.
+fonttools>=4.40,<5

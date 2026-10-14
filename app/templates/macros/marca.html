@@ -1,0 +1,97 @@
+{#- Elementos da marca: o símbolo pequeno da barra do topo e a ilustração do percurso
+    das páginas de entrada. As cores vêm de app/static/style.css (secções 1 e 5). -#}
+
+{#- Símbolo pequeno: um caminho que se divide em dois, um deles escolhido. -#}
+{% macro simbolo() -%}
+<svg class="marca-simbolo" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+  <path class="simbolo-tronco" d="M3 17h6c4 0 5-10 10-10h2" />
+  <path class="simbolo-ramo" d="M9 17h12" />
+  <circle class="simbolo-no" cx="21" cy="7" r="2.5" />
+</svg>
+{%- endmacro %}
+
+{#- Ilustração do percurso: várias opções a partir de um ponto, uma delas escolhida.
+    É decorativa (aria-hidden): o significado está no texto ao lado. -#}
+{% macro percurso() -%}
+<svg class="percurso" viewBox="0 0 320 220" aria-hidden="true" focusable="false">
+  <g class="percurso-opcoes">
+    <path d="M24 170H96C140 170 150 52 196 52H292" />
+    <path d="M196 52C228 52 230 20 262 20" />
+    <path d="M96 170H240" />
+    <path d="M200 170C228 170 230 202 258 202" />
+    <circle cx="292" cy="52" r="4.5" />
+    <circle cx="262" cy="20" r="4.5" />
+    <circle cx="240" cy="170" r="4.5" />
+    <circle cx="258" cy="202" r="4.5" />
+  </g>
+  <path class="percurso-escolhido" pathLength="1" d="M24 170H96C140 170 152 112 198 112H292" />
+  <circle class="percurso-inicio" cx="24" cy="170" r="6" />
+  <circle class="percurso-destino" cx="292" cy="112" r="9" />
+</svg>
+{%- endmacro %}
+
+{#- Mapa interativo da página de apresentação: um ramo por opção de texts.LANDING_PATH_OPTIONS
+    (até 4). O ramo ativo é escolhido por data-ativo no elemento .mapa (app/static/app.js). -#}
+{% set RAMOS = [
+  {"d": "M32 268H150C214 268 226 58 300 58H500", "x": 500, "y": 58},
+  {"d": "M32 268H150C220 268 236 138 316 138H520", "x": 520, "y": 138},
+  {"d": "M32 268H150C224 268 246 214 322 214H488", "x": 488, "y": 214},
+  {"d": "M32 268H420", "x": 420, "y": 268},
+] %}
+{% macro mapa(opcoes) -%}
+<svg class="mapa-svg" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <g class="mapa-base">
+    {% for opcao in opcoes[:4] %}<path d="{{ RAMOS[loop.index0].d }}" />{% endfor %}
+  </g>
+  {% for opcao in opcoes[:4] %}
+    {% set r = RAMOS[loop.index0] %}
+    <g class="mapa-ramo" data-ramo="{{ loop.index0 }}">
+      <path class="mapa-ramo-linha" pathLength="1" d="{{ r.d }}" />
+      <circle class="mapa-ramo-no" cx="{{ r.x }}" cy="{{ r.y }}" r="8" />
+      <text class="mapa-ramo-nome" x="{{ r.x - 12 }}" y="{{ r.y - 16 }}" text-anchor="end">{{ opcao.nome }}</text>
+    </g>
+  {% endfor %}
+  <circle class="mapa-inicio" cx="32" cy="268" r="7" />
+</svg>
+{%- endmacro %}
+
+{#- Percurso «perdido» da página de erro: o caminho acaba num tracejado. -#}
+{% macro perdido() -%}
+<svg class="perdido" viewBox="0 0 320 120" aria-hidden="true" focusable="false">
+  <path class="perdido-linha" d="M16 90H120C160 90 170 40 210 40H240" />
+  <path class="perdido-fim" d="M240 40H304" />
+  <circle class="perdido-inicio" cx="16" cy="90" r="6" />
+  <text class="perdido-sinal" x="300" y="30" text-anchor="end">?</text>
+</svg>
+{%- endmacro %}
+
+{#- Palavra «escrita à mão» (app/manuscrito.py desenha as letras; app/static/app.js anima).
+    Sem fontTools, mostra o texto normal. -#}
+{% macro escrita(texto, desenho) -%}
+{% if desenho %}
+<svg class="manuscrito" viewBox="{{ desenho.viewbox }}" role="img" aria-label="{{ texto }}" focusable="false">
+  <path class="manuscrito-tinta" d="{{ desenho.completo }}" />
+  {% for contorno in desenho.contornos %}<path class="manuscrito-traco" d="{{ contorno }}" />{% endfor %}
+</svg>
+{%- else -%}
+<span class="manuscrito-texto">{{ texto }}</span>
+{%- endif %}
+{%- endmacro %}
+
+{#- Seta (desenho do ícone «arrow-right» do Lucide, licença ISC). -#}
+{% macro seta(classe) -%}
+<svg class="{{ classe }}" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+</svg>
+{%- endmacro %}
+
+{#- Botão «flow»: ao passar o rato, um círculo enche o botão e as setas trocam de lado.
+    Adaptação do componente FlowButton (React) ao OptaBem. Estilos na secção 11 do CSS. -#}
+{% macro flow(texto, endereco, variante="") -%}
+<a class="flow-button{% if variante %} flow-button-{{ variante }}{% endif %}" href="{{ endereco }}">
+  {{ seta("flow-seta flow-seta-entra") }}
+  <span class="flow-texto">{{ texto }}</span>
+  <span class="flow-circulo" aria-hidden="true"></span>
+  {{ seta("flow-seta flow-seta-sai") }}
+</a>
+{%- endmacro %}

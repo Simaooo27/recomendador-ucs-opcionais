@@ -5,7 +5,31 @@
 {% block content %}
 <h1>{{ texts.ADMIN_DASHBOARD_TITLE }}</h1>
 <p>{{ texts.ADMIN_DASHBOARD_GREETING.format(nome=g.admin["username"]) }}</p>
-<p class="lead">{{ texts.ADMIN_DASHBOARD_INTRO }}</p>
+
+{#- Indicadores (app/gestao/services.py, indicadores). Só totais, nunca dados de um aluno. -#}
+<section aria-labelledby="indicadores">
+  <h2 id="indicadores">{{ texts.ADMIN_STATS_TITLE }}</h2>
+  <dl class="indicadores">
+    <div class="indicador">
+      <dt>{{ texts.ADMIN_STAT_STUDENTS }}</dt>
+      <dd data-contar="{{ indicadores.alunos_ativos }}">{{ indicadores.alunos_ativos }}</dd>
+    </div>
+    <div class="indicador">
+      <dt>{{ texts.ADMIN_STAT_PENDING }}</dt>
+      <dd data-contar="{{ indicadores.contas_por_confirmar }}">{{ indicadores.contas_por_confirmar }}</dd>
+    </div>
+    <div class="indicador">
+      <dt>{{ texts.ADMIN_STAT_ADMINS }}</dt>
+      <dd data-contar="{{ indicadores.administradores }}">{{ indicadores.administradores }}</dd>
+    </div>
+    <div class="indicador">
+      <dt>{{ texts.ADMIN_STAT_LAST_SIGNUP }}</dt>
+      <dd class="indicador-data">{{ indicadores.ultimo_registo or texts.ADMIN_STAT_NONE }}</dd>
+    </div>
+  </dl>
+</section>
+
+<h2>{{ texts.ADMIN_DASHBOARD_INTRO }}</h2>
 <ul class="plain-list">
   {% for item in texts.ADMIN_UPCOMING %}
     <li>{{ item }}</li>

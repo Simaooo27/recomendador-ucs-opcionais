@@ -128,7 +128,7 @@ flask --app app run --debug
 
 Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para criar conta. Em desenvolvimento não é enviado nenhum email: a ligação de confirmação aparece **na própria página «Confirme o seu email»** (caixa amarela) e no terminal onde a aplicação está a correr.
 
-**Administradores (US03):** têm contas próprias, sem email, numa área que não aparece nas páginas dos alunos. O primeiro cria-se no terminal e depois entra-se em http://127.0.0.1:5000/gestao/entrar (ver [docs/US03/](docs/US03/README.md)):
+**Administradores (US03):** têm contas próprias, sem email, numa área que não aparece nas páginas dos alunos. O primeiro cria-se no terminal e depois entra-se na mesma página dos alunos, http://127.0.0.1:5000/auth/entrar, com o nome de utilizador no campo do email (ver [docs/US03/](docs/US03/README.md)):
 
 ```bash
 flask --app app create-admin    # pede o nome e a palavra-passe

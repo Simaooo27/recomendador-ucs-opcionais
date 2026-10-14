@@ -19,6 +19,49 @@ Os textos estão agrupados pela página onde aparecem, pela ordem em que surgem 
 # Nome da aplicação: barra do topo e separador do navegador.
 APP_NAME = "Recomendador de UCs opcionais"
 
+# Marca: nome curto na barra do topo e no painel das páginas de entrada.
+BRAND_NAME = "OptaBem"
+# Frase grande e frase de apoio no painel com o percurso (criar conta, iniciar sessão, confirmar email).
+BRAND_TAGLINE = "Escolha o curso e as opcionais com a experiência de quem já lá esteve."
+BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opinião de outros alunos."
+
+# ---------------------------------------------------------------------------
+# Página de apresentação (/), para quem ainda não tem sessão iniciada
+# ---------------------------------------------------------------------------
+
+LANDING_TITLE = "Escolher curso e opcionais"
+LANDING_NAV_LOGIN = "Iniciar sessão"
+LANDING_NAV_REGISTER = "Criar conta"
+LANDING_CTA_PRIMARY = "Criar conta"
+LANDING_CTA_SECONDARY = "Já tenho conta"
+
+# O percurso interativo: cada opção é um ramo. «nome» aparece no ramo e no botão;
+# «porque» aparece por baixo quando a opção é escolhida. São exemplos ilustrativos.
+LANDING_TRY_LABEL = "Experimente escolher um caminho"
+LANDING_PATH_OPTIONS = [
+    {"nome": "Informática", "porque": "Gosta de resolver problemas e de perceber como a tecnologia funciona."},
+    {"nome": "Gestão", "porque": "Quer perceber como as organizações tomam decisões e usam os recursos."},
+    {"nome": "Ciência da Informação", "porque": "Gosta de organizar, encontrar e dar sentido à informação."},
+    {"nome": "Ainda não sei", "porque": "Comece pelo questionário: o OptaBem sugere cursos e explica porquê."},
+]
+
+LANDING_HOW_TITLE = "Como funciona"
+# Os três passos, pela ordem em que acontecem.
+LANDING_STEPS = [
+    {"titulo": "Responda a um questionário curto", "texto": "Interesses, tipo de trabalho que imagina e onde quer estudar. Demora menos de dois minutos."},
+    {"titulo": "Compare os cursos sugeridos", "texto": "Cursos de várias instituições, lado a lado, com vagas, nota do último colocado e saídas profissionais, e o motivo de cada sugestão."},
+    {"titulo": "Escolha e registe o seu percurso", "texto": "A decisão fica guardada. Mais tarde, as opcionais são sugeridas com base em quem fez escolhas parecidas."},
+]
+
+LANDING_FOR_TITLE = "Para quem é"
+LANDING_FOR = [
+    {"titulo": "Ainda não escolheu o curso", "texto": "Explore cursos de várias instituições e receba sugestões a partir dos seus interesses."},
+    {"titulo": "Já é aluno e vai escolher opcionais", "texto": "Veja como outros alunos avaliaram cada opcional em interesse, carga de trabalho e dificuldade, sempre de forma anónima."},
+]
+
+LANDING_FOOTER = "Projeto académico de Metodologias Ágeis (Scrum)."
+LANDING_PRIVACY_LINK = "Política de privacidade"
+
 # Como o título de cada página aparece no separador do navegador.
 PAGE_TITLE_FORMAT = "{pagina} · {aplicacao}"
 
@@ -47,6 +90,12 @@ REGISTER_PASSWORD_HINT = "Pelo menos {minimo} caracteres, com uma letra e um nú
 
 REGISTER_PASSWORD_CONFIRM_LABEL = "Repita a palavra-passe"
 
+# Lista que se vai marcando enquanto escreve a palavra-passe (só aparece com JavaScript).
+REGISTER_RULE_LENGTH = "Pelo menos {minimo} caracteres"
+REGISTER_RULE_LETTER = "Uma letra"
+REGISTER_RULE_NUMBER = "Um número"
+REGISTER_RULE_MATCH = "As duas palavras-passe coincidem"
+
 # A expressão «política de privacidade» é a ligação para a página da política.
 REGISTER_PRIVACY_BEFORE_LINK = "Li e aceito a "
 REGISTER_PRIVACY_LINK = "política de privacidade"
@@ -72,7 +121,9 @@ ERROR_PRIVACY_REQUIRED = "É necessário aceitar a política de privacidade para
 ERROR_EMAIL_SEND_FAILED = "Não foi possível enviar o email de confirmação. Tente de novo dentro de alguns minutos."
 
 # ---------------------------------------------------------------------------
-# Página «Iniciar sessão» (/auth/entrar)
+# Página «Iniciar sessão» (/auth/entrar) — a mesma para alunos e administradores
+# Os administradores escrevem o nome de utilizador no campo «Email». O rótulo diz só «Email»
+# para a gestão continuar invisível aos alunos; pode mudar-se para «Email ou nome de utilizador».
 # ---------------------------------------------------------------------------
 
 LOGIN_TITLE = "Iniciar sessão"
@@ -84,6 +135,7 @@ LOGIN_NO_ACCOUNT = "Ainda não tem conta? "
 LOGIN_REGISTER_LINK = "Crie uma conta"
 
 # A mesma mensagem para email inexistente e palavra-passe errada (não revela que emails têm conta).
+# Também é a mensagem dos administradores, para o formulário não revelar que a gestão existe.
 ERROR_LOGIN_INVALID = "Email ou palavra-passe incorretos."
 ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que lhe enviámos para ativar a conta."
 
@@ -93,7 +145,20 @@ ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que l
 
 HOME_TITLE = "Início"
 HOME_GREETING = "Olá, {email}"
-HOME_INTRO = "Tem a sessão iniciada. As recomendações de UCs opcionais vão aparecer aqui."
+HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."
+
+# Linha do tempo «O seu percurso» (app/percurso.py decide em que passo está cada pessoa).
+HOME_PATH_TITLE = "O seu percurso"
+HOME_PATH_STEPS = [
+    {"titulo": "Conta criada", "texto": "O seu email está confirmado."},
+    {"titulo": "Questionário de orientação", "texto": "Conte-nos os seus interesses para receber sugestões de curso."},
+    {"titulo": "Escolher curso", "texto": "Compare os cursos sugeridos e registe a sua escolha."},
+    {"titulo": "Escolher opcionais", "texto": "Receba sugestões de opcionais com base em quem fez escolhas parecidas."},
+]
+HOME_STEP_DONE = "Concluído"
+HOME_STEP_CURRENT = "Próximo passo"
+HOME_STEP_LATER = "Depois"
+HOME_NEXT_SOON = "Disponível em breve."
 
 # ---------------------------------------------------------------------------
 # Área de gestão (administradores, US03). Endereço em ADMIN_URL_PREFIX (por omissão /gestao).
@@ -104,15 +169,20 @@ ADMIN_AREA_NAME = "Gestão"
 ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
 
-ADMIN_LOGIN_TITLE = "Gestão — iniciar sessão"
-ADMIN_LOGIN_INTRO = "Área reservada aos administradores."
+# Os administradores entram pela página «Iniciar sessão» dos alunos, com o nome de utilizador
+# no campo do email (app/auth/perfis.py). Estes rótulos são do formulário «Novo administrador».
 ADMIN_USERNAME_LABEL = "Nome de utilizador"
 ADMIN_PASSWORD_LABEL = "Palavra-passe"
-ADMIN_LOGIN_BUTTON = "Entrar"
-ERROR_ADMIN_LOGIN_INVALID = "Nome de utilizador ou palavra-passe incorretos."
 
 ADMIN_DASHBOARD_TITLE = "Painel de gestão"
 ADMIN_DASHBOARD_GREETING = "Olá, {nome}."
+# Indicadores no topo do painel.
+ADMIN_STATS_TITLE = "Neste momento"
+ADMIN_STAT_STUDENTS = "Alunos com conta ativa"
+ADMIN_STAT_PENDING = "Contas por confirmar"
+ADMIN_STAT_ADMINS = "Administradores"
+ADMIN_STAT_LAST_SIGNUP = "Último registo"
+ADMIN_STAT_NONE = "Ainda nenhum"
 ADMIN_DASHBOARD_INTRO = "Nos próximos sprints, esta área vai permitir:"
 # Uma linha por funcionalidade prevista (pode acrescentar ou retirar linhas).
 ADMIN_UPCOMING = [
@@ -147,7 +217,7 @@ ERROR_ADMIN_USERNAME_TAKEN = "Já existe um administrador com este nome."
 CLI_ADMIN_USERNAME_PROMPT = "Nome de utilizador"
 CLI_ADMIN_PASSWORD_PROMPT = "Palavra-passe"
 CLI_ADMIN_PASSWORD_CONFIRM_PROMPT = "Repita a palavra-passe"
-CLI_ADMIN_CREATED = "Administrador «{nome}» criado. Entre em {endereco}."
+CLI_ADMIN_CREATED = "Administrador «{nome}» criado. Inicie sessão em {endereco} com este nome no campo do email."
 CLI_NO_ADMINS = "Ainda não há administradores. Use: flask --app app create-admin"
 
 # ---------------------------------------------------------------------------
@@ -225,4 +295,5 @@ ERROR_PAGE_TITLE = "Erro"
 NOT_FOUND_TITLE = "Página não encontrada"
 NOT_FOUND_MESSAGE = "A página que procura não existe."
 BAD_REQUEST_TITLE = "Pedido inválido"
-ERROR_BACK_LINK = "Voltar ao registo"
+NOT_FOUND_HINT = "Este caminho não leva a lado nenhum. Volte ao início e escolha outro."
+ERROR_BACK_LINK = "Voltar ao início"

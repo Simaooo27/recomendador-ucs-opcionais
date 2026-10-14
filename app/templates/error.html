@@ -1,13 +1,16 @@
 {% extends "base.html" %}
+{% import "macros/marca.html" as marca %}
 {% set page_title = texts.ERROR_PAGE_TITLE %}
 
 {% block content %}
 {% if error.code == 404 %}
+  {{ marca.perdido() }}
   <h1>{{ texts.NOT_FOUND_TITLE }}</h1>
   <p>{{ texts.NOT_FOUND_MESSAGE }}</p>
+  <p class="lead">{{ texts.NOT_FOUND_HINT }}</p>
 {% else %}
   <h1>{{ texts.BAD_REQUEST_TITLE }}</h1>
   <p>{{ error.description }}</p>
 {% endif %}
-<p><a href="{{ url_for('auth.register_form') }}">{{ texts.ERROR_BACK_LINK }}</a></p>
+<p><a href="{{ url_for('main.index') }}">{{ texts.ERROR_BACK_LINK }}</a></p>
 {% endblock %}

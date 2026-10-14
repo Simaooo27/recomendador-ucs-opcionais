@@ -11,32 +11,14 @@ from .services import RemoveOutcome
 
 @bp.get("/entrar")
 def login_form():
-    if g.admin is not None:
-        return redirect(url_for("gestao.dashboard"))
-    return render_template("gestao/login.html", username="", error=None)
-
-
-@bp.post("/entrar")
-def login_submit():
-    username = request.form.get("username", "")
-    admin_id = services.authenticate(get_db(), username, request.form.get("password", ""))
-    if admin_id is None:
-        page = render_template("gestao/login.html", username=username.strip(), error=texts.ERROR_ADMIN_LOGIN_INVALID)
-        return page, 401
-    sessions.login_admin(admin_id)
-    return redirect(url_for("gestao.dashboard"))
-
-
-@bp.post("/sair")
-def logout():
-    sessions.logout_admin()
-    return redirect(url_for("gestao.login_form"))
+    """Endereço antigo: o início de sessão é o mesmo para todos (app/auth/perfis.py)."""
+    return redirect(url_for("auth.login_form"))
 
 
 @bp.get("/")
 @sessions.admin_required
 def dashboard():
-    return render_template("gestao/painel.html")
+    return render_template("gestao/painel.html", indicadores=services.indicadores(get_db()))
 
 
 def _render_admins(values: dict | None = None, errors: dict | None = None, status: int = 200):

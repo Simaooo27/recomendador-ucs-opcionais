@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "macros/password.html" as password with context %}
+{% set layout = "entrada" %}
 {% set page_title = texts.REGISTER_TITLE %}
 
 {% block content %}
@@ -56,6 +57,14 @@
       <p class="error" id="password_confirm-error">{{ errors.password_confirm }}</p>
     {% endif %}
   </div>
+
+  {#- Regras da palavra-passe, marcadas enquanto escreve (app/static/app.js). -#}
+  <ul class="regras" data-regras data-minimo="{{ min_length }}" hidden>
+    <li data-regra="tamanho">{{ texts.REGISTER_RULE_LENGTH.format(minimo=min_length) }}</li>
+    <li data-regra="letra">{{ texts.REGISTER_RULE_LETTER }}</li>
+    <li data-regra="numero">{{ texts.REGISTER_RULE_NUMBER }}</li>
+    <li data-regra="iguais">{{ texts.REGISTER_RULE_MATCH }}</li>
+  </ul>
 
   <div class="field">
     <div class="check">

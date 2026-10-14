@@ -17,10 +17,12 @@ class LoginFormTests(AppTestCase):
             self.assertIn(f'name="{name}"', html)
         self.assertIn('href="/auth/registo"', html)
 
-    def test_pagina_inicial_sem_sessao_vai_para_o_inicio_de_sessao(self):
+    def test_pagina_inicial_sem_sessao_mostra_a_apresentacao(self):
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(_location(response).endswith("/auth/entrar"))
+        html = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('href="/auth/entrar"', html)
+        self.assertIn('href="/auth/registo"', html)
 
 
 class SuccessfulLoginTests(AppTestCase):

@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.2 · 2026-10-14** (1.0 de 13/10: proposta inicial; 1.1: início de sessão único com Strategy, Chain of Responsibility e Factory; 1.2: spike do LLM — Gemini e Groq, conversa em vez de pedido único, ver [05-spike-llm.md](05-spike-llm.md); 20/10: adaptador para o servidor Ollama da faculdade). Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
+**Versão 1.2 · 2026-10-14** (1.0 de 13/10: proposta inicial; 1.1: início de sessão único com Strategy, Chain of Responsibility e Factory; 1.2: spike do LLM — Gemini e Groq, conversa em vez de pedido único, ver [05-spike-llm.md](05-spike-llm.md)). Complementa as regras de [02-regras-de-geracao-de-codigo.md](02-regras-de-geracao-de-codigo.md): aquele documento diz *como* se escreve código; este diz *como as peças se organizam e porquê*. A visão que motiva as partes novas está em [00-visao-do-produto.md](00-visao-do-produto.md).
 
 ## 1. Visão geral
 
@@ -29,7 +29,7 @@ flowchart LR
 | Base de dados | SQLite (`sqlite3` da biblioteca padrão) | Um ficheiro, sem servidor para instalar; suficiente para o volume do projeto |
 | Testes | `unittest` | Biblioteca padrão; corre com um único comando e sem rede |
 | Motor de recomendação | `pandas` e `numpy` (a partir da US11) | Cálculos de médias e similaridades sobre matrizes |
-| LLM | Google Gemini (Flash-Lite, plano gratuito), Groq como reserva e o servidor Ollama da faculdade (`qwen3:4b`), atrás de uma interface própria (secção 4.2); pedidos com `urllib`, sem SDK | Não ficar preso a um fornecedor; testes sem rede nem custos. Limites, custo e termos em [05-spike-llm.md](05-spike-llm.md) |
+| LLM | Google Gemini (Flash-Lite, plano gratuito) e Groq como reserva, atrás de uma interface própria (secção 4.2); pedidos com `urllib`, sem SDK | Não ficar preso a um fornecedor; testes sem rede nem custos. Limites, custo e termos em [05-spike-llm.md](05-spike-llm.md) |
 | Interface | HTML (Jinja), CSS e JavaScript próprios, sem React nem Tailwind | Componentes de bibliotecas React (ex.: FlowButton, HandwritingText) são **adaptados** a este formato em vez de mudar o projeto para React: a política de segurança (CSP) só aceita ficheiros do próprio site e o código fica legível para os dois elementos |
 | Letras «escritas à mão» | `fontTools` no servidor (`app/manuscrito.py`) | Converte as letras em traços SVG sem carregar bibliotecas de outros sites; sem ele, a página mostra texto normal |
 
@@ -121,12 +121,10 @@ classDiagram
     }
     class AdaptadorGemini
     class AdaptadorGroq
-    class AdaptadorOllama
     class LLMFalso
     class ProtegerDadosPessoais
     ClienteLLM <|.. AdaptadorGemini
     ClienteLLM <|.. AdaptadorGroq
-    ClienteLLM <|.. AdaptadorOllama
     ClienteLLM <|.. LLMFalso
     ClienteLLM <|.. ProtegerDadosPessoais
     ProtegerDadosPessoais --> ClienteLLM : embrulha
@@ -135,7 +133,6 @@ classDiagram
 
 - `AdaptadorGemini`: Google Gemini (`generateContent`); chave `GEMINI_API_KEY` no `.env`, nunca no repositório, sempre num cabeçalho e nunca no endereço.
 - `AdaptadorGroq`: Groq (API compatível com a da OpenAI), reserva; chave `GROQ_API_KEY`.
-- `AdaptadorOllama`: um servidor Ollama, pela API `/api/chat` (o da faculdade, ou um no próprio computador); endereço `OLLAMA_BASE_URL` e token `OLLAMA_API_KEY` só no `.env`. O token só segue por https. Pede JSON (`format`), sem raciocínio (`think: false`) e com uma janela de 8192 tokens (`num_ctx`), porque as instruções com o catálogo têm cerca de 3700.
 - `LLMFalso`: devolve respostas fixas e guarda o que recebeu; é o que os testes usam (RNF06: sem rede).
 
 Código: `app/llm/` (`cliente.py`, `adaptadores.py`, `decoradores.py`, `fabrica.py`). Testes: `tests/test_llm.py`.
@@ -146,8 +143,8 @@ Igual ao `create_mailer()`: uma função lê a configuração e devolve a implem
 
 | Variável | Valores | Por omissão |
 |---|---|---|
-| `LLM_BACKEND` | `falso`, `gemini`, `groq`, `ollama` | `falso` |
-| `LLM_MODELO` | nome do modelo do fornecedor (vale para todos) | `gemini-3.5-flash-lite` (Gemini), `openai/gpt-oss-120b` (Groq), `qwen3:4b` (Ollama) |
+| `LLM_BACKEND` | `falso`, `gemini`, `groq` | `falso` |
+| `LLM_MODELO` | nome do modelo do fornecedor | `gemini-3.5-flash-lite` (Gemini), `openai/gpt-oss-120b` (Groq) |
 | `ESTRATEGIA_RECOMENDACAO` | `popularidade`, `user_based` | `popularidade` |
 
 Com `falso` por omissão, quem clona o projeto consegue correr tudo sem chaves nem custos.
@@ -191,7 +188,7 @@ app/
     fabrica.py       escolha da estratégia (Factory)
   llm/             spike de 14/10 (US29, US30)
     cliente.py       interface ClienteLLM, Mensagem e erros
-    adaptadores.py   Gemini, Groq, Ollama, Falso (Adapter)
+    adaptadores.py   Gemini, Groq, Falso (Adapter)
     decoradores.py   ProtegerDadosPessoais (Decorator); registar e cache entram com a US30/US31
     fabrica.py       criar_cliente_llm() (Factory)
 ```

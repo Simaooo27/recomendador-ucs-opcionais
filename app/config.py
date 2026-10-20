@@ -45,10 +45,6 @@ def default_config() -> dict:
         "LLM_TIMEOUT": float(os.environ.get("LLM_TIMEOUT", "15")),   # RNF12: resposta em menos de 15 s
         "GEMINI_API_KEY": os.environ.get("GEMINI_API_KEY", ""),
         "GROQ_API_KEY": os.environ.get("GROQ_API_KEY", ""),
-        # Servidor Ollama (o da faculdade). O endereço e o token vêm do docente e ficam só no .env.
-        "OLLAMA_BASE_URL": os.environ.get("OLLAMA_BASE_URL", ""),
-        "OLLAMA_API_KEY": os.environ.get("OLLAMA_API_KEY", ""),
-        "OLLAMA_NUM_CTX": int(os.environ.get("OLLAMA_NUM_CTX", "8192")),
         # Email
         "MAIL_BACKEND": os.environ.get("MAIL_BACKEND", "console"),
         "MAIL_SERVER": os.environ.get("MAIL_SERVER", ""),

@@ -63,8 +63,7 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │
 ├── llm/                              LIGAÇÃO AO LLM (spike de 14/10; ver 05-spike-llm.md)
 │   ├── cliente.py                    a interface que o resto do código usa (ClienteLLM, Mensagem, erros)
-│   ├── adaptadores.py                Gemini, Groq, Ollama (servidor da faculdade) e o LLM falso dos testes —
-│   │                                 o ÚNICO ficheiro que fala com fornecedores
+│   ├── adaptadores.py                Gemini, Groq e o LLM falso dos testes — o ÚNICO ficheiro que fala com fornecedores
 │   ├── decoradores.py                apaga emails e números do que o utilizador escreve, antes de enviar (RNF12)
 │   └── fabrica.py                    escolhe o fornecedor pela variável LLM_BACKEND do .env
 │
@@ -131,8 +130,7 @@ docs/
 | Exigir outra vez o email institucional | `.env` | `ALLOWED_EMAIL_DOMAINS=iscap.ipp.pt` |
 | Regras da palavra-passe, prazo da ligação | `app/config.py` | Falar primeiro com quem desenvolve (os testes dependem disto) |
 | Como o LLM conduz a conversa (tom, perguntas, regras) | `app/orientacao/instrucoes.md` | Texto normal; não apagar `$catalogo` nem `$max_perguntas`. Correr os testes e `flask --app app llm-teste --backend gemini` |
-| O fornecedor ou o modelo do LLM | `.env` | `LLM_BACKEND=gemini` (ou `groq`, `ollama`, `falso`) e, se preciso, `LLM_MODELO=…` (vale para todos os fornecedores) |
-| O servidor Ollama da faculdade | `.env` | `OLLAMA_BASE_URL` e `OLLAMA_API_KEY` (dados pelo docente; nunca noutro ficheiro); o modelo por omissão (`qwen3:4b`) está em `app/llm/fabrica.py` |
+| O fornecedor ou o modelo do LLM | `.env` | `LLM_BACKEND=gemini` (ou `groq`, ou `falso`) e, se preciso, `LLM_MODELO=…` |
 | O número máximo de perguntas do LLM | `app/orientacao/conversa.py` | `LIMITE_PERGUNTAS` (hoje 6) |
 
 Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador com **Ctrl+F5** e correr os testes (secção 7).
@@ -216,9 +214,6 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 14/10 | Um só início de sessão (Strategy, Chain of Responsibility, Factory); novo aspeto visual | `app/auth/perfis.py`, `app/templates/`, `app/static/` | PR do início de sessão único |
 | 14/10 | Spike do LLM: Gemini e Groq atrás de `ClienteLLM` (Adapter, Factory, Decorator), conversa de orientação sem páginas, comando `llm-teste` | `app/llm/`, `app/orientacao/`, `docs/geral/05-spike-llm.md` | PR #17 |
 | 14/10 | US29: página da conversa de orientação com o LLM | `app/orientacao/`, `app/templates/orientacao/`, `docs/US29/` | PR #19 |
-| 20/10 | US30: cursos sugeridos no fim da conversa, «Ver sugestões já», página `/cursos/` | `app/orientacao/`, `app/catalogo/`, `app/templates/`, `docs/US30/` | PR #22 |
-| 20/10 | Revisão: correções ao spike e aos requisitos; US29 garante o limite de 6 perguntas | `docs/geral/`, `app/orientacao/conversa.py`, `app/llm/adaptadores.py` | PR #23 e #24 |
-| 20/10 | Servidor Ollama da faculdade como fornecedor do LLM (`AdaptadorOllama`, `qwen3:4b`) | `app/llm/`, `app/config.py`, `docs/geral/05-spike-llm.md` | PR do Ollama |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

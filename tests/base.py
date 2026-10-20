@@ -32,8 +32,6 @@ class AppTestCase(unittest.TestCase):
                 "LLM_BACKEND": "falso",
                 "GEMINI_API_KEY": "",
                 "GROQ_API_KEY": "",
-                "OLLAMA_BASE_URL": "",
-                "OLLAMA_API_KEY": "",
                 **self.config_overrides,
             }
         )

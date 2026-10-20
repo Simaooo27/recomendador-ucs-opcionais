@@ -5,7 +5,6 @@
 | falso       | respostas fixas, sem rede (por omissão) | —               |
 | gemini      | Google Gemini, plano gratuito           | GEMINI_API_KEY  |
 | groq        | Groq, plano gratuito (reserva)          | GROQ_API_KEY    |
-| ollama      | servidor Ollama (o da faculdade)        | OLLAMA_API_KEY e OLLAMA_BASE_URL |
 
 ``LLM_MODELO`` muda o modelo; vazio usa o de ``MODELOS_POR_OMISSAO``.
 Qualquer que seja o fornecedor, o cliente vem sempre embrulhado em ``ProtegerDadosPessoais`` (RNF12).
@@ -14,7 +13,7 @@ from __future__ import annotations
 
 from typing import Mapping
 
-from .adaptadores import AdaptadorGemini, AdaptadorGroq, AdaptadorOllama, LLMFalso
+from .adaptadores import AdaptadorGemini, AdaptadorGroq, LLMFalso
 from .cliente import ClienteLLM
 from .decoradores import ProtegerDadosPessoais
 
@@ -24,7 +23,6 @@ from .decoradores import ProtegerDadosPessoais
 MODELOS_POR_OMISSAO = {
     "gemini": "gemini-3.5-flash-lite",
     "groq": "openai/gpt-oss-120b",
-    "ollama": "qwen3:4b",   # escolha do PO (20/10), entre os modelos do servidor da faculdade
 }
 
 
@@ -38,14 +36,6 @@ def criar_cliente_llm(config: Mapping) -> ClienteLLM:
         cliente = AdaptadorGemini(chave=config.get("GEMINI_API_KEY", ""), modelo=modelo, timeout=timeout)
     elif backend == "groq":
         cliente = AdaptadorGroq(chave=config.get("GROQ_API_KEY", ""), modelo=modelo, timeout=timeout)
-    elif backend == "ollama":
-        cliente = AdaptadorOllama(
-            endereco=config.get("OLLAMA_BASE_URL", ""),
-            chave=config.get("OLLAMA_API_KEY", ""),
-            modelo=modelo,
-            timeout=timeout,
-            contexto=int(config.get("OLLAMA_NUM_CTX", 8192)),
-        )
     else:
-        raise RuntimeError(f"LLM_BACKEND desconhecido: {backend!r} (use 'falso', 'gemini', 'groq' ou 'ollama').")
+        raise RuntimeError(f"LLM_BACKEND desconhecido: {backend!r} (use 'falso', 'gemini' ou 'groq').")
     return ProtegerDadosPessoais(cliente)

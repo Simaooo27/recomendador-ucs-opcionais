@@ -14,7 +14,7 @@ from app.llm import (
     RespostaInvalida,
     criar_cliente_llm,
 )
-from app.llm.adaptadores import AdaptadorGemini, AdaptadorGroq, ErroHTTP, LLMFalso
+from app.llm.adaptadores import AdaptadorGemini, AdaptadorGroq, AdaptadorOllama, ErroHTTP, LLMFalso
 from app.llm.decoradores import EMAIL_REMOVIDO, NUMERO_REMOVIDO, ProtegerDadosPessoais, remover_dados_pessoais
 
 CHAVE = "chave-secreta-de-teste-123"
@@ -44,6 +44,10 @@ def resposta_groq(texto: str) -> dict:
     return {"choices": [{"message": {"role": "assistant", "content": texto}}]}
 
 
+def resposta_ollama(texto: str) -> dict:
+    return {"model": "qwen3:4b", "message": {"role": "assistant", "content": texto}, "done": True}
+
+
 class FabricaTests(unittest.TestCase):
     def test_por_omissao_usa_o_falso_sem_rede(self):
         cliente = criar_cliente_llm({})
@@ -68,8 +72,21 @@ class FabricaTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "LLM_BACKEND desconhecido"):
             criar_cliente_llm({"LLM_BACKEND": "openai"})
 
+    def test_escolhe_o_ollama_com_o_qwen3_por_omissao(self):
+        cliente = criar_cliente_llm({"LLM_BACKEND": "ollama", "OLLAMA_BASE_URL": "https://servidor.exemplo", "OLLAMA_API_KEY": CHAVE})
+        self.assertEqual(cliente.nome, "ollama/qwen3:4b")
+
+    def test_ollama_sem_endereco_da_erro_claro(self):
+        with self.assertRaisesRegex(LLMIndisponivel, "OLLAMA_BASE_URL"):
+            criar_cliente_llm({"LLM_BACKEND": "ollama", "OLLAMA_API_KEY": CHAVE})
+
     def test_o_cliente_vem_sempre_protegido(self):
-        for config in ({}, {"LLM_BACKEND": "gemini", "GEMINI_API_KEY": CHAVE}, {"LLM_BACKEND": "groq", "GROQ_API_KEY": CHAVE}):
+        for config in (
+            {},
+            {"LLM_BACKEND": "gemini", "GEMINI_API_KEY": CHAVE},
+            {"LLM_BACKEND": "groq", "GROQ_API_KEY": CHAVE},
+            {"LLM_BACKEND": "ollama", "OLLAMA_BASE_URL": "https://servidor.exemplo"},
+        ):
             self.assertIsInstance(criar_cliente_llm(config), ProtegerDadosPessoais)
 
 
@@ -158,6 +175,69 @@ class AdaptadorGroqTests(unittest.TestCase):
         self.transporte.erro = ErroHTTP(429, json.dumps({"error": {"message": "Rate limit reached"}}))
         with self.assertRaisesRegex(LimiteAtingido, "Rate limit"):
             self.groq.conversar("r", CONVERSA)
+
+
+class AdaptadorOllamaTests(unittest.TestCase):
+    def setUp(self):
+        self.transporte = TransporteFalso(resposta_ollama('{"tipo": "pergunta", "texto": "?"}'))
+        self.ollama = AdaptadorOllama(
+            endereco="https://servidor.exemplo:443/", chave=CHAVE, modelo="qwen3:4b", transporte=self.transporte
+        )
+
+    def test_monta_o_pedido_no_formato_do_ollama(self):
+        self.assertEqual(self.ollama.conversar("regras", CONVERSA), '{"tipo": "pergunta", "texto": "?"}')
+        pedido = self.transporte.pedidos[0]
+        self.assertEqual(pedido["url"], "https://servidor.exemplo:443/api/chat")
+        corpo = pedido["corpo"]
+        self.assertEqual(corpo["model"], "qwen3:4b")
+        self.assertEqual(corpo["messages"][0], {"role": "system", "content": "regras"})
+        self.assertEqual([m["role"] for m in corpo["messages"][1:]], ["user", "assistant", "user"])
+        self.assertEqual(corpo["format"], "json")
+        self.assertFalse(corpo["stream"])
+        self.assertFalse(corpo["think"])
+        # As instruções com o catálogo têm cerca de 3700 tokens: a janela tem de chegar.
+        self.assertGreaterEqual(corpo["options"]["num_ctx"], 8192)
+
+    def test_o_token_vai_no_cabecalho_e_nunca_no_endereco(self):
+        self.ollama.conversar("regras", CONVERSA)
+        pedido = self.transporte.pedidos[0]
+        self.assertEqual(pedido["cabecalhos"], {"Authorization": f"Bearer {CHAVE}"})
+        self.assertNotIn(CHAVE, pedido["url"])
+
+    def test_o_token_nunca_vai_por_http(self):
+        with self.assertRaisesRegex(LLMIndisponivel, "https"):
+            AdaptadorOllama(endereco="http://servidor.exemplo", chave=CHAVE, modelo="qwen3:4b")
+
+    def test_servidor_local_sem_token_pode_ser_http(self):
+        transporte = TransporteFalso(resposta_ollama('{"tipo": "pergunta", "texto": "?"}'))
+        local = AdaptadorOllama(endereco="http://localhost:11434", chave="", modelo="qwen3:4b", transporte=transporte)
+        local.conversar("regras", CONVERSA)
+        self.assertEqual(transporte.pedidos[0]["cabecalhos"], {})
+
+    def test_ignora_o_bloco_de_raciocinio(self):
+        self.transporte.resposta = resposta_ollama('<think>a pensar…</think>\n{"tipo": "pergunta", "texto": "?"}')
+        self.assertEqual(self.ollama.conversar("regras", CONVERSA), '{"tipo": "pergunta", "texto": "?"}')
+
+    def test_resposta_vazia(self):
+        self.transporte.resposta = resposta_ollama("   ")
+        with self.assertRaises(RespostaInvalida):
+            self.ollama.conversar("regras", CONVERSA)
+
+    def test_erros_nunca_mostram_o_token(self):
+        self.transporte.erro = ErroHTTP(401, f'{{"error": "token {CHAVE} inválido"}}')
+        with self.assertRaises(LLMIndisponivel) as contexto:
+            self.ollama.conversar("regras", CONVERSA)
+        self.assertNotIn(CHAVE, str(contexto.exception))
+
+    def test_modelo_inexistente(self):
+        self.transporte.erro = ErroHTTP(404, '{"error": "model \\"qwen9\\" not found"}')
+        with self.assertRaisesRegex(LLMIndisponivel, "não existe"):
+            self.ollama.conversar("regras", CONVERSA)
+
+    def test_servidor_ocupado(self):
+        self.transporte.erro = ErroHTTP(429, '{"error": "too many requests"}')
+        with self.assertRaises(LimiteAtingido):
+            self.ollama.conversar("regras", CONVERSA)
 
 
 class DadosPessoaisTests(unittest.TestCase):

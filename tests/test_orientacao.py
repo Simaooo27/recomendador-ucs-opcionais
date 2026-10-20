@@ -154,6 +154,11 @@ class ComandoLlmTesteTests(AppTestCase):
         self.assertEqual(resultado.exit_code, 1)
         self.assertIn("GEMINI_API_KEY", resultado.output)
 
+    def test_ollama_sem_endereco_explica_o_que_falta(self):
+        resultado = self.app.test_cli_runner().invoke(args=["llm-teste", "--backend", "ollama"])
+        self.assertEqual(resultado.exit_code, 1)
+        self.assertIn("OLLAMA_BASE_URL", resultado.output)
+
     def test_backend_desconhecido(self):
         resultado = self.app.test_cli_runner().invoke(args=["llm-teste", "--backend", "xpto"])
         self.assertEqual(resultado.exit_code, 1)

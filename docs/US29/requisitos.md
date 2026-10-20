@@ -74,5 +74,5 @@ RNF02 (CSRF em todos os botões, texto do LLM escapado), RNF06 (testes sem rede)
 | 2 | Idade mínima: os termos do Gemini excluem menores de 18. Por agora a página só avisa; não há verificação. | **Por decidir** (ponto 14 dos requisitos) |
 | 3 | Guardar a conversa no servidor enquanto decorre; apagar ao recomeçar. Falta decidir se se apaga depois da escolha de curso (US31). | Parcial (ponto 15 dos requisitos) |
 | 4 | Nomes próprios escritos no meio do texto não são detetados (só emails e números). | Aceite, com aviso na página |
-| 5 | Se o LLM continuar a perguntar depois das 6 respostas (não cumprir a instrução), a conversa continua até ele sugerir. | Por vigiar no teste com o Gemini |
+| 5 | Se o LLM continuar a perguntar depois das 6 respostas (não cumprir a instrução), a pergunta é recusada e aparece «Tentar de novo» (RF36.4). | **Resolvido** a 20/10 (encontrado na revisão) |
 | 6 | Sem *streaming*: a resposta aparece de uma vez, com o botão em «a enviar» enquanto se espera. | Aceite para o MVP |

@@ -199,6 +199,23 @@ class VerSugestoesJaTests(SugestoesTestCase):
         self.assertIn(texts.ORIENTACAO_SUGESTOES_TITULO, self.pagina())
 
 
+    def test_se_o_llm_fizer_outra_pergunta_nao_aparece_e_tentar_de_novo_volta_a_pedir(self):
+        """Corrigido a 20/10: pedir as sugestões não pode acabar numa pergunta a mais."""
+        self.usar_llm(LLMFalso([pergunta("Do que gosta?"), pergunta("E que disciplinas prefere?")]))
+        self.post("/orientacao/comecar")
+        self.post("/orientacao/responder", resposta="Gosto de Informática")
+        self.usar_llm(LLMFalso([pergunta("Desobedeci?"), sugestao((A.chave, "x"), (B.chave, "y"))]))
+        with self.assertLogs(self.app.logger, level="WARNING"):
+            self.post("/orientacao/sugerir")
+        html = self.pagina()
+        self.assertNotIn("Desobedeci?", html)
+        self.assertIn(texts.ORIENTACAO_A_ESPERA, html)
+        self.post("/orientacao/tentar-de-novo")
+        instrucoes, _ = self.llm.pedidos[-1]
+        self.assertTrue(instrucoes.endswith(conversa.PEDIDO_DE_SUGESTAO))
+        self.assertIn(texts.ORIENTACAO_SUGESTOES_TITULO, self.pagina())
+
+
 class NenhumCursoEscolhidoTests(SugestoesTestCase):
     """RN10: as sugestões nunca atribuem um curso; a escolha é a US31."""
 

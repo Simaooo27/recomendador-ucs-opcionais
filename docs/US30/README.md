@@ -25,7 +25,7 @@
 flask --app app run --debug                              # com LLM_BACKEND=gemini no .env
 ```
 
-Iniciar sessão como aluno, abrir `/orientacao/`, responder a uma ou duas perguntas e carregar em **«Ver sugestões já»**. Com `LLM_BACKEND=falso` o assistente só repete uma pergunta simulada: para ver as sugestões sem rede, correr os testes (`tests/test_sugestoes.py`).
+Iniciar sessão como aluno, abrir `/orientacao/`, responder a uma ou duas perguntas e carregar em **«Ver sugestões já»**. Com `LLM_BACKEND=falso` (sem chave), o assistente faz uma pergunta simulada e, depois da primeira resposta, sugere sem cursos: serve para ver o caso de poucos cursos. Para ver cursos sugeridos sem rede, correr os testes (`tests/test_sugestoes.py`).
 
 ## Documentos
 
@@ -53,4 +53,4 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): mudar 
 
 ## Testes
 
-[`tests/test_sugestoes.py`](../../tests/test_sugestoes.py): 19 testes, com o LLM falso (sem rede). A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).
+[`tests/test_sugestoes.py`](../../tests/test_sugestoes.py): 20 testes, com o LLM falso (sem rede). A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).

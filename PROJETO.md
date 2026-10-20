@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · spike do LLM feito a 14/10 · a seguir: Sprint 2 (conversa de orientação com o LLM e sugestão de cursos) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
-| **Testes automáticos** | 250, todos a passar |
+| **Testes automáticos** | 255, todos a passar |
 
 ## Índice
 

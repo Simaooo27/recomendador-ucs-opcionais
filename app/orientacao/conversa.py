@@ -125,6 +125,9 @@ def proximo_passo(
 
     ``conversa`` são as mensagens trocadas até agora (vazia no início). O chamador acrescenta a
     resposta do LLM à conversa como mensagem do «assistente» antes do passo seguinte.
+
+    Depois de ``LIMITE_PERGUNTAS`` respostas (ou com ``forcar_sugestao``), só aceita a sugestão:
+    se o LLM fizer outra pergunta, levanta ``RespostaInvalida``.
     """
     mensagens = [Mensagem("utilizador", ABERTURA)] + [
         Mensagem(m.papel, m.texto[:MAX_CARACTERES_RESPOSTA] if m.papel == "utilizador" else m.texto)
@@ -132,9 +135,14 @@ def proximo_passo(
     ]
     respostas_do_utilizador = sum(1 for m in conversa if m.papel == "utilizador")
     texto_instrucoes = instrucoes(catalogo)
-    if forcar_sugestao or respostas_do_utilizador >= LIMITE_PERGUNTAS:
+    exigir_sugestao = forcar_sugestao or respostas_do_utilizador >= LIMITE_PERGUNTAS
+    if exigir_sugestao:
         texto_instrucoes += PEDIDO_DE_SUGESTAO
     dados = interpretar(cliente.conversar(texto_instrucoes, mensagens))
     if dados["tipo"] == "pergunta":
+        if exigir_sugestao:
+            # O limite não pode depender de o LLM obedecer: uma pergunta a mais é uma resposta
+            # fora do formato pedido (a página mostra «Tentar de novo» e não gasta mais perguntas).
+            raise RespostaInvalida("O LLM fez outra pergunta depois de lhe ter sido pedida a sugestão.")
         return Pergunta(" ".join(str(dados.get("texto", "")).split()))
     return validar_contra_catalogo(dados, catalogo)

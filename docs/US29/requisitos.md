@@ -23,13 +23,13 @@
 | **RF36.1** | A página `/orientacao/` só abre com sessão de aluno; sem sessão, leva ao início de sessão. |
 | **RF36.2** | Abrir a página nunca chama o LLM. A conversa começa com o botão «Começar a conversa» (para não gastar o limite diário, partilhado por todos). |
 | **RF36.3** | As perguntas são do LLM, uma de cada vez. Cada pedido leva as instruções (`app/orientacao/instrucoes.md`, com o catálogo) e a conversa toda até ali. |
-| **RF36.4** | Ao fim de 6 respostas do aluno, as instruções passam a exigir a sugestão. Quando o LLM sugere, a conversa termina e deixa de haver caixa de resposta. |
+| **RF36.4** | Ao fim de 6 respostas do aluno, as instruções passam a exigir a sugestão. Quando o LLM sugere, a conversa termina e deixa de haver caixa de resposta. O limite é garantido pela aplicação: se o LLM fizer outra pergunta, é tratado como resposta fora do formato (RF36.9) e nunca aparece uma 7.ª pergunta. *(20/10: antes dependia de o LLM obedecer.)* |
 | **RF36.5** | A resposta é obrigatória e tem até 500 caracteres. Se não for válida, a página mostra o erro junto da caixa e mantém o texto escrito. |
 | **RF36.6** | O texto do LLM é mostrado como texto, nunca como HTML. |
 | **RF36.7** | O aluno pode recomeçar a conversa: a conversa guardada é apagada. |
 | **RF36.8** | A conversa fica guardada no servidor (tabela `conversas_orientacao`), uma por aluno; cada aluno só vê a sua. |
 | **RF36.9** | Se o LLM falhar, não responder em 15 segundos ou responder fora do formato, a página mostra uma mensagem clara, sem detalhes técnicos. A resposta do aluno fica guardada e aparece «Tentar de novo». O limite de pedidos atingido tem uma mensagem própria. O detalhe técnico fica no registo da aplicação. |
-| **RF36.10** | Na página inicial, o passo atual da linha do tempo tem o botão «Começar a conversa»; quando a conversa termina com sugestões, o percurso passa a «Escolher curso» e o botão passa a «Continuar a conversa». |
+| **RF36.10** | Na página inicial, o passo atual da linha do tempo tem o botão «Começar a conversa»; quando a conversa termina com sugestões, o percurso passa a «Escolher curso» e o botão passa a «Ver os cursos sugeridos». |
 | **RNF12** | O LLM nunca recebe o email, o nome ou o identificador da conta. Emails e números longos escritos pelo aluno são apagados antes de enviar e antes de guardar. A página avisa para não escrever dados pessoais e que as respostas vão para um serviço externo. |
 
 ## 3. Mensagens
@@ -54,7 +54,7 @@ Tabela nova `conversas_orientacao`: `user_id` (chave; apagada com a conta), `men
 
 | Critério da story (backlog) | Requisitos | Testes automáticos (`tests/test_conversa.py`) |
 |---|---|---|
-| As perguntas não são fixas: o LLM faz uma de cada vez, a partir das respostas anteriores, no máximo 6. | RF36.2 a RF36.6 | `ConversaConduzidaPeloLLMTests` (6 testes) |
+| As perguntas não são fixas: o LLM faz uma de cada vez, a partir das respostas anteriores, no máximo 6. | RF36.2 a RF36.6 | `ConversaConduzidaPeloLLMTests` (7 testes, incluindo `test_o_limite_nao_depende_de_o_llm_obedecer`) |
 | A página avisa para não escrever dados pessoais; emails e números longos são apagados antes de enviar, e o LLM nunca recebe email, nome ou identificadores da conta (RNF12). | RNF12, RF36.8 | `DadosPessoaisTests` (4 testes); `AcessoTests.test_abrir_a_pagina_nao_chama_o_llm` |
 | Disponível com sessão iniciada. | RF36.1 | `AcessoTests` (4 testes, incluindo CSRF) |
 | Se o LLM falhar, atingir o limite ou demorar mais de 15 s, aparece uma mensagem clara e a pessoa pode tentar de novo sem perder a conversa. | RF36.9 | `FalhasDoLLMTests` (5 testes); o tempo limite de 15 s é `LLM_TIMEOUT` (`tests/test_llm.py`) |
@@ -74,5 +74,5 @@ RNF02 (CSRF em todos os botões, texto do LLM escapado), RNF06 (testes sem rede)
 | 2 | Idade mínima: os termos do Gemini excluem menores de 18. Por agora a página só avisa; não há verificação. | **Por decidir** (ponto 14 dos requisitos) |
 | 3 | Guardar a conversa no servidor enquanto decorre; apagar ao recomeçar. Falta decidir se se apaga depois da escolha de curso (US31). | Parcial (ponto 15 dos requisitos) |
 | 4 | Nomes próprios escritos no meio do texto não são detetados (só emails e números). | Aceite, com aviso na página |
-| 5 | Se o LLM continuar a perguntar depois das 6 respostas (não cumprir a instrução), a conversa continua até ele sugerir. | Por vigiar no teste com o Gemini |
+| 5 | Se o LLM continuar a perguntar depois das 6 respostas (não cumprir a instrução), a pergunta é recusada e aparece «Tentar de novo» (RF36.4). | **Resolvido** a 20/10 (encontrado na revisão) |
 | 6 | Sem *streaming*: a resposta aparece de uma vez, com o botão em «a enviar» enquanto se espera. | Aceite para o MVP |

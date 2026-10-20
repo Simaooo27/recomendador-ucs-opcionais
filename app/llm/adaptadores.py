@@ -65,17 +65,29 @@ def _traduzir_erro(erro: ErroHTTP, fornecedor: str, modelo: str, chave: str) -> 
     return LLMIndisponivel(f"{fornecedor}: erro {erro.codigo}. {detalhe}")
 
 
+PERGUNTA_SIMULADA = '{"tipo": "pergunta", "texto": "Pergunta simulada (LLM_BACKEND=falso): o que gosta de fazer?"}'
+SUGESTAO_SIMULADA = '{"tipo": "sugestao", "texto": "Sugestão simulada (LLM_BACKEND=falso), sem cursos.", "cursos": []}'
+
+
 class LLMFalso:
-    """Devolve as respostas dadas, por ordem (repete a última). Guarda o que lhe foi enviado."""
+    """LLM sem rede, para os testes e para correr a aplicação sem chaves. Guarda o que lhe foi enviado.
+
+    Com ``respostas``, devolve-as por ordem (repete a última). Sem elas, simula uma conversa curta:
+    faz uma pergunta e, depois da primeira resposta do utilizador, devolve uma sugestão sem cursos.
+    Decide só pelas mensagens do próprio pedido, por isso cada utilizador tem a sua conversa simulada.
+    """
 
     nome = "falso"
 
     def __init__(self, respostas: Sequence[str] | None = None) -> None:
-        self._respostas = list(respostas or ['{"tipo": "pergunta", "texto": "Resposta simulada (LLM_BACKEND=falso)."}'])
+        self._respostas = list(respostas) if respostas else None
         self.pedidos: list[tuple[str, tuple[Mensagem, ...]]] = []
 
     def conversar(self, instrucoes: str, mensagens: Sequence[Mensagem]) -> str:
         self.pedidos.append((instrucoes, tuple(mensagens)))
+        if self._respostas is None:
+            respostas_do_utilizador = sum(1 for m in mensagens if m.papel == "utilizador")
+            return PERGUNTA_SIMULADA if respostas_do_utilizador <= 1 else SUGESTAO_SIMULADA
         indice = min(len(self.pedidos) - 1, len(self._respostas) - 1)
         return self._respostas[indice]
 

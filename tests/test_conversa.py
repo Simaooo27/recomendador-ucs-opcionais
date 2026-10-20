@@ -138,6 +138,22 @@ class ConversaConduzidaPeloLLMTests(ConversaTestCase):
         self.assertIn(texts.ORIENTACAO_SUGESTOES_TITULO, html)
         self.assertNotIn(texts.ORIENTACAO_RESPOSTA_LABEL, html)
 
+    def test_o_limite_nao_depende_de_o_llm_obedecer(self):
+        """Se, depois da 6.ª resposta, o LLM fizer outra pergunta, ela não aparece: é um erro e pode tentar de novo."""
+        self.usar_llm(LLMFalso([pergunta("?")] * (conversa.LIMITE_PERGUNTAS + 1) + [sugestao()]))
+        self.post("/orientacao/comecar")
+        for i in range(conversa.LIMITE_PERGUNTAS - 1):
+            self.post("/orientacao/responder", resposta=f"resposta {i}")
+        with self.assertLogs(self.app.logger, level="WARNING"):
+            self.post("/orientacao/responder", resposta="última resposta")
+        html = self.pagina()
+        perguntas = [m for m in self.mensagens_guardadas() if m["papel"] == "assistente"]
+        self.assertEqual(len(perguntas), conversa.LIMITE_PERGUNTAS)
+        self.assertIn(texts.ORIENTACAO_TENTAR_DE_NOVO, html)
+        self.assertNotIn('name="resposta"', html)   # não há caixa para responder a uma 7.ª pergunta
+        self.post("/orientacao/tentar-de-novo")
+        self.assertIn(texts.ORIENTACAO_SUGESTOES_TITULO, self.pagina())
+
     def test_resposta_vazia_ou_longa(self):
         self.post("/orientacao/comecar")
         response = self.post("/orientacao/responder", resposta="   ")

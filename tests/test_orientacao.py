@@ -101,6 +101,25 @@ class ProximoPassoTests(unittest.TestCase):
         conversa.proximo_passo(falso, CATALOGO, historico)
         self.assertTrue(falso.pedidos[0][0].endswith(conversa.PEDIDO_DE_SUGESTAO))
 
+    def test_depois_do_limite_uma_pergunta_e_resposta_invalida(self):
+        historico = []
+        for i in range(conversa.LIMITE_PERGUNTAS):
+            historico += [Mensagem("assistente", f"pergunta {i}"), Mensagem("utilizador", f"resposta {i}")]
+        with self.assertRaises(RespostaInvalida):
+            conversa.proximo_passo(LLMFalso(['{"tipo": "pergunta", "texto": "mais uma?"}']), CATALOGO, historico)
+
+    def test_pedir_a_sugestao_antes_do_limite_tambem_nao_aceita_perguntas(self):
+        with self.assertRaises(RespostaInvalida):
+            conversa.proximo_passo(
+                LLMFalso(['{"tipo": "pergunta", "texto": "mais uma?"}']), CATALOGO, [], forcar_sugestao=True
+            )
+
+    def test_o_llm_falso_sem_respostas_simula_uma_conversa_curta(self):
+        falso = LLMFalso()
+        self.assertIsInstance(conversa.proximo_passo(falso, CATALOGO, []), conversa.Pergunta)
+        historico = [Mensagem("assistente", "?"), Mensagem("utilizador", "gosto de dados")]
+        self.assertIsInstance(conversa.proximo_passo(falso, CATALOGO, historico), conversa.Sugestao)
+
     def test_respostas_longas_sao_cortadas(self):
         falso = LLMFalso()
         conversa.proximo_passo(falso, CATALOGO, [Mensagem("assistente", "?"), Mensagem("utilizador", "a" * 5000)])

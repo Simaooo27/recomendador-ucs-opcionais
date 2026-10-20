@@ -3,6 +3,7 @@
 - ``LLMFalso``: respostas fixas, sem rede. É o que os testes usam (RNF06).
 - ``AdaptadorGemini``: Google Gemini (API REST ``generateContent``).
 - ``AdaptadorGroq``: Groq (API compatível com a da OpenAI). Reserva para quando o Gemini falhar.
+- ``AdaptadorOllama``: um servidor Ollama (o da faculdade, ou um no próprio computador), API ``/api/chat``.
 
 Os pedidos são feitos com ``urllib`` (biblioteca padrão), sem SDK de nenhum fornecedor: menos uma
 dependência e o pedido fica visível neste ficheiro. A chave vai sempre num cabeçalho, nunca no
@@ -11,6 +12,7 @@ endereço, para não aparecer em registos; e é apagada de qualquer mensagem de 
 from __future__ import annotations
 
 import json
+import re
 import urllib.error
 import urllib.request
 from typing import Callable, Sequence
@@ -153,4 +155,57 @@ class AdaptadorGroq:
             raise RespostaInvalida("Groq devolveu uma resposta sem «choices».") from None
         if not texto.strip():
             raise RespostaInvalida("Groq devolveu uma resposta vazia.")
+        return texto
+
+
+# Modelos com raciocínio (como o qwen3) podem começar a resposta com um bloco <think>…</think>.
+_RACIOCINIO = re.compile(r"^\s*<think>.*?</think>\s*", re.S)
+
+
+class AdaptadorOllama:
+    """Servidor Ollama, pela API nativa ``/api/chat`` (por exemplo, o servidor da faculdade).
+
+    O token (se o servidor o pedir) vai no cabeçalho ``Authorization`` e só por https.
+    ``contexto`` é a janela do modelo em tokens (``num_ctx``): as instruções com o catálogo
+    têm cerca de 3700 tokens, e com uma janela menor o servidor cortaria o início, que são as regras.
+    """
+
+    def __init__(
+        self,
+        *,
+        endereco: str,
+        chave: str,
+        modelo: str,
+        timeout: float = 15,
+        contexto: int = 8192,
+        transporte: Transporte = transporte_urllib,
+    ) -> None:
+        if not endereco:
+            raise LLMIndisponivel("LLM_BACKEND=ollama exige OLLAMA_BASE_URL no .env.")
+        if chave and not endereco.lower().startswith("https://"):
+            raise LLMIndisponivel("Com OLLAMA_API_KEY, o endereço do Ollama tem de começar por https://.")
+        self._endereco = endereco.rstrip("/") + "/api/chat"
+        self._chave, self.modelo, self._timeout = chave, modelo, timeout
+        self._contexto, self._transporte = contexto, transporte
+        self.nome = f"ollama/{modelo}"
+
+    def conversar(self, instrucoes: str, mensagens: Sequence[Mensagem]) -> str:
+        corpo = {
+            "model": self.modelo,
+            "messages": [{"role": "system", "content": instrucoes}]
+            + [{"role": "user" if m.papel == "utilizador" else "assistant", "content": m.texto} for m in mensagens],
+            "stream": False,
+            "format": "json",
+            # Sem raciocínio: as respostas chegam mais depressa (RNF12: menos de 15 s).
+            "think": False,
+            "options": {"temperature": 0.7, "num_ctx": self._contexto},
+        }
+        cabecalhos = {"Authorization": f"Bearer {self._chave}"} if self._chave else {}
+        try:
+            dados = self._transporte(self._endereco, cabecalhos, corpo, self._timeout)
+        except ErroHTTP as erro:
+            raise _traduzir_erro(erro, "Ollama", self.modelo, self._chave) from None
+        texto = _RACIOCINIO.sub("", (dados.get("message") or {}).get("content") or "")
+        if not texto.strip():
+            raise RespostaInvalida("Ollama devolveu uma resposta vazia.")
         return texto

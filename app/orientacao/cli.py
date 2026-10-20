@@ -1,6 +1,7 @@
 """Comando de terminal para experimentar o LLM com a chave real (spike da US30).
 
     flask --app app llm-teste --backend gemini
+    flask --app app llm-teste --backend ollama
 
 Faz 2 pedidos: o LLM faz a primeira pergunta; depois recebe uma resposta de exemplo (com um
 email de propósito, para mostrar que é apagado) e tem de sugerir cursos do catálogo.
@@ -25,7 +26,7 @@ RESPOSTA_DE_EXEMPLO = (
 
 
 @click.command("llm-teste")
-@click.option("--backend", default=None, help="falso, gemini ou groq (por omissão: LLM_BACKEND do .env).")
+@click.option("--backend", default=None, help="falso, gemini, groq ou ollama (por omissão: LLM_BACKEND do .env).")
 @click.option("--modelo", default=None, help="Outro modelo do fornecedor (por omissão: LLM_MODELO ou o padrão).")
 @with_appcontext
 def llm_teste(backend: str | None, modelo: str | None) -> None:
@@ -58,7 +59,9 @@ def llm_teste(backend: str | None, modelo: str | None) -> None:
         raise click.ClickException(str(erro)) from None
     except RuntimeError as erro:   # LLM_BACKEND desconhecido
         raise click.ClickException(str(erro)) from None
-    click.echo("\nPedidos usados: 2. Limites da sua conta: https://aistudio.google.com/rate-limit (Gemini).")
+    click.echo("\nPedidos usados: 2.")
+    if cliente.nome.startswith("gemini/"):
+        click.echo("Limites da sua conta: https://aistudio.google.com/rate-limit")
 
 
 def _descrever(passo: conversa.Pergunta | conversa.Sugestao) -> str:

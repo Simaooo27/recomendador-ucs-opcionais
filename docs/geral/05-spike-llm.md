@@ -64,19 +64,15 @@ Faz 2 pedidos e mostra: a primeira pergunta do LLM, e a sugestão de cursos depo
 
 **Fontes:** [limites](https://ai.google.dev/gemini-api/docs/rate-limits) e [preços](https://ai.google.dev/gemini-api/docs/pricing) do Gemini; [termos da API do Gemini](https://ai.google.dev/gemini-api/terms); [medição de 02/09/2026](https://aiplug.work/en/blog/gemini-free-tier-limits); [limites](https://console.groq.com/docs/rate-limits) e [dados](https://console.groq.com/docs/your-data) do Groq; [termos de utilização do Groq](https://groq.com/terms-of-use).
 
-## 7. Servidor Ollama da faculdade (20/10/2026)
+## 7. Servidor Ollama da faculdade: testado e posto de parte (20/10/2026)
 
-O docente disponibilizou um servidor [Ollama](https://ollama.com) da faculdade, partilhado pelos alunos, com vários modelos. O endereço e o token vêm do docente e ficam **só no `.env`** (`OLLAMA_BASE_URL`, `OLLAMA_API_KEY`); o `.env.example` deixa-os vazios, porque o repositório é público e o token é de toda a turma. O PO escolheu o **`qwen3:4b`**, depois de confirmar que o servidor responde.
+O docente recomendou um servidor Ollama da faculdade, partilhado pelos alunos. Foi ligado ao OptaBem (PR #25) e testado pelo PO no seu computador com o comando `llm-teste`, com o modelo `qwen3:4b`, lado a lado com o Gemini:
 
-| | Servidor Ollama da faculdade |
-|---|---|
-| Custo | 0 € |
-| Termos | Não tem os do Gemini (EEE, menores de 18): pode resolver o ponto 14 dos requisitos. **Falta confirmar com o docente** se o site o pode usar e com que volume |
-| Privacidade | As respostas ficam num servidor da instituição. O código continua a apagar emails e números antes de enviar |
-| Riscos | É partilhado: com muitos colegas a usar, uma resposta pode passar os 15 s (RNF12) e o servidor pode estar desligado fora das aulas. Um modelo de 4B cumpre pior o formato JSON e sugere pior do que o Gemini; a aplicação protege-se (rejeita respostas fora do formato e cursos fora do catálogo), mas pode aparecer mais vezes «Tentar de novo» |
+| | Ollama (`qwen3:4b`) | Gemini Flash-Lite |
+|---|---|---|
+| 1.ª pergunta | 6 a 7 s; em português do Brasil («O que você gosta de fazer…»), apesar de as instruções pedirem PT-PT | 3 s, em PT-PT |
+| Sugestão de cursos | Com o limite de 15 s: não chegou a tempo. Com 60 s: fez outra pergunta em vez de sugerir (a aplicação recusou-a, como manda o RF36.4) | 1 s; 2 cursos do catálogo adequados à resposta de exemplo, com explicação |
 
-**Como o pedido é feito** (`AdaptadorOllama`): API nativa `/api/chat`, com o token no cabeçalho `Authorization` e só por https; resposta em JSON (`format`); sem raciocínio (`think: false`), para ser mais rápido; janela de 8192 tokens (`num_ctx`), porque com a janela por omissão o servidor podia cortar o início das instruções, onde estão as regras.
-
-**Experimentar:** `flask --app app llm-teste --backend ollama` (2 pedidos). Para comparar com o Gemini: `flask --app app llm-teste --backend gemini`.
+**Decisão do PO (20/10):** o servidor da faculdade não cumpre o RNF12 (resposta em menos de 15 s) nem obedece ao pedido de sugestão com este modelo, por isso o adaptador foi retirado (PR de reversão do #25). Fica o **Gemini**, com o Groq como reserva. O ponto 14 dos requisitos (termos do Gemini) continua por decidir. Se for preciso voltar a experimentar, o adaptador está no histórico do Git (commit `a18cb33`).
 
 **Revisão de 20/10/2026:** o Flash mais recente passou a ser o `gemini-3.8-flash`; corrigido o que a Google faz com os dados no EEE (aplicam-se as regras do plano pago, mesmo no gratuito); os limites da secção 1 assinalados como não oficiais. Confirmado nas páginas de [modelos](https://ai.google.dev/gemini-api/docs/latest-model), [preços](https://ai.google.dev/pricing), [limites](https://ai.google.dev/gemini-api/docs/rate-limits) e [termos](https://ai.google.dev/terms).

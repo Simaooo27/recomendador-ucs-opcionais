@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · spike do LLM feito a 14/10 · a seguir: Sprint 2 (conversa de orientação com o LLM e sugestão de cursos) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
-| **Testes automáticos** | 267, todos a passar |
+| **Testes automáticos** | 255, todos a passar |
 
 ## Índice
 
@@ -156,11 +156,9 @@ Para experimentar o LLM com a chave real (2 pedidos; a chave nunca é mostrada):
 | `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` | |
 | `SESSION_COOKIE_SECURE` | `true` em produção (HTTPS) | `false` |
 | `ADMIN_URL_PREFIX` | Endereço da área de gestão (administradores) | `gestao` |
-| `LLM_BACKEND` | LLM da orientação: `falso` (sem rede), `gemini`, `groq` ou `ollama` (servidor da faculdade) | `falso` |
-| `LLM_MODELO` | Outro modelo do fornecedor (vale para todos: para comparar, usar `--modelo` no `llm-teste`) | `gemini-3.5-flash-lite` / `openai/gpt-oss-120b` / `qwen3:4b` |
+| `LLM_BACKEND` | LLM da orientação: `falso` (sem rede), `gemini` ou `groq` | `falso` |
+| `LLM_MODELO` | Outro modelo do fornecedor | `gemini-3.5-flash-lite` / `openai/gpt-oss-120b` |
 | `GEMINI_API_KEY`, `GROQ_API_KEY` | Chaves pessoais dos fornecedores (só no `.env`, nunca no repositório) | vazias |
-| `OLLAMA_BASE_URL`, `OLLAMA_API_KEY` | Endereço e token do servidor Ollama da faculdade (pedir ao docente; só no `.env`, nunca no repositório) | vazios |
-| `OLLAMA_NUM_CTX` | Janela do modelo Ollama, em tokens | `8192` |
 
 </details>
 
@@ -181,7 +179,7 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 | `tests/test_validators.py` | Regras do email e da palavra-passe |
 | `tests/test_texts.py` | Ficheiro de textos: nada vazio e marcadores `{…}` no sítio |
 | `tests/test_app_factory.py` | Arranque e configuração da aplicação |
-| `tests/test_llm.py` | Ligação ao LLM: fábrica, adaptadores Gemini, Groq e Ollama (sem rede), chave nunca exposta, dados pessoais apagados |
+| `tests/test_llm.py` | Ligação ao LLM: fábrica, adaptadores Gemini e Groq (sem rede), chave nunca exposta, dados pessoais apagados |
 | `tests/test_orientacao.py` | Conversa de orientação: formato das respostas, só cursos do catálogo (RN09), limite de perguntas, comando `llm-teste` |
 | `tests/test_conversa.py` | Página da conversa (US29): sessão, perguntas do LLM, dados pessoais, falhas e «Tentar de novo», recomeçar |
 | `tests/test_sugestoes.py` | Cursos sugeridos (US30): dados do catálogo e explicação, só cursos do catálogo, «Ver sugestões já», poucos cursos, página `/cursos/` |
@@ -207,7 +205,7 @@ app/
   security.py       proteção CSRF e cabeçalhos de segurança
   mailer.py         envio de email (terminal ou SMTP)
   main.py           página inicial do aluno e política de privacidade
-  llm/              ligação ao LLM (Gemini, Groq, Ollama da faculdade, falso), escolhido por LLM_BACKEND
+  llm/              ligação ao LLM (Gemini, Groq, falso), escolhido por LLM_BACKEND
   orientacao/       conversa de orientação conduzida pelo LLM (US29, US30) e comando llm-teste
   gestao/           área de gestão (administradores, US03); endereço em ADMIN_URL_PREFIX
     routes.py         entrar, sair, painel e lista de administradores

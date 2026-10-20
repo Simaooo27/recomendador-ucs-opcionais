@@ -6,7 +6,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 1 concluído (10 SP: US01, US02, US03) · spike do LLM feito a 14/10 · a seguir: Sprint 2 (conversa de orientação com o LLM e sugestão de cursos) |
+| **Sprint atual** | Sprint 2, desde 20/10 (US29, US30 e US31; Sprint Planning de 20/10) · Sprint 1 concluído (10 SP: US01, US02, US03) |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador |
 | **Testes automáticos** | 255, todos a passar |
 
@@ -30,20 +30,22 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | Sprint | Sprint Goal |
 |---|---|
-| Sprint 2 (8 SP) | Uma pessoa indecisa conversa com o assistente (LLM), que lhe faz perguntas e lhe sugere 2 a 3 cursos do catálogo com explicação. |
-| Sprint 3 (10 SP) | O utilizador escolhe um curso sugerido (fica registado no percurso) e consulta e compara cursos de várias instituições. |
+| Sprint 2 (13 SP, 8 já feitos) | Uma pessoa indecisa conversa com o assistente (LLM), recebe 2 a 3 cursos do catálogo com explicação e escolhe um, ficando a decisão registada no percurso. |
+| Sprint 3 (5 SP, por completar) | Uma pessoa indecisa consulta e compara cursos de várias instituições. |
 | Sprint 4 (10 SP) | Quem já é aluno regista as UCs que concluiu e avalia as opcionais que fez, com as avaliações pseudonimizadas desde o início. |
 
 **Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
+
+**Sprint Planning do Sprint 2 (20/10/2026, decisão do PO):** a US29 e a US30 foram feitas antes de o sprint começar, por isso entra a US31 (antecipada do Sprint 3). O ponto 14 dos requisitos fica decidido: o OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa. O servidor Ollama da faculdade foi testado e posto de parte ([spike](docs/geral/05-spike-llm.md), secção 7).
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
 | US03 | Perfis de aluno e administrador (revista a 14/10: um só início de sessão) | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
-| US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Feita (PR #19; chega ao `main` pelo PR #20) | [docs/US29/](docs/US29/) |
-| US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita (por rever, PR da US30) | [docs/US30/](docs/US30/) |
-| US31 | Escolher curso e linha do tempo do percurso | Sprint 3 | Por fazer | — |
+| US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Feita (no `main`; por aceitar na Sprint Review) | [docs/US29/](docs/US29/) |
+| US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita (no `main`; por aceitar na Sprint Review) | [docs/US30/](docs/US30/) |
+| US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10) | Sprint 2 | Por fazer | — |
 | US05 | Consultar e comparar cursos | Sprint 3 | Por fazer (a pesquisa já foi feita a 14/10, e a página `/cursos/` na US30; faltam filtros, ficha e comparação) | `app/catalogo/` |
 | US06 | Registar percurso | Sprint 4 | Por fazer | — |
 | US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Sprint 4 | Por fazer | — |

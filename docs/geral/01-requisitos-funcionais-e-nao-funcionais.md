@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.4 · rascunho para validação do Product Owner · 2026-10-14.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.5 · rascunho para validação do Product Owner · 2026-10-20.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
@@ -121,7 +121,7 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | US03 — Perfis de aluno e administrador | RF04 (ver [detalhe](../US03/requisitos.md)) | Sprint 1 | nova |
 | US29 — Conversa de orientação com o LLM | RF36, RNF12 | Sprint 2 | nova (13/10; reescrita a 14/10, absorve a US32) |
 | US30 — Sugestão de 2 a 3 cursos no fim da conversa | RF37, RF38, RNF12, RN09, RN10 | Sprint 2 | nova (13/10; reescrita a 14/10) |
-| US31 — Escolher curso e linha do tempo do percurso | RF03, RF35, RF39, RN10 | Sprint 3 | nova (13/10) |
+| US31 — Escolher curso e linha do tempo do percurso | RF03, RF35, RF39, RN10 | Sprint 2 | nova (13/10; antecipada a 20/10) |
 | US05 — Consultar e comparar cursos | RF34 | Sprint 3 | US04 |
 | US06 — Registar percurso | RF05 (UCs), RF08, RF09 | Sprint 4 | US05 |
 | US07 — Avaliar opcional concluída | RF10, RF13, RF15 (pseudo_id desde o início) | Sprint 4 | US06 |
@@ -176,7 +176,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 11 | A exportação e o apagamento de dados (US17, RF17) ficam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | Por decidir |
 | 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições de `dados/catalogo-cursos-mvp.csv` antes da US30; a Gestão da Universidade de Aveiro ainda não tem descrição. | Por decidir |
 | 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar: talvez como evolução da US29/US30, reutilizando o adaptador `ClienteLLM` e as validações previstas em 03-arquitetura-e-padroes.md. | **Alterado (14/10):** o LLM conduz a conversa; US32 fundida na US29; RF36 a RF38 e RNF12 reescritos. Custo e privacidade avaliados no [spike](05-spike-llm.md). |
-| 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18, e os outros usam a consulta de cursos (US05); (c) plano pago (cerca de 1,5 cêntimos por conversa) ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | Por decidir (antes do Sprint 2) |
+| 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18, e os outros usam a consulta de cursos (US05); (c) plano pago (cerca de 1,5 cêntimos por conversa) ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | **Decidido (20/10):** opção (a). O OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa; fica escrito no relatório. O servidor Ollama da faculdade, que evitaria estes termos, foi testado e posto de parte (spike, secção 7). |
 | 15 | A conversa tem de ser guardada entre pedidos, e não cabe no cookie de sessão (limite de 4 KB). | Guardá-la no servidor é guardar texto livre escrito pelo utilizador (RNF01). | Guardar no servidor só enquanto a conversa decorre e apagar ao recomeçar ou depois da escolha (US31); a sugestão guardada na linha do tempo leva só os cursos e as explicações. | Por decidir (na US29) |
 
 ## 6. Histórico de alterações
@@ -188,5 +188,6 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.2 | 2026-10-07 | RF01: registo com email pessoal, por decisão do Product Owner (ponto 9 da secção 5). |
 | 1.3 | 2026-10-13 | Nova [visão do produto](00-visao-do-produto.md). RF03, RF05 e RF07 alterados; novos RF34 a RF39 (comparar cursos, linha do tempo, orientação de curso com LLM), RNF12 (uso de LLM), RN09 e RN10. Rastreabilidade com as stories novas US29 a US31 e o novo plano de sprints. Pontos 10 a 12 da secção 5. |
 | 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
+| 1.5 | 2026-10-20 | Sprint Planning do Sprint 2: ponto 14 decidido (protótipo da equipa, opção a); US31 antecipada para o Sprint 2. |
 
 O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 14/10). O ficheiro Word continua na versão 1.0.

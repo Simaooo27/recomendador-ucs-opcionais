@@ -4,6 +4,8 @@ from flask import Blueprint, current_app, g, redirect, render_template, request,
 from . import percurso
 from .catalogo import services as catalogo
 from .auth.sessions import login_required
+from .db import get_db
+from .orientacao import services as orientacao_services
 
 bp = Blueprint("main", __name__)
 
@@ -27,7 +29,8 @@ def index():
 @bp.get("/inicio")
 @login_required
 def home():
-    estado = percurso.estado_do_utilizador(g.user)
+    terminada = orientacao_services.tem_sugestao(get_db(), g.user["id"])
+    estado = percurso.estado_do_utilizador(g.user, conversa_terminada=terminada)
     return render_template("home.html", passos=percurso.passos(estado))
 
 

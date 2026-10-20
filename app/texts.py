@@ -159,7 +159,7 @@ HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui.
 HOME_PATH_TITLE = "O seu percurso"
 HOME_PATH_STEPS = [
     {"titulo": "Conta criada", "texto": "O seu email está confirmado."},
-    {"titulo": "Questionário de orientação", "texto": "Conte-nos os seus interesses para receber sugestões de curso."},
+    {"titulo": "Conversa de orientação", "texto": "Responda a algumas perguntas sobre os seus interesses para receber sugestões de curso."},
     {"titulo": "Escolher curso", "texto": "Compare os cursos sugeridos e registe a sua escolha."},
     {"titulo": "Escolher opcionais", "texto": "Receba sugestões de opcionais com base em quem fez escolhas parecidas."},
 ]
@@ -167,6 +167,50 @@ HOME_STEP_DONE = "Concluído"
 HOME_STEP_CURRENT = "Próximo passo"
 HOME_STEP_LATER = "Depois"
 HOME_NEXT_SOON = "Disponível em breve."
+# Botão no passo atual da linha do tempo (só nos passos que já existem).
+HOME_ACTION_CONVERSA = "Começar a conversa"
+HOME_ACTION_CONTINUAR = "Continuar a conversa"
+
+# ---------------------------------------------------------------------------
+# Conversa de orientação (/orientacao, US29): o assistente (LLM) faz as perguntas.
+# O que o assistente diz vem do LLM; as instruções que ele segue estão em
+# app/orientacao/instrucoes.md.
+# ---------------------------------------------------------------------------
+
+ORIENTACAO_TITLE = "Conversa de orientação"
+# {maximo} é o número máximo de perguntas (LIMITE_PERGUNTAS em app/orientacao/conversa.py).
+ORIENTACAO_INTRO = (
+    "O assistente faz-lhe algumas perguntas (no máximo {maximo}) sobre o que gosta e o que imagina fazer. "
+    "No fim, sugere 2 a 3 cursos do catálogo."
+)
+# Aviso de privacidade (RNF12), sempre visível nesta página.
+ORIENTACAO_AVISO = (
+    "Não escreva dados pessoais, como o nome, o email ou o telefone. As suas respostas são enviadas a um "
+    "serviço externo de inteligência artificial, sem o seu email nem o seu nome."
+)
+# Decisão pendente do Product Owner (ponto 14 dos requisitos: os termos do Gemini excluem menores de 18).
+ORIENTACAO_IDADE = "Por agora, esta conversa destina-se a maiores de 18 anos."
+ORIENTACAO_COMECAR = "Começar a conversa"
+ORIENTACAO_ASSISTENTE = "Assistente"
+ORIENTACAO_VOCE = "Você"
+# {numero} é a pergunta atual e {maximo} o limite.
+ORIENTACAO_PROGRESSO = "Pergunta {numero} de, no máximo, {maximo}"
+ORIENTACAO_RESPOSTA_LABEL = "A sua resposta"
+ORIENTACAO_RESPOSTA_HINT = "Até {maximo} caracteres. Emails e números de telefone são apagados antes de enviar."
+ORIENTACAO_ENVIAR = "Enviar"
+ORIENTACAO_TENTAR_DE_NOVO = "Tentar de novo"
+ORIENTACAO_A_ESPERA = "O assistente não chegou a responder. A sua resposta está guardada: tente de novo."
+ORIENTACAO_RECOMECAR = "Recomeçar a conversa"
+ORIENTACAO_TERMINADA = "O assistente já tem informação suficiente. As sugestões de curso vão aparecer aqui em breve."
+
+ORIENTACAO_ERRO_VAZIA = "Escreva uma resposta antes de enviar."
+ORIENTACAO_ERRO_LONGA = "A resposta pode ter até {maximo} caracteres. Encurte-a um pouco."
+# O limite do serviço externo é partilhado por todos os utilizadores (por minuto e por dia).
+ORIENTACAO_ERRO_LIMITE = (
+    "O assistente está com muitos pedidos neste momento. Tente de novo dentro de um minuto; "
+    "se continuar, o limite diário foi atingido e volta a funcionar amanhã."
+)
+ORIENTACAO_ERRO_LLM = "Não foi possível falar com o assistente. A sua conversa está guardada: tente de novo."
 
 # ---------------------------------------------------------------------------
 # Área de gestão (administradores, US03). Endereço em ADMIN_URL_PREFIX (por omissão /gestao).

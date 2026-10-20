@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
-**Versão 1.0 · decisão dos Product Owners · 2026-10-13.** Substitui a visão implícita até ao Sprint 1 («recomendador de opcionais para alunos de um curso»). As consequências nos requisitos estão na versão 1.3 de [01-requisitos-funcionais-e-nao-funcionais.md](01-requisitos-funcionais-e-nao-funcionais.md) e no [backlog](product-backlog.xlsx).
+**Versão 1.1 · decisão dos Product Owners · 2026-10-14** (1.0 de 13/10; 1.1: o LLM conduz a conversa de orientação, sem perguntas fixas). Substitui a visão implícita até ao Sprint 1 («recomendador de opcionais para alunos de um curso»). As consequências nos requisitos estão na versão 1.4 de [01-requisitos-funcionais-e-nao-funcionais.md](01-requisitos-funcionais-e-nao-funcionais.md) e no [backlog](product-backlog.xlsx).
 
 ## 1. O problema
 
@@ -31,7 +31,7 @@ O OptaBem não atribui um percurso de uma vez: acompanha cada momento de decisã
 ```mermaid
 stateDiagram-v2
     [*] --> SemCurso: regista-se
-    SemCurso --> SemCurso: questionário e sugestões
+    SemCurso --> SemCurso: conversa de orientação e sugestões
     SemCurso --> ComCurso: escolhe curso e instituição
     ComCurso --> AEscolherOpcionais: chega a um semestre com opcionais
     AEscolherOpcionais --> ComCurso: escolhe opcionais
@@ -40,10 +40,10 @@ stateDiagram-v2
 
 | Momento | O que o OptaBem faz | Como decide |
 |---|---|---|
-| Escolher curso | Questionário curto e 2 a 3 cursos sugeridos, cada um com explicação | Modelo de linguagem (LLM) sobre uma lista fechada de cursos do catálogo |
+| Escolher curso | Conversa em que o assistente faz perguntas sobre os interesses da pessoa (no máximo 6) e termina com 2 a 3 cursos sugeridos, cada um com explicação | Modelo de linguagem (LLM) que conduz a conversa e sugere só cursos de uma lista fechada do catálogo |
 | Comparar cursos | Fichas lado a lado: descrição, saídas, vagas, nota do último colocado | Dados oficiais da DGES e das instituições |
 | Escolher opcionais | Opcionais sugeridas com explicação | Popularidade e, mais tarde, colegas com gostos parecidos |
-| Repensar | Volta ao questionário com o histórico já preenchido | Igual a «Escolher curso» |
+| Repensar | Nova conversa de orientação; as decisões anteriores ficam na linha do tempo | Igual a «Escolher curso» |
 
 **O utilizador decide sempre.** O OptaBem sugere e explica; nunca atribui um curso ou uma opcional sem confirmação.
 
@@ -53,9 +53,9 @@ stateDiagram-v2
 
 - Catálogo de **12 instituições e 30 licenciaturas** em três áreas (Ciência da Informação, Gestão, Informática), públicas e privadas, universidades e politécnicos: ver [`dados/catalogo-cursos-mvp.csv`](../../dados/catalogo-cursos-mvp.csv).
 - Consulta e comparação de cursos.
-- Questionário de orientação e sugestão de cursos com LLM.
+- Conversa de orientação conduzida por um LLM e sugestão de 2 a 3 cursos do catálogo.
 - Escolha de curso e linha do tempo das decisões.
-- Para quem já é aluno: percurso, avaliação de opcionais e recomendações por popularidade.
+- Para quem já é aluno: percurso e avaliação de opcionais (pseudonimizada). As recomendações por popularidade (US11) passaram para o backlog a 14/10, para o plano caber na velocidade real (10 SP por sprint).
 
 **Fora (backlog):** recomendação colaborativa (user-based e por itens), avaliação offline do motor, comentários, horários, mais instituições e áreas.
 
@@ -68,13 +68,13 @@ stateDiagram-v2
 | Sugestões de curso pertinentes | % de sugestões que o utilizador considera «faz sentido» | ≥ 70 % num teste com 10 pessoas |
 | Sugestões fiáveis | Sugestões com cursos fora do catálogo que chegam ao ecrã | 0 (validação obrigatória, RN09) |
 | Decisões acompanhadas | Utilizadores que escolhem um curso depois de receberem sugestões | ≥ 50 % no mesmo teste |
-| Rapidez | Tempo do questionário à sugestão | < 2 minutos |
+| Rapidez | Tempo da primeira pergunta à sugestão (até 6 perguntas) | < 4 minutos (proposta de 14/10; era 2 minutos com o questionário fixo) |
 
 *As metas são uma proposta inicial; os Product Owners validam-nas na Sprint Review.*
 
 ## 7. Restrições e princípios
 
-- **Privacidade:** ao LLM só seguem as respostas do questionário e o catálogo, nunca email, nome ou outros dados identificativos (RNF12).
+- **Privacidade:** ao LLM só seguem o texto da conversa (sem emails nem números longos, que são apagados antes de enviar) e o catálogo, nunca email, nome ou identificadores da conta (RNF12). Fornecedor, limites e termos: [05-spike-llm.md](05-spike-llm.md).
 - **Independência do fornecedor:** o LLM fica atrás de uma interface própria; mudar de fornecedor, ou correr um modelo local, não mexe no resto da aplicação. Ver [03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md).
 - **Testável sem rede:** os testes usam um LLM falso de resposta conhecida (RNF06).
 - **Sugestão do professor:** o uso de um LLM e de design patterns foi sugerido pelo docente da UC.
@@ -88,3 +88,4 @@ stateDiagram-v2
 | 2026-10-13 | Várias instituições (MVP com 12) para haver dados comparativos | Product Owners |
 | 2026-10-13 | O percurso é atualizado em cada momento de decisão, não atribuído de uma vez | Product Owners |
 | 2026-10-13 | LLM para sugerir cursos e design patterns na arquitetura, por sugestão do docente | Product Owners |
+| 2026-10-14 | Sem perguntas fixas: o LLM conduz a conversa e associa as respostas a cursos do catálogo (issue #15). Fornecedor: Google Gemini (plano gratuito), Groq como reserva | Product Owner (Duarte Eusébio) |

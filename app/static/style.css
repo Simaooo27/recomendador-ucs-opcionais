@@ -826,6 +826,37 @@ td form { margin: 0; }
 }
 .recomecar { margin-top: 2rem; }
 
+/* «Ver sugestões já» (US30), por baixo do botão Enviar. */
+.pedir-sugestao { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin-top: 1rem; }
+.pedir-sugestao .hint { margin: 0; }
+
+/* Cursos sugeridos no fim da conversa (US30): as fichas do catálogo (secção 11), com a explicação. */
+.sugestoes { margin-top: 0.5rem; }
+.sugestoes h2 { margin-bottom: 0; }
+.sugestoes .cursos { grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr)); }
+.curso-explicacao {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius);
+  background: var(--page);
+  box-shadow: inset 3px 0 0 var(--marigold);
+  font-size: 0.95rem;
+}
+.curso-explicacao p { margin: 0; overflow-wrap: anywhere; }
+.curso-explicacao-titulo { margin-bottom: 0.2rem !important; font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+.sugestoes-nota { margin: 1.25rem 0 0; color: var(--muted); }
+.poucas-sugestoes { margin: 1.25rem 0 0; }
+.sugestoes-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+.sugestoes-acoes form { margin: 0; }
+/* Ligação com o aspeto do botão secundário («Procurar no catálogo»). */
+.botao-ligacao { display: inline-flex; align-items: center; border-radius: var(--radius); text-decoration: none; }
+
+/* Catálogo de cursos (/cursos/): a caixa de pesquisa e as fichas da secção 11, numa página normal. */
+.catalogo-procura { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; }
+.catalogo-procura .field { flex: 1 1 16rem; margin: 0; }
+.catalogo-procura button { width: auto; }
+.catalogo-resultados { padding-top: 1.5rem; }
+
 @media (max-width: 40rem) {
   .linha-tempo { grid-template-columns: 1fr; gap: 0; }
   .etapa { padding: 0 0 1.75rem 2.25rem; }

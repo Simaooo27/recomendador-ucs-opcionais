@@ -1,9 +1,23 @@
-"""Rotas do catálogo. Por agora só a pesquisa usada pela página de apresentação."""
+"""Rotas do catálogo: a página /cursos/ e a pesquisa em JSON usada pela página de apresentação.
+
+Os filtros, a ficha de cada curso e a comparação são a US05.
+"""
 from __future__ import annotations
 
-from flask import current_app, jsonify, request
+from flask import current_app, jsonify, render_template, request
 
 from . import bp, services
+
+
+@bp.get("/")
+def lista():
+    """Pesquisa no catálogo numa página própria, com ou sem sessão iniciada.
+
+    É para aqui que leva «Procurar no catálogo», quando a conversa de orientação acaba com
+    menos de 2 cursos sugeridos (US30). A página de apresentação (/) só a vê quem não tem sessão.
+    """
+    termo = request.args.get("q", "")[:80]
+    return render_template("catalogo/lista.html", termo=termo, resultado=services.pesquisar(current_app.config, termo))
 
 
 @bp.get("/pesquisa")

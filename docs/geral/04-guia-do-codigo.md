@@ -91,7 +91,8 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
 │   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow»
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
-│   ├── orientacao/conversa.html      a conversa com o assistente (US29)
+│   ├── orientacao/conversa.html      a conversa com o assistente (US29) e os cursos sugeridos (US30)
+│   ├── catalogo/lista.html           página /cursos/: pesquisa no catálogo (US30; filtros e comparação na US05)
 │   └── gestao/                       painel e lista de administradores
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR

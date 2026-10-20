@@ -1,4 +1,5 @@
-"""Regras da conversa de orientação (US29): começar, responder, tentar de novo e recomeçar.
+"""Regras da conversa de orientação: começar, responder, tentar de novo e recomeçar (US29);
+pedir as sugestões antes do fim, mostrá-las e continuar quando são poucas (US30).
 
 A conversa fica guardada no servidor, uma por aluno. Estas funções nunca recebem nem enviam o
 email ou o nome do aluno: só o identificador interno, usado para guardar a conversa (RNF12).
@@ -11,6 +12,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Sequence
 
+from .. import texts
 from ..catalogo.repository import Curso
 from ..llm import ClienteLLM, Mensagem
 from ..llm.decoradores import remover_dados_pessoais
@@ -47,6 +49,25 @@ class EstadoConversa:
     def perguntas_feitas(self) -> int:
         return sum(1 for m in self.mensagens if m.papel == "assistente")
 
+    @property
+    def respostas_dadas(self) -> int:
+        return sum(1 for m in self.mensagens if m.papel == "utilizador")
+
+    @property
+    def pode_pedir_sugestao(self) -> bool:
+        """«Ver sugestões já»: depois de pelo menos uma resposta, enquanto a conversa decorre."""
+        return self.comecada and not self.terminada and not self.a_espera_do_assistente and self.respostas_dadas > 0
+
+    @property
+    def sugestao_suficiente(self) -> bool:
+        """A conversa terminou com pelo menos 2 cursos do catálogo (já validados ao guardar, RN09)."""
+        return self.terminada and len(self.sugestao.get("cursos") or []) >= conversa.MIN_CURSOS_SUGERIDOS
+
+    @property
+    def sugestao_foi_pedida(self) -> bool:
+        """A última mensagem é o pedido «Ver sugestões já» (para «Tentar de novo» voltar a pedi-las)."""
+        return bool(self.mensagens) and self.mensagens[-1] == Mensagem("utilizador", texts.ORIENTACAO_PEDIDO_SUGESTAO)
+
 
 def _agora() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -75,10 +96,16 @@ def _sugestao_em_json(sugestao: conversa.Sugestao) -> dict:
 
 
 def _pedir_ao_llm(
-    db: sqlite3.Connection, user_id: int, estado: EstadoConversa, cliente: ClienteLLM, catalogo: Sequence[Curso]
+    db: sqlite3.Connection,
+    user_id: int,
+    estado: EstadoConversa,
+    cliente: ClienteLLM,
+    catalogo: Sequence[Curso],
+    *,
+    forcar_sugestao: bool = False,
 ) -> EstadoConversa:
     """Pede o próximo passo ao LLM e guarda-o. Se o LLM falhar, o erro sobe e a conversa fica como estava."""
-    passo = conversa.proximo_passo(cliente, catalogo, estado.mensagens)
+    passo = conversa.proximo_passo(cliente, catalogo, estado.mensagens, forcar_sugestao=forcar_sugestao)
     if isinstance(passo, conversa.Pergunta):
         novo = EstadoConversa(estado.mensagens + (Mensagem("assistente", passo.texto),), None)
     else:
@@ -127,7 +154,48 @@ def continuar(db: sqlite3.Connection, user_id: int, cliente: ClienteLLM, catalog
     estado = obter(db, user_id)
     if not estado.a_espera_do_assistente:
         return estado
-    return _pedir_ao_llm(db, user_id, estado, cliente, catalogo)
+    return _pedir_ao_llm(db, user_id, estado, cliente, catalogo, forcar_sugestao=estado.sugestao_foi_pedida)
+
+
+def pedir_sugestao(
+    db: sqlite3.Connection, user_id: int, cliente: ClienteLLM, catalogo: Sequence[Curso]
+) -> EstadoConversa:
+    """«Ver sugestões já» (US30): o pedido fica na conversa e o LLM tem de sugerir, sem mais perguntas.
+
+    Como em ``responder``, o pedido é guardado antes de chamar o LLM: se ele falhar, «Tentar de
+    novo» volta a pedir as sugestões.
+    """
+    estado = obter(db, user_id)
+    if not estado.pode_pedir_sugestao:
+        return estado
+    estado = EstadoConversa(estado.mensagens + (Mensagem("utilizador", texts.ORIENTACAO_PEDIDO_SUGESTAO),), None)
+    _guardar(db, user_id, estado)
+    return _pedir_ao_llm(db, user_id, estado, cliente, catalogo, forcar_sugestao=True)
+
+
+def cursos_sugeridos(estado: EstadoConversa, catalogo: Sequence[Curso]) -> conversa.Sugestao | None:
+    """Os cursos a mostrar, com os dados atuais do catálogo e a explicação do LLM.
+
+    Volta a validar contra o catálogo (RN09): se um curso sair do catálogo depois de sugerido,
+    deixa de aparecer.
+    """
+    if not estado.terminada:
+        return None
+    return conversa.validar_contra_catalogo(estado.sugestao, catalogo)
+
+
+def continuar_conversa(db: sqlite3.Connection, user_id: int) -> EstadoConversa:
+    """Com menos de 2 cursos sugeridos, o aluno pode continuar a conversa para dar mais pistas.
+
+    A conversa mantém-se; a sugestão é apagada e a próxima resposta volta a pedir cursos ao LLM.
+    Com sugestões suficientes não faz nada: a escolha do curso é a US31.
+    """
+    estado = obter(db, user_id)
+    if not estado.terminada or estado.sugestao_suficiente:
+        return estado
+    novo = EstadoConversa(estado.mensagens, None)
+    _guardar(db, user_id, novo)
+    return novo
 
 
 def recomecar(db: sqlite3.Connection, user_id: int) -> None:
@@ -135,4 +203,5 @@ def recomecar(db: sqlite3.Connection, user_id: int) -> None:
 
 
 def tem_sugestao(db: sqlite3.Connection, user_id: int) -> bool:
-    return obter(db, user_id).terminada
+    """A conversa terminou com pelo menos 2 cursos: o percurso passa a «Escolher curso»."""
+    return obter(db, user_id).sugestao_suficiente

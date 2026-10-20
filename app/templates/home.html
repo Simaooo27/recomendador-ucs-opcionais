@@ -5,7 +5,7 @@
 <h1>{{ texts.HOME_GREETING.format(email=g.user["email"]) }}</h1>
 <p class="lead">{{ texts.HOME_INTRO }}</p>
 
-{#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso.py. -#}
+{#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso/__init__.py. -#}
 <section class="meu-percurso" aria-labelledby="meu-percurso">
   <h2 id="meu-percurso">{{ texts.HOME_PATH_TITLE }}</h2>
   <ol class="linha-tempo" data-linha-tempo>

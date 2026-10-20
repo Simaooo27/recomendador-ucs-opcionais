@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set page_title = texts.PERCURSO_TITLE %}
+
+{#- Linha do tempo das decisões (US31, RF35): da mais recente para a mais antiga. A primeira é o
+    curso atual (RF03). Os nomes ficam como estavam no momento da escolha. -#}
+{% block content %}
+<h1>{{ texts.PERCURSO_TITLE }}</h1>
+<p class="lead">{{ texts.PERCURSO_INTRO }}</p>
+
+{% if decisoes %}
+  <ol class="decisoes">
+    {% for decisao in decisoes %}
+      <li class="decisao{% if loop.first %} decisao-atual{% endif %}" data-chave="{{ decisao.curso_chave }}">
+        {% if loop.first %}<p class="decisao-etiqueta">{{ texts.PERCURSO_ATUAL }}</p>{% endif %}
+        <h2 class="decisao-curso">{{ decisao.curso }}</h2>
+        <p class="decisao-instituicao">{{ decisao.instituicao }}</p>
+        <p class="decisao-data"><time datetime="{{ decisao.decidida_em.isoformat() }}">{{ texts.PERCURSO_DATA.format(data=decisao.decidida_em.strftime("%d/%m/%Y")) }}</time></p>
+        <p class="decisao-origem">{% if decisao.veio_das_sugestoes %}{{ texts.PERCURSO_DA_SUGESTAO }}{% else %}{{ texts.PERCURSO_DO_CATALOGO }}{% endif %}</p>
+        {% if decisao.sugeridos %}
+          <p class="decisao-sugeridos-titulo">{{ texts.PERCURSO_SUGERIDOS }}</p>
+          <ul class="decisao-sugeridos">
+            {% for sugerido in decisao.sugeridos %}
+              <li{% if sugerido.chave == decisao.curso_chave %} class="decisao-escolhido"{% endif %}>{{ sugerido.curso }}, {{ sugerido.instituicao }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <p class="resultados-vazio">{{ texts.PERCURSO_VAZIO }}</p>
+{% endif %}
+
+<section class="mudar-curso" aria-labelledby="mudar-curso">
+  <h2 id="mudar-curso">{{ texts.PERCURSO_MUDAR_TITULO }}</h2>
+  <div class="escolha-acoes">
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('orientacao.pagina') }}">{{ texts.PERCURSO_NOVA_CONVERSA }}</a>
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('catalogo.lista') }}">{{ texts.PERCURSO_PROCURAR }}</a>
+  </div>
+</section>
+{% endblock %}

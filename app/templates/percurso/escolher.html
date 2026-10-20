@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "macros/marca.html" as marca with context %}
+{% set page_title = texts.PERCURSO_ESCOLHER_TITLE %}
+
+{#- Confirmar a escolha de um curso (US31). RN10: a escolha só fica registada com o botão
+    «Confirmar a escolha» (POST); abrir esta página não regista nada. -#}
+{% block content %}
+<h1>{{ texts.PERCURSO_ESCOLHER_TITLE }}</h1>
+<p class="lead">{{ texts.PERCURSO_ESCOLHER_INTRO }}</p>
+
+<ul class="cursos curso-unico">{{ marca.cartao_curso(curso) }}</ul>
+
+{% if atual and atual.curso_chave == curso.chave %}
+  <div class="aviso" role="status"><p>{{ texts.PERCURSO_JA_ESCOLHIDO }}</p></div>
+  <p><a href="{{ url_for('percurso.linha_tempo') }}">{{ texts.HOME_ACTION_VER_PERCURSO }}</a></p>
+{% else %}
+  <div class="aviso">
+    {% if atual %}<p>{{ texts.PERCURSO_CURSO_ATUAL.format(curso=atual.curso, instituicao=atual.instituicao) }}</p>{% endif %}
+    <p>{{ texts.PERCURSO_CONVERSA_APAGADA }}</p>
+  </div>
+  <div class="escolha-acoes">
+    <form method="post" action="{{ url_for('percurso.escolher', chave=curso.chave) }}">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit">{{ texts.PERCURSO_CONFIRMAR }}</button>
+    </form>
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('orientacao.pagina') }}">{{ texts.PERCURSO_CANCELAR }}</a>
+  </div>
+{% endif %}
+{% endblock %}

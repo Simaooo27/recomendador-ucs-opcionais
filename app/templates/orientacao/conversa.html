@@ -35,7 +35,7 @@
       <h2 id="sugestoes-titulo">{{ texts.ORIENTACAO_SUGESTOES_TITULO }}</h2>
       {% if sugestao.cursos %}
         <ul class="cursos">
-          {% for sugerido in sugestao.cursos %}{{ marca.cartao_curso(sugerido.curso, sugerido.explicacao) }}{% endfor %}
+          {% for sugerido in sugestao.cursos %}{{ marca.cartao_curso(sugerido.curso, sugerido.explicacao, escolher=true) }}{% endfor %}
         </ul>
       {% endif %}
       {% if sugestao.cursos|length >= min_cursos %}

@@ -114,7 +114,7 @@ class HandwritingTests(AppTestCase):
 
 
 class PathTimelineTests(AppTestCase):
-    """«O seu percurso» na página inicial do aluno (padrão State, app/percurso.py)."""
+    """«O seu percurso» na página inicial do aluno (padrão State, app/percurso/__init__.py)."""
 
     def test_sem_curso_o_proximo_passo_e_o_questionario(self):
         passos = percurso.passos(EstadoPercurso.SEM_CURSO)

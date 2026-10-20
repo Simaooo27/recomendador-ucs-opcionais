@@ -60,3 +60,18 @@ Sem tabelas novas. A sugestão continua na coluna `sugestao` de `conversas_orien
 | Cada curso mostra os dados do catálogo (instituição, localidade, vagas, nota do último colocado, ligação à DGES) e a explicação do LLM. | RF37.4 | `MostrarSugestoesTests` (4 testes, incluindo o máximo de 3 cursos e a explicação como texto) |
 | Nenhum curso é atribuído automaticamente: a escolha é feita na US31 (RN10). | RF37.5, RF37.9 | `NenhumCursoEscolhidoTests` (2 testes) |
 | Os testes usam o LLM falso, incluindo respostas com cursos inventados. | — | Todos (`LLMFalso`, `LLMQueFalha`); cursos inventados em `SoCursosDoCatalogoTests` e `PoucasSugestoesTests` |
+
+## 6. Requisitos não funcionais aplicáveis
+
+RNF02 (CSRF em «Ver sugestões já» e «Continuar a conversa»; explicação do LLM escapada), RNF06 (testes sem rede), RNF08 (commits `US30: ...`), RNF09 (uso de IA documentado), RNF10 (ajuda do botão ligada por `aria-describedby`; aviso de poucos cursos com `role="status"`), RNF11 (português de Portugal), RNF12 (o pedido de sugestões não acrescenta dados pessoais).
+
+## 7. Decisões e questões em aberto
+
+| # | Questão | Estado |
+|---|---|---|
+| 1 | A sugestão termina a conversa da US29 (decisão do PO de 14/10, issue #15). | **Decidido** |
+| 2 | «Procurar no catálogo» precisava de uma página para quem tem sessão iniciada: foi criada `/cursos/`, só com a pesquisa que já existia. Filtros, ficha e comparação continuam na US05. | Proposta do Claude, **a confirmar pelo PO** |
+| 3 | O percurso só passa a «Escolher curso» com pelo menos 2 cursos sugeridos. | Proposta do Claude, **a confirmar pelo PO** |
+| 4 | «Continuar a conversa» só existe com menos de 2 cursos; com 2 ou mais, só «Recomeçar». | Proposta do Claude, **a confirmar pelo PO** |
+| 5 | Se o LLM fizer outra pergunta quando a sugestão foi pedida, aparece «Tentar de novo» (RF36.4 da US29). | **Resolvido** a 20/10 (correção da US29) |
+| 6 | A qualidade das explicações depende das descrições do catálogo (ponto 12 dos requisitos gerais) e só se vê com o Gemini real. | Por verificar no teste do PO |

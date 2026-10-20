@@ -44,7 +44,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Feita (PR #19; chega ao `main` pelo PR #20) | [docs/US29/](docs/US29/) |
 | US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita (por rever, PR da US30) | [docs/US30/](docs/US30/) |
 | US31 | Escolher curso e linha do tempo do percurso | Sprint 3 | Por fazer | — |
-| US05 | Consultar e comparar cursos | Sprint 3 | Em curso (pesquisa feita; faltam filtros, ficha e comparação) | `app/catalogo/` |
+| US05 | Consultar e comparar cursos | Sprint 3 | Por fazer (a pesquisa já foi feita a 14/10, e a página `/cursos/` na US30; faltam filtros, ficha e comparação) | `app/catalogo/` |
 | US06 | Registar percurso | Sprint 4 | Por fazer | — |
 | US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Sprint 4 | Por fazer | — |
 | US04 | Importar catálogo de instituições e cursos | Backlog | Por fazer | — |

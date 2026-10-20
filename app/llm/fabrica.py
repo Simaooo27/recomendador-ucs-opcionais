@@ -18,7 +18,8 @@ from .cliente import ClienteLLM
 from .decoradores import ProtegerDadosPessoais
 
 # Escolhidos pelos limites do plano gratuito (ver docs/geral/05-spike-llm.md):
-# o Gemini Flash dá cerca de 20 pedidos por dia; o Flash-Lite cerca de 500.
+# numa medição independente (não oficial), o Gemini Flash dava cerca de 20 pedidos por dia
+# e o Flash-Lite cerca de 500. Cada conta vê os seus em https://aistudio.google.com/rate-limit.
 MODELOS_POR_OMISSAO = {
     "gemini": "gemini-3.5-flash-lite",
     "groq": "openai/gpt-oss-120b",

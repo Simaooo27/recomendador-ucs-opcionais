@@ -186,7 +186,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.0 | 2026-09-30 | Versão inicial (33 RF, 9 RNF, 6 RN), igual ao documento Word. |
 | 1.1 | 2026-10-01 | RNF01, RNF02, RNF05 e RNF06 reescritos para refletirem a segurança e a tecnologia decididas. Novos RNF10 (acessibilidade) e RNF11 (idioma). RN05 com definição numérica; novas RN07 (escalas) e RN08 (privacidade nas explicações). Novas secções 5 e 6 e matriz de rastreabilidade. |
 | 1.2 | 2026-10-07 | RF01: registo com email pessoal, por decisão do Product Owner (ponto 9 da secção 5). |
-| 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
 | 1.3 | 2026-10-13 | Nova [visão do produto](00-visao-do-produto.md). RF03, RF05 e RF07 alterados; novos RF34 a RF39 (comparar cursos, linha do tempo, orientação de curso com LLM), RNF12 (uso de LLM), RN09 e RN10. Rastreabilidade com as stories novas US29 a US31 e o novo plano de sprints. Pontos 10 a 12 da secção 5. |
+| 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
 
-O ficheiro Word e o Excel do backlog continuam na versão 1.0. Depois de o Product Owner validar a 1.1, devem ser atualizados a partir deste documento.
+O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 14/10). O ficheiro Word continua na versão 1.0.

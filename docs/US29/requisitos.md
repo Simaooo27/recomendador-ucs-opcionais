@@ -39,7 +39,7 @@ Os textos estão em [`app/texts.py`](../../app/texts.py), secção «Conversa de
 | Situação | Mensagem |
 |---|---|
 | Aviso (sempre visível) | Não escreva dados pessoais, como o nome, o email ou o telefone. As suas respostas são enviadas a um serviço externo de inteligência artificial, sem o seu email nem o seu nome. |
-| Idade | Por agora, esta conversa destina-se a maiores de 18 anos. *(decisão pendente: ponto 14 dos requisitos)* |
+| Idade | Por agora, esta conversa destina-se a maiores de 18 anos. *(ponto 14 dos requisitos, decidido a 20/10)* |
 | Resposta vazia | Escreva uma resposta antes de enviar. |
 | Resposta longa | A resposta pode ter até 500 caracteres. Encurte-a um pouco. |
 | LLM falhou | Não foi possível falar com o assistente. A sua conversa está guardada: tente de novo. |
@@ -71,7 +71,7 @@ RNF02 (CSRF em todos os botões, texto do LLM escapado), RNF06 (testes sem rede)
 | # | Questão | Estado |
 |---|---|---|
 | 1 | Sem perguntas fixas: o LLM conduz a conversa (issue #15). | **Decidido** pelo PO (14/10/2026) |
-| 2 | Idade mínima: os termos do Gemini excluem menores de 18. Por agora a página só avisa; não há verificação. | **Por decidir** (ponto 14 dos requisitos) |
+| 2 | Idade mínima: os termos do Gemini excluem menores de 18. A página só avisa; não há verificação. | **Decidido** a 20/10 (ponto 14 dos requisitos, opção a): protótipo usado pela equipa e na demonstração |
 | 3 | Guardar a conversa no servidor enquanto decorre; apagar ao recomeçar. Falta decidir se se apaga depois da escolha de curso (US31). | Parcial (ponto 15 dos requisitos) |
 | 4 | Nomes próprios escritos no meio do texto não são detetados (só emails e números). | Aceite, com aviso na página |
 | 5 | Se o LLM continuar a perguntar depois das 6 respostas (não cumprir a instrução), a pergunta é recusada e aparece «Tentar de novo» (RF36.4). | **Resolvido** a 20/10 (encontrado na revisão) |

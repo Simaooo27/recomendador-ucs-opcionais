@@ -194,7 +194,7 @@ ORIENTACAO_AVISO = (
     "Não escreva dados pessoais, como o nome, o email ou o telefone. As suas respostas são enviadas a um "
     "serviço externo de inteligência artificial, sem o seu email nem o seu nome."
 )
-# Decisão pendente do Product Owner (ponto 14 dos requisitos: os termos do Gemini excluem menores de 18).
+# Ponto 14 dos requisitos, decidido a 20/10: protótipo da equipa, com este aviso (os termos do Gemini excluem menores de 18).
 ORIENTACAO_IDADE = "Por agora, esta conversa destina-se a maiores de 18 anos."
 ORIENTACAO_COMECAR = "Começar a conversa"
 ORIENTACAO_ASSISTENTE = "Assistente"

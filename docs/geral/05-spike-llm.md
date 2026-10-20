@@ -48,8 +48,8 @@ Plano gratuito: 0 €. Se for preciso passar ao pago: no Flash-Lite, a 0,30 $ po
 
 ## 5. Decisões para o PO
 
-1. **Idade:** a conversa com LLM é só para maiores de 18 (e os menores usam a pesquisa e a comparação da US05), ou muda-se de fornecedor?
-2. **Âmbito do plano gratuito:** só para a equipa e para a demonstração na aula, assumido no relatório como protótipo?
+1. **Idade:** a conversa com LLM é só para maiores de 18 (e os menores usam a pesquisa e a comparação da US05), ou muda-se de fornecedor? **Decidido a 20/10:** aviso de 18+ na conversa, sem verificação (protótipo).
+2. **Âmbito do plano gratuito:** só para a equipa e para a demonstração na aula, assumido no relatório como protótipo? **Decidido a 20/10:** sim (ponto 14 dos requisitos, opção a).
 3. **Flash-Lite em vez de Flash:** confirmar, depois de comparar os dois com `flask --app app llm-teste --backend gemini` e `… --modelo gemini-3.8-flash`, e de ver os limites da conta no AI Studio.
 
 ## 6. Como repetir o teste (no computador do PO)

@@ -26,7 +26,7 @@ flask --app app init-db                                  # cria a tabela nova (n
 flask --app app run --debug                              # com LLM_BACKEND=gemini no .env
 ```
 
-Iniciar sessão como aluno e, na página inicial, carregar em **«Começar a conversa»** (ou abrir `/orientacao/`). Com `LLM_BACKEND=falso` a página funciona, mas o assistente repete sempre a mesma pergunta simulada.
+Iniciar sessão como aluno e, na página inicial, carregar em **«Começar a conversa»** (ou abrir `/orientacao/`). Com `LLM_BACKEND=falso` a página funciona sem rede: o assistente faz uma pergunta simulada e, depois da primeira resposta, termina com uma sugestão simulada sem cursos.
 
 Quando a conversa termina, a página diz que as sugestões aparecem em breve: mostrar os cursos é a US30.
 
@@ -57,4 +57,4 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): mudar 
 
 ## Testes
 
-[`tests/test_conversa.py`](../../tests/test_conversa.py): 21 testes, com o LLM falso (sem rede). A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).
+[`tests/test_conversa.py`](../../tests/test_conversa.py): 22 testes, com o LLM falso (sem rede). A tabela critério de aceitação → teste está na secção 5 de [requisitos.md](requisitos.md#5-critérios-de-aceitação-e-testes).

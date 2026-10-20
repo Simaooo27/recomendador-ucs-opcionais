@@ -22,7 +22,7 @@
 | ID | Requisito |
 |---|---|
 | **RF37.1** | A sugestão aparece quando o LLM responde com o formato «sugestao»: por decisão dele (já tem informação suficiente), ao fim de 6 respostas (as instruções passam a exigi-la) ou a pedido do aluno (RF37.2). |
-| **RF37.2** | Depois da primeira resposta, e enquanto a conversa decorre, há um botão «Ver sugestões já». O pedido fica na conversa como mensagem do aluno e as instruções exigem a sugestão. Se o LLM falhar, «Tentar de novo» volta a pedir as sugestões. |
+| **RF37.2** | Depois da primeira resposta, e enquanto a conversa decorre, há um botão «Ver sugestões já». O pedido fica na conversa como mensagem do aluno e as instruções exigem a sugestão. Se o LLM falhar, ou fizer outra pergunta em vez de sugerir (RF36.4 da US29, corrigido a 20/10), «Tentar de novo» volta a pedir as sugestões. |
 | **RF37.3** | Só aparecem cursos do catálogo, sem repetidos e no máximo 3 (RN09). Os outros são descartados e ficam registados na sugestão guardada (`descartados`), sem chegar ao ecrã. A validação repete-se ao mostrar a página: um curso que saia do catálogo depois de sugerido deixa de aparecer. |
 | **RF37.4** | Cada curso mostra os dados do catálogo — área, curso, instituição, localidade, vagas de 2026, nota do último colocado (1.ª fase de 2025) e ligação à página da DGES — e a explicação do LLM («Porque combina consigo»), mostrada como texto e nunca como HTML. |
 | **RF37.5** | Com 2 ou 3 cursos, a página diz que nenhum curso fica escolhido e que a escolha vem a seguir (RN10). Não há botão de escolher: é a US31. |
@@ -55,7 +55,7 @@ Sem tabelas novas. A sugestão continua na coluna `sugestao` de `conversas_orien
 
 | Critério da story (backlog) | Requisitos | Testes automáticos (`tests/test_sugestoes.py`) |
 |---|---|---|
-| A sugestão aparece quando o LLM tem informação suficiente ou ao fim de 6 respostas; a pessoa pode pedi-la antes («Ver sugestões já»). | RF37.1, RF37.2 | `VerSugestoesJaTests` (4 testes); `MostrarSugestoesTests.test_a_conversa_termina_sem_caixa_de_resposta`; `test_no_maximo_seis_perguntas` em `tests/test_conversa.py` |
+| A sugestão aparece quando o LLM tem informação suficiente ou ao fim de 6 respostas; a pessoa pode pedi-la antes («Ver sugestões já»). | RF37.1, RF37.2 | `VerSugestoesJaTests` (5 testes, incluindo o LLM que faz outra pergunta em vez de sugerir); `MostrarSugestoesTests.test_a_conversa_termina_sem_caixa_de_resposta`; `test_no_maximo_seis_perguntas` em `tests/test_conversa.py` |
 | Só aparecem cursos do catálogo; os outros são descartados (RN09). Se sobrarem menos de 2, a página diz isso e propõe continuar a conversa ou ver o catálogo. | RF37.3, RF37.6 a RF37.8 | `SoCursosDoCatalogoTests` (2 testes); `PoucasSugestoesTests` (7 testes) |
 | Cada curso mostra os dados do catálogo (instituição, localidade, vagas, nota do último colocado, ligação à DGES) e a explicação do LLM. | RF37.4 | `MostrarSugestoesTests` (4 testes, incluindo o máximo de 3 cursos e a explicação como texto) |
 | Nenhum curso é atribuído automaticamente: a escolha é feita na US31 (RN10). | RF37.5, RF37.9 | `NenhumCursoEscolhidoTests` (2 testes) |

@@ -61,6 +61,17 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── services.py                   pesquisa sem acentos, amostra e totais
 │   └── routes.py                     /cursos/pesquisa (resultados em JSON para a pesquisa ao vivo)
 │
+├── llm/                              LIGAÇÃO AO LLM (spike de 14/10; ver 05-spike-llm.md)
+│   ├── cliente.py                    a interface que o resto do código usa (ClienteLLM, Mensagem, erros)
+│   ├── adaptadores.py                Gemini, Groq e o LLM falso dos testes — o ÚNICO ficheiro que fala com fornecedores
+│   ├── decoradores.py                apaga emails e números do que o utilizador escreve, antes de enviar (RNF12)
+│   └── fabrica.py                    escolhe o fornecedor pela variável LLM_BACKEND do .env
+│
+├── orientacao/                       CONVERSA DE ORIENTAÇÃO (US29, US30; por agora sem páginas)
+│   ├── instrucoes.md                 o que se diz ao LLM: como conduzir a conversa, regras, formato, catálogo
+│   ├── conversa.py                   próximo passo (pergunta ou sugestão) e validação contra o catálogo (RN09)
+│   └── cli.py                        comando flask llm-teste (experimentar com a chave real)
+│
 ├── gestao/                           ÁREA DE GESTÃO / ADMINISTRADORES (US03)
 │   ├── routes.py                     páginas /gestao/ e /gestao/administradores (/gestao/entrar leva a /auth/entrar)
 │   ├── services.py                   regras: criar, autenticar e remover administradores
@@ -87,7 +98,8 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
     └── password-toggle.js            o clique no ícone de olho (mostrar/esconder a palavra-passe)
 
 tests/                                um ficheiro por área: test_registration, test_confirmation,
-                                      test_validators, test_login, test_gestao, test_perfis, test_apresentacao, test_texts…
+                                      test_validators, test_login, test_gestao, test_perfis, test_apresentacao, test_texts,
+                                      test_llm, test_orientacao…
 docs/
 ├── geral/                            requisitos, regras de código, este guia, backlog (Excel), registo de IA
 └── US01/, US02/, US03/               uma pasta por story: requisitos, use case, BPMN, prompt, diagramas
@@ -112,6 +124,9 @@ docs/
 | O endereço da área de gestão | `.env` | `ADMIN_URL_PREFIX=outro-nome` (por omissão `gestao`) |
 | Exigir outra vez o email institucional | `.env` | `ALLOWED_EMAIL_DOMAINS=iscap.ipp.pt` |
 | Regras da palavra-passe, prazo da ligação | `app/config.py` | Falar primeiro com quem desenvolve (os testes dependem disto) |
+| Como o LLM conduz a conversa (tom, perguntas, regras) | `app/orientacao/instrucoes.md` | Texto normal; não apagar `$catalogo` nem `$max_perguntas`. Correr os testes e `flask --app app llm-teste --backend gemini` |
+| O fornecedor ou o modelo do LLM | `.env` | `LLM_BACKEND=gemini` (ou `groq`, ou `falso`) e, se preciso, `LLM_MODELO=…` |
+| O número máximo de perguntas do LLM | `app/orientacao/conversa.py` | `LIMITE_PERGUNTAS` (hoje 6) |
 
 Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador com **Ctrl+F5** e correr os testes (secção 7).
 
@@ -192,6 +207,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 08/10 · PR #9 | CSS organizado em secções; este guia | `app/static/style.css`, `docs/geral/04-guia-do-codigo.md` | PR #9 |
 | 13/10 · PR #10 | Nova visão do produto, padrões de desenho previstos, catálogo de cursos | `docs/geral/00-…`, `docs/geral/03-…`, `dados/` | PR #10 |
 | 14/10 | Um só início de sessão (Strategy, Chain of Responsibility, Factory); novo aspeto visual | `app/auth/perfis.py`, `app/templates/`, `app/static/` | PR do início de sessão único |
+| 14/10 | Spike do LLM: Gemini e Groq atrás de `ClienteLLM` (Adapter, Factory, Decorator), conversa de orientação sem páginas, comando `llm-teste` | `app/llm/`, `app/orientacao/`, `docs/geral/05-spike-llm.md` | PR do spike |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

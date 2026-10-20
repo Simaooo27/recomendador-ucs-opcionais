@@ -28,6 +28,10 @@ class AppTestCase(unittest.TestCase):
                 "SECRET_KEY": "chave-so-para-testes",
                 "DATABASE": self.db_path,
                 "MAIL_CONSOLE_ECHO": False,
+                # Nunca usar chaves reais nos testes, mesmo que estejam exportadas no terminal (RNF06).
+                "LLM_BACKEND": "falso",
+                "GEMINI_API_KEY": "",
+                "GROQ_API_KEY": "",
                 **self.config_overrides,
             }
         )

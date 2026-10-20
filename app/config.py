@@ -38,6 +38,13 @@ def default_config() -> dict:
             "CATALOGO_CSV",
             os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dados", "catalogo-cursos-mvp.csv"),
         ),
+        # LLM (spike da US30; ver app/llm/fabrica.py e docs/geral/05-spike-llm.md).
+        # "falso" por omissão: quem clona o projeto corre tudo sem chaves nem rede.
+        "LLM_BACKEND": os.environ.get("LLM_BACKEND", "falso"),
+        "LLM_MODELO": os.environ.get("LLM_MODELO", ""),
+        "LLM_TIMEOUT": float(os.environ.get("LLM_TIMEOUT", "30")),
+        "GEMINI_API_KEY": os.environ.get("GEMINI_API_KEY", ""),
+        "GROQ_API_KEY": os.environ.get("GROQ_API_KEY", ""),
         # Email
         "MAIL_BACKEND": os.environ.get("MAIL_BACKEND", "console"),
         "MAIL_SERVER": os.environ.get("MAIL_SERVER", ""),

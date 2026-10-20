@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set page_title = texts.ORIENTACAO_TITLE %}
+
+{#- Conversa de orientação (US29). O que o assistente diz vem do LLM e é mostrado como texto
+    (escapado pelo Jinja), nunca como HTML. As regras estão em app/orientacao/services.py. -#}
+{% block content %}
+<h1>{{ texts.ORIENTACAO_TITLE }}</h1>
+<p class="lead">{{ texts.ORIENTACAO_INTRO.format(maximo=max_perguntas) }}</p>
+
+<div class="aviso" id="aviso-privacidade">
+  <p>{{ texts.ORIENTACAO_AVISO }}</p>
+  <p>{{ texts.ORIENTACAO_IDADE }}</p>
+</div>
+
+{% if not estado.comecada %}
+  <form method="post" action="{{ url_for('orientacao.comecar') }}">
+    <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+    <button type="submit">{{ texts.ORIENTACAO_COMECAR }}</button>
+  </form>
+{% else %}
+  <ol class="conversa" aria-label="{{ texts.ORIENTACAO_TITLE }}">
+    {% for mensagem in estado.mensagens %}
+      <li class="mensagem mensagem-{{ mensagem.papel }}">
+        <span class="mensagem-autor">{% if mensagem.papel == "assistente" %}{{ texts.ORIENTACAO_ASSISTENTE }}{% else %}{{ texts.ORIENTACAO_VOCE }}{% endif %}</span>
+        <p>{{ mensagem.texto }}</p>
+      </li>
+    {% endfor %}
+  </ol>
+
+  {% if estado.terminada %}
+    <div class="alert alert-ok" role="status" id="resposta">{{ texts.ORIENTACAO_TERMINADA }}</div>
+  {% elif estado.a_espera_do_assistente %}
+    <div class="alert alert-error" role="alert">{{ texts.ORIENTACAO_A_ESPERA }}</div>
+    <form method="post" action="{{ url_for('orientacao.tentar_de_novo') }}" id="resposta">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit">{{ texts.ORIENTACAO_TENTAR_DE_NOVO }}</button>
+    </form>
+  {% else %}
+    <form method="post" action="{{ url_for('orientacao.responder') }}" id="resposta" novalidate>
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <p class="progresso-conversa">{{ texts.ORIENTACAO_PROGRESSO.format(numero=estado.perguntas_feitas, maximo=max_perguntas) }}</p>
+      <div class="field">
+        <label for="resposta-texto">{{ texts.ORIENTACAO_RESPOSTA_LABEL }}</label>
+        <textarea id="resposta-texto" name="resposta" rows="3" maxlength="{{ max_caracteres }}" required autofocus
+                  aria-describedby="{% if erro %}resposta-erro {% endif %}resposta-ajuda aviso-privacidade"
+                  {% if erro %}aria-invalid="true"{% endif %}>{{ resposta }}</textarea>
+        {% if erro %}<p class="error" id="resposta-erro">{{ erro }}</p>{% endif %}
+        <p class="hint" id="resposta-ajuda">{{ texts.ORIENTACAO_RESPOSTA_HINT.format(maximo=max_caracteres) }}</p>
+      </div>
+      <button type="submit">{{ texts.ORIENTACAO_ENVIAR }}</button>
+    </form>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('orientacao.recomecar') }}" class="recomecar">
+    <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+    <button type="submit" class="botao-secundario">{{ texts.ORIENTACAO_RECOMECAR }}</button>
+  </form>
+{% endif %}
+{% endblock %}

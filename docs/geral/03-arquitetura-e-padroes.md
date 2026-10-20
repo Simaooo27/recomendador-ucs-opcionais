@@ -176,6 +176,8 @@ O utilizador está num de três estados (sem curso, com curso, a escolher opcion
 app/
   catalogo/        US04, US05 — instituições, cursos e UCs (routes, services, repository)
   orientacao/      US29, US30 — conversa conduzida pelo LLM e sugestão de cursos
+    routes.py        página /orientacao/ (US29)
+    services.py      regras da conversa; repository.py: a conversa guardada (tabela conversas_orientacao)
     conversa.py      próximo passo (pergunta ou sugestão), validação contra o catálogo
     instrucoes.md    instruções enviadas ao LLM (versionadas, revistas como código)
     cli.py           flask llm-teste (experimentar com a chave real)

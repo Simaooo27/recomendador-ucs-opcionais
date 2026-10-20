@@ -18,7 +18,7 @@
      9. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
     10. Tabelas ...................... lista de administradores (gestão)
     11. Página de apresentação ....... a página inicial pública (/): pesquisa de cursos, passos, para quem
-    12. O meu percurso ............... linha do tempo na página inicial do aluno
+    12. O meu percurso ............... linha do tempo do aluno e conversa de orientação (US29)
     13. Gestão, erros e detalhes ..... números do painel, página não encontrada, regras da palavra-passe
     14. Movimento .................... animações (e o que acontece a quem pede menos movimento)
     15. Modo escuro .................. cores quando o computador está em modo escuro
@@ -300,11 +300,12 @@ a:hover { text-decoration-thickness: 2px; }
 label { display: block; font-weight: 700; margin-bottom: 0.35rem; }      /* nome do campo */
 .hint { color: var(--muted); font-size: 0.92rem; margin: 0.4rem 0 0; }   /* ajuda por baixo do campo */
 
-/* Caixas de texto (email, nome de utilizador, palavra-passe).
+/* Caixas de texto (email, nome de utilizador, palavra-passe, resposta na conversa).
    A letra tem pelo menos 16 px para o iPhone não aproximar a página ao tocar. */
 input[type="email"],
 input[type="password"],
-input[type="text"] {
+input[type="text"],
+textarea {
   width: 100%;
   min-height: 3rem;
   padding: 0.6rem 0.85rem;
@@ -317,15 +318,17 @@ input[type="text"] {
 }
 input[type="email"]:focus,
 input[type="password"]:focus,
-input[type="text"]:focus {
+input[type="text"]:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(14, 107, 87, 0.18);
 }
 
 /* Campo com erro: contorno vermelho. */
-input[aria-invalid="true"] { border-color: var(--danger); }
-input[aria-invalid="true"]:focus { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.16); }
+textarea { display: block; min-height: 6rem; resize: vertical; line-height: 1.5; }   /* várias linhas */
+input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--danger); }
+input[aria-invalid="true"]:focus, textarea[aria-invalid="true"]:focus { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.16); }
 
 /* Mensagem de erro por baixo do campo. */
 .error { color: var(--danger); font-size: 0.95rem; margin: 0.4rem 0 0; }
@@ -781,6 +784,48 @@ td form { margin: 0; }
 .etapa-depois h3 { color: var(--muted); }
 .etapa-breve { margin: 0.6rem 0 0; font-size: 0.9rem; font-style: italic; color: var(--muted); }
 
+/* Botão no passo atual («Começar a conversa»). */
+.etapa-acao { display: inline-block; margin-top: 0.75rem; font-weight: 700; }
+
+/* Conversa de orientação (/orientacao, US29): mensagens do assistente à esquerda, do aluno à direita. */
+.aviso {
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: inset 4px 0 0 var(--marigold), 0 0 0 1px var(--line);
+  font-size: 0.95rem;
+}
+.aviso p:last-child { margin: 0; }
+.conversa { display: flex; flex-direction: column; gap: 0.75rem; margin: 0 0 1.5rem; padding: 0; list-style: none; }
+.mensagem {
+  max-width: min(36rem, 88%);
+  padding: 0.75rem 1rem;
+  border-radius: calc(var(--radius) + 6px);
+  overflow-wrap: anywhere;
+}
+.mensagem p { margin: 0; white-space: pre-line; }
+.mensagem-autor { display: block; margin-bottom: 0.2rem; font-size: 0.8rem; font-weight: 700; }
+.mensagem-assistente { align-self: flex-start; background: var(--paper); box-shadow: 0 0 0 1px var(--line); border-bottom-left-radius: 4px; }
+.mensagem-assistente .mensagem-autor { color: var(--accent); }
+.mensagem-utilizador { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.progresso-conversa { color: var(--muted); font-size: 0.92rem; margin: 0 0 0.75rem; }
+/* Botão secundário («Recomeçar a conversa»): discreto, com contorno. */
+.botao-secundario {
+  width: auto;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+@media (hover: hover) {
+  .botao-secundario:hover { background: var(--page); }
+}
+.recomecar { margin-top: 2rem; }
+
 @media (max-width: 40rem) {
   .linha-tempo { grid-template-columns: 1fr; gap: 0; }
   .etapa { padding: 0 0 1.75rem 2.25rem; }
@@ -922,7 +967,7 @@ button.a-enviar::before {
     --forest: #0b231d; --marigold: #f5c15c;
     --danger: #ff9c94; --danger-bg: #3a1715; --ok: #7fd9a6; --ok-bg: #10301f;
   }
-  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
+  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
   .alert-error { border-color: rgba(255, 156, 148, 0.35); }
   .alert-ok { border-color: rgba(127, 217, 166, 0.3); }
   .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }

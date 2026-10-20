@@ -42,7 +42,7 @@ def default_config() -> dict:
         # "falso" por omissão: quem clona o projeto corre tudo sem chaves nem rede.
         "LLM_BACKEND": os.environ.get("LLM_BACKEND", "falso"),
         "LLM_MODELO": os.environ.get("LLM_MODELO", ""),
-        "LLM_TIMEOUT": float(os.environ.get("LLM_TIMEOUT", "30")),
+        "LLM_TIMEOUT": float(os.environ.get("LLM_TIMEOUT", "15")),   # RNF12: resposta em menos de 15 s
         "GEMINI_API_KEY": os.environ.get("GEMINI_API_KEY", ""),
         "GROQ_API_KEY": os.environ.get("GROQ_API_KEY", ""),
         # Email

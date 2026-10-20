@@ -19,7 +19,8 @@
         </p>
         <h3>{{ passo.titulo }}</h3>
         <p class="etapa-texto">{{ passo.texto }}</p>
-        {% if passo.situacao == "atual" %}<p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>{% endif %}
+        {% if passo.acao %}<a class="etapa-acao" href="{{ url_for(passo.acao[1]) }}">{{ passo.acao[0] }}</a>
+        {%- elif passo.situacao == "atual" %}<p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>{% endif %}
       </li>
     {% endfor %}
   </ol>

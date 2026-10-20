@@ -53,6 +53,12 @@ LANDING_CARD_NO_NOTA = "Sem dados"
 LANDING_CARD_SOURCE = "Ver na DGES"
 LANDING_DATA_SOURCE = "Dados públicos da DGES: vagas do concurso nacional de 2026 e nota do último colocado na 1.ª fase de 2025 (escala 0–200)."
 
+# Página do catálogo (/cursos/): a pesquisa acima numa página própria, também para quem tem sessão
+# iniciada (ligação «Procurar no catálogo» da conversa de orientação, US30). Os filtros, a ficha
+# e a comparação de cursos são a US05.
+CATALOGO_TITLE = "Catálogo de cursos"
+CATALOGO_VOLTAR = "Voltar à conversa de orientação"
+
 LANDING_HOW_TITLE = "Como funciona"
 # Os três passos, pela ordem em que acontecem.
 LANDING_STEPS = [
@@ -169,7 +175,7 @@ HOME_STEP_LATER = "Depois"
 HOME_NEXT_SOON = "Disponível em breve."
 # Botão no passo atual da linha do tempo (só nos passos que já existem).
 HOME_ACTION_CONVERSA = "Começar a conversa"
-HOME_ACTION_CONTINUAR = "Continuar a conversa"
+HOME_ACTION_CONTINUAR = "Ver os cursos sugeridos"
 
 # ---------------------------------------------------------------------------
 # Conversa de orientação (/orientacao, US29): o assistente (LLM) faz as perguntas.
@@ -201,7 +207,29 @@ ORIENTACAO_ENVIAR = "Enviar"
 ORIENTACAO_TENTAR_DE_NOVO = "Tentar de novo"
 ORIENTACAO_A_ESPERA = "O assistente não chegou a responder. A sua resposta está guardada: tente de novo."
 ORIENTACAO_RECOMECAR = "Recomeçar a conversa"
-ORIENTACAO_TERMINADA = "O assistente já tem informação suficiente. As sugestões de curso vão aparecer aqui em breve."
+
+# Pedir as sugestões antes do fim (US30). O pedido fica na conversa como mensagem do aluno
+# e é também o que o assistente recebe.
+ORIENTACAO_VER_SUGESTOES = "Ver sugestões já"
+ORIENTACAO_VER_SUGESTOES_HINT = "Se já disse o suficiente, o assistente sugere cursos agora, sem mais perguntas."
+ORIENTACAO_PEDIDO_SUGESTAO = "Prefiro ver já as sugestões de curso."
+
+# Cursos sugeridos no fim da conversa (US30). Os cursos e os números vêm do catálogo;
+# a explicação de cada curso vem do assistente.
+ORIENTACAO_SUGESTOES_TITULO = "Cursos sugeridos para si"
+ORIENTACAO_PORQUE = "Porque combina consigo"
+# RN10: nenhum curso é escolhido automaticamente; a escolha é a US31.
+ORIENTACAO_ESCOLHA_DEPOIS = (
+    "Nenhum curso fica escolhido por si. Compare-os com calma: em breve vai poder escolher um destes, "
+    "ou outro do catálogo."
+)
+# Menos de 2 cursos do catálogo (os outros foram descartados, RN09).
+ORIENTACAO_POUCAS_SUGESTOES = (
+    "O assistente não encontrou cursos suficientes no catálogo que combinem com as suas respostas. "
+    "Pode continuar a conversa, para lhe dar mais pistas, ou procurar no catálogo."
+)
+ORIENTACAO_CONTINUAR_CONVERSA = "Continuar a conversa"
+ORIENTACAO_VER_CATALOGO = "Procurar no catálogo"
 
 ORIENTACAO_ERRO_VAZIA = "Escreva uma resposta antes de enviar."
 ORIENTACAO_ERRO_LONGA = "A resposta pode ter até {maximo} caracteres. Encurte-a um pouco."

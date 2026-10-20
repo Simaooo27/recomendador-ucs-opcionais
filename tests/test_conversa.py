@@ -13,7 +13,7 @@ from app.llm.decoradores import EMAIL_REMOVIDO, NUMERO_REMOVIDO, ProtegerDadosPe
 from app.orientacao import conversa
 from tests.base import CSRF_TOKEN, VALID_EMAIL, AppTestCase
 
-CHAVE = catalogo_repository.todos(default_config()["CATALOGO_CSV"])[0].chave
+CHAVE, CHAVE2 = (c.chave for c in catalogo_repository.todos(default_config()["CATALOGO_CSV"])[:2])
 
 
 def pergunta(texto: str) -> str:
@@ -21,7 +21,8 @@ def pergunta(texto: str) -> str:
 
 
 def sugestao() -> str:
-    return json.dumps({"tipo": "sugestao", "texto": "Tenho sugestões.", "cursos": [{"id": CHAVE, "explicacao": "x"}]})
+    cursos = [{"id": CHAVE, "explicacao": "x"}, {"id": CHAVE2, "explicacao": "y"}]
+    return json.dumps({"tipo": "sugestao", "texto": "Tenho sugestões.", "cursos": cursos})
 
 
 class LLMQueFalha:
@@ -81,7 +82,10 @@ class AcessoTests(ConversaTestCase):
         self.assertEqual(self.llm.pedidos, [])
 
     def test_os_botoes_exigem_csrf(self):
-        for caminho in ("/orientacao/comecar", "/orientacao/responder", "/orientacao/tentar-de-novo", "/orientacao/recomecar"):
+        for caminho in (
+            "/orientacao/comecar", "/orientacao/responder", "/orientacao/tentar-de-novo", "/orientacao/recomecar",
+            "/orientacao/sugerir", "/orientacao/continuar",
+        ):
             with self.subTest(caminho=caminho):
                 self.assertEqual(self.client.post(caminho, data={"resposta": "x"}).status_code, 400)
 
@@ -131,7 +135,7 @@ class ConversaConduzidaPeloLLMTests(ConversaTestCase):
         ultimo, _ = self.llm.pedidos[-1]
         self.assertTrue(ultimo.endswith(conversa.PEDIDO_DE_SUGESTAO))
         html = self.pagina()
-        self.assertIn(texts.ORIENTACAO_TERMINADA, html)
+        self.assertIn(texts.ORIENTACAO_SUGESTOES_TITULO, html)
         self.assertNotIn(texts.ORIENTACAO_RESPOSTA_LABEL, html)
 
     def test_resposta_vazia_ou_longa(self):

@@ -23,7 +23,8 @@ from ..catalogo.repository import Curso
 from ..llm import ClienteLLM, Mensagem, RespostaInvalida
 
 LIMITE_PERGUNTAS = 6            # depois disto, o LLM tem de sugerir (poupa pedidos ao plano gratuito)
-MAX_CURSOS_SUGERIDOS = 3        # RN10: 2 a 3 cursos
+MIN_CURSOS_SUGERIDOS = 2        # RF37: 2 a 3 cursos; com menos, a página propõe continuar (US30)
+MAX_CURSOS_SUGERIDOS = 3
 MAX_CARACTERES_RESPOSTA = 500   # cada resposta do utilizador (protege o limite de tokens)
 MAX_CARACTERES_EXPLICACAO = 400
 ABERTURA = "Olá! Quero ajuda para escolher um curso."

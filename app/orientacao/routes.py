@@ -1,4 +1,4 @@
-"""Página da conversa de orientação (US29): /orientacao.
+"""Página da conversa de orientação (US29) e dos cursos sugeridos no fim (US30): /orientacao.
 
 As rotas só recebem o pedido e mostram a página; as regras estão em ``services.py``.
 Abrir a página nunca chama o LLM: só os botões (POST) o fazem, para não gastar pedidos do
@@ -43,6 +43,8 @@ def _pagina(erro: str | None = None, resposta: str = "", estado_http: int = 200)
         render_template(
             "orientacao/conversa.html",
             estado=estado,
+            sugestao=services.cursos_sugeridos(estado, catalogo.cursos(current_app.config)),
+            min_cursos=conversa.MIN_CURSOS_SUGERIDOS,
             erro=erro,
             resposta=resposta,
             max_perguntas=conversa.LIMITE_PERGUNTAS,
@@ -87,6 +89,22 @@ def responder():
 @login_required
 def tentar_de_novo():
     _com_o_llm(services.continuar)
+    return _voltar()
+
+
+@bp.post("/sugerir")
+@login_required
+def sugerir():
+    """«Ver sugestões já» (US30)."""
+    _com_o_llm(services.pedir_sugestao)
+    return redirect(url_for("orientacao.pagina", _anchor="sugestoes"))
+
+
+@bp.post("/continuar")
+@login_required
+def continuar_conversa():
+    """Menos de 2 cursos sugeridos: voltar à conversa para dar mais pistas (US30). Não chama o LLM."""
+    services.continuar_conversa(get_db(), g.user["id"])
     return _voltar()
 
 

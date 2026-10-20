@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% import "macros/marca.html" as marca with context %}
 {% set page_title = texts.ORIENTACAO_TITLE %}
 
-{#- Conversa de orientação (US29). O que o assistente diz vem do LLM e é mostrado como texto
+{#- Conversa de orientação (US29) e cursos sugeridos no fim (US30). O que o assistente diz vem do LLM e é mostrado como texto
     (escapado pelo Jinja), nunca como HTML. As regras estão em app/orientacao/services.py. -#}
 {% block content %}
 <h1>{{ texts.ORIENTACAO_TITLE }}</h1>
@@ -28,7 +29,29 @@
   </ol>
 
   {% if estado.terminada %}
-    <div class="alert alert-ok" role="status" id="resposta">{{ texts.ORIENTACAO_TERMINADA }}</div>
+    {#- US30: só cursos do catálogo (RN09), com os dados do catálogo e a explicação do assistente.
+        Nenhum fica escolhido (RN10): a escolha é a US31. -#}
+    <section class="sugestoes" id="sugestoes" aria-labelledby="sugestoes-titulo">
+      <h2 id="sugestoes-titulo">{{ texts.ORIENTACAO_SUGESTOES_TITULO }}</h2>
+      {% if sugestao.cursos %}
+        <ul class="cursos">
+          {% for sugerido in sugestao.cursos %}{{ marca.cartao_curso(sugerido.curso, sugerido.explicacao) }}{% endfor %}
+        </ul>
+      {% endif %}
+      {% if sugestao.cursos|length >= min_cursos %}
+        <p class="sugestoes-nota">{{ texts.ORIENTACAO_ESCOLHA_DEPOIS }}</p>
+        <p class="resultados-fonte">{{ texts.LANDING_DATA_SOURCE }}</p>
+      {% else %}
+        <div class="aviso poucas-sugestoes" role="status" id="poucas-sugestoes">{{ texts.ORIENTACAO_POUCAS_SUGESTOES }}</div>
+        <div class="sugestoes-acoes">
+          <form method="post" action="{{ url_for('orientacao.continuar_conversa') }}">
+            <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+            <button type="submit">{{ texts.ORIENTACAO_CONTINUAR_CONVERSA }}</button>
+          </form>
+          <a class="botao-secundario botao-ligacao" href="{{ url_for('catalogo.lista') }}">{{ texts.ORIENTACAO_VER_CATALOGO }}</a>
+        </div>
+      {% endif %}
+    </section>
   {% elif estado.a_espera_do_assistente %}
     <div class="alert alert-error" role="alert">{{ texts.ORIENTACAO_A_ESPERA }}</div>
     <form method="post" action="{{ url_for('orientacao.tentar_de_novo') }}" id="resposta">
@@ -38,7 +61,9 @@
   {% else %}
     <form method="post" action="{{ url_for('orientacao.responder') }}" id="resposta" novalidate>
       <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
-      <p class="progresso-conversa">{{ texts.ORIENTACAO_PROGRESSO.format(numero=estado.perguntas_feitas, maximo=max_perguntas) }}</p>
+      {% if estado.perguntas_feitas <= max_perguntas %}
+        <p class="progresso-conversa">{{ texts.ORIENTACAO_PROGRESSO.format(numero=estado.perguntas_feitas, maximo=max_perguntas) }}</p>
+      {% endif %}
       <div class="field">
         <label for="resposta-texto">{{ texts.ORIENTACAO_RESPOSTA_LABEL }}</label>
         <textarea id="resposta-texto" name="resposta" rows="3" maxlength="{{ max_caracteres }}" required autofocus
@@ -49,6 +74,13 @@
       </div>
       <button type="submit">{{ texts.ORIENTACAO_ENVIAR }}</button>
     </form>
+    {% if estado.pode_pedir_sugestao %}
+      <form method="post" action="{{ url_for('orientacao.sugerir') }}" class="pedir-sugestao">
+        <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+        <button type="submit" class="botao-secundario" aria-describedby="pedir-sugestao-ajuda">{{ texts.ORIENTACAO_VER_SUGESTOES }}</button>
+        <p class="hint" id="pedir-sugestao-ajuda">{{ texts.ORIENTACAO_VER_SUGESTOES_HINT }}</p>
+      </form>
+    {% endif %}
   {% endif %}
 
   <form method="post" action="{{ url_for('orientacao.recomecar') }}" class="recomecar">

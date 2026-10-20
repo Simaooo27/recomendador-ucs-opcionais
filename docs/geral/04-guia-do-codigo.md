@@ -42,7 +42,11 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 ├── security.py                       proteção CSRF dos formulários e cabeçalhos de segurança
 ├── mailer.py                         envio de email (no terminal em desenvolvimento, ou SMTP)
 ├── main.py                           apresentação (/), página inicial do aluno (/inicio), privacidade
-├── percurso.py                       em que passo do percurso está cada aluno (padrão State)
+├── percurso/                         O PERCURSO DO ALUNO (US31)
+│   ├── __init__.py                   em que passo do percurso está cada aluno (padrão State)
+│   ├── routes.py                     /percurso/ (linha do tempo) e /percurso/escolher/<curso> (confirmar a escolha)
+│   ├── services.py                   regras: escolher curso, mudar de curso, curso atual, apagar a conversa
+│   └── repository.py                 consultas SQL à tabela decisoes
 ├── manuscrito.py                     converte palavras em traços «escritos à mão» (fontTools)
 ├── recursos/                         tipo de letra manuscrito Caveat, usado pelo servidor (licença OFL)
 │
@@ -92,6 +96,7 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow»
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
 │   ├── orientacao/conversa.html      a conversa com o assistente (US29) e os cursos sugeridos (US30)
+│   ├── percurso/                     confirmar a escolha do curso e a linha do tempo das decisões (US31)
 │   ├── catalogo/lista.html           página /cursos/: pesquisa no catálogo (US30; filtros e comparação na US05)
 │   └── gestao/                       painel e lista de administradores
 │
@@ -123,6 +128,7 @@ docs/
 | Os textos da pesquisa, os passos e «Para quem é» | `app/texts.py` | `LANDING_SEARCH_*`, `LANDING_RESULTS_*`, `LANDING_STEPS`, `LANDING_FOR` |
 | Os cursos que aparecem na pesquisa | `dados/catalogo-cursos-mvp.csv` | Acrescentar ou corrigir linhas; a página lê o ficheiro de novo quando ele muda |
 | Os passos de «O seu percurso» | `app/texts.py` | `HOME_PATH_STEPS` |
+| Os textos da escolha de curso e da linha do tempo | `app/texts.py` | `CURSO_ESCOLHER` e os que começam por `PERCURSO_` |
 | Uma cor | `app/static/style.css`, secção 1 | Mudar o código `#rrggbb` da cor (modo escuro: secção 12) |
 | Largura, tamanho da letra, espaços | `app/static/style.css`, secções 3 a 8 | Ver os exemplos na secção 4 deste guia |
 | O que aparece numa página (ordem dos campos, um parágrafo novo) | `app/templates/…` | O ficheiro com o nome da página; o texto vai para `texts.py` |
@@ -214,6 +220,11 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 14/10 | Um só início de sessão (Strategy, Chain of Responsibility, Factory); novo aspeto visual | `app/auth/perfis.py`, `app/templates/`, `app/static/` | PR do início de sessão único |
 | 14/10 | Spike do LLM: Gemini e Groq atrás de `ClienteLLM` (Adapter, Factory, Decorator), conversa de orientação sem páginas, comando `llm-teste` | `app/llm/`, `app/orientacao/`, `docs/geral/05-spike-llm.md` | PR #17 |
 | 14/10 | US29: página da conversa de orientação com o LLM | `app/orientacao/`, `app/templates/orientacao/`, `docs/US29/` | PR #19 |
+| 20/10 | US30: cursos sugeridos no fim da conversa, «Ver sugestões já», página `/cursos/` | `app/orientacao/`, `app/catalogo/`, `docs/US30/` | PR #22 |
+| 20/10 | Revisão: correções ao spike e aos requisitos; US29 garante o limite de 6 perguntas | `docs/geral/`, `app/orientacao/conversa.py`, `app/llm/adaptadores.py` | PR #23 e #24 |
+| 20/10 | Servidor Ollama da faculdade: ligado, testado e retirado (fica o Gemini) | `docs/geral/05-spike-llm.md`, secção 7 | PR #25 e #26 |
+| 20/10 | Sprint Planning do Sprint 2: US31 antecipada; ponto 14 decidido | Excel, `PROJETO.md`, requisitos | PR #28 |
+| 20/10 | US31: escolher curso e linha do tempo das decisões; `app/percurso.py` passou a pacote | `app/percurso/`, `app/templates/percurso/`, `app/schema.sql`, `docs/US31/` | PR da US31 |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

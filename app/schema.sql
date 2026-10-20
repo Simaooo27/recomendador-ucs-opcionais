@@ -35,3 +35,18 @@ CREATE TABLE IF NOT EXISTS conversas_orientacao (
     sugestao        TEXT,              -- JSON da sugestão final (US30); vazio enquanto a conversa decorre
     atualizada_em   TEXT    NOT NULL   -- UTC, ISO 8601
 );
+
+-- Decisões do percurso (US31): cada escolha de curso é uma linha; o curso do perfil é o da
+-- decisão mais recente (RF03). O nome do curso e da instituição ficam guardados como estavam no
+-- momento da escolha, para a linha do tempo não mudar se o catálogo mudar (RF35).
+CREATE TABLE IF NOT EXISTS decisoes (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    curso_chave     TEXT    NOT NULL,  -- identificador do catálogo (instituição-curso)
+    curso           TEXT    NOT NULL,
+    instituicao     TEXT    NOT NULL,
+    origem          TEXT    NOT NULL CHECK (origem IN ('sugestao', 'catalogo')),
+    sugeridos       TEXT    NOT NULL,  -- JSON: cursos sugeridos pelo assistente nessa altura ([] se nenhum)
+    decidida_em     TEXT    NOT NULL   -- UTC, ISO 8601
+);
+CREATE INDEX IF NOT EXISTS decisoes_por_utilizador ON decisoes (user_id, decidida_em);

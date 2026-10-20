@@ -50,7 +50,7 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): mudar 
 | [`app/orientacao/repository.py`](../../app/orientacao/repository.py) | SQL da tabela `conversas_orientacao` |
 | [`app/orientacao/conversa.py`](../../app/orientacao/conversa.py) | Do spike: pedido ao LLM, limite de 6 perguntas, validação contra o catálogo |
 | [`app/templates/orientacao/conversa.html`](../../app/templates/orientacao/conversa.html) | A página da conversa |
-| [`app/percurso.py`](../../app/percurso.py), [`app/templates/home.html`](../../app/templates/home.html) | Botão «Começar a conversa» na linha do tempo; conversa terminada avança o percurso |
+| [`app/percurso/__init__.py`](../../app/percurso/__init__.py), [`app/templates/home.html`](../../app/templates/home.html) | Botão «Começar a conversa» na linha do tempo; conversa terminada avança o percurso |
 | [`app/schema.sql`](../../app/schema.sql) | Tabela `conversas_orientacao` |
 | [`app/texts.py`](../../app/texts.py) | Textos (secção «Conversa de orientação») |
 | [`app/static/style.css`](../../app/static/style.css) | Secção 12: mensagens, aviso, botão secundário |

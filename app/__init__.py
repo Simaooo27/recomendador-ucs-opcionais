@@ -39,11 +39,13 @@ def create_app(config: dict | None = None) -> Flask:
     from .gestao import bp as gestao_bp
     from .main import bp as main_bp
     from .orientacao import bp as orientacao_bp
+    from .percurso.routes import bp as percurso_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(catalogo_bp)
     app.register_blueprint(orientacao_bp)
+    app.register_blueprint(percurso_bp)
     app.register_blueprint(gestao_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
 
     # Todos os templates recebem os textos de app/texts.py como «texts».

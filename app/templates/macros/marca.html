@@ -34,7 +34,8 @@
     (que preenche os elementos com data-campo). ``c`` pode ser None no modelo. -#}
 {#- Ficha de um curso do catálogo. ``explicacao`` (opcional) é o motivo da sugestão do assistente
     (US30), mostrado como texto. Sem curso (``c`` = none) é o modelo usado pelo app.js. -#}
-{% macro cartao_curso(c, explicacao=none) -%}
+{#- ``escolher`` (US31): mostra a ligação «Escolher este curso», que leva à página de confirmação. -#}
+{% macro cartao_curso(c, explicacao=none, escolher=false) -%}
 <li class="curso"{% if c %} data-chave="{{ c.chave }}"{% endif %}>
   <p class="curso-area"><span class="curso-area-ponto" aria-hidden="true"></span><span data-campo="area">{{ c.area if c }}</span></p>
   <h3 class="curso-nome" data-campo="curso">{{ c.curso if c }}</h3>
@@ -54,6 +55,9 @@
     <div><dt>{{ texts.LANDING_CARD_NOTA }}</dt><dd data-campo="ultimo_colocado" data-vazio="{{ texts.LANDING_CARD_NO_NOTA }}"{% if c and not c.ultimo_colocado %} class="sem-dados"{% endif %}>{{ (c.ultimo_colocado or texts.LANDING_CARD_NO_NOTA) if c }}</dd></div>
   </dl>
   <a class="curso-fonte" data-campo-href="fonte" href="{{ c.fonte if c else '#' }}" target="_blank" rel="noopener">{{ texts.LANDING_CARD_SOURCE }}</a>
+  {%- if escolher and c %}
+  <a class="curso-escolher" href="{{ url_for('percurso.confirmar', chave=c.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>
+  {%- endif %}
 </li>
 {%- endmacro %}
 

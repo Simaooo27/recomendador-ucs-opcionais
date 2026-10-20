@@ -18,7 +18,7 @@
      9. Caixas de mensagem ........... erro, sucesso e caixa de desenvolvimento
     10. Tabelas ...................... lista de administradores (gestão)
     11. Página de apresentação ....... a página inicial pública (/): pesquisa de cursos, passos, para quem
-    12. O meu percurso ............... linha do tempo do aluno e conversa de orientação (US29)
+    12. O meu percurso ............... linha do tempo do aluno, conversa de orientação (US29), sugestões (US30) e decisões (US31)
     13. Gestão, erros e detalhes ..... números do painel, página não encontrada, regras da palavra-passe
     14. Movimento .................... animações (e o que acontece a quem pede menos movimento)
     15. Modo escuro .................. cores quando o computador está em modo escuro
@@ -856,6 +856,29 @@ td form { margin: 0; }
 .catalogo-procura .field { flex: 1 1 16rem; margin: 0; }
 .catalogo-procura button { width: auto; }
 .catalogo-resultados { padding-top: 1.5rem; }
+
+/* Escolher curso e linha do tempo das decisões (/percurso, US31). */
+.curso-escolher { align-self: flex-start; margin-top: 0.35rem; font-weight: 700; }
+.curso-unico { grid-template-columns: minmax(0, 24rem); }
+.escolha-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: 1.25rem; }
+.escolha-acoes form { margin: 0; }
+.escolha-acoes button { width: auto; }
+.decisoes { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.decisao {
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.decisao-atual { box-shadow: inset 4px 0 0 var(--accent), 0 0 0 1px var(--line); }
+.decisao-etiqueta { margin: 0 0 0.25rem; font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+.decisao-curso { margin: 0; font-size: 1.2rem; }
+.decisao-instituicao { margin: 0.15rem 0 0; }
+.decisao-data, .decisao-origem { margin: 0.35rem 0 0; font-size: 0.92rem; color: var(--muted); }
+.decisao-sugeridos-titulo { margin: 0.6rem 0 0.2rem; font-size: 0.92rem; }
+.decisao-sugeridos { margin: 0; padding-left: 1.1rem; font-size: 0.92rem; }
+.decisao-escolhido { font-weight: 700; }
+.mudar-curso { margin-top: 2rem; }
 
 @media (max-width: 40rem) {
   .linha-tempo { grid-template-columns: 1fr; gap: 0; }

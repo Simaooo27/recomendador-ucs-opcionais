@@ -56,6 +56,41 @@ LANDING_DATA_SOURCE = "Dados públicos da DGES: vagas do concurso nacional de 20
 # Página do catálogo (/cursos/): a pesquisa acima numa página própria, também para quem tem sessão
 # iniciada (ligação «Procurar no catálogo» da conversa de orientação, US30). Os filtros, a ficha
 # e a comparação de cursos são a US05.
+# ---------------------------------------------------------------------------
+# Escolher curso e linha do tempo das decisões (/percurso, US31).
+# ---------------------------------------------------------------------------
+
+# Botão em cada ficha de curso (cursos sugeridos e catálogo).
+CURSO_ESCOLHER = "Escolher este curso"
+PERCURSO_ESCOLHER_TITLE = "Escolher curso"
+# RN10: a escolha só fica registada depois de confirmar.
+PERCURSO_ESCOLHER_INTRO = "Confirme a sua escolha. Pode mudar de curso mais tarde: cada mudança fica registada."
+# {curso} e {instituicao} são o curso atual.
+PERCURSO_CURSO_ATUAL = "O seu curso atual é {curso}, {instituicao}. Ao confirmar, passa a ser este."
+PERCURSO_JA_ESCOLHIDO = "Este já é o seu curso."
+# Ponto 15 dos requisitos (decisão do PO de 20/10): depois de escolher, a conversa é apagada.
+PERCURSO_CONVERSA_APAGADA = (
+    "Ao confirmar, a sua conversa com o assistente é apagada. Ficam guardados só a data, os cursos "
+    "sugeridos e o curso que escolheu."
+)
+PERCURSO_CONFIRMAR = "Confirmar a escolha"
+PERCURSO_CANCELAR = "Voltar sem escolher"
+PERCURSO_ESCOLHA_REGISTADA = "Escolha registada: {curso}, {instituicao}."
+PERCURSO_JA_E_O_SEU_CURSO = "Esse curso já é o seu curso atual: não foi registada uma nova decisão."
+
+PERCURSO_TITLE = "As minhas decisões"
+PERCURSO_INTRO = "Cada vez que escolhe ou muda de curso, a decisão fica registada aqui, da mais recente para a mais antiga."
+PERCURSO_VAZIO = "Ainda não escolheu nenhum curso."
+PERCURSO_ATUAL = "Curso atual"
+# {data} vem no formato dia/mês/ano.
+PERCURSO_DATA = "Escolhido a {data}"
+PERCURSO_DA_SUGESTAO = "Escolhido entre os cursos sugeridos pelo assistente."
+PERCURSO_DO_CATALOGO = "Escolhido no catálogo."
+PERCURSO_SUGERIDOS = "Cursos sugeridos nessa altura:"
+PERCURSO_MUDAR_TITULO = "Mudar de curso"
+PERCURSO_NOVA_CONVERSA = "Nova conversa com o assistente"
+PERCURSO_PROCURAR = "Procurar no catálogo"
+
 CATALOGO_TITLE = "Catálogo de cursos"
 CATALOGO_VOLTAR = "Voltar à conversa de orientação"
 
@@ -161,7 +196,7 @@ HOME_TITLE = "Início"
 HOME_GREETING = "Olá, {email}"
 HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."
 
-# Linha do tempo «O seu percurso» (app/percurso.py decide em que passo está cada pessoa).
+# Linha do tempo «O seu percurso» (app/percurso/__init__.py decide em que passo está cada pessoa).
 HOME_PATH_TITLE = "O seu percurso"
 HOME_PATH_STEPS = [
     {"titulo": "Conta criada", "texto": "O seu email está confirmado."},
@@ -176,6 +211,9 @@ HOME_NEXT_SOON = "Disponível em breve."
 # Botão no passo atual da linha do tempo (só nos passos que já existem).
 HOME_ACTION_CONVERSA = "Começar a conversa"
 HOME_ACTION_CONTINUAR = "Ver os cursos sugeridos"
+# Depois de escolher o curso (US31): o passo «Escolher curso» mostra-o. {curso} e {instituicao} vêm do catálogo.
+HOME_CURSO_ESCOLHIDO = "Escolheu {curso}, {instituicao}."
+HOME_ACTION_VER_PERCURSO = "Ver as minhas decisões"
 
 # ---------------------------------------------------------------------------
 # Conversa de orientação (/orientacao, US29): o assistente (LLM) faz as perguntas.
@@ -220,7 +258,7 @@ ORIENTACAO_SUGESTOES_TITULO = "Cursos sugeridos para si"
 ORIENTACAO_PORQUE = "Porque combina consigo"
 # RN10: nenhum curso é escolhido automaticamente; a escolha é a US31.
 ORIENTACAO_ESCOLHA_DEPOIS = (
-    "Nenhum curso fica escolhido por si. Compare-os com calma: em breve vai poder escolher um destes, "
+    "Nenhum curso fica escolhido por si. Compare-os com calma e, quando decidir, escolha um destes "
     "ou outro do catálogo."
 )
 # Menos de 2 cursos do catálogo (os outros foram descartados, RN09).

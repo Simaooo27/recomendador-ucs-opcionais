@@ -30,7 +30,7 @@
   </div>
   {% if resultado.cursos %}
     <ul class="cursos">
-      {% for curso in resultado.cursos %}{{ marca.cartao_curso(curso) }}{% endfor %}
+      {% for curso in resultado.cursos %}{{ marca.cartao_curso(curso, escolher=g.user is not none) }}{% endfor %}
     </ul>
   {% else %}
     <p class="resultados-vazio">{{ texts.LANDING_NO_RESULTS.format(termo=termo) }}</p>

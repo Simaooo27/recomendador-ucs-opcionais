@@ -6,6 +6,7 @@ from .catalogo import services as catalogo
 from .auth.sessions import login_required
 from .db import get_db
 from .orientacao import services as orientacao_services
+from .percurso import services as percurso_services
 
 bp = Blueprint("main", __name__)
 
@@ -30,8 +31,9 @@ def index():
 @login_required
 def home():
     terminada = orientacao_services.tem_sugestao(get_db(), g.user["id"])
-    estado = percurso.estado_do_utilizador(g.user, conversa_terminada=terminada)
-    return render_template("home.html", passos=percurso.passos(estado))
+    curso = percurso_services.curso_atual(get_db(), g.user["id"])
+    estado = percurso.estado_do_utilizador(g.user, conversa_terminada=terminada, tem_curso=curso is not None)
+    return render_template("home.html", passos=percurso.passos(estado, curso))
 
 
 @bp.get("/privacidade")

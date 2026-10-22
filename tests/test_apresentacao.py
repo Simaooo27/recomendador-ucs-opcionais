@@ -118,15 +118,29 @@ class PathTimelineTests(AppTestCase):
 
     def test_sem_curso_o_proximo_passo_e_o_questionario(self):
         passos = percurso.passos(EstadoPercurso.SEM_CURSO)
-        self.assertEqual([p.situacao for p in passos], ["feito", "atual", "depois", "depois"])
+        self.assertEqual([p.situacao for p in passos], ["feito", "atual", "depois"])
         self.assertEqual(passos[1].titulo, texts.HOME_PATH_STEPS[1]["titulo"])
 
     def test_cada_estado_avanca_o_passo_atual(self):
         atuais = [
             [p.situacao for p in percurso.passos(estado)].index("atual")
-            for estado in (EstadoPercurso.SEM_CURSO, EstadoPercurso.A_ESCOLHER_CURSO, EstadoPercurso.COM_CURSO)
+            for estado in (EstadoPercurso.SEM_CURSO, EstadoPercurso.A_ESCOLHER_CURSO)
         ]
-        self.assertEqual(atuais, [1, 2, 3])
+        self.assertEqual(atuais, [1, 2])
+
+    def test_com_curso_o_percurso_esta_concluido(self):
+        # As opcionais saíram desta release (22/10): escolher o curso é o último passo.
+        passos = percurso.passos(EstadoPercurso.COM_CURSO)
+        self.assertEqual([p.situacao for p in passos], ["feito", "feito", "feito"])
+
+    def test_nao_ha_referencias_a_opcionais(self):
+        # Decisão dos PO (22/10): nesta release o site não fala de opcionais.
+        for pagina in ("/", "/privacidade", "/auth/entrar"):
+            html = self.client.get(pagina).get_data(as_text=True).lower()
+            self.assertNotIn("opcionais", html, pagina)
+        self.create_active_user()
+        self.login()
+        self.assertNotIn("opcionais", self.client.get("/inicio").get_data(as_text=True).lower())
 
     def test_pagina_inicial_mostra_a_linha_do_tempo(self):
         self.create_active_user()

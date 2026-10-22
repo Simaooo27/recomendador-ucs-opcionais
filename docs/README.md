@@ -12,6 +12,7 @@ A documentação está organizada por user story: os documentos que valem para t
 | [geral/03-arquitetura-e-padroes.md](geral/03-arquitetura-e-padroes.md) | Tecnologias, padrões de desenho existentes e previstos, estrutura dos módulos novos |
 | [geral/04-guia-do-codigo.md](geral/04-guia-do-codigo.md) | Guia do código: mapa das pastas, onde mexer, CSS secção a secção, histórico de alterações |
 | [geral/05-spike-llm.md](geral/05-spike-llm.md) | Spike do LLM (14/10): limites do plano gratuito, custo, privacidade, termos e viabilidade do Gemini e do Groq |
+| [geral/06-aceder-noutro-dispositivo.md](geral/06-aceder-noutro-dispositivo.md) | Abrir o OptaBem no telemóvel ou noutro computador com um túnel do Cloudflare (sem modo debug) |
 | [../dados/README.md](../dados/README.md) | Catálogo de instituições e cursos: colunas, fontes e lacunas |
 | [geral/registo-de-uso-de-ia.md](geral/registo-de-uso-de-ia.md) | Registo de uso de IA |
 | [geral/product-backlog.xlsx](geral/product-backlog.xlsx) | Product Backlog: stories, plano de sprints e resumo MoSCoW |

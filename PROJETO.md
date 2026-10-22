@@ -87,6 +87,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Arquitetura e padrões de desenho](docs/geral/03-arquitetura-e-padroes.md) | Tecnologias e porquê, padrões que o código já usa e os previstos (Strategy, Adapter, Factory, Decorator…) |
 | [Guia do código](docs/geral/04-guia-do-codigo.md) | Onde está cada coisa (incluindo o CSS), onde mexer para alterar, quem escreveu o quê |
 | [Spike do LLM](docs/geral/05-spike-llm.md) | Gemini e Groq: limites do plano gratuito, custo, privacidade, termos e viabilidade (14/10) |
+| [Abrir noutro dispositivo](docs/geral/06-aceder-noutro-dispositivo.md) | Usar o OptaBem no telemóvel ou noutro computador com um túnel do Cloudflare, sem modo debug (22/10) |
 | [Catálogo de cursos](dados/README.md) | 30 licenciaturas de 12 instituições (DGES), para importar na US04 |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |

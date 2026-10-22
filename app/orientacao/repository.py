@@ -1,4 +1,4 @@
-"""Consultas SQL à tabela ``conversas_orientacao`` (padrão Repository). Só este ficheiro tem SQL da orientação."""
+"""Consultas SQL às tabelas ``conversas_orientacao`` e ``pedidos_llm`` (padrão Repository). Só este ficheiro tem SQL da orientação."""
 from __future__ import annotations
 
 import sqlite3
@@ -24,4 +24,20 @@ def guardar(db: sqlite3.Connection, user_id: int, mensagens: str, sugestao: str 
 
 def apagar(db: sqlite3.Connection, user_id: int) -> None:
     db.execute("DELETE FROM conversas_orientacao WHERE user_id = ?", (user_id,))
+    db.commit()
+
+
+def pedidos_no_dia(db: sqlite3.Connection, user_id: int, dia: str) -> int:
+    linha = db.execute("SELECT total FROM pedidos_llm WHERE user_id = ? AND dia = ?", (user_id, dia)).fetchone()
+    return linha["total"] if linha else 0
+
+
+def contar_pedido(db: sqlite3.Connection, user_id: int, dia: str) -> None:
+    db.execute(
+        """
+        INSERT INTO pedidos_llm (user_id, dia, total) VALUES (?, ?, 1)
+        ON CONFLICT(user_id, dia) DO UPDATE SET total = total + 1
+        """,
+        (user_id, dia),
+    )
     db.commit()

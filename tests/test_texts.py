@@ -10,7 +10,7 @@ from tests.base import AppTestCase
 # ou o email ficam incompletos (por exemplo, o email sem a ligação de confirmação).
 REQUIRED_PLACEHOLDERS = {
     "PAGE_TITLE_FORMAT": {"pagina", "aplicacao"},
-    "HOME_GREETING": {"email"},
+    "HOME_SESSAO": {"email"},
     "ADMIN_DASHBOARD_GREETING": {"nome"},
     "ADMIN_PASSWORD_HINT": {"minimo"},
     "ADMIN_CREATED": {"nome"},

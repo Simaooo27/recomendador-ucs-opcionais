@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 3, de 22/10 a 29/10 (US05 e US17, 8 SP) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Entrega a 05/11 |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo |
-| **Testes automáticos** | 275, todos a passar |
+| **Testes automáticos** | 298, todos a passar |
 
 ## Índice
 
@@ -162,11 +162,13 @@ Para experimentar o LLM com a chave real (2 pedidos; a chave nunca é mostrada):
 | `DATABASE_PATH` | Ficheiro SQLite | `instance/app.sqlite3` |
 | `MAIL_BACKEND` | `console` (escreve o email no terminal) ou `smtp` | `console` |
 | `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` | |
-| `SESSION_COOKIE_SECURE` | `true` em produção (HTTPS) | `false` |
+| `SHOW_DEV_CONFIRMATION_LINK` | Com `console`, mostrar a ligação de confirmação na página. `false` no túnel: fica só no terminal | `true` |
+| `SESSION_COOKIE_SECURE` | `true` em produção ou pelo túnel (HTTPS); com isto ligado, a aplicação recusa o modo debug | `false` |
 | `ADMIN_URL_PREFIX` | Endereço da área de gestão (administradores) | `gestao` |
 | `LLM_BACKEND` | LLM da orientação: `falso` (sem rede), `gemini` ou `groq` | `falso` |
 | `LLM_MODELO` | Outro modelo do fornecedor | `gemini-3.5-flash-lite` / `openai/gpt-oss-120b` |
 | `GEMINI_API_KEY`, `GROQ_API_KEY` | Chaves pessoais dos fornecedores (só no `.env`, nunca no repositório) | vazias |
+| `ORIENTACAO_MAX_PEDIDOS_DIA` | Pedidos ao LLM por aluno e por dia (`0` = sem limite) | `40` |
 
 </details>
 
@@ -191,6 +193,8 @@ Os testes não precisam de rede nem de configuração. Também correm com `pytes
 | `tests/test_orientacao.py` | Conversa de orientação: formato das respostas, só cursos do catálogo (RN09), limite de perguntas, comando `llm-teste` |
 | `tests/test_conversa.py` | Página da conversa (US29): sessão, perguntas do LLM, dados pessoais, falhas e «Tentar de novo», recomeçar |
 | `tests/test_sugestoes.py` | Cursos sugeridos (US30): dados do catálogo e explicação, só cursos do catálogo, «Ver sugestões já», poucos cursos, página `/cursos/` |
+| `tests/test_site_publico.py` | Site aberto pelo túnel: modo debug recusado, ligação de confirmação escondida (página e cookie), limite de pedidos ao LLM por aluno e por dia |
+| `tests/test_navegacao.py` | Menu dos alunos e página atual marcada, logótipo com ligação, saudação, passos concluídos, estilo do campo de pesquisa |
 | `tests/test_escolha.py` | Escolher curso (US31): confirmação, curso no perfil, decisões com data e sugeridos, conversa apagada, linha do tempo, mudar de curso |
 
 ## 6. Organização do código
@@ -215,7 +219,7 @@ app/
   mailer.py         envio de email (terminal ou SMTP)
   main.py           página inicial do aluno e política de privacidade
   llm/              ligação ao LLM (Gemini, Groq, falso), escolhido por LLM_BACKEND
-  orientacao/       conversa de orientação conduzida pelo LLM (US29, US30) e comando llm-teste
+  orientacao/       conversa de orientação conduzida pelo LLM (US29, US30), limite de pedidos por aluno e comando llm-teste
   percurso/         em que passo está cada aluno (State) e as decisões: escolher curso, linha do tempo (US31)
   gestao/           área de gestão (administradores, US03); endereço em ADMIN_URL_PREFIX
     routes.py         entrar, sair, painel e lista de administradores

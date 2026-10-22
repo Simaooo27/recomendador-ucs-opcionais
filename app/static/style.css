@@ -160,7 +160,11 @@ body {
   color: var(--muted);
 }
 
-/* Menu da gestão (Painel, Administradores) e nome do administrador. */
+/* O símbolo e o nome levam ao início de cada perfil (aluno ou administrador). */
+.site-header .marca-ligacao { padding: 0.35rem 0; }
+
+/* Menu dos alunos (Início, Conversa, Catálogo, As minhas decisões) e da gestão (Painel,
+   Administradores), com o nome do administrador. */
 .user-nav { display: flex; align-items: center; gap: 1.25rem; font-size: 0.95rem; }
 .user-nav a {
   color: var(--muted);
@@ -187,7 +191,7 @@ body {
 /* Ecrãs estreitos (telemóvel): o menu passa para uma segunda linha. */
 @media (max-width: 40rem) {
   .site-header { flex-wrap: wrap; gap: 0.25rem 1rem; }
-  .user-nav { order: 3; width: 100%; }
+  .user-nav { order: 3; width: 100%; flex-wrap: wrap; gap: 0 1.1rem; }
 }
 
 
@@ -300,11 +304,12 @@ a:hover { text-decoration-thickness: 2px; }
 label { display: block; font-weight: 700; margin-bottom: 0.35rem; }      /* nome do campo */
 .hint { color: var(--muted); font-size: 0.92rem; margin: 0.4rem 0 0; }   /* ajuda por baixo do campo */
 
-/* Caixas de texto (email, nome de utilizador, palavra-passe, resposta na conversa).
+/* Caixas de texto (email, nome de utilizador, palavra-passe, pesquisa, resposta na conversa).
    A letra tem pelo menos 16 px para o iPhone não aproximar a página ao tocar. */
 input[type="email"],
 input[type="password"],
 input[type="text"],
+input[type="search"],
 textarea {
   width: 100%;
   min-height: 3rem;
@@ -319,11 +324,15 @@ textarea {
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="text"]:focus,
+input[type="search"]:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(14, 107, 87, 0.18);
 }
+
+/* O Safari desenha a pesquisa com cantos e lupa próprios: fica igual às outras caixas. */
+input[type="search"] { -webkit-appearance: none; appearance: none; }
 
 /* Campo com erro: contorno vermelho. */
 textarea { display: block; min-height: 6rem; resize: vertical; line-height: 1.5; }   /* várias linhas */
@@ -751,6 +760,8 @@ td form { margin: 0; }
    Linha do tempo com os passos feitos, o atual e os seguintes (app/percurso.py).
    -------------------------------------------------------------------------- */
 .meu-percurso h2 { margin-top: 0.5rem; }
+/* «Sessão iniciada como …», por baixo da saudação (emails compridos partem a linha). */
+.sessao-conta { margin: -0.5rem 0 0.75rem; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
 .linha-tempo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
 .etapa { position: relative; padding: 2.25rem 0.75rem 0 0; }
 .etapa-no {
@@ -1021,7 +1032,7 @@ button.a-enviar::before {
     --forest: #0b231d; --marigold: #f5c15c;
     --danger: #ff9c94; --danger-bg: #3a1715; --ok: #7fd9a6; --ok-bg: #10301f;
   }
-  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
+  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, input[type="search"]:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
   .alert-error { border-color: rgba(255, 156, 148, 0.35); }
   .alert-ok { border-color: rgba(127, 217, 166, 0.3); }
   .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }

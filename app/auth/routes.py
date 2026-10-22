@@ -71,14 +71,23 @@ def register_submit():
         )
 
     session[_PENDING_EMAIL_KEY] = pending.email
-    if current_app.config["MAIL_BACKEND"] == "console":
+    # A ligação só vai para a sessão se for para a mostrar: o cookie de sessão é assinado, mas
+    # o navegador consegue lê-lo, por isso guardá-la ali bastava para confirmar qualquer email.
+    if _mostrar_ligacao_de_desenvolvimento():
         session[_DEV_LINK_KEY] = link
+    else:
+        session.pop(_DEV_LINK_KEY, None)
     return redirect(url_for("auth.register_pending"))
+
+
+def _mostrar_ligacao_de_desenvolvimento() -> bool:
+    """Em desenvolvimento (email no terminal), a ligação de confirmação aparece também na página."""
+    return current_app.config["MAIL_BACKEND"] == "console" and current_app.config["SHOW_DEV_CONFIRMATION_LINK"]
 
 
 @bp.get("/registo/pendente")
 def register_pending():
-    dev_link = session.get(_DEV_LINK_KEY) if current_app.config["MAIL_BACKEND"] == "console" else None
+    dev_link = session.get(_DEV_LINK_KEY) if _mostrar_ligacao_de_desenvolvimento() else None
     return render_template("auth/pending.html", email=session.get(_PENDING_EMAIL_KEY), dev_link=dev_link)
 
 

@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS conversas_orientacao (
     atualizada_em   TEXT    NOT NULL   -- UTC, ISO 8601
 );
 
+-- Pedidos ao LLM por aluno e por dia (revisão de 22/10): o limite do fornecedor é partilhado por
+-- todos, e este contador impede que uma só conta o gaste (ORIENTACAO_MAX_PEDIDOS_DIA).
+CREATE TABLE IF NOT EXISTS pedidos_llm (
+    user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    dia         TEXT    NOT NULL,  -- UTC, AAAA-MM-DD
+    total       INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, dia)
+);
+
 -- Decisões do percurso (US31): cada escolha de curso é uma linha; o curso do perfil é o da
 -- decisão mais recente (RF03). O nome do curso e da instituição ficam guardados como estavam no
 -- momento da escolha, para a linha do tempo não mudar se o catálogo mudar (RF35).

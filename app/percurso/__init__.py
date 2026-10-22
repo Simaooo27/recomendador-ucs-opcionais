@@ -68,7 +68,7 @@ def passos(estado: EstadoPercurso, curso_escolhido=None) -> list[Passo]:
     for indice, passo in enumerate(texts.HOME_PATH_STEPS):
         situacao = "feito" if indice < atual else "atual" if indice == atual else "depois"
         acao = _ACAO.get(estado) if situacao == "atual" else None
-        texto = passo["texto"]
+        texto = passo.get("feito", passo["texto"]) if situacao == "feito" else passo["texto"]
         if indice == _PASSO_CURSO and curso_escolhido is not None:
             texto = texts.HOME_CURSO_ESCOLHIDO.format(curso=curso_escolhido.curso, instituicao=curso_escolhido.instituicao)
             acao = (texts.HOME_ACTION_VER_PERCURSO, "percurso.linha_tempo")

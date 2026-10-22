@@ -2,38 +2,57 @@
 {% import "macros/marca.html" as marca with context %}
 {% set page_title = texts.CATALOGO_TITLE %}
 
-{#- Catálogo de cursos (/cursos/): a mesma pesquisa da apresentação, sem JavaScript, para quem
-    tem sessão iniciada. Os filtros, a ficha e a comparação de cursos são a US05. -#}
+{#- Catálogo de cursos (/cursos/, US05): filtros por área, instituição e localidade, ficha de cada
+    curso e comparação de até 3 cursos. Funciona sem sessão e sem JavaScript: os filtros vão no
+    endereço (GET) e as caixas «Comparar» pertencem ao formulário comparar-form (atributo form=). -#}
 {% block content %}
 <h1>{{ texts.CATALOGO_TITLE }}</h1>
+<p class="lead">{{ texts.CATALOGO_INTRO.format(maximo=max_comparar) }}</p>
 {% if g.user %}
   <p><a href="{{ url_for('orientacao.pagina') }}">{{ texts.CATALOGO_VOLTAR }}</a></p>
 {% endif %}
 
-<form method="get" action="{{ url_for('catalogo.lista') }}" role="search" class="catalogo-procura">
-  <div class="field">
+<form method="get" action="{{ url_for('catalogo.lista') }}" role="search" class="catalogo-filtros" aria-labelledby="filtros-titulo">
+  <h2 id="filtros-titulo" class="visually-hidden">{{ texts.CATALOGO_FILTROS }}</h2>
+  <div class="field filtro-termo">
     <label for="q">{{ texts.LANDING_SEARCH_LABEL }}</label>
-    <input id="q" name="q" type="search" value="{{ termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
-           autocomplete="off" spellcheck="false">
+    <input id="q" name="q" type="search" value="{{ filtros.termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
+           autocomplete="off" spellcheck="false" maxlength="80">
   </div>
-  <button type="submit">{{ texts.LANDING_SEARCH_BUTTON }}</button>
+  {% for nome, rotulo, valores, atual in [
+       ("area", texts.CATALOGO_FILTRO_AREA, opcoes.areas, filtros.area),
+       ("instituicao", texts.CATALOGO_FILTRO_INSTITUICAO, opcoes.instituicoes, filtros.instituicao),
+       ("localidade", texts.CATALOGO_FILTRO_LOCALIDADE, opcoes.localidades, filtros.localidade)] %}
+  <div class="field">
+    <label for="filtro-{{ nome }}">{{ rotulo }}</label>
+    <select id="filtro-{{ nome }}" name="{{ nome }}">
+      <option value="">{{ texts.CATALOGO_FILTRO_TODAS }}</option>
+      {% for valor in valores %}<option value="{{ valor }}"{% if valor == atual %} selected{% endif %}>{{ valor }}</option>{% endfor %}
+    </select>
+  </div>
+  {% endfor %}
+  <div class="filtros-acoes">
+    <button type="submit">{{ texts.CATALOGO_APLICAR }}</button>
+    {% if filtros.ativos %}<a href="{{ url_for('catalogo.lista') }}">{{ texts.CATALOGO_LIMPAR }}</a>{% endif %}
+  </div>
 </form>
 
 <section class="resultados catalogo-resultados" aria-labelledby="resultados-titulo">
   <div class="resultados-cabecalho">
     <h2 id="resultados-titulo">
-      {%- if resultado.amostra %}{{ texts.LANDING_RESULTS_SAMPLE }}{% else %}{{ texts.LANDING_RESULTS_FOUND.format(termo=termo) }}{% endif -%}
+      {%- if filtros.ativos %}{{ texts.CATALOGO_CONTA.format(mostrados=cursos|length, total=total) }}{% else %}{{ texts.CATALOGO_CONTA_TODOS.format(total=total) }}{% endif -%}
     </h2>
-    {% if not resultado.amostra and resultado.total %}
-      <p class="resultados-conta">{{ texts.LANDING_RESULTS_COUNT.format(mostrados=resultado.cursos|length, total=resultado.total) }}</p>
-    {% endif %}
   </div>
-  {% if resultado.cursos %}
+  {% if cursos %}
+    <form id="comparar-form" method="get" action="{{ url_for('catalogo.comparar') }}" class="comparar-barra">
+      <p class="hint">{{ texts.CATALOGO_COMPARAR_AJUDA.format(maximo=max_comparar) }}</p>
+      <button type="submit" class="botao-secundario">{{ texts.CATALOGO_COMPARAR_BOTAO }}</button>
+    </form>
     <ul class="cursos">
-      {% for curso in resultado.cursos %}{{ marca.cartao_curso(curso, escolher=g.user is not none) }}{% endfor %}
+      {% for curso in cursos %}{{ marca.cartao_curso(curso, escolher=g.user is not none, comparar=true) }}{% endfor %}
     </ul>
   {% else %}
-    <p class="resultados-vazio">{{ texts.LANDING_NO_RESULTS.format(termo=termo) }}</p>
+    <p class="resultados-vazio">{{ texts.CATALOGO_VAZIO }}</p>
   {% endif %}
   <p class="resultados-fonte">{{ texts.LANDING_DATA_SOURCE }}</p>
 </section>

@@ -8,7 +8,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | **Sprint atual** | Sprint 3, de 22/10 a 29/10 (US05 e US17, 8 SP) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Entrega a 05/11 |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo |
-| **Testes automáticos** | 298, todos a passar |
+| **Testes automáticos** | 318, todos a passar |
 
 ## Índice
 
@@ -50,7 +50,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Feita | [docs/US29/](docs/US29/) |
 | US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita | [docs/US30/](docs/US30/) |
 | US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
-| US05 | Consultar e comparar cursos | Sprint 3 | Por fazer (a pesquisa já foi feita a 14/10, e a página `/cursos/` na US30; faltam filtros, ficha e comparação) | `app/catalogo/` |
+| US05 | Consultar e comparar cursos | Sprint 3 | Em curso (feita, por rever; issue #12) | [docs/US05/](docs/US05/) |
 | US17 | Exportar e apagar os meus dados (sobe do backlog a 22/10) | Sprint 3 | Por fazer | — |
 | US06 | Registar percurso | Backlog (opcionais, 22/10) | Por fazer | — |
 | US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Backlog (opcionais, 22/10) | Por fazer | — |
@@ -101,6 +101,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [US29](docs/US29/README.md) | Conversa de orientação com o LLM: requisitos, use case, BPMN e como experimentar |
 | [US30](docs/US30/README.md) | Sugestão de 2 a 3 cursos no fim da conversa: requisitos, use case, BPMN e como experimentar |
 | [US31](docs/US31/README.md) | Escolher curso e linha do tempo do percurso: requisitos, use case, BPMN e como experimentar |
+| [US05](docs/US05/README.md) | Consultar e comparar cursos: filtros, ficha completa e comparação de até 3 cursos |
 
 ## 3. Alterar textos e cores
 

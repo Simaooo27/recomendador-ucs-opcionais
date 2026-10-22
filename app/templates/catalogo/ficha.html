@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set page_title = curso.curso ~ " · " ~ curso.instituicao %}
+
+{#- Ficha completa de um curso (/cursos/<chave>, US05): descrição, saídas profissionais, dados de
+    acesso da DGES e as fontes. Funciona sem sessão; com sessão aparece «Escolher este curso» (US31). -#}
+{% block content %}
+<p class="ficha-voltar"><a href="{{ url_for('catalogo.lista') }}">{{ texts.FICHA_VOLTAR }}</a></p>
+
+<article class="ficha" aria-labelledby="ficha-titulo">
+  <header class="ficha-cabecalho">
+    <p class="curso-area"><span class="curso-area-ponto" aria-hidden="true"></span>{{ curso.area }}</p>
+    <h1 id="ficha-titulo">{{ curso.curso }}</h1>
+    <p class="ficha-instituicao">{{ curso.instituicao }}</p>
+    <p class="ficha-local">{{ curso.unidade_organica }} · {{ curso.localidade }}</p>
+  </header>
+
+  <dl class="curso-numeros ficha-numeros">
+    <div><dt>{{ texts.LANDING_CARD_VAGAS }}</dt><dd>{{ curso.vagas if curso.vagas is not none else texts.FICHA_SEM_DADOS }}</dd></div>
+    <div><dt>{{ texts.LANDING_CARD_NOTA }}</dt><dd{% if not curso.ultimo_colocado %} class="sem-dados"{% endif %}>{{ curso.ultimo_colocado or texts.LANDING_CARD_NO_NOTA }}</dd></div>
+  </dl>
+
+  <div class="ficha-colunas">
+    <section aria-labelledby="ficha-sobre">
+      <h2 id="ficha-sobre">{{ texts.FICHA_SOBRE }}</h2>
+      <p>{{ curso.descricao or texts.FICHA_SEM_DADOS }}</p>
+      <h2>{{ texts.FICHA_SAIDAS }}</h2>
+      {% if curso.lista_saidas %}
+        <ul class="ficha-saidas">{% for saida in curso.lista_saidas %}<li>{{ saida }}</li>{% endfor %}</ul>
+      {% else %}
+        <p>{{ texts.FICHA_SEM_DADOS }}</p>
+      {% endif %}
+    </section>
+
+    <section aria-labelledby="ficha-dados">
+      <h2 id="ficha-dados">{{ texts.FICHA_DADOS }}</h2>
+      <dl class="ficha-dados">
+        <div><dt>{{ texts.FICHA_INSTITUICAO }}</dt><dd>{{ curso.instituicao }}</dd></div>
+        <div><dt>{{ texts.FICHA_UNIDADE }}</dt><dd>{{ curso.unidade_organica or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_LOCALIDADE }}</dt><dd>{{ curso.localidade }}</dd></div>
+        <div><dt>{{ texts.FICHA_TIPO }}</dt><dd>{{ curso.tipo_ensino or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_GRAU }}</dt><dd>{{ curso.grau or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_DURACAO }}</dt><dd>{{ texts.FICHA_DURACAO_VALOR.format(semestres=curso.duracao_semestres) if curso.duracao_semestres else texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_ECTS }}</dt><dd>{{ curso.ects or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_AREA_OFICIAL }}</dt><dd>{{ curso.area_cnaef or texts.FICHA_SEM_DADOS }}</dd></div>
+      </dl>
+      <h2>{{ texts.FICHA_FONTES }}</h2>
+      <ul class="ficha-fontes">
+        <li><a href="{{ curso.fonte }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DGES }}</a></li>
+        {% if curso.fonte_descricao %}<li><a href="{{ curso.fonte_descricao }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DESCRICAO }}</a></li>{% endif %}
+      </ul>
+    </section>
+  </div>
+
+  <div class="ficha-acoes">
+    {% if g.user %}<a class="button-link" href="{{ url_for('percurso.confirmar', chave=curso.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>{% endif %}
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('catalogo.lista', area=curso.area) }}">{{ texts.FICHA_COMPARAR }}</a>
+  </div>
+</article>
+{% endblock %}

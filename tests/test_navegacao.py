@@ -85,6 +85,7 @@ class PassosConcluidosTests(AppTestCase):
 class CampoDePesquisaTests(AppTestCase):
     def test_o_campo_de_pesquisa_tem_o_estilo_das_outras_caixas(self):
         css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
-        regra = re.search(r"((?:input\[type=\"\w+\"\],\s*)+)textarea \{", css)
+        # A regra comum das caixas também inclui «select» desde a US05 (filtros do catálogo).
+        regra = re.search(r"((?:(?:input\[type=\"\w+\"\]|select),\s*)+)textarea \{", css)
         self.assertIsNotNone(regra)
         self.assertIn('input[type="search"]', regra.group(1))

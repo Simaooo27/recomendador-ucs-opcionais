@@ -36,6 +36,14 @@ REQUIRED_PLACEHOLDERS = {
     "ORIENTACAO_PROGRESSO": {"numero", "maximo"},
     "ORIENTACAO_RESPOSTA_HINT": {"maximo"},
     "ORIENTACAO_ERRO_LONGA": {"maximo"},
+    # Catálogo, ficha e comparação (US05)
+    "CATALOGO_INTRO": {"maximo"},
+    "CATALOGO_CONTA": {"mostrados", "total"},
+    "CATALOGO_CONTA_TODOS": {"total"},
+    "CATALOGO_COMPARAR_AJUDA": {"maximo"},
+    "FICHA_DURACAO_VALOR": {"semestres"},
+    "COMPARAR_POUCOS": {"minimo"},
+    "COMPARAR_A_MAIS": {"maximo"},
 }
 
 

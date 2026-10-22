@@ -310,6 +310,7 @@ input[type="email"],
 input[type="password"],
 input[type="text"],
 input[type="search"],
+select,
 textarea {
   width: 100%;
   min-height: 3rem;
@@ -325,6 +326,7 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="text"]:focus,
 input[type="search"]:focus,
+select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
@@ -333,6 +335,16 @@ textarea:focus {
 
 /* O Safari desenha a pesquisa com cantos e lupa próprios: fica igual às outras caixas. */
 input[type="search"] { -webkit-appearance: none; appearance: none; }
+/* Listas de escolha (filtros do catálogo, US05): seta própria, igual em todos os navegadores. */
+select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.2rem) 52%, calc(100% - 0.85rem) 52%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
 
 /* Campo com erro: contorno vermelho. */
 textarea { display: block; min-height: 6rem; resize: vertical; line-height: 1.5; }   /* várias linhas */
@@ -862,11 +874,62 @@ td form { margin: 0; }
 /* Ligação com o aspeto do botão secundário («Procurar no catálogo»). */
 .botao-ligacao { display: inline-flex; align-items: center; border-radius: var(--radius); text-decoration: none; }
 
-/* Catálogo de cursos (/cursos/): a caixa de pesquisa e as fichas da secção 11, numa página normal. */
-.catalogo-procura { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; }
-.catalogo-procura .field { flex: 1 1 16rem; margin: 0; }
-.catalogo-procura button { width: auto; }
+/* Catálogo de cursos (/cursos/, US05): filtros, fichas da secção 11 e caixa «Comparar». */
+.catalogo-filtros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));   /* a pesquisa ocupa a linha toda; os três filtros por baixo */
+  gap: 0.75rem 1rem;
+  align-items: end;
+  padding: 1.25rem;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.catalogo-filtros .field { margin: 0; min-width: 0; }
+.filtro-termo { grid-column: 1 / -1; }
+.filtros-acoes { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
+.filtros-acoes button { width: auto; }
 .catalogo-resultados { padding-top: 1.5rem; }
+.comparar-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 1rem; }
+.comparar-barra .hint { margin: 0; }
+.curso-nome a { color: inherit; text-decoration: none; }
+.curso-nome a:hover { text-decoration: underline; }
+.curso-comparar { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0 0; font-weight: 400; cursor: pointer; }
+.curso-comparar input { width: 1.2rem; height: 1.2rem; margin: 0; accent-color: var(--accent); }
+
+/* Ficha completa de um curso (/cursos/<curso>, US05). */
+.ficha-voltar { margin: 0 0 1rem; }
+.ficha-cabecalho h1 { margin: 0.25rem 0 0.35rem; }
+.ficha-instituicao { margin: 0; font-size: 1.1rem; }
+.ficha-local { margin: 0.2rem 0 0; color: var(--muted); }
+.ficha-numeros { max-width: 26rem; }
+.ficha-colunas { margin-top: 0.5rem; }   /* uma coluna: a página tem a largura de leitura (secção 3) */
+.ficha-colunas h2 { margin-top: 1.25rem; font-size: 1.2rem; }
+.ficha-saidas, .ficha-fontes { margin: 0; padding-left: 1.2rem; }
+.ficha-saidas li, .ficha-fontes li { margin: 0.2rem 0; }
+.ficha-dados { margin: 0; }
+.ficha-dados > div { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+.ficha-dados dt { color: var(--muted); font-size: 0.92rem; }
+.ficha-dados dd { margin: 0; overflow-wrap: anywhere; }
+.ficha-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: 2rem; }
+
+/* Comparação lado a lado (/cursos/comparar, US05): uma coluna por curso. No telemóvel a tabela
+   desliza para o lado dentro da sua caixa (.table-wrap, secção 10), sem deslocar a página. */
+.comparacao { min-width: 34rem; table-layout: fixed; }   /* cabe na coluna de leitura; mais estreito, desliza */
+.comparacao th[scope="row"] { width: 8rem; padding-left: 0; position: sticky; left: 0; z-index: 1; background: var(--page); }   /* o nome da linha fica visível ao deslizar */
+.comparacao-deslizar { display: none; }
+.comparacao thead th { font-family: var(--font-display); font-size: 1.15rem; font-weight: 650; color: var(--ink); vertical-align: bottom; }
+.comparacao td, .comparacao th { vertical-align: top; overflow-wrap: anywhere; }
+.comparacao-vagas, .comparacao-ultimo_colocado { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.comparacao .sem-dados { font-family: var(--font-text); font-size: 0.95rem; font-weight: 400; color: var(--muted); }
+.comparacao-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 40rem) {
+  .catalogo-filtros { grid-template-columns: 1fr; padding: 1rem; }
+  .filtros-acoes button { width: 100%; }
+  .ficha-dados > div { grid-template-columns: 1fr; gap: 0.1rem; }
+  .comparacao-deslizar { display: block; margin-bottom: 0.5rem; }
+}
 
 /* Escolher curso e linha do tempo das decisões (/percurso, US31). */
 .curso-escolher { align-self: flex-start; margin-top: 0.35rem; font-weight: 700; }
@@ -1032,7 +1095,7 @@ button.a-enviar::before {
     --forest: #0b231d; --marigold: #f5c15c;
     --danger: #ff9c94; --danger-bg: #3a1715; --ok: #7fd9a6; --ok-bg: #10301f;
   }
-  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, input[type="search"]:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
+  input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
   .alert-error { border-color: rgba(255, 156, 148, 0.35); }
   .alert-ok { border-color: rgba(127, 217, 166, 0.3); }
   .alert-dev { background: #2e2608; color: #f3d77a; border-color: #b08a14; }

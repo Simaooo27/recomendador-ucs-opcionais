@@ -50,4 +50,4 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): mudar 
 | `app/static/style.css` | Secção 7 (caixa de pesquisa e listas de escolha) e secção 12 (filtros, ficha, comparação) |
 | `app/static/app.js` | A pesquisa da página de apresentação preenche também a ligação para a ficha |
 | `app/texts.py` | Textos `CATALOGO_*`, `FICHA_*` e `COMPARAR_*` |
-| `tests/test_catalogo.py` | 20 testes (filtros, ficha, comparação, sem sessão) |
+| `tests/test_catalogo.py` | 24 testes (filtros, ficha, comparação e melhorias da revisão do #37, sem sessão) |

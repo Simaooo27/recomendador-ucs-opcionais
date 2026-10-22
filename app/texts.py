@@ -109,6 +109,9 @@ CATALOGO_VAZIO = "Nenhum curso corresponde a estes filtros. Experimente tirar um
 CATALOGO_COMPARAR_CAIXA = "Comparar"
 CATALOGO_COMPARAR_BOTAO = "Comparar os cursos marcados"
 CATALOGO_COMPARAR_AJUDA = "Marque 2 ou {maximo} cursos e carregue em «Comparar os cursos marcados»."
+# Substitui a ajuda acima quando há cursos marcados (só com JavaScript). {n} é o número de cursos
+# marcados (preenchido por app/static/app.js) e {maximo} o máximo que se compara.
+CATALOGO_COMPARAR_MARCADOS = "Cursos marcados: {n} de {maximo}."
 CATALOGO_VER_FICHA = "Ver ficha completa"
 
 # Ficha de um curso (/cursos/<curso>, US05).

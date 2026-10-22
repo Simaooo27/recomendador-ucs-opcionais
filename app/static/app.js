@@ -295,4 +295,21 @@
       window.requestAnimationFrame(passo);
     });
   }
+
+  /* 6. Quantos cursos estão marcados para comparar (/cursos/, US05) ------- */
+  // Sem JavaScript, a barra mostra só a ajuda; com ele, diz quantos cursos estão marcados.
+  document.querySelectorAll("[data-comparar]").forEach(function (form) {
+    var conta = form.querySelector("[data-comparar-conta]");
+    var modelo = form.getAttribute("data-texto-marcados");
+    var ajuda = conta ? conta.textContent : "";
+    var caixas = document.querySelectorAll('input[form="' + form.id + '"]');
+    if (!conta || !modelo || !caixas.length) return;
+    function atualizar() {
+      var n = 0;
+      caixas.forEach(function (caixa) { if (caixa.checked) n += 1; });
+      conta.textContent = n ? modelo.replace("{n}", String(n)) : ajuda;
+    }
+    caixas.forEach(function (caixa) { caixa.addEventListener("change", atualizar); });
+    atualizar();   // o navegador pode repor caixas marcadas ao voltar atrás
+  });
 })();

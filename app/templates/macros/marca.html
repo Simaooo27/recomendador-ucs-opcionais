@@ -35,10 +35,12 @@
 {#- Ficha de um curso do catálogo. ``explicacao`` (opcional) é o motivo da sugestão do assistente
     (US30), mostrado como texto. Sem curso (``c`` = none) é o modelo usado pelo app.js. -#}
 {#- ``escolher`` (US31): mostra a ligação «Escolher este curso», que leva à página de confirmação. -#}
-{% macro cartao_curso(c, explicacao=none, escolher=false) -%}
+{#- O nome do curso leva à ficha completa (US05). ``comparar`` (US05): caixa «Comparar», ligada ao
+    formulário ``comparar-form`` da página (atributo form=, para não haver formulários dentro de formulários). -#}
+{% macro cartao_curso(c, explicacao=none, escolher=false, comparar=false) -%}
 <li class="curso"{% if c %} data-chave="{{ c.chave }}"{% endif %}>
   <p class="curso-area"><span class="curso-area-ponto" aria-hidden="true"></span><span data-campo="area">{{ c.area if c }}</span></p>
-  <h3 class="curso-nome" data-campo="curso">{{ c.curso if c }}</h3>
+  <h3 class="curso-nome"><a href="{{ url_for('catalogo.ficha', chave=c.chave) if c else '#' }}" data-campo="curso" data-campo-href="ficha">{{ c.curso if c }}</a></h3>
   <p class="curso-instituicao"><span data-campo="instituicao">{{ c.instituicao if c }}</span></p>
   <p class="curso-local">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M20 10c0 4.99-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 14.99 4 10a8 8 0 0 1 16 0" /><circle cx="12" cy="10" r="3" /></svg>
@@ -55,6 +57,9 @@
     <div><dt>{{ texts.LANDING_CARD_NOTA }}</dt><dd data-campo="ultimo_colocado" data-vazio="{{ texts.LANDING_CARD_NO_NOTA }}"{% if c and not c.ultimo_colocado %} class="sem-dados"{% endif %}>{{ (c.ultimo_colocado or texts.LANDING_CARD_NO_NOTA) if c }}</dd></div>
   </dl>
   <a class="curso-fonte" data-campo-href="fonte" href="{{ c.fonte if c else '#' }}" target="_blank" rel="noopener">{{ texts.LANDING_CARD_SOURCE }}</a>
+  {%- if comparar and c %}
+  <label class="curso-comparar"><input type="checkbox" name="c" value="{{ c.chave }}" form="comparar-form"> {{ texts.CATALOGO_COMPARAR_CAIXA }}</label>
+  {%- endif %}
   {%- if escolher and c %}
   <a class="curso-escolher" href="{{ url_for('percurso.confirmar', chave=c.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>
   {%- endif %}

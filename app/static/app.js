@@ -108,8 +108,11 @@
           el.textContent = String(valor);
         }
       });
-      var fonte = item.querySelector("[data-campo-href]");
-      if (fonte) fonte.href = curso.fonte;
+      // Ligações da ficha: «Ver na DGES» (fonte) e o nome do curso (ficha completa, US05).
+      item.querySelectorAll("[data-campo-href]").forEach(function (el) {
+        var destino = curso[el.getAttribute("data-campo-href")];
+        if (destino) el.href = destino;
+      });
     }
 
     function mostrar(dados) {

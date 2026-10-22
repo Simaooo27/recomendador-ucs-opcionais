@@ -78,8 +78,9 @@ class CourseSearchTests(AppTestCase):
         self.assertEqual(set(dados), {"termo", "total", "amostra", "cursos"})
         self.assertEqual(
             set(dados["cursos"][0]),
-            {"curso", "instituicao", "unidade", "localidade", "area", "vagas", "ultimo_colocado", "fonte", "chave"},
+            {"curso", "instituicao", "unidade", "localidade", "area", "vagas", "ultimo_colocado", "fonte", "chave", "ficha"},
         )
+        self.assertEqual(dados["cursos"][0]["ficha"], "/cursos/" + dados["cursos"][0]["chave"])   # US05
         self.assertTrue(dados["cursos"][0]["fonte"].startswith("https://www.dges.gov.pt/"))
 
     def test_termo_muito_longo_e_cortado(self):

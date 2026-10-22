@@ -100,6 +100,20 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US31/diagramas/bpmn.bpmn](US31/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 | [US31/diagramas/gerar.py](US31/diagramas/gerar.py) | Script que gera os três diagramas |
 
+### [US05 — Consultar e comparar cursos](US05/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US05/README.md](US05/README.md) | Resumo, como experimentar, código e testes |
+| [US05/requisitos.md](US05/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US05/use-case.md](US05/use-case.md) | Use case |
+| [US05/bpmn.md](US05/bpmn.md) | Processo BPMN |
+| [US05/prompt.md](US05/prompt.md) | Pedido feito à IA (incluindo as decisões a confirmar) |
+| [US05/diagramas/use-case.svg](US05/diagramas/use-case.svg) | Diagrama de use case |
+| [US05/diagramas/bpmn.svg](US05/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US05/diagramas/bpmn.bpmn](US05/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US05/diagramas/gerar.py](US05/diagramas/gerar.py) | Script que gera os três diagramas |
+
 ## Nova story
 
 Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [PROJETO.md](../PROJETO.md#1-estado-do-projeto).

@@ -62,8 +62,8 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │
 ├── catalogo/                         CATÁLOGO DE CURSOS (base da US04 e da US05)
 │   ├── repository.py                 lê os cursos de dados/catalogo-cursos-mvp.csv (a US04 troca por SQL)
-│   ├── services.py                   pesquisa sem acentos, amostra e totais
-│   └── routes.py                     /cursos/pesquisa (resultados em JSON para a pesquisa ao vivo)
+│   ├── services.py                   pesquisa sem acentos, amostra e totais; filtros, ficha e comparação (US05)
+│   └── routes.py                     /cursos/ (filtros), /cursos/<curso> (ficha), /cursos/comparar e /cursos/pesquisa (JSON)
 │
 ├── llm/                              LIGAÇÃO AO LLM (spike de 14/10; ver 05-spike-llm.md)
 │   ├── cliente.py                    a interface que o resto do código usa (ClienteLLM, Mensagem, erros)
@@ -98,7 +98,9 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
 │   ├── orientacao/conversa.html      a conversa com o assistente (US29) e os cursos sugeridos (US30)
 │   ├── percurso/                     confirmar a escolha do curso e a linha do tempo das decisões (US31)
-│   ├── catalogo/lista.html           página /cursos/: pesquisa no catálogo (US30; filtros e comparação na US05)
+│   ├── catalogo/lista.html           página /cursos/: pesquisa e filtros por área, instituição e localidade (US05)
+│   ├── catalogo/ficha.html           ficha completa de um curso, /cursos/<curso> (US05)
+│   ├── catalogo/comparar.html        comparação de 2 ou 3 cursos lado a lado, /cursos/comparar (US05)
 │   └── gestao/                       painel e lista de administradores
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR
@@ -232,6 +234,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 22/10 | Sprint Review do Sprint 2: US29, US30 e US31 aceites; até 05/11 os cursos são o centro e as opcionais passam para segundo plano | `PROJETO.md`, `docs/geral/product-backlog.xlsx`, `docs/US29/` a `docs/US31/` | PR do fecho do Sprint 2 |
 | 22/10 | As opcionais saem do site (decisão dos PO): textos, linha do tempo com 3 passos, política de privacidade provisória | `app/texts.py`, `app/percurso/__init__.py`, `tests/test_apresentacao.py` | PR #32 e #33 |
 | 22/10 | Sprint Planning do Sprint 3: US05 e US17; US06 e US07 para o backlog; sprints de uma semana até 05/11 | `docs/geral/product-backlog.xlsx`, `PROJETO.md` | PR do Sprint Planning do Sprint 3 |
+| 22/10 | US05: filtros no catálogo, ficha completa de cada curso e comparação de até 3 cursos | `app/catalogo/`, `app/templates/catalogo/`, `docs/US05/` | PR da US05 |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

@@ -26,6 +26,17 @@ class Curso:
     descricao: str
     saidas: str
     fonte: str                    # página da DGES com os dados de acesso
+    # Ficha completa (US05). Têm valores por omissão para quem cria um Curso à mão.
+    grau: str = ""
+    duracao_semestres: int | None = None
+    ects: int | None = None
+    area_cnaef: str = ""          # área de estudo oficial (CNAEF), ex.: «481 Ciências informáticas»
+    fonte_descricao: str = ""     # página da instituição de onde veio a descrição
+
+    @property
+    def lista_saidas(self) -> list[str]:
+        """As saídas profissionais, que o CSV separa com «;»."""
+        return [s.strip() for s in self.saidas.split(";") if s.strip()]
 
     @property
     def chave(self) -> str:
@@ -56,6 +67,11 @@ def _ler(caminho: str, modificado: float) -> tuple[Curso, ...]:
             descricao=l["descricao"].strip(),
             saidas=l["saidas_profissionais"].strip(),
             fonte=l["fonte_dados_acesso"].strip(),
+            grau=(l.get("grau") or "").strip(),
+            duracao_semestres=_inteiro(l.get("duracao_semestres", "")),
+            ects=_inteiro(l.get("ects", "")),
+            area_cnaef=(l.get("area_cnaef") or "").strip(),
+            fonte_descricao=(l.get("fonte_descricao") or "").strip(),
         )
         for l in linhas
         if l.get("curso", "").strip()

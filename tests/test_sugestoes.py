@@ -156,7 +156,7 @@ class PoucasSugestoesTests(SugestoesTestCase):
 
     def test_o_catalogo_sem_resultados(self):
         html = self.client.get("/cursos/?q=zzzzzz").get_data(as_text=True)
-        self.assertIn(texts.LANDING_NO_RESULTS.format(termo="zzzzzz"), html)
+        self.assertIn(texts.CATALOGO_VAZIO, html)   # US05: a lista do catálogo tem filtros e mensagem própria
 
 
 class VerSugestoesJaTests(SugestoesTestCase):

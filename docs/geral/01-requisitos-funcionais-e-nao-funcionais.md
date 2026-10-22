@@ -122,7 +122,7 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | US29 — Conversa de orientação com o LLM | RF36, RNF12 | Sprint 2 | nova (13/10; reescrita a 14/10, absorve a US32) |
 | US30 — Sugestão de 2 a 3 cursos no fim da conversa | RF37, RF38, RNF12, RN09, RN10 | Sprint 2 | nova (13/10; reescrita a 14/10) |
 | US31 — Escolher curso e linha do tempo do percurso | RF03, RF35, RF39, RN10 | Sprint 2 | nova (13/10; antecipada a 20/10) |
-| US05 — Consultar e comparar cursos | RF34 | Sprint 3 | US04 |
+| US05 — Consultar e comparar cursos | RF34 | Sprint 3 | — (desde 22/10: o catálogo é lido do CSV; a US04 passou para o backlog) |
 | US06 — Registar percurso | RF05 (UCs), RF08, RF09 | Sprint 4 | US05 |
 | US07 — Avaliar opcional concluída | RF10, RF13, RF15 (pseudo_id desde o início) | Sprint 4 | US06 |
 | US04 — Importar catálogo de instituições e cursos | RF05 (instituições e cursos) | Backlog | US03 |

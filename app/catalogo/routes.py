@@ -1,10 +1,12 @@
-"""Rotas do catálogo: a página /cursos/ e a pesquisa em JSON usada pela página de apresentação.
+"""Rotas do catálogo (US05): a lista com filtros (/cursos/), a ficha de cada curso, a comparação
+de até 3 cursos e a pesquisa em JSON usada pela página de apresentação.
 
-Os filtros, a ficha de cada curso e a comparação são a US05.
+Tudo funciona sem sessão iniciada e sem JavaScript: os filtros e os cursos a comparar vão no
+endereço (?area=…&c=…). As regras estão em ``services.py``.
 """
 from __future__ import annotations
 
-from flask import current_app, jsonify, render_template, request
+from flask import abort, current_app, jsonify, render_template, request, url_for
 
 from . import bp, services
 
@@ -16,8 +18,36 @@ def lista():
     É para aqui que leva «Procurar no catálogo», quando a conversa de orientação acaba com
     menos de 2 cursos sugeridos (US30). A página de apresentação (/) só a vê quem não tem sessão.
     """
-    termo = request.args.get("q", "")[:80]
-    return render_template("catalogo/lista.html", termo=termo, resultado=services.pesquisar(current_app.config, termo))
+    filtros = services.ler_filtros(request.args, current_app.config)
+    return render_template(
+        "catalogo/lista.html",
+        filtros=filtros,
+        opcoes=services.opcoes(current_app.config),
+        cursos=services.filtrar(current_app.config, filtros),
+        total=len(services.cursos(current_app.config)),
+        max_comparar=services.MAX_COMPARAR,
+    )
+
+
+@bp.get("/comparar")
+def comparar():
+    """Comparação lado a lado de 2 ou 3 cursos (/cursos/comparar?c=…&c=…)."""
+    comparacao = services.comparar(current_app.config, request.args.getlist("c")[:20])
+    return render_template(
+        "catalogo/comparar.html",
+        comparacao=comparacao,
+        minimo=services.MIN_COMPARAR,
+        maximo=services.MAX_COMPARAR,
+    ), (200 if comparacao.suficiente else 400)
+
+
+@bp.get("/<chave>")
+def ficha(chave: str):
+    """Ficha completa de um curso. Um identificador que não existe dá «página não encontrada»."""
+    curso = services.por_chave(current_app.config, chave)
+    if curso is None:
+        abort(404)
+    return render_template("catalogo/ficha.html", curso=curso)
 
 
 @bp.get("/pesquisa")
@@ -40,6 +70,7 @@ def pesquisa():
                 "ultimo_colocado": c.ultimo_colocado,
                 "fonte": c.fonte,
                 "chave": c.chave,
+                "ficha": url_for("catalogo.ficha", chave=c.chave),
             }
             for c in resultado.cursos
         ],

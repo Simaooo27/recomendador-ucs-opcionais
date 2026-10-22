@@ -225,7 +225,8 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 20/10 | Servidor Ollama da faculdade: ligado, testado e retirado (fica o Gemini) | `docs/geral/05-spike-llm.md`, secção 7 | PR #25 e #26 |
 | 20/10 | Sprint Planning do Sprint 2: US31 antecipada; ponto 14 decidido | Excel, `PROJETO.md`, requisitos | PR #28 |
 | 20/10 | US31: escolher curso e linha do tempo das decisões; `app/percurso.py` passou a pacote | `app/percurso/`, `app/templates/percurso/`, `app/schema.sql`, `docs/US31/` | PR da US31 |
-| 22/10 | Abrir o OptaBem no telemóvel ou noutro computador (túnel do Cloudflare, sem modo debug) | `docs/geral/06-aceder-noutro-dispositivo.md` | PR deste guia |
+| 22/10 | Abrir o OptaBem no telemóvel ou noutro computador (túnel do Cloudflare, sem modo debug) | `docs/geral/06-aceder-noutro-dispositivo.md` | PR #30 |
+| 22/10 | Sprint Review do Sprint 2: US29, US30 e US31 aceites; até 05/11 os cursos são o centro e as opcionais passam para segundo plano | `PROJETO.md`, `docs/geral/product-backlog.xlsx`, `docs/US29/` a `docs/US31/` | PR do fecho do Sprint 2 |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

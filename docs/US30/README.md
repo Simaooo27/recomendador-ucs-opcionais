@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita (por rever) |
+| Estado | Feita (aceite na Sprint Review do Sprint 2, 22/10) |
 | Sprint | Sprint 2 |
 | Story points | 3 |
 | Épico | E11 — Orientação de curso |

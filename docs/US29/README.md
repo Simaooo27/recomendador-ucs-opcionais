@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita (por rever) |
+| Estado | Feita (aceite na Sprint Review do Sprint 2, 22/10) |
 | Sprint | Sprint 2 (feita antes do início do sprint, por decisão do PO de 14/10) |
 | Story points | 5 |
 | Épico | E11 — Orientação de curso |

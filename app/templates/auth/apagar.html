@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "macros/password.html" as password with context %}
+{% set page_title = texts.APAGAR_TITLE %}
+
+{#- Apagar a minha conta (US17): explica o que se perde e pede a palavra-passe como confirmação. -#}
+{% block content %}
+<h1>{{ texts.APAGAR_TITLE }}</h1>
+
+{% if error %}
+  <div class="alert alert-error" role="alert" id="apagar-erro">{{ error }}</div>
+{% endif %}
+
+<p class="lead">{{ texts.APAGAR_INTRO }}</p>
+<ul class="apagar-lista">
+  {% for item in texts.APAGAR_ITENS %}<li>{{ item }}</li>{% endfor %}
+</ul>
+
+<form method="post" action="{{ url_for('auth.delete_account_submit') }}" class="apagar-form" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <div class="field">
+    <label for="password">{{ texts.APAGAR_PASSWORD_LABEL }}</label>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="current-password" required
+             {% if error %}aria-invalid="true" aria-describedby="apagar-erro"{% endif %}>
+      {{ password.toggle("password") }}
+    </div>
+  </div>
+  <div class="apagar-acoes">
+    <button type="submit" class="botao-perigo">{{ texts.APAGAR_BOTAO }}</button>
+    <a href="{{ url_for('main.home') }}">{{ texts.APAGAR_CANCELAR }}</a>
+  </div>
+</form>
+{% endblock %}

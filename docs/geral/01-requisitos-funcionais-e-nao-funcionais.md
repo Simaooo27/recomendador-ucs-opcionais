@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.6 · rascunho para validação do Product Owner · 2026-10-20.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.7 · rascunho para validação do Product Owner · 2026-10-22.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
@@ -43,7 +43,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 
 - **RF15** As avaliações devem ser guardadas associadas a um identificador pseudonimizado, separado dos dados de identificação do aluno.
 - **RF16** O sistema nunca deve mostrar avaliações individuais associadas a um autor.
-- **RF17** O aluno deve poder exportar e eliminar todos os seus dados.
+- **RF17** O aluno deve poder exportar e eliminar todos os seus dados. *(22/10: nesta release só o apagamento, com a US17; a exportação fica no backlog.)*
 - **RF18** O administrador deve poder ocultar comentários inapropriados ou que identifiquem pessoas.
 
 ### Módulo F — Motor de recomendação
@@ -135,7 +135,7 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | US14 — Explicação da recomendação | RF29 | Backlog | US13 |
 | US15 — Avaliação offline do motor | RF32 | Backlog | US21 |
 | US16 — Períodos de avaliação | RF14 | Backlog | US24 |
-| US17 — Exportar e apagar dados | RF17 | Backlog | US10 |
+| US17 — Apagar a minha conta (reduzida a 22/10; a exportação fica no backlog) | RF17 (apagamento) | Sprint 3 | — |
 | US18 — Comentário livre | RF12 | Backlog | US08 |
 | US19 — Moderar comentários | RF18 | Backlog | US25 |
 | US20 — Filtrar por semestre e ECTS | RF25 | Backlog | US16 |
@@ -155,7 +155,7 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 - **Sem user story:** RF06 (criar, editar e desativar UCs individualmente). O RF03 passou a ter a US31 e o RF04 a US03.
 - **Parte sem user story:** a recuperação de palavra-passe, incluída no RF02.
 - **Sem requisito:** as user stories US26 e US28 (antigas US27 e US28) não têm RF. Acrescentar o requisito ou retirar a story.
-- **Privacidade das avaliações:** com a US17 (exportar e apagar dados) no backlog, o RNF01 fica por cumprir nesta release. Ver o ponto 11 da secção 5.
+- **Privacidade:** desde 22/10, a US17 permite apagar a conta e todos os dados (direito ao apagamento). A exportação (direito de acesso em formato portável) continua no backlog. Ver o ponto 11 da secção 5.
 
 ## 5. Dependências e pontos em aberto
 
@@ -173,7 +173,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
 | 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Aceitar email pessoal; a restrição a um domínio fica como opção (`ALLOWED_EMAIL_DOMAINS`, ver [US01/requisitos.md](../US01/requisitos.md)). | **Alterado:** RF01 (versão 1.2). |
 | 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Planear a 10 SP por sprint. | **Alterado (14/10):** Sprints 2 a 4 com 8, 10 e 10 SP; US04, US09 e US11 no backlog. Consequência: sem recomendação de opcionais nesta release, a não ser que haja um Sprint 5. |
-| 11 | A exportação e o apagamento de dados (US17, RF17) ficam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | Por decidir |
+| 11 | A exportação e o apagamento de dados (US17, RF17) ficam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | **Decidido (22/10):** a US17 sobe para o Sprint 3 só com o apagamento da conta (pede a palavra-passe e apaga conta, conversa, decisões e pedidos ao LLM). A exportação fica no backlog. Ver [US17/requisitos.md](../US17/requisitos.md). |
 | 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições de `dados/catalogo-cursos-mvp.csv` antes da US30; a Gestão da Universidade de Aveiro ainda não tem descrição. | Por decidir |
 | 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar: talvez como evolução da US29/US30, reutilizando o adaptador `ClienteLLM` e as validações previstas em 03-arquitetura-e-padroes.md. | **Alterado (14/10):** o LLM conduz a conversa; US32 fundida na US29; RF36 a RF38 e RNF12 reescritos. Custo e privacidade avaliados no [spike](05-spike-llm.md). |
 | 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18, e os outros usam a consulta de cursos (US05); (c) plano pago (cerca de 1,5 cêntimos por conversa) ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | **Decidido (20/10):** opção (a). O OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa; fica escrito no relatório. O servidor Ollama da faculdade, que evitaria estes termos, foi testado e posto de parte (spike, secção 7). |
@@ -190,5 +190,6 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
 | 1.5 | 2026-10-20 | Sprint Planning do Sprint 2: ponto 14 decidido (protótipo da equipa, opção a); US31 antecipada para o Sprint 2. |
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
+| 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 
 O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 14/10). O ficheiro Word continua na versão 1.0.

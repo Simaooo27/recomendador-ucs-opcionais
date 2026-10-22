@@ -1,6 +1,6 @@
 # Abrir o OptaBem noutro dispositivo (telemóvel ou outro computador)
 
-Versão 1.1 · 22/10/2026 · Decisão do PO (1.1: definições do `.env` para o túnel, secção 4.1)
+Versão 1.2 · 22/10/2026 · Decisão do PO (1.1: definições do `.env` para o túnel, secção 4.1; 1.2: o exemplo do `.env` deixa de ter comentários na mesma linha)
 
 O OptaBem corre no computador de um elemento da equipa. Este guia explica como o abrir noutro computador ou no telemóvel, por exemplo para a demonstração ou para o outro elemento da equipa experimentar a conversa com o Gemini, **sem publicar o site**.
 
@@ -53,13 +53,21 @@ A pasta `ferramentas/` não vai para o GitHub (ver o [Guia do código](04-guia-d
 
 ### 4.1 Definições do `.env` para o túnel
 
-Antes de arrancar, acrescentar ao `.env` do computador que vai abrir o túnel:
+Antes de arrancar, acrescentar ao `.env` do computador que vai abrir o túnel, **exatamente assim**:
 
 ```ini
-SESSION_COOKIE_SECURE=true          # o endereço do túnel é HTTPS; com isto, a aplicação recusa arrancar em modo debug
-SHOW_DEV_CONFIRMATION_LINK=false    # a ligação de confirmação deixa de aparecer na página (fica só no terminal)
-ORIENTACAO_MAX_PEDIDOS_DIA=40       # cada conta faz no máximo 40 pedidos ao Gemini por dia (0 = sem limite)
+SESSION_COOKIE_SECURE=true
+SHOW_DEV_CONFIRMATION_LINK=false
+ORIENTACAO_MAX_PEDIDOS_DIA=40
 ```
+
+> **Sem comentários na mesma linha.** O `arrancar.ps1` lê o `.env` linha a linha e fica com tudo o que está depois do `=`. Um comentário à frente do valor (`true  # …`) passa a fazer parte do valor: o `SESSION_COOKIE_SECURE` deixava de valer como verdadeiro, sem dar erro, e o limite de pedidos podia impedir a aplicação de arrancar. Um comentário numa linha própria, a começar por `#`, não tem problema.
+
+| Linha | O que faz |
+|---|---|
+| `SESSION_COOKIE_SECURE=true` | O endereço do túnel é HTTPS, por isso o cookie de sessão só viaja em HTTPS. Com isto, a aplicação recusa arrancar em modo debug. |
+| `SHOW_DEV_CONFIRMATION_LINK=false` | A ligação de confirmação deixa de aparecer na página «Confirme o seu email» (fica só no terminal). |
+| `ORIENTACAO_MAX_PEDIDOS_DIA=40` | Cada conta faz no máximo 40 pedidos ao Gemini por dia (0 = sem limite). |
 
 - Com `SHOW_DEV_CONFIRMATION_LINK=false` e sem SMTP configurado, quem cria conta pelo túnel não recebe email: quem tem a aplicação a correr copia a ligação do terminal e envia-lha. Para a demonstração, é mais simples deixar `true` e criar as contas antes.
 - Se a aplicação parar com «Modo debug ligado com SESSION_COOKIE_SECURE=true», está a ser arrancada com `--debug`: usar o `arrancar-tunel.ps1` (secção 3).

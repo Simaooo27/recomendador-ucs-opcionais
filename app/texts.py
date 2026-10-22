@@ -17,19 +17,19 @@ Os textos estão agrupados pela página onde aparecem, pela ordem em que surgem 
 # ---------------------------------------------------------------------------
 
 # Nome da aplicação: barra do topo e separador do navegador.
-APP_NAME = "Recomendador de UCs opcionais"
+APP_NAME = "OptaBem: escolher curso"
 
 # Marca: nome curto na barra do topo e no painel das páginas de entrada.
 BRAND_NAME = "OptaBem"
 # Frase grande e frase de apoio no painel com o percurso (criar conta, iniciar sessão, confirmar email).
-BRAND_TAGLINE = "Escolha o curso e as opcionais com a experiência de quem já lá esteve."
+BRAND_TAGLINE = "Escolha o curso com ajuda, sem decidir às cegas."
 BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opinião de outros alunos."
 
 # ---------------------------------------------------------------------------
 # Página de apresentação (/), para quem ainda não tem sessão iniciada
 # ---------------------------------------------------------------------------
 
-LANDING_TITLE = "Escolher curso e opcionais"
+LANDING_TITLE = "Escolher curso"
 LANDING_NAV_LOGIN = "Iniciar sessão"
 LANDING_NAV_REGISTER = "Criar conta"
 LANDING_CTA_PRIMARY = "Criar conta"
@@ -97,15 +97,15 @@ CATALOGO_VOLTAR = "Voltar à conversa de orientação"
 LANDING_HOW_TITLE = "Como funciona"
 # Os três passos, pela ordem em que acontecem.
 LANDING_STEPS = [
-    {"titulo": "Responda a um questionário curto", "texto": "Interesses, tipo de trabalho que imagina e onde quer estudar. Demora menos de dois minutos."},
+    {"titulo": "Converse com o assistente", "texto": "Algumas perguntas sobre os seus interesses, o tipo de trabalho que imagina e onde quer estudar."},
     {"titulo": "Compare os cursos sugeridos", "texto": "Cursos de várias instituições, lado a lado, com vagas, nota do último colocado e saídas profissionais, e o motivo de cada sugestão."},
-    {"titulo": "Escolha e registe o seu percurso", "texto": "A decisão fica guardada. Mais tarde, as opcionais são sugeridas com base em quem fez escolhas parecidas."},
+    {"titulo": "Escolha e registe o seu percurso", "texto": "A decisão fica guardada na linha do tempo do seu percurso. Se mudar de ideias, pode escolher outro curso."},
 ]
 
 LANDING_FOR_TITLE = "Para quem:"
 LANDING_FOR = [
     {"titulo": "Ainda não escolheu o curso", "texto": "Explore cursos de várias instituições e receba sugestões a partir dos seus interesses."},
-    {"titulo": "Já é aluno e vai escolher opcionais", "texto": "Veja como outros alunos avaliaram cada opcional em interesse, carga de trabalho e dificuldade, sempre de forma anónima."},
+    {"titulo": "Já escolheu, mas tem dúvidas", "texto": "Volte a conversar com o assistente ou procure no catálogo. Se escolher outro curso, a decisão anterior fica na linha do tempo."},
 ]
 
 LANDING_FOOTER = "Projeto académico de Metodologias Ágeis (Scrum)."
@@ -202,7 +202,6 @@ HOME_PATH_STEPS = [
     {"titulo": "Conta criada", "texto": "O seu email está confirmado."},
     {"titulo": "Conversa de orientação", "texto": "Responda a algumas perguntas sobre os seus interesses para receber sugestões de curso."},
     {"titulo": "Escolher curso", "texto": "Compare os cursos sugeridos e registe a sua escolha."},
-    {"titulo": "Escolher opcionais", "texto": "Receba sugestões de opcionais com base em quem fez escolhas parecidas."},
 ]
 HOME_STEP_DONE = "Concluído"
 HOME_STEP_CURRENT = "Próximo passo"
@@ -399,10 +398,10 @@ PRIVACY_TITLE = "Política de privacidade"
 PRIVACY_VERSION = "Versão {versao}"
 # Texto provisório: a equipa substitui pelo texto final da política (RNF01).
 PRIVACY_BODY = (
-    "Texto provisório. A política final descreve que dados são recolhidos (email, percurso e "
-    "avaliações), com que finalidade (recomendar opcionais), como são protegidos (avaliações "
-    "pseudonimizadas e nunca mostradas individualmente) e como exercer os direitos de acesso, "
-    "exportação e apagamento."
+    "Texto provisório. A política final descreve que dados são recolhidos (email, conversa de "
+    "orientação e cursos escolhidos), com que finalidade (sugerir cursos), como são protegidos "
+    "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
+    "curso) e como exercer os direitos de acesso, exportação e apagamento."
 )
 
 # ---------------------------------------------------------------------------

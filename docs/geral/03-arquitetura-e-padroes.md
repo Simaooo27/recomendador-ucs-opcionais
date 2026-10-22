@@ -170,7 +170,7 @@ Cada filtro recebe a lista de candidatos e devolve-a reduzida: área, instituiç
 
 O utilizador está num de três estados (sem curso, com curso, a escolher opcionais; ver o diagrama em [00-visao-do-produto.md](00-visao-do-produto.md#4-o-percurso-como-sequência-de-decisões)). Cada estado define o que a página inicial mostra e que transições são permitidas. Na prática, começa por uma função que decide a página; só vale a pena criar classes por estado se as regras crescerem.
 
-**Como está feito (US31, 20/10):** o estado não é guardado numa coluna; é calculado. `estado_do_utilizador` em `app/percurso/__init__.py` olha para o que já existe: uma decisão de curso (tabela `decisoes`) → «com curso»; uma conversa terminada com 2 ou mais cursos → «a escolher curso»; senão → «sem curso». Assim não há um estado guardado que possa ficar desatualizado. As decisões ficam no mesmo pacote, com as camadas de sempre (`routes.py` → `services.py` → `repository.py`).
+**Como está feito (US31, 20/10):** o estado não é guardado numa coluna; é calculado. `estado_do_utilizador` em `app/percurso/__init__.py` olha para o que já existe: uma decisão de curso (tabela `decisoes`) → «com curso»; uma conversa terminada com 2 ou mais cursos → «a escolher curso»; senão → «sem curso». Assim não há um estado guardado que possa ficar desatualizado. Desde 22/10 (decisão dos PO), o estado «a escolher opcionais» não existe nesta release: «com curso» é o fim do percurso e todos os passos da linha do tempo aparecem como feitos. As decisões ficam no mesmo pacote, com as camadas de sempre (`routes.py` → `services.py` → `repository.py`).
 
 ## 5. Estrutura prevista
 

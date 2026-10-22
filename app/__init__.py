@@ -1,4 +1,4 @@
-"""Recomendador de UCs opcionais: aplicação web (Flask)."""
+"""OptaBem: aplicação web (Flask) que ajuda a escolher o curso."""
 from __future__ import annotations
 
 from pathlib import Path

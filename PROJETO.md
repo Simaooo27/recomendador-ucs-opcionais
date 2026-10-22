@@ -6,7 +6,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 2 concluído a 22/10 (13 SP: US29, US30, US31) · Sprint 1 concluído (10 SP: US01, US02, US03) · Sprint 3 por planear |
+| **Sprint atual** | Sprint 3, de 22/10 a 29/10 (US05 e US17, 8 SP) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Entrega a 05/11 |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo |
 | **Testes automáticos** | 275, todos a passar |
 
@@ -31,14 +31,16 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | Sprint | Sprint Goal |
 |---|---|
 | Sprint 2 (13 SP, concluído a 22/10) | Uma pessoa indecisa conversa com o assistente (LLM), recebe 2 a 3 cursos do catálogo com explicação e escolhe um, ficando a decisão registada no percurso. |
-| Sprint 3 (5 SP, por completar) | Uma pessoa indecisa consulta e compara cursos de várias instituições. |
-| Sprint 4 (10 SP) | Quem já é aluno regista as UCs que concluiu e avalia as opcionais que fez, com as avaliações pseudonimizadas desde o início. |
+| Sprint 3 (8 SP, 22/10 a 29/10) | Uma pessoa indecisa filtra, consulta e compara cursos de várias instituições, e pode exportar ou apagar os seus dados. |
+| Sprint 4 (29/10 a 05/11) | O percurso continua depois da escolha do curso: story nova a decidir com o docente; US04 se houver folga. O código fecha por volta de 03/11. |
 
 **Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
 
 **Sprint Planning do Sprint 2 (20/10/2026, decisão do PO):** a US29 e a US30 foram feitas antes de o sprint começar, por isso entra a US31 (antecipada do Sprint 3). O ponto 14 dos requisitos fica decidido: o OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa. O servidor Ollama da faculdade foi testado e posto de parte ([spike](docs/geral/05-spike-llm.md), secção 7).
 
 **Sprint Review do Sprint 2 (22/10/2026, decisão dos Product Owners):** 13 de 13 SP. O percurso completo (conversa com o Gemini real, sugestões, escolha do curso e linha do tempo) foi testado pelos dois Product Owners, também noutro computador através de um túnel ([abrir noutro dispositivo](docs/geral/06-aceder-noutro-dispositivo.md)), e as três stories foram aceites. Os Product Owners decidiram também que, até à entrega de 05/11, o centro do produto são os cursos e as opcionais passam para segundo plano: nesta release o percurso termina na escolha do curso. O plano dos Sprints 3 e 4 vai ser revisto no próximo Sprint Planning.
+
+**Sprint Planning do Sprint 3 (22/10/2026, decisão do PO):** sprints de uma semana até à entrega (Sprint 3 de 22/10 a 29/10, Sprint 4 de 29/10 a 05/11). O Sprint 3 tem a US05 e a US17, que sobe do backlog e passa a Must porque o OptaBem já guarda conversas e decisões de pessoas. A US06 e a US07 (opcionais) saem do Sprint 4 para o backlog. A story do Sprint 4 fica por decidir com o docente (preparar o percurso depois da escolha do curso, ou perguntas e respostas por curso). A revisão de 22/10 (segurança do túnel, menu do aluno e textos) fica adiada; até lá, o túnel é só para a equipa.
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
@@ -49,8 +51,9 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita | [docs/US30/](docs/US30/) |
 | US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
 | US05 | Consultar e comparar cursos | Sprint 3 | Por fazer (a pesquisa já foi feita a 14/10, e a página `/cursos/` na US30; faltam filtros, ficha e comparação) | `app/catalogo/` |
-| US06 | Registar percurso | Sprint 4 | Por fazer | — |
-| US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Sprint 4 | Por fazer | — |
+| US17 | Exportar e apagar os meus dados (sobe do backlog a 22/10) | Sprint 3 | Por fazer | — |
+| US06 | Registar percurso | Backlog (opcionais, 22/10) | Por fazer | — |
+| US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Backlog (opcionais, 22/10) | Por fazer | — |
 | US04 | Importar catálogo de instituições e cursos | Backlog | Por fazer | — |
 | US09 | Avaliações pseudonimizadas | Backlog | Por fazer | — |
 | US11 | Recomendações de popularidade | Backlog | Por fazer | — |
@@ -61,7 +64,6 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US14 | Explicação da recomendação | Backlog | Por fazer | — |
 | US15 | Avaliação offline do motor | Backlog | Por fazer | — |
 | US16 | Períodos de avaliação | Backlog | Por fazer | — |
-| US17 | Exportar e apagar dados | Backlog | Por fazer | — |
 | US18 | Comentário livre | Backlog | Por fazer | — |
 | US19 | Moderar comentários | Backlog | Por fazer | — |
 | US20 | Filtrar por semestre e ECTS | Backlog | Por fazer | — |

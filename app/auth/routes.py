@@ -1,7 +1,7 @@
 """Rotas HTTP do registo (US01) e do início e fim de sessão (US02)."""
 from __future__ import annotations
 
-from flask import current_app, g, redirect, render_template, request, session, url_for
+from flask import current_app, flash, g, redirect, render_template, request, session, url_for
 
 from .. import texts
 from ..db import get_db
@@ -139,3 +139,28 @@ def login_submit():
 def logout():
     sessions.logout_user()
     return redirect(url_for("auth.login_form"))
+
+
+# ---------------------------------------------------------------------------
+# Apagar a minha conta (US17)
+# ---------------------------------------------------------------------------
+
+def _render_apagar(error: str | None = None, status: int = 200):
+    return render_template("auth/apagar.html", error=error), status
+
+
+@bp.get("/conta/apagar")
+@sessions.login_required
+def delete_account_form():
+    return _render_apagar()
+
+
+@bp.post("/conta/apagar")
+@sessions.login_required
+def delete_account_submit():
+    """Apaga a conta depois de confirmada com a palavra-passe; termina a sessão."""
+    if not services.delete_account(get_db(), g.user["id"], request.form.get("password", "")):
+        return _render_apagar(texts.APAGAR_ERRO_PASSWORD, 422)
+    sessions.logout_user()
+    flash(texts.APAGAR_FEITO, "ok")
+    return redirect(url_for("main.index"))

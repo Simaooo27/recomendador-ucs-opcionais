@@ -72,9 +72,14 @@
   </header>
   <main class="conteudo{% if g.admin %} wide{% endif %}">
 {% endif %}
-    {% for category, message in get_flashed_messages(with_categories=true) %}
+    {#- Na apresentação, os avisos ficam numa coluna com margens (ex.: «conta apagada», US17). -#}
+    {% with avisos = get_flashed_messages(with_categories=true) %}
+    {% if avisos %}{% if layout == "apresentacao" %}<div class="avisos">{% endif %}
+    {% for category, message in avisos %}
       <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
     {% endfor %}
+    {% if layout == "apresentacao" %}</div>{% endif %}{% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
 {% if layout == "entrada" %}
       </div>

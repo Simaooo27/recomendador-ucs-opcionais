@@ -235,6 +235,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 22/10 | As opcionais saem do site (decisão dos PO): textos, linha do tempo com 3 passos, política de privacidade provisória | `app/texts.py`, `app/percurso/__init__.py`, `tests/test_apresentacao.py` | PR #32 e #33 |
 | 22/10 | Sprint Planning do Sprint 3: US05 e US17; US06 e US07 para o backlog; sprints de uma semana até 05/11 | `docs/geral/product-backlog.xlsx`, `PROJETO.md` | PR do Sprint Planning do Sprint 3 |
 | 22/10 | US05: filtros no catálogo, ficha completa de cada curso e comparação de até 3 cursos | `app/catalogo/`, `app/templates/catalogo/`, `docs/US05/` | PR da US05 |
+| 22/10 | US17: apagar a minha conta e todos os dados (confirmação pela palavra-passe); guia do túnel sem comentários no `.env` | `app/auth/`, `app/templates/auth/apagar.html`, `home.html`, `docs/US17/`, `06-aceder-noutro-dispositivo.md` | PR da US17 |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

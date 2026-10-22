@@ -252,6 +252,24 @@ HOME_TITLE = "Início"
 HOME_GREETING = "Olá!"
 # Por baixo da saudação, para a pessoa saber com que conta entrou. {email} é preenchido pela aplicação.
 HOME_SESSAO = "Sessão iniciada como {email}."
+# Fundo da página inicial: ligação para apagar a conta (US17).
+HOME_CONTA_TITULO = "A sua conta"
+HOME_CONTA_APAGAR = "Apagar a minha conta e todos os meus dados"
+
+# Página «Apagar a minha conta» (/auth/conta/apagar, US17).
+APAGAR_TITLE = "Apagar a minha conta"
+APAGAR_INTRO = "Esta ação não pode ser desfeita. São apagados para sempre:"
+APAGAR_ITENS = [
+    "a sua conta e o seu email;",
+    "a conversa de orientação, se ainda existir;",
+    "todas as decisões do seu percurso (cursos escolhidos);",
+    "o registo de pedidos ao assistente.",
+]
+APAGAR_PASSWORD_LABEL = "Para confirmar, escreva a sua palavra-passe"
+APAGAR_BOTAO = "Apagar a minha conta"
+APAGAR_CANCELAR = "Cancelar e voltar ao início"
+APAGAR_ERRO_PASSWORD = "A palavra-passe não está certa. A conta não foi apagada."
+APAGAR_FEITO = "A sua conta e todos os seus dados foram apagados."
 HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."
 
 # Linha do tempo «O seu percurso» (app/percurso/__init__.py decide em que passo está cada pessoa).
@@ -466,7 +484,8 @@ PRIVACY_BODY = (
     "Texto provisório. A política final descreve que dados são recolhidos (email, conversa de "
     "orientação e cursos escolhidos), com que finalidade (sugerir cursos), como são protegidos "
     "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
-    "curso) e como exercer os direitos de acesso, exportação e apagamento."
+    "curso) e como exercer os direitos de acesso e de apagamento: cada aluno pode apagar a conta e "
+    "todos os seus dados na página inicial («Apagar a minha conta»)."
 )
 
 # ---------------------------------------------------------------------------

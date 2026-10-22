@@ -68,3 +68,10 @@ def count_by_status(db: sqlite3.Connection) -> tuple[int, int]:
 def last_created_at(db: sqlite3.Connection) -> str | None:
     """Data do registo mais recente (UTC, ISO 8601), ou ``None`` se não houver contas."""
     return db.execute("SELECT MAX(created_at) AS ultimo FROM users").fetchone()["ultimo"]
+
+
+def delete_user(db: sqlite3.Connection, user_id: int) -> None:
+    """Apaga a conta (US17). A conversa, as decisões e os pedidos ao LLM saem com ela
+    (``ON DELETE CASCADE`` em app/schema.sql; a ligação liga ``PRAGMA foreign_keys``)."""
+    db.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    db.commit()

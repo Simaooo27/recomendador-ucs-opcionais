@@ -147,3 +147,15 @@ def authenticate(db: sqlite3.Connection, email: str, password: str) -> LoginResu
     if not user["is_active"]:
         return LoginResult(LoginOutcome.INACTIVE)
     return LoginResult(LoginOutcome.SUCCESS, user_id=int(user["id"]))
+
+
+def delete_account(db: sqlite3.Connection, user_id: int, password: str) -> bool:
+    """Apaga a conta do aluno e todos os dados ligados a ela (US17).
+
+    Pede a palavra-passe como confirmação: devolve False (e não apaga nada) se estiver errada.
+    """
+    user = repository.get_by_id(db, user_id)
+    if user is None or not password or not check_password_hash(user["password_hash"], password):
+        return False
+    repository.delete_user(db, user_id)
+    return True

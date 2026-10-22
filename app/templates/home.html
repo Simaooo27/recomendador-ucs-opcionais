@@ -26,4 +26,10 @@
     {% endfor %}
   </ol>
 </section>
+
+{#- US17: apagar a conta e todos os dados (direito ao apagamento). -#}
+<section class="minha-conta" aria-labelledby="minha-conta">
+  <h2 id="minha-conta">{{ texts.HOME_CONTA_TITULO }}</h2>
+  <p><a class="ligacao-perigo" href="{{ url_for('auth.delete_account_form') }}">{{ texts.HOME_CONTA_APAGAR }}</a></p>
+</section>
 {% endblock %}

@@ -27,7 +27,7 @@ A pasta do projeto (`222`) é o repositório Git: o que está nela é o que est�
 | `.venv/` | Python e bibliotecas instalados no teu computador. | Não (cada um cria o seu) |
 | `.env` | Configuração e chave secreta (`SECRET_KEY`). | **Nunca** (o repositório é público) |
 | `instance/` | Base de dados com as contas de teste. | Não (dados pessoais) |
-| `ferramentas/` | Atalhos de Windows: `configurar.bat`, `arrancar.bat`, `admin.bat`. | Não |
+| `ferramentas/` | Atalhos de Windows: `configurar.bat`, `arrancar.bat`, `admin.bat` (e, se criado, `arrancar-tunel.ps1`: ver [abrir noutro dispositivo](06-aceder-noutro-dispositivo.md)). | Não |
 | `.git/` | Histórico do Git. | — |
 
 ## 2. Mapa das pastas e ficheiros
@@ -225,6 +225,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 20/10 | Servidor Ollama da faculdade: ligado, testado e retirado (fica o Gemini) | `docs/geral/05-spike-llm.md`, secção 7 | PR #25 e #26 |
 | 20/10 | Sprint Planning do Sprint 2: US31 antecipada; ponto 14 decidido | Excel, `PROJETO.md`, requisitos | PR #28 |
 | 20/10 | US31: escolher curso e linha do tempo das decisões; `app/percurso.py` passou a pacote | `app/percurso/`, `app/templates/percurso/`, `app/schema.sql`, `docs/US31/` | PR da US31 |
+| 22/10 | Abrir o OptaBem no telemóvel ou noutro computador (túnel do Cloudflare, sem modo debug) | `docs/geral/06-aceder-noutro-dispositivo.md` | PR deste guia |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 
@@ -235,5 +236,5 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
    .venv\Scripts\python.exe -m unittest discover -s tests -t .
    ```
    No fim tem de aparecer `OK`. Se aparecer `FAILED`, o nome do teste diz o que deixou de funcionar.
-2. **A aplicação:** `.\ferramentas\arrancar.bat` e abrir http://127.0.0.1:5000. Alunos e administradores entram na mesma página: com o email (aluno) ou com o nome de utilizador (administrador).
+2. **A aplicação:** `.\ferramentas\arrancar.bat` e abrir http://127.0.0.1:5000. Alunos e administradores entram na mesma página: com o email (aluno) ou com o nome de utilizador (administrador). Para a abrir no telemóvel ou noutro computador, ver [abrir noutro dispositivo](06-aceder-noutro-dispositivo.md) (nunca com o modo debug).
 3. **Os documentos:** os requisitos de cada story têm, na secção 5, a tabela critério de aceitação → teste que o verifica.

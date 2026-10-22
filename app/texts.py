@@ -30,10 +30,13 @@ BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opiniã
 # ---------------------------------------------------------------------------
 
 LANDING_TITLE = "Escolher curso"
-LANDING_NAV_LOGIN = "Iniciar sessão"
+# Barra do topo da apresentação: fica presa ao topo ao percorrer a página, por isso é o único
+# sítio com «Entrar» e «Criar conta» (decisão do PO de 22/10: antes havia 2 e 3 de cada).
+LANDING_NAV_CURSOS = "Cursos"
+LANDING_NAV_COMO = "Como funciona"
+LANDING_NAV_PARA_QUEM = "Para quem"
+LANDING_NAV_LOGIN = "Entrar"
 LANDING_NAV_REGISTER = "Criar conta"
-LANDING_CTA_PRIMARY = "Criar conta"
-LANDING_CTA_SECONDARY = "Já tenho conta"
 
 # Pesquisa de cursos (dados reais do catálogo da DGES, dados/catalogo-cursos-mvp.csv).
 LANDING_SEARCH_NOTE = "comece por aqui"   # escrito à mão por cima da caixa de pesquisa

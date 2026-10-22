@@ -8,10 +8,6 @@
   <div class="hero-texto">
     <h1 class="hero-titulo">{{ texts.BRAND_TAGLINE }}</h1>
     <p class="hero-apoio">{{ texts.BRAND_SUPPORT }}</p>
-    <p class="hero-acoes">
-      {{ marca.flow(texts.LANDING_CTA_PRIMARY, url_for('auth.register_form'), "claro") }}
-      <a class="hero-secundaria" href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_CTA_SECONDARY }}</a>
-    </p>
   </div>
 
   {#- Pesquisa no catálogo real (app/catalogo). Sem JavaScript, o formulário recarrega a
@@ -93,7 +89,6 @@
       </div>
     {% endfor %}
   </div>
-  <p class="para-quem-acao">{{ marca.flow(texts.LANDING_CTA_PRIMARY, url_for('auth.register_form')) }}</p>
 </section>
 
 <footer class="rodape">

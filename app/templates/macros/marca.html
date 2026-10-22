@@ -98,8 +98,9 @@
 
 {#- Botão «flow»: ao passar o rato, um círculo enche o botão e as setas trocam de lado.
     Adaptação do componente FlowButton (React) ao OptaBem. Estilos na secção 11 do CSS. -#}
-{% macro flow(texto, endereco, variante="") -%}
-<a class="flow-button{% if variante %} flow-button-{{ variante }}{% endif %}" href="{{ endereco }}">
+{#- ``pequeno``: versão mais baixa, para a barra do topo. -#}
+{% macro flow(texto, endereco, variante="", pequeno=false) -%}
+<a class="flow-button{% if variante %} flow-button-{{ variante }}{% endif %}{% if pequeno %} flow-button-pequeno{% endif %}" href="{{ endereco }}">
   {{ seta("flow-seta flow-seta-entra") }}
   <span class="flow-texto">{{ texto }}</span>
   <span class="flow-circulo" aria-hidden="true"></span>

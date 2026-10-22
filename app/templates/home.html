@@ -2,7 +2,8 @@
 {% set page_title = texts.HOME_TITLE %}
 
 {% block content %}
-<h1>{{ texts.HOME_GREETING.format(email=g.user["email"]) }}</h1>
+<h1>{{ texts.HOME_GREETING }}</h1>
+<p class="sessao-conta">{{ texts.HOME_SESSAO.format(email=g.user["email"]) }}</p>
 <p class="lead">{{ texts.HOME_INTRO }}</p>
 
 {#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso/__init__.py. -#}

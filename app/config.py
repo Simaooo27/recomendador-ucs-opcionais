@@ -45,6 +45,9 @@ def default_config() -> dict:
         "LLM_TIMEOUT": float(os.environ.get("LLM_TIMEOUT", "15")),   # RNF12: resposta em menos de 15 s
         "GEMINI_API_KEY": os.environ.get("GEMINI_API_KEY", ""),
         "GROQ_API_KEY": os.environ.get("GROQ_API_KEY", ""),
+        # Pedidos ao LLM por aluno e por dia (UTC). O limite do fornecedor é partilhado por todos;
+        # este impede que uma só conta o gaste. 0 = sem limite.
+        "ORIENTACAO_MAX_PEDIDOS_DIA": int(os.environ.get("ORIENTACAO_MAX_PEDIDOS_DIA", "40")),
         # Email
         "MAIL_BACKEND": os.environ.get("MAIL_BACKEND", "console"),
         "MAIL_SERVER": os.environ.get("MAIL_SERVER", ""),
@@ -53,6 +56,10 @@ def default_config() -> dict:
         "MAIL_USERNAME": os.environ.get("MAIL_USERNAME", ""),
         "MAIL_PASSWORD": os.environ.get("MAIL_PASSWORD", ""),
         "MAIL_SENDER": os.environ.get("MAIL_SENDER", "noreply@localhost"),
+        # Com MAIL_BACKEND=console, a ligação de confirmação aparece também na página «Confirme o seu
+        # email» (útil em desenvolvimento). Com «false», só aparece no terminal da aplicação: quem
+        # entra pelo túnel deixa de conseguir confirmar emails que não são seus.
+        "SHOW_DEV_CONFIRMATION_LINK": _env_bool("SHOW_DEV_CONFIRMATION_LINK", True),
         # Sessão / cookies
         "SESSION_COOKIE_HTTPONLY": True,
         "SESSION_COOKIE_SAMESITE": "Lax",

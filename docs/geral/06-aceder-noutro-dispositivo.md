@@ -1,6 +1,6 @@
 # Abrir o OptaBem noutro dispositivo (telemóvel ou outro computador)
 
-Versão 1.0 · 22/10/2026 · Decisão do PO
+Versão 1.1 · 22/10/2026 · Decisão do PO (1.1: definições do `.env` para o túnel, secção 4.1)
 
 O OptaBem corre no computador de um elemento da equipa. Este guia explica como o abrir noutro computador ou no telemóvel, por exemplo para a demonstração ou para o outro elemento da equipa experimentar a conversa com o Gemini, **sem publicar o site**.
 
@@ -50,6 +50,20 @@ A pasta `ferramentas/` não vai para o GitHub (ver o [Guia do código](04-guia-d
    ```
 4. Copiar o endereço `https://….trycloudflare.com` que aparece na caixa e enviá-lo para o telemóvel (por mensagem ou email) em vez de o escrever à mão: é longo e é fácil errar uma letra.
 5. Para terminar: `Ctrl+C` nos dois terminais (ou fechar o painel do terminal / o VS Code).
+
+### 4.1 Definições do `.env` para o túnel
+
+Antes de arrancar, acrescentar ao `.env` do computador que vai abrir o túnel:
+
+```ini
+SESSION_COOKIE_SECURE=true          # o endereço do túnel é HTTPS; com isto, a aplicação recusa arrancar em modo debug
+SHOW_DEV_CONFIRMATION_LINK=false    # a ligação de confirmação deixa de aparecer na página (fica só no terminal)
+ORIENTACAO_MAX_PEDIDOS_DIA=40       # cada conta faz no máximo 40 pedidos ao Gemini por dia (0 = sem limite)
+```
+
+- Com `SHOW_DEV_CONFIRMATION_LINK=false` e sem SMTP configurado, quem cria conta pelo túnel não recebe email: quem tem a aplicação a correr copia a ligação do terminal e envia-lha. Para a demonstração, é mais simples deixar `true` e criar as contas antes.
+- Se a aplicação parar com «Modo debug ligado com SESSION_COOKIE_SECURE=true», está a ser arrancada com `--debug`: usar o `arrancar-tunel.ps1` (secção 3).
+- Para voltar a trabalhar em local com `--debug`, tirar ou comentar estas linhas.
 
 O aviso do `cloudflared` sobre o *certificate pool* pode ser ignorado: a ligação local ao Flask é `http`, o HTTPS do endereço público é tratado pelo Cloudflare.
 

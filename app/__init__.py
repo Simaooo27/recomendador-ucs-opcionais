@@ -21,6 +21,14 @@ def create_app(config: dict | None = None) -> Flask:
         raise RuntimeError(
             "SECRET_KEY não definida. Defina a variável de ambiente SECRET_KEY (ver .env.example)."
         )
+    if app.debug and app.config.get("SESSION_COOKIE_SECURE"):
+        # SESSION_COOKIE_SECURE=true é o sinal de um site aberto a outras pessoas (por exemplo, pelo
+        # túnel). Com --debug, o depurador do Flask permite executar código a partir de uma página
+        # de erro: não pode estar ligado (docs/geral/06-aceder-noutro-dispositivo.md).
+        raise RuntimeError(
+            "Modo debug ligado com SESSION_COOKIE_SECURE=true. Para abrir o site a outras pessoas, "
+            "arranque sem --debug (ver docs/geral/06-aceder-noutro-dispositivo.md)."
+        )
     if not app.config.get("DATABASE"):
         app.config["DATABASE"] = str(Path(app.instance_path) / "app.sqlite3")
 

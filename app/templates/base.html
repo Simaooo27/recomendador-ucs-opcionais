@@ -44,7 +44,18 @@
       <div class="entrada-coluna">
 {% else %}
   <header class="site-header">
-    <p class="marca">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span>{% if g.admin %}<span class="marca-area">{{ texts.ADMIN_AREA_NAME }}</span>{% endif %}</p>
+    {#- Com sessão iniciada, o símbolo e o nome levam ao início de cada perfil. -#}
+    {% set inicio = url_for('gestao.dashboard') if g.admin else (url_for('main.home') if g.user else url_for('main.index')) %}
+    <p class="marca"><a class="marca-ligacao" href="{{ inicio }}">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></a>{% if g.admin %}<span class="marca-area">{{ texts.ADMIN_AREA_NAME }}</span>{% endif %}</p>
+    {% if g.user and not g.admin %}
+      {#- Menu dos alunos (revisão de 22/10). A página atual fica marcada com aria-current. -#}
+      <nav class="user-nav" aria-label="{{ texts.NAV_LABEL }}">
+        <a href="{{ url_for('main.home') }}"{% if request.endpoint == 'main.home' %} aria-current="page"{% endif %}>{{ texts.NAV_INICIO }}</a>
+        <a href="{{ url_for('orientacao.pagina') }}"{% if request.blueprint == 'orientacao' %} aria-current="page"{% endif %}>{{ texts.NAV_CONVERSA }}</a>
+        <a href="{{ url_for('catalogo.lista') }}"{% if request.blueprint == 'catalogo' %} aria-current="page"{% endif %}>{{ texts.NAV_CATALOGO }}</a>
+        <a href="{{ url_for('percurso.linha_tempo') }}"{% if request.blueprint == 'percurso' %} aria-current="page"{% endif %}>{{ texts.NAV_DECISOES }}</a>
+      </nav>
+    {% endif %}
     {% if g.admin %}
       <nav class="user-nav" aria-label="{{ texts.NAV_LABEL }}">
         <a href="{{ url_for('gestao.dashboard') }}"{% if request.endpoint == 'gestao.dashboard' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_DASHBOARD }}</a>

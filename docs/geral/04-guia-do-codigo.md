@@ -74,7 +74,8 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 ├── orientacao/                       CONVERSA DE ORIENTAÇÃO (US29, US30)
 │   ├── routes.py                     página /orientacao/ e os botões Começar, Enviar, Tentar de novo, Recomeçar
 │   ├── services.py                   regras da conversa: começar, responder, tentar de novo, recomeçar
-│   ├── repository.py                 consultas SQL à tabela conversas_orientacao
+│   ├── repository.py                 consultas SQL às tabelas conversas_orientacao e pedidos_llm
+│   ├── limite.py                     limite de pedidos ao LLM por aluno e por dia (Decorator à volta do ClienteLLM)
 │   ├── instrucoes.md                 o que se diz ao LLM: como conduzir a conversa, regras, formato, catálogo
 │   ├── conversa.py                   próximo passo (pergunta ou sugestão) e validação contra o catálogo (RN09)
 │   └── cli.py                        comando flask llm-teste (experimentar com a chave real)
@@ -138,6 +139,8 @@ docs/
 | Como o LLM conduz a conversa (tom, perguntas, regras) | `app/orientacao/instrucoes.md` | Texto normal; não apagar `$catalogo` nem `$max_perguntas`. Correr os testes e `flask --app app llm-teste --backend gemini` |
 | O fornecedor ou o modelo do LLM | `.env` | `LLM_BACKEND=gemini` (ou `groq`, ou `falso`) e, se preciso, `LLM_MODELO=…` |
 | O número máximo de perguntas do LLM | `app/orientacao/conversa.py` | `LIMITE_PERGUNTAS` (hoje 6) |
+| Quantos pedidos ao LLM cada aluno pode fazer por dia | `.env` | `ORIENTACAO_MAX_PEDIDOS_DIA=40` (`0` = sem limite) |
+| As páginas do menu dos alunos | `app/templates/base.html` e `app/texts.py` | `NAV_INICIO`, `NAV_CONVERSA`, `NAV_CATALOGO`, `NAV_DECISOES` |
 
 Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador com **Ctrl+F5** e correr os testes (secção 7).
 

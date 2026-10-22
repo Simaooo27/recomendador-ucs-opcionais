@@ -121,6 +121,11 @@ HIDE_PASSWORD = "Esconder palavra-passe"
 # Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
 NAV_LABEL = "Menu"
+# Menu dos alunos, na barra do topo (app/templates/base.html).
+NAV_INICIO = "Início"
+NAV_CONVERSA = "Conversa"
+NAV_CATALOGO = "Catálogo"
+NAV_DECISOES = "As minhas decisões"
 
 # ---------------------------------------------------------------------------
 # Página «Criar conta» (/auth/registo)
@@ -193,14 +198,19 @@ ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que l
 # ---------------------------------------------------------------------------
 
 HOME_TITLE = "Início"
-HOME_GREETING = "Olá, {email}"
+HOME_GREETING = "Olá!"
+# Por baixo da saudação, para a pessoa saber com que conta entrou. {email} é preenchido pela aplicação.
+HOME_SESSAO = "Sessão iniciada como {email}."
 HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."
 
 # Linha do tempo «O seu percurso» (app/percurso/__init__.py decide em que passo está cada pessoa).
 HOME_PATH_TITLE = "O seu percurso"
+# Cada passo: «titulo», «texto» (enquanto está por fazer) e, opcionalmente, «feito» (o texto
+# depois de concluído). O texto do passo «Escolher curso» concluído é HOME_CURSO_ESCOLHIDO.
 HOME_PATH_STEPS = [
     {"titulo": "Conta criada", "texto": "O seu email está confirmado."},
-    {"titulo": "Conversa de orientação", "texto": "Responda a algumas perguntas sobre os seus interesses para receber sugestões de curso."},
+    {"titulo": "Conversa de orientação", "texto": "Responda a algumas perguntas sobre os seus interesses para receber sugestões de curso.",
+     "feito": "Pode voltar a conversar com o assistente sempre que quiser."},
     {"titulo": "Escolher curso", "texto": "Compare os cursos sugeridos e registe a sua escolha."},
 ]
 HOME_STEP_DONE = "Concluído"
@@ -276,6 +286,10 @@ ORIENTACAO_ERRO_LIMITE = (
     "se continuar, o limite diário foi atingido e volta a funcionar amanhã."
 )
 ORIENTACAO_ERRO_LLM = "Não foi possível falar com o assistente. A sua conversa está guardada: tente de novo."
+# Limite de pedidos ao assistente por aluno e por dia (ORIENTACAO_MAX_PEDIDOS_DIA em app/config.py).
+ORIENTACAO_ERRO_LIMITE_ALUNO = (
+    "Já fez muitos pedidos ao assistente hoje. A sua conversa está guardada: pode continuar amanhã."
+)
 
 # ---------------------------------------------------------------------------
 # Área de gestão (administradores, US03). Endereço em ADMIN_URL_PREFIX (por omissão /gestao).

@@ -14,6 +14,7 @@ from ..catalogo import services as catalogo
 from ..db import get_db
 from ..llm import ClienteLLM, ErroLLM, LimiteAtingido, criar_cliente_llm
 from . import conversa, services
+from .limite import LimitarPedidosPorAluno, LimiteDoAlunoAtingido
 
 bp = Blueprint("orientacao", __name__, url_prefix="/orientacao")
 
@@ -26,9 +27,17 @@ def _cliente() -> ClienteLLM:
 
 
 def _com_o_llm(funcao, *argumentos) -> None:
-    """Chama o serviço; se o LLM falhar, mostra uma mensagem clara (a conversa fica guardada)."""
+    """Chama o serviço; se o LLM falhar, mostra uma mensagem clara (a conversa fica guardada).
+
+    O cliente do LLM vai embrulhado no limite de pedidos por aluno e por dia (``limite.py``).
+    """
+    db = get_db()
     try:
-        funcao(get_db(), g.user["id"], *argumentos, _cliente(), catalogo.cursos(current_app.config))
+        cliente = LimitarPedidosPorAluno(_cliente(), db, g.user["id"], current_app.config["ORIENTACAO_MAX_PEDIDOS_DIA"])
+        funcao(db, g.user["id"], *argumentos, cliente, catalogo.cursos(current_app.config))
+    except LimiteDoAlunoAtingido as erro:
+        current_app.logger.info("Orientação: %s", erro)
+        flash(texts.ORIENTACAO_ERRO_LIMITE_ALUNO, "error")
     except LimiteAtingido as erro:
         current_app.logger.warning("Orientação: %s", erro)
         flash(texts.ORIENTACAO_ERRO_LIMITE, "error")

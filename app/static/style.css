@@ -890,7 +890,21 @@ td form { margin: 0; }
 .filtros-acoes { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
 .filtros-acoes button { width: auto; }
 .catalogo-resultados { padding-top: 1.5rem; }
-.comparar-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 1rem; }
+/* Barra «Comparar os cursos marcados»: fica presa ao topo enquanto se percorre a lista. */
+.comparar-barra {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0 0;
+  padding: 0.6rem 0;
+  background: var(--page);
+  box-shadow: 0 1px 0 var(--line);
+}
 .comparar-barra .hint { margin: 0; }
 .curso-nome a { color: inherit; text-decoration: none; }
 .curso-nome a:hover { text-decoration: underline; }
@@ -918,8 +932,10 @@ td form { margin: 0; }
 .comparacao { min-width: 34rem; table-layout: fixed; }   /* cabe na coluna de leitura; mais estreito, desliza */
 .comparacao th[scope="row"] { width: 8rem; padding-left: 0; position: sticky; left: 0; z-index: 1; background: var(--page); }   /* o nome da linha fica visível ao deslizar */
 .comparacao-deslizar { display: none; }
-.comparacao thead th { font-family: var(--font-display); font-size: 1.15rem; font-weight: 650; color: var(--ink); vertical-align: bottom; }
-.comparacao td, .comparacao th { vertical-align: top; overflow-wrap: anywhere; }
+.comparacao thead th { font-family: var(--font-display); font-size: 1.05rem; font-weight: 650; color: var(--ink); vertical-align: bottom; }
+.comparacao-cabecalho-instituicao { display: block; margin-top: 0.3rem; font-family: var(--font-text); font-size: 0.88rem; font-weight: 400; color: var(--muted); }
+/* As palavras só se partem quando não cabem numa linha inteira, e com hífen (pt-PT). */
+.comparacao td, .comparacao th { vertical-align: top; overflow-wrap: break-word; hyphens: auto; }
 .comparacao-vagas, .comparacao-ultimo_colocado { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
 .comparacao .sem-dados { font-family: var(--font-text); font-size: 0.95rem; font-weight: 400; color: var(--muted); }
 .comparacao-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
@@ -929,6 +945,8 @@ td form { margin: 0; }
   .filtros-acoes button { width: 100%; }
   .ficha-dados > div { grid-template-columns: 1fr; gap: 0.1rem; }
   .comparacao-deslizar { display: block; margin-bottom: 0.5rem; }
+  .comparar-barra .hint { flex: 1 1 100%; }
+  .comparar-barra button { width: 100%; }
 }
 
 /* Escolher curso e linha do tempo das decisões (/percurso, US31). */

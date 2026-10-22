@@ -41,6 +41,7 @@ REQUIRED_PLACEHOLDERS = {
     "CATALOGO_CONTA": {"mostrados", "total"},
     "CATALOGO_CONTA_TODOS": {"total"},
     "CATALOGO_COMPARAR_AJUDA": {"maximo"},
+    "CATALOGO_COMPARAR_MARCADOS": {"n", "maximo"},
     "FICHA_DURACAO_VALOR": {"semestres"},
     "COMPARAR_POUCOS": {"minimo"},
     "COMPARAR_A_MAIS": {"maximo"},

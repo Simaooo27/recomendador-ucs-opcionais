@@ -17,7 +17,7 @@
 {% else %}
   <p class="lead">{{ texts.COMPARAR_INTRO }}</p>
   {% set linhas = [
-      (texts.FICHA_INSTITUICAO, "instituicao"), (texts.FICHA_LOCALIDADE, "localidade"), (texts.FICHA_TIPO, "tipo_ensino"),
+      (texts.FICHA_LOCALIDADE, "localidade"), (texts.FICHA_TIPO, "tipo_ensino"),
       (texts.CATALOGO_FILTRO_AREA, "area"), (texts.LANDING_CARD_VAGAS, "vagas"), (texts.LANDING_CARD_NOTA, "ultimo_colocado"),
       (texts.FICHA_DURACAO, "duracao_semestres"), (texts.FICHA_ECTS, "ects"), (texts.FICHA_SOBRE, "descricao")] %}
   <p class="hint comparacao-deslizar">{{ texts.COMPARAR_DESLIZAR }}</p>
@@ -27,7 +27,8 @@
       <thead>
         <tr>
           <td></td>
-          {% for c in comparacao.cursos %}<th scope="col"><a href="{{ url_for('catalogo.ficha', chave=c.chave) }}">{{ c.curso }}</a></th>{% endfor %}
+          {#- A instituição vai logo por baixo do nome: há cursos com o mesmo nome em várias instituições. -#}
+          {% for c in comparacao.cursos %}<th scope="col"><a href="{{ url_for('catalogo.ficha', chave=c.chave) }}">{{ c.curso }}</a><span class="comparacao-cabecalho-instituicao">{{ c.instituicao }}</span></th>{% endfor %}
         </tr>
       </thead>
       <tbody>

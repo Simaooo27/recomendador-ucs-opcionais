@@ -5,6 +5,7 @@ Tudo funciona sem sessão iniciada e sem JavaScript: os filtros e os cursos a co
 from __future__ import annotations
 
 import html as html_lib
+from pathlib import Path
 from urllib.parse import urlencode
 
 from app import texts
@@ -166,6 +167,44 @@ class CompararTests(AppTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(pagina.count('<th scope="col">'), 2)
         self.assertIn(texts.COMPARAR_IGNORADOS, pagina)
+
+
+class CompararMelhoriasTests(AppTestCase):
+    """Revisão do PR #37: cursos com o mesmo nome, palavras partidas e o botão sempre à mão."""
+
+    def test_o_cabecalho_de_cada_coluna_mostra_a_instituicao(self):
+        # Há cursos com o mesmo nome em várias instituições (ex.: «Engenharia Informática»).
+        por_nome = {}
+        for curso in CATALOGO:
+            por_nome.setdefault(curso.curso, []).append(curso)
+        iguais = next(cursos for cursos in por_nome.values() if len(cursos) >= 2)[:2]
+        pagina = self.client.get("/cursos/comparar?" + urlencode([("c", c.chave) for c in iguais])).get_data(as_text=True)
+        cabecalho = html_lib.unescape(pagina.split("<thead>")[1].split("</thead>")[0])
+        for curso in iguais:
+            self.assertIn(f'<span class="comparacao-cabecalho-instituicao">{curso.instituicao}</span>', cabecalho)
+        # As células de cada linha usam a classe «comparacao-<campo>»: a do cabeçalho tem de ser
+        # diferente, senão o CSS do cabeçalho desfaz as células com o mesmo nome.
+        self.assertNotIn('<span class="comparacao-instituicao">', pagina)
+        # A instituição já está no cabeçalho: não se repete numa linha própria.
+        self.assertNotIn(f'<th scope="row">{texts.FICHA_INSTITUICAO}</th>', pagina)
+
+    def test_a_barra_comparar_fica_presa_ao_topo(self):
+        css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
+        regra = css.split(".comparar-barra {", 1)[1].split("}", 1)[0]
+        self.assertIn("position: sticky", regra)
+        self.assertIn("top: 0", regra)
+
+    def test_a_barra_traz_o_texto_da_contagem_para_o_javascript(self):
+        pagina = html_lib.unescape(self.client.get("/cursos/").get_data(as_text=True))
+        texto = texts.CATALOGO_COMPARAR_MARCADOS.format(n="{n}", maximo=services.MAX_COMPARAR)
+        self.assertIn(f'data-texto-marcados="{texto}"', pagina)
+        self.assertIn("data-comparar-conta", pagina)
+
+    def test_as_palavras_da_comparacao_nao_se_partem_ao_acaso(self):
+        css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
+        regra = css.split(".comparacao td, .comparacao th {", 1)[1].split("}", 1)[0]
+        self.assertNotIn("anywhere", regra)
+        self.assertIn("hyphens: auto", regra)
 
 
 class SemSessaoTests(AppTestCase):

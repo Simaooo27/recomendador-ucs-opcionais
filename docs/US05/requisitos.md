@@ -27,7 +27,7 @@
 | **RF34.4** | Cada curso tem uma ficha em `/cursos/<curso>` com: área, nome, instituição, escola ou faculdade, localidade, vagas de 2026, nota do último colocado (1.ª fase de 2025), descrição, saídas profissionais (em lista), tipo de ensino, grau, duração, ECTS, área CNAEF e as fontes (página da DGES e página da instituição). Um dado em falta aparece como «Sem dados». Um curso que não existe dá «página não encontrada» (404). |
 | **RF34.5** | O nome do curso, em todas as fichas resumidas (catálogo, página de apresentação, sugestões da conversa), é uma ligação para a ficha completa. |
 | **RF34.6** | Cada ficha do catálogo tem a caixa «Comparar». O botão «Comparar os cursos marcados» leva a `/cursos/comparar?c=…&c=…`, sem JavaScript. |
-| **RF34.7** | A comparação mostra 2 ou 3 cursos lado a lado, numa tabela com uma coluna por curso, pela ordem em que foram marcados: instituição, localidade, tipo de ensino, área, vagas, último colocado, duração, ECTS, descrição e saídas profissionais. |
+| **RF34.7** | A comparação mostra 2 ou 3 cursos lado a lado, numa tabela com uma coluna por curso, pela ordem em que foram marcados. O cabeçalho de cada coluna tem o nome do curso e a instituição (há cursos com o mesmo nome em várias instituições); as linhas são: localidade, tipo de ensino, área, vagas, último colocado, duração, ECTS, descrição e saídas profissionais. |
 | **RF34.8** | Com mais de 3 cursos, comparam-se os 3 primeiros e a página explica porquê. Com menos de 2, a página explica que é preciso escolher pelo menos 2 e não mostra a tabela. Cursos repetidos ou que não existem ficam de fora, com um aviso. |
 | **RF34.9** | Tudo funciona sem sessão iniciada. Com sessão de aluno, a ficha e a comparação mostram também «Escolher este curso» (US31). |
 
@@ -56,7 +56,7 @@ Sem tabelas novas. A ficha usa colunas do CSV que já existiam e não eram lidas
 |---|---|---|
 | Filtros por área, instituição e localidade. | RF34.1 a RF34.3 | `FiltrosTests` (9 testes: cada filtro, filtros combinados, valor selecionado, valor inválido ignorado, sem resultados, ordem das opções) |
 | Ficha de cada curso com descrição, saídas profissionais, vagas, nota do último colocado e ligação à fonte. | RF34.4, RF34.5 | `FichaTests` (4 testes); `test_resposta_json_tem_os_campos_da_ficha` em `tests/test_apresentacao.py` (ligação na página de apresentação) |
-| Comparação de até 3 cursos lado a lado. | RF34.6 a RF34.8 | `CompararTests` (6 testes: caixa em cada ficha, 3 e 2 cursos, mais de 3, menos de 2, repetidos e inexistentes) |
+| Comparação de até 3 cursos lado a lado. | RF34.6 a RF34.8 | `CompararTests` (6 testes: caixa em cada ficha, 3 e 2 cursos, mais de 3, menos de 2, repetidos e inexistentes); `CompararMelhoriasTests` (4 testes: instituição no cabeçalho, barra presa ao topo, contagem dos marcados, palavras sem cortes) |
 | Funciona sem sessão iniciada. | RF34.9 | `SemSessaoTests.test_todas_as_paginas_abrem_sem_sessao`; `FichaTests.test_escolher_so_aparece_com_sessao` |
 
 ## 6. Requisitos não funcionais aplicáveis

@@ -7,7 +7,7 @@ página inicial mostra. As decisões (escolher curso, US31) estão em ``services
 
 - sem curso: conta criada; a seguir, a conversa de orientação (US29);
 - a escolher curso: a conversa terminou com sugestões (US30);
-- com curso: escolheu um curso (US31); a seguir, as opcionais.
+- com curso: escolheu um curso (US31); o percurso desta release termina aqui (decisão dos PO, 22/10).
 """
 from __future__ import annotations
 
@@ -20,10 +20,11 @@ from .. import texts
 class EstadoPercurso(str, Enum):
     SEM_CURSO = "sem_curso"                  # conta criada; a seguir, a conversa de orientação
     A_ESCOLHER_CURSO = "a_escolher_curso"    # a conversa terminou com sugestões (US29)
-    COM_CURSO = "com_curso"                  # escolheu o curso (US31); a seguir, as opcionais
+    COM_CURSO = "com_curso"                  # escolheu o curso (US31); todos os passos ficam feitos
 
 
-# Índice do passo atual (em texts.HOME_PATH_STEPS) em cada estado.
+# Índice do passo atual (em texts.HOME_PATH_STEPS) em cada estado. «Com curso» aponta para depois
+# do último passo: todos ficam «feito» (as opcionais saíram desta release, 22/10).
 _PASSO_ATUAL = {
     EstadoPercurso.SEM_CURSO: 1,
     EstadoPercurso.A_ESCOLHER_CURSO: 2,

@@ -192,7 +192,8 @@ class CompararMelhoriasTests(AppTestCase):
         css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
         regra = css.split(".comparar-barra {", 1)[1].split("}", 1)[0]
         self.assertIn("position: sticky", regra)
-        self.assertIn("top: 0", regra)
+        # Desde 22/10 a barra do topo também é fixa: «Comparar» fica logo abaixo dela.
+        self.assertIn("top: var(--altura-topo)", regra)
 
     def test_a_barra_traz_o_texto_da_contagem_para_o_javascript(self):
         pagina = html_lib.unescape(self.client.get("/cursos/").get_data(as_text=True))

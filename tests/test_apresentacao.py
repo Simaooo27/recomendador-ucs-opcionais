@@ -187,3 +187,29 @@ class DetailsTests(AppTestCase):
         html = self.client.get("/auth/registo").get_data(as_text=True)
         self.assertIn("data-regras", html)
         self.assertIn(texts.REGISTER_RULE_MATCH, html)
+
+
+class MenuDaApresentacaoTests(AppTestCase):
+    """Decisão do PO (22/10): a barra do topo fica presa ao topo e é o único sítio da
+    apresentação com «Entrar» e «Criar conta» (antes havia 2 e 3 de cada)."""
+
+    def test_entrar_e_criar_conta_aparecem_uma_so_vez(self):
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertEqual(html.count('href="/auth/entrar"'), 1)
+        self.assertEqual(html.count('href="/auth/registo"'), 1)
+
+    def test_a_barra_tem_as_seccoes_da_pagina(self):
+        html = self.client.get("/").get_data(as_text=True)
+        for destino in ('href="/cursos/"', 'href="/#como-funciona"', 'href="/#para-quem"'):
+            self.assertIn(destino, html)
+        self.assertIn('id="como-funciona"', html)
+        self.assertIn('id="para-quem"', html)
+
+    def test_a_barra_do_topo_fica_presa(self):
+        from pathlib import Path
+        import re
+
+        css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
+        regra = re.search(r"\.site-header \{([^}]*)\}", css).group(1)
+        self.assertIn("position: sticky", regra)
+        self.assertIn("top: 0", regra)

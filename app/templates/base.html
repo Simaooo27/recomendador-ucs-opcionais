@@ -26,9 +26,14 @@
 {% if layout == "apresentacao" %}
   <header class="site-header site-header-apresentacao">
     <p class="marca">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></p>
+    {#- Barra presa ao topo: secções da página à esquerda, conta à direita. É o único sítio
+        da apresentação com «Entrar» e «Criar conta» (o botão «flow» da secção 11 do CSS). -#}
     <nav class="landing-nav" aria-label="{{ texts.NAV_LABEL }}">
-      <a href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_NAV_LOGIN }}</a>
-      <a class="button-link" href="{{ url_for('auth.register_form') }}">{{ texts.LANDING_NAV_REGISTER }}</a>
+      <a class="landing-seccao" href="{{ url_for('catalogo.lista') }}">{{ texts.LANDING_NAV_CURSOS }}</a>
+      <a class="landing-seccao" href="{{ url_for('main.index', _anchor='como-funciona') }}">{{ texts.LANDING_NAV_COMO }}</a>
+      <a class="landing-seccao" href="{{ url_for('main.index', _anchor='para-quem') }}">{{ texts.LANDING_NAV_PARA_QUEM }}</a>
+      <a class="landing-entrar" href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_NAV_LOGIN }}</a>
+      {{ marca.flow(texts.LANDING_NAV_REGISTER, url_for('auth.register_form'), "claro", pequeno=true) }}
     </nav>
   </header>
   <main class="apresentacao">

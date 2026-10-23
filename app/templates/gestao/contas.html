@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set page_title = texts.ADMIN_CONTAS_TITULO %}
+{% set noindex = true %}
+
+{#- Contas de alunos por confirmar, com «Ativar» (23/10). Só aparecem nome, email e data do registo. -#}
+{% block content %}
+<h1>{{ texts.ADMIN_CONTAS_TITULO }}</h1>
+<p class="lead">{{ texts.ADMIN_CONTAS_INTRO }}</p>
+
+{% if pendentes %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">{{ texts.ADMIN_COL_NOME }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_EMAIL }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_REGISTO }}</th>
+        <th scope="col"><span class="visually-hidden">{{ texts.ADMIN_ATIVAR }}</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for conta in pendentes %}
+        <tr>
+          <td>{{ conta["nome"] or "—" }}</td>
+          <td>{{ conta["email"] }}</td>
+          <td class="nowrap">{{ conta["created_at"][:16].replace("T", " ") }}</td>
+          <td>
+            <form method="post" action="{{ url_for('gestao.contas_ativar', user_id=conta['id']) }}">
+              <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+              <button type="submit" class="button-small" aria-label="{{ texts.ADMIN_ATIVAR_ROTULO.format(email=conta['email']) }}">{{ texts.ADMIN_ATIVAR }}</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>{{ texts.ADMIN_CONTAS_VAZIO }}</p>
+{% endif %}
+{% endblock %}

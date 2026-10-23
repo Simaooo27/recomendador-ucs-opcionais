@@ -16,6 +16,8 @@ REQUIRED_PLACEHOLDERS = {
     "ADMIN_DASHBOARD_GREETING": {"nome"},
     "ADMIN_PASSWORD_HINT": {"minimo"},
     "ADMIN_CREATED": {"nome"},
+    "ADMIN_ATIVAR_ROTULO": {"email"},
+    "ADMIN_CONTA_ATIVADA": {"email"},
     "ADMIN_REMOVED": {"nome"},
     "CLI_ADMIN_CREATED": {"nome", "endereco"},
     "REGISTER_EMAIL_HINT": {"dominios"},

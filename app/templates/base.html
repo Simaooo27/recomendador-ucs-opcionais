@@ -68,6 +68,7 @@
       <nav class="user-nav" aria-label="{{ texts.NAV_LABEL }}">
         <a href="{{ url_for('gestao.dashboard') }}"{% if request.endpoint == 'gestao.dashboard' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_DASHBOARD }}</a>
         <a href="{{ url_for('gestao.admins') }}"{% if request.endpoint == 'gestao.admins' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_ADMINS }}</a>
+        <a href="{{ url_for('gestao.contas') }}"{% if request.endpoint == 'gestao.contas' %} aria-current="page"{% endif %}>{{ texts.ADMIN_NAV_CONTAS }}</a>
         <span class="role-badge">{{ g.admin["username"] }}</span>
       </nav>
     {% endif %}

@@ -3,6 +3,9 @@
 CREATE TABLE IF NOT EXISTS users (
     id                      INTEGER PRIMARY KEY AUTOINCREMENT,
     email                   TEXT    NOT NULL UNIQUE COLLATE NOCASE,
+    -- Nome pedido no registo (23/10, decisão do PO), para tratar a pessoa pelo nome e não pelo email.
+    -- Contas criadas antes ficam com '' até a pessoa o indicar em «A minha conta».
+    nome                    TEXT    NOT NULL DEFAULT '',
     password_hash           TEXT    NOT NULL,
     role                    TEXT    NOT NULL DEFAULT 'aluno'
                                     CHECK (role IN ('aluno', 'admin')),

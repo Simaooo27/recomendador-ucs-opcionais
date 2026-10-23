@@ -51,11 +51,11 @@ class MenuDosAlunosTests(AppTestCase):
         self.assertEqual(_menu(html), "")
         self.assertIn('<a class="marca-ligacao" href="/">', html)
 
-    def test_o_inicio_diz_ola_e_com_que_conta_se_entrou(self):
+    def test_o_inicio_trata_a_pessoa_pelo_primeiro_nome_e_nao_pelo_email(self):
         html = self.client.get("/inicio").get_data(as_text=True)
-        self.assertIn(f"<h1>{texts.HOME_GREETING}</h1>", html)
-        self.assertNotIn(f"<h1>Olá, {VALID_EMAIL}", html)
-        self.assertIn(texts.HOME_SESSAO.format(email=VALID_EMAIL), html)
+        self.assertIn("<h1>Olá, Ana!</h1>", html)          # registo com «Ana Silva» (tests/base.py)
+        self.assertNotIn(f"Olá, {VALID_EMAIL}", html)
+        self.assertNotIn(texts.HOME_SEM_NOME, html)
 
 
 class MenuDaGestaoTests(AppTestCase):

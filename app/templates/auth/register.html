@@ -15,6 +15,18 @@
   <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
 
   <div class="field">
+    <label for="nome">{{ texts.REGISTER_NOME_LABEL }}</label>
+    <input id="nome" name="nome" type="text" autocomplete="name" required maxlength="60"
+           value="{{ values.get('nome', '') }}"
+           {% if errors.nome %}aria-invalid="true" aria-describedby="nome-error"{% else %}aria-describedby="nome-hint"{% endif %}>
+    {% if errors.nome %}
+      <p class="error" id="nome-error">{{ errors.nome }}</p>
+    {% else %}
+      <p class="hint" id="nome-hint">{{ texts.REGISTER_NOME_HINT }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
     <label for="email">{{ texts.REGISTER_EMAIL_LABEL }}</label>
     <input id="email" name="email" type="email" autocomplete="email" required
            value="{{ values.get('email', '') }}"

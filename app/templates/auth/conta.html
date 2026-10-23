@@ -6,6 +6,18 @@
 {% block content %}
 <h1>{{ texts.CONTA_TITLE }}</h1>
 
+<form method="post" action="{{ url_for('auth.change_nome') }}" class="conta-nome" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <div class="field">
+    <label for="nome">{{ texts.CONTA_NOME }}</label>
+    <input id="nome" name="nome" type="text" autocomplete="name" required maxlength="60" value="{{ nome }}"
+           {% if erro_nome %}aria-invalid="true" aria-describedby="nome-error"{% elif not nome %}aria-describedby="nome-hint"{% endif %}>
+    {% if erro_nome %}<p class="error" id="nome-error">{{ erro_nome }}</p>
+    {% elif not nome %}<p class="hint" id="nome-hint">{{ texts.CONTA_NOME_SEM }}</p>{% endif %}
+  </div>
+  <button type="submit" class="botao-secundario">{{ texts.CONTA_NOME_ALTERAR }}</button>
+</form>
+
 <dl class="conta-dados">
   <div><dt>{{ texts.CONTA_EMAIL }}</dt><dd>{{ g.user["email"] }}</dd></div>
   {% if criada %}<div><dt>{{ texts.CONTA_DESDE }}</dt><dd>{{ criada }}</dd></div>{% endif %}

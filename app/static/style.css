@@ -1114,6 +1114,14 @@ td form { margin: 0; }
   .comparar-barra button { width: 100%; }
 }
 
+/* Paginação do catálogo (US04). */
+.paginacao { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem 1.5rem; margin: 2rem 0 0; }
+.paginacao a { padding: 0.6rem 0.9rem; border-radius: var(--radius); font-weight: 700; text-decoration: none; box-shadow: inset 0 0 0 1px var(--line); }
+.paginacao span { color: var(--muted); }
+@media (hover: hover) {
+  .paginacao a:hover { background: var(--paper); }
+}
+
 /* Avisos na página de apresentação (ex.: depois de apagar a conta). */
 .avisos { padding: 1.25rem var(--lado); }
 .avisos .alert { margin: 0; }

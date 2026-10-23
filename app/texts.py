@@ -109,6 +109,11 @@ CATALOGO_LIMPAR = "Limpar filtros"
 CATALOGO_CONTA = "{mostrados} de {total} cursos"
 CATALOGO_CONTA_TODOS = "Todos os {total} cursos do catálogo"
 CATALOGO_VAZIO = "Nenhum curso corresponde a estes filtros. Experimente tirar um deles."
+# Paginação do catálogo (US04: o catálogo completo tem mais de mil cursos; 24 por página).
+CATALOGO_PAGINAS = "Páginas do catálogo"
+CATALOGO_PAGINA = "Página {numero} de {paginas}"
+CATALOGO_ANTERIOR = "← Anterior"
+CATALOGO_SEGUINTE = "Seguinte →"
 # Comparar: cada ficha tem uma caixa «Comparar»; o botão leva à comparação lado a lado.
 CATALOGO_COMPARAR_CAIXA = "Comparar"
 CATALOGO_COMPARAR_BOTAO = "Comparar os cursos marcados"

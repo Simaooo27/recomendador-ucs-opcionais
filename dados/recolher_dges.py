@@ -158,7 +158,7 @@ COLUNAS = [
     "fonte_dados_acesso", "fonte_descricao",
 ]
 # Graus que entram no catálogo (o índice da DGES escreve-os entre parênteses retos).
-GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "MI": "Mestrado integrado"}
+GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "Mest Integ": "Mestrado integrado"}
 
 # Áreas do OptaBem: os dois primeiros algarismos da área CNAEF (grandes grupos de formação).
 AREAS_CNAEF = {
@@ -221,8 +221,17 @@ def _localidade(pagina: str) -> str:
     encontrado = re.search(r"\b\d{4}-\d{3}\s+([^<]+)<br", pagina)
     if not encontrado:
         return ""
-    cidade = _texto(encontrado.group(1))
-    return " ".join(p if p in ("de", "do", "da", "dos", "das", "e") else p.capitalize() for p in cidade.lower().split())
+    cidade = _texto(encontrado.group(1)).lower()
+    pequenas = ("a", "de", "do", "da", "dos", "das", "e")
+
+    def maiuscula(palavra: str, primeira: bool) -> str:
+        return palavra if palavra in pequenas and not primeira else palavra.capitalize()
+
+    # «IDANHA-A-NOVA» -> «Idanha-a-Nova»; «SÃO MAMEDE DE INFESTA» -> «São Mamede de Infesta»
+    return " ".join(
+        "-".join(maiuscula(parte, i == 0 and j == 0) for j, parte in enumerate(palavra.split("-")))
+        for i, palavra in enumerate(cidade.split())
+    )
 
 
 # Nomes de instituições que têm « - » no próprio nome: não se partem.
@@ -232,7 +241,7 @@ NOMES_COM_TRACO = ("Iscte - Instituto Universitário de Lisboa",)
 def _instituicao(nome: str) -> tuple[str, str]:
     """«Universidade do Porto - Faculdade de Letras» -> («Universidade do Porto», «Faculdade de Letras»)."""
     for inteiro in NOMES_COM_TRACO:
-        if nome.startswith(inteiro):
+        if nome.lower().startswith(inteiro.lower()):   # a DGES escreve «ISCTE» e «Iscte»
             resto = nome[len(inteiro):].lstrip(" -")
             return inteiro, resto
     if " - " in nome:
@@ -297,7 +306,7 @@ def processar() -> None:
     graus: dict[str, str] = {}
     for indice_html in sorted((PASTA / "indices").glob("*.html")):
         graus.update(graus_do_indice(indice_html.read_text(encoding="latin-1")))
-    equipa = {}
+    equipa: dict[str, dict[str, str]] = {}
     if MVP.exists():
         with open(MVP, encoding="utf-8-sig", newline="") as ficheiro:
             for linha in csv.DictReader(ficheiro):
@@ -317,13 +326,21 @@ def processar() -> None:
                            "saidas_profissionais", "fonte_descricao"):
                 linha[coluna] = da_equipa[coluna]
         linhas.append(linha)
+        equipa.pop(f"{codc}-{code}", None)
+    # Os cursos do MVP cujas páginas ainda não foram descarregadas ficam como estavam (com a área
+    # pela mesma regra), para o catálogo nunca perder cursos a meio de uma recolha.
+    for da_equipa in equipa.values():
+        linha = {coluna: da_equipa.get(coluna, "") for coluna in COLUNAS}
+        linha["area_optabem"] = _area(linha["curso"], linha["area_cnaef"])
+        linhas.append(linha)
     linhas.sort(key=lambda l: (l["curso"], l["instituicao"], l["unidade_organica"]))
     with open(SAIDA, "w", encoding="utf-8-sig", newline="") as ficheiro:
         escritor = csv.DictWriter(ficheiro, fieldnames=COLUNAS)
         escritor.writeheader()
         escritor.writerows(linhas)
     sem_nota = sum(1 for l in linhas if not l["ultimo_colocado_1fase_2025"])
-    print(f"{len(linhas)} cursos em {SAIDA.name} ({len(equipa)} do MVP com descrição; {sem_nota} sem nota do último colocado).")
+    com_descricao = sum(1 for l in linhas if l["descricao"])
+    print(f"{len(linhas)} cursos em {SAIDA.name} ({com_descricao} com descrição; {sem_nota} sem nota do último colocado).")
     if ignorados:
         print("Fora do catálogo (outros graus): " + ", ".join(f"{g}: {n}" for g, n in sorted(ignorados.items())))
 

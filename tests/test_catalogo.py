@@ -33,7 +33,7 @@ class FiltrosTests(AppTestCase):
 
     def test_sem_filtros_mostra_o_catalogo_todo(self):
         pagina = self._lista()
-        self.assertEqual(len(_chaves(pagina)), len(CATALOGO))
+        self.assertEqual(len(_chaves(pagina)), min(len(CATALOGO), services.POR_PAGINA))   # 1.ª página (US04)
         self.assertIn(texts.CATALOGO_CONTA_TODOS.format(total=len(CATALOGO)), pagina)
 
     def test_filtrar_por_area(self):
@@ -67,7 +67,7 @@ class FiltrosTests(AppTestCase):
 
     def test_valor_que_nao_existe_e_ignorado(self):
         pagina = self._lista(area="Medicina", instituicao="<script>")
-        self.assertEqual(len(_chaves(pagina)), len(CATALOGO))
+        self.assertEqual(len(_chaves(pagina)), min(len(CATALOGO), services.POR_PAGINA))
         self.assertNotIn("<script>", pagina)
 
     def test_sem_resultados_diz_o_que_fazer(self):
@@ -106,7 +106,8 @@ class FichaTests(AppTestCase):
 
     def test_as_fichas_da_lista_levam_a_ficha_completa(self):
         pagina = self.client.get("/cursos/").get_data(as_text=True)
-        self.assertIn(f'href="/cursos/{self.curso.chave}"', pagina)
+        for chave in _chaves(pagina):
+            self.assertIn(f'href="/cursos/{chave}"', pagina)
 
     def test_escolher_so_aparece_com_sessao(self):
         pagina = self.client.get(f"/cursos/{self.curso.chave}").get_data(as_text=True)
@@ -125,7 +126,7 @@ class CompararTests(AppTestCase):
 
     def test_a_lista_tem_uma_caixa_comparar_em_cada_ficha(self):
         pagina = self.client.get("/cursos/").get_data(as_text=True)
-        self.assertEqual(pagina.count('form="comparar-form"'), len(CATALOGO))
+        self.assertEqual(pagina.count('form="comparar-form"'), len(_chaves(pagina)))
         self.assertIn('id="comparar-form"', pagina)
         self.assertIn('action="/cursos/comparar"', pagina)
 
@@ -218,3 +219,29 @@ class SemSessaoTests(AppTestCase):
                 response = self.client.get(endereco)
                 self.assertEqual(response.status_code, 200)
                 self.assertNotIn("/auth/entrar", response.headers.get("Location", ""))
+
+
+class PaginacaoTests(AppTestCase):
+    """US04: o catálogo completo tem mais de mil cursos, por isso a lista tem páginas."""
+
+    def test_a_segunda_pagina_tem_o_resto(self):
+        primeira = _chaves(self.client.get("/cursos/").get_data(as_text=True))
+        segunda = _chaves(self.client.get("/cursos/?p=2").get_data(as_text=True))
+        self.assertEqual(len(primeira) + len(segunda), len(CATALOGO))   # o MVP tem 30: cabe em 2 páginas
+        self.assertFalse(set(primeira) & set(segunda))
+
+    def test_as_ligacoes_guardam_os_filtros(self):
+        pagina = self.client.get("/cursos/").get_data(as_text=True)
+        self.assertIn(texts.CATALOGO_PAGINA.format(numero=1, paginas=2), pagina)
+        self.assertIn('href="/cursos/?p=2"', pagina)
+        com_filtro = self.client.get("/cursos/?q=a").get_data(as_text=True)
+        if 'rel="next"' in com_filtro:
+            self.assertRegex(com_filtro, r'href="/cursos/\?p=2&amp;q=a"')
+
+    def test_pagina_invalida_mostra_a_primeira_ou_a_ultima(self):
+        self.assertEqual(self.client.get("/cursos/?p=abc").status_code, 200)
+        ultima = _chaves(self.client.get("/cursos/?p=99").get_data(as_text=True))
+        self.assertEqual(ultima, _chaves(self.client.get("/cursos/?p=2").get_data(as_text=True)))
+
+    def test_a_apresentacao_mostra_no_maximo_5_areas(self):
+        self.assertLessEqual(len(services.resumo(self.app.config).areas), services.AREAS_NA_APRESENTACAO)

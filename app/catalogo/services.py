@@ -88,13 +88,25 @@ class Resumo:
     areas: tuple[str, ...]
 
 
+AREAS_NA_APRESENTACAO = 5   # «Ou veja por área»: só as áreas com mais cursos (o catálogo tem muitas)
+
+
+def _areas_principais(todos) -> tuple[str, ...]:
+    contagem: dict[str, int] = {}
+    for curso in todos:
+        if curso.area:
+            contagem[curso.area] = contagem.get(curso.area, 0) + 1
+    principais = sorted(contagem, key=lambda a: (-contagem[a], _normalizar(a)))[:AREAS_NA_APRESENTACAO]
+    return tuple(sorted(principais, key=_normalizar))
+
+
 def resumo(config: Mapping) -> Resumo:
     todos = cursos(config)
     return Resumo(
         cursos=len(todos),
         instituicoes=len({c.instituicao for c in todos}),
         vagas=sum(c.vagas or 0 for c in todos),
-        areas=tuple(sorted({c.area for c in todos})),
+        areas=_areas_principais(todos),
     )
 
 
@@ -174,6 +186,34 @@ def filtrar(config: Mapping, filtros: Filtros) -> list[Curso]:
         escolhidos.append(curso)
     escolhidos.sort(key=lambda c: (_relevancia(palavras, c) if palavras else 0, -(c.vagas or 0), _normalizar(c.curso)))
     return escolhidos
+
+
+POR_PAGINA = 24   # cursos por página em /cursos/ (o catálogo completo tem mais de mil)
+
+
+@dataclass(frozen=True)
+class Pagina:
+    cursos: list[Curso]
+    numero: int        # 1, 2, …
+    paginas: int       # total de páginas (pelo menos 1)
+    total: int         # cursos que respeitam os filtros
+
+    @property
+    def anterior(self) -> int | None:
+        return self.numero - 1 if self.numero > 1 else None
+
+    @property
+    def seguinte(self) -> int | None:
+        return self.numero + 1 if self.numero < self.paginas else None
+
+
+def paginar(cursos_filtrados: list[Curso], pedido: str | None) -> Pagina:
+    """A página ``pedido`` (texto do endereço, ?p=2). Um número inválido dá a primeira ou a última."""
+    paginas = max(1, -(-len(cursos_filtrados) // POR_PAGINA))
+    numero = int(pedido) if (pedido or "").isdigit() else 1
+    numero = min(max(numero, 1), paginas)
+    inicio = (numero - 1) * POR_PAGINA
+    return Pagina(cursos_filtrados[inicio:inicio + POR_PAGINA], numero, paginas, len(cursos_filtrados))
 
 
 def por_chave(config: Mapping, chave: str) -> Curso | None:

@@ -19,11 +19,13 @@ def lista():
     menos de 2 cursos sugeridos (US30). A página de apresentação (/) só a vê quem não tem sessão.
     """
     filtros = services.ler_filtros(request.args, current_app.config)
+    pagina = services.paginar(services.filtrar(current_app.config, filtros), request.args.get("p"))
     return render_template(
         "catalogo/lista.html",
         filtros=filtros,
         opcoes=services.opcoes(current_app.config),
-        cursos=services.filtrar(current_app.config, filtros),
+        cursos=pagina.cursos,
+        pagina=pagina,
         total=len(services.cursos(current_app.config)),
         max_comparar=services.MAX_COMPARAR,
     )

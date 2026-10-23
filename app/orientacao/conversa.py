@@ -32,7 +32,7 @@ from typing import Sequence
 from ..catalogo.repository import Curso
 from ..llm import ClienteLLM, Mensagem, RespostaInvalida
 
-MAX_CURSOS_DIRETO = 60          # até aqui, o catálogo vai inteiro nas instruções (como no MVP)
+MAX_CURSOS_DIRETO = 150         # até aqui, o catálogo vai inteiro nas instruções (cerca de 7 mil tokens)
 MAX_CURSOS_ENVIADOS = 80        # filtro por área: cursos enviados no pedido da sugestão
 MAX_AREAS = 3
 LIMITE_PERGUNTAS = 6            # depois disto, o LLM tem de sugerir (poupa pedidos ao plano gratuito)

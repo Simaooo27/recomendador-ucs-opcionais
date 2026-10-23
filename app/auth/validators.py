@@ -25,12 +25,40 @@ MSG_PRIVACY_REQUIRED = texts.ERROR_PRIVACY_REQUIRED
 MSG_EMAIL_DUPLICATE = texts.ERROR_EMAIL_DUPLICATE
 
 
+_MAX_NOME_LENGTH = 60
+# Letras (com acentos), espaços, hífen, apóstrofo e ponto: «Ana-Rita», «D'Almeida», «J. Silva».
+_NOME_CARACTERES_EXTRA = set(" -'’.")
+
+
 @dataclass(frozen=True)
 class RegistrationInput:
     email: str
     password: str
     password_confirm: str
     accepted_privacy: bool
+    nome: str = ""
+
+
+def normalize_nome(raw: str) -> str:
+    """Tira os espaços das pontas e junta os repetidos («  Ana   Rita » -> «Ana Rita»)."""
+    return " ".join(raw.split())
+
+
+def nome_error(nome: str) -> str | None:
+    """Mensagem de erro do nome (já normalizado), ou ``None`` se é válido."""
+    if not nome:
+        return texts.ERROR_NOME_REQUIRED
+    if len(nome) > _MAX_NOME_LENGTH or not any(c.isalpha() for c in nome):
+        return texts.ERROR_NOME_INVALID.format(maximo=_MAX_NOME_LENGTH)
+    if not all(c.isalpha() or c in _NOME_CARACTERES_EXTRA for c in nome):
+        return texts.ERROR_NOME_INVALID.format(maximo=_MAX_NOME_LENGTH)
+    return None
+
+
+def primeiro_nome(nome: str) -> str:
+    """A primeira palavra do nome, para a saudação («Duarte Eusébio» -> «Duarte»)."""
+    partes = (nome or "").split()
+    return partes[0] if partes else ""
 
 
 def normalize_email(raw: str) -> str:
@@ -72,8 +100,13 @@ def validate_registration(
     """Devolve ``{campo: mensagem}``; dicionário vazio se tudo estiver válido.
 
     Espera que ``data.email`` já esteja normalizado (ver ``normalize_email``).
+    O nome é obrigatório desde 23/10 (decisão do PO: tratar a pessoa pelo nome).
     """
     errors: dict[str, str] = {}
+
+    erro_nome = nome_error(normalize_nome(data.nome))
+    if erro_nome:
+        errors["nome"] = erro_nome
 
     if not data.email:
         errors["email"] = MSG_EMAIL_REQUIRED

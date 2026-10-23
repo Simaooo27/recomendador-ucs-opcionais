@@ -3,6 +3,7 @@
 > **Como** aluno, **quero** registar-me com o meu email pessoal, **para** poder avaliar as UCs que fiz e receber recomendações.
 
 *Versão 1.1 (2026-10-07): o registo passou a aceitar email pessoal, por decisão do Product Owner. A restrição a um domínio continua disponível como opção de configuração.*
+*Versão 1.2 (2026-10-23): o registo pede também o nome, para o OptaBem tratar a pessoa pelo nome e não pelo email (decisão do PO; RF01.1, RF01.17, RF01.18).*
 
 | | |
 |---|---|
@@ -22,7 +23,7 @@
 
 | ID | Requisito |
 |---|---|
-| **RF01.1** | O sistema apresenta um formulário com: email, palavra-passe, repetição da palavra-passe e uma caixa para aceitar a política de privacidade. |
+| **RF01.1** | O sistema apresenta um formulário com: nome, email, palavra-passe, repetição da palavra-passe e uma caixa para aceitar a política de privacidade. |
 | **RF01.2** | O email é normalizado antes de qualquer validação ou gravação: sem espaços nas pontas e em minúsculas. |
 | **RF01.3** | É aceite qualquer email com formato válido e até 254 caracteres (email pessoal). Se a equipa configurar domínios em `ALLOWED_EMAIL_DOMAINS`, só se aceitam esses domínios ou subdomínios verdadeiros deles; domínios parecidos (`iscap.ipp.pt.evil.com`, `evil-iscap.ipp.pt`) são rejeitados. |
 | **RF01.4** | A palavra-passe tem entre 8 e 128 caracteres, com pelo menos uma letra e um número, e coincide com a repetição. |
@@ -38,6 +39,8 @@
 | **RF01.14** | Em caso de dados inválidos o formulário volta a ser mostrado com o email preenchido, **sem** palavras-passe, e uma mensagem junto de cada campo com erro (HTTP 422). |
 | **RF01.15** | Todos os pedidos `POST` exigem token CSRF válido; sem ele a resposta é HTTP 400 e nada é gravado. |
 | **RF01.16** | Em desenvolvimento (`MAIL_BACKEND=console`), a página «Confirme o seu email» mostra também a ligação de confirmação, para testar sem email real. Com email real (SMTP) a ligação nunca aparece na página. |
+| **RF01.17** | O nome é obrigatório: sem espaços a mais, até 60 caracteres, só letras (com acentos), espaços, hífens, apóstrofos e pontos. Um erro noutro campo não apaga o nome escrito. |
+| **RF01.18** | A pessoa é tratada pelo primeiro nome («Olá, Ana!») no início e no email de confirmação; o nome completo aparece no painel da conta e pode ser mudado em «A minha conta». As contas criadas antes de 23/10 ficam sem nome até a pessoa o indicar. |
 
 ## 3. Mensagens ao utilizador
 
@@ -45,6 +48,8 @@ Os textos em uso estão em [`app/texts.py`](../../app/texts.py); esta tabela reg
 
 | Situação | Mensagem |
 |---|---|
+| Nome vazio | Indique o seu nome. |
+| Nome com números ou símbolos | Use só letras, espaços, hífens e apóstrofos (até 60 caracteres). |
 | Email vazio | Indique o seu email. |
 | Email mal formado | Indique um email válido, por exemplo nome@gmail.com. |
 | Email fora do domínio (só com domínios configurados) | Use um email terminado em @iscap.ipp.pt. |
@@ -62,7 +67,7 @@ Os textos em uso estão em [`app/texts.py`](../../app/texts.py); esta tabela reg
 
 ## 4. Dados guardados
 
-Tabela `users`: `id`, `email` (único, sem distinção de maiúsculas), `password_hash`, `role` (`aluno` ou `admin`), `is_active`, `confirmation_nonce`, `privacy_policy_version`, `privacy_accepted_at`, `created_at`, `confirmed_at`.
+Tabela `users`: `id`, `email` (único, sem distinção de maiúsculas), `nome` (desde 23/10; uma base de dados antiga recebe a coluna ao arrancar, em `app/db.py`), `password_hash`, `role` (`aluno` ou `admin`), `is_active`, `confirmation_nonce`, `privacy_policy_version`, `privacy_accepted_at`, `created_at`, `confirmed_at`.
 
 O `confirmation_nonce` muda a cada registo; faz parte do token e é o que invalida ligações antigas (RF01.12). A separação entre identidade e avaliações (`pseudo_id`, `MapaIdentidade`) é da US09.
 
@@ -74,6 +79,7 @@ O `confirmation_nonce` muda a cada registo; faz parte do token e é o que invali
 | A conta só fica ativa após confirmação por email. | RF01.7 a RF01.10, RF01.12 | `tests/test_confirmation.py` (todos); `tests/test_registration.py` (`SuccessfulRegistrationTests`: conta inativa, email com ligação; `DuplicateRegistrationTests`) |
 | A palavra-passe é guardada com hash. | RF01.6 | `tests/test_registration.py` (`SuccessfulRegistrationTests.test_palavra_passe_guardada_com_hash`) |
 | O registo exige aceitação explícita da política de privacidade. | RF01.5 | `tests/test_registration.py` (`RejectedRegistrationTests.test_exige_aceitacao_da_politica_de_privacidade`; `SuccessfulRegistrationTests.test_guarda_aceitacao_da_politica_com_versao_e_data`) |
+| (23/10) O registo pede o nome e a pessoa é tratada por ele. | RF01.17, RF01.18 | `tests/test_nome.py` (11 testes) |
 | (Transversal) proteção CSRF e cabeçalhos | RF01.15, RNF02 | `tests/test_registration.py` (`CsrfTests`, `SecurityHeadersTests`) |
 
 ## 6. Requisitos não funcionais aplicáveis

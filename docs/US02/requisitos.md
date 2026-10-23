@@ -25,7 +25,7 @@
 | **RF02.3** | Com credenciais corretas e conta ativa, o sistema começa uma sessão nova (os dados de sessão anteriores e o token CSRF são descartados) e mostra a página inicial do aluno. |
 | **RF02.4** | Com email inexistente, palavra-passe errada ou campos vazios, o sistema mostra sempre a mesma mensagem («Email ou palavra-passe incorretos.», HTTP 401), sem indicar qual falhou. A verificação demora o mesmo tempo quando o email não existe. |
 | **RF02.5** | Com a palavra-passe correta mas a conta por confirmar, a sessão não é iniciada e o aluno é informado de que tem de confirmar o email (HTTP 403). Com a palavra-passe errada, aplica-se o RF02.4. |
-| **RF02.6** | Terminar sessão apaga a sessão e volta à página de início de sessão. Só por `POST` com token CSRF (um `GET` não termina a sessão). |
+| **RF02.6** | Terminar sessão apaga a sessão e volta à página inicial (a apresentação), com o aviso «Sessão terminada» (até 23/10 voltava ao início de sessão; decisão do PO). Só por `POST` com token CSRF (um `GET` não termina a sessão). |
 | **RF02.7** | Quem abre uma página privada sem sessão é redirecionado para o início de sessão. Uma sessão de uma conta que deixou de existir ou de estar ativa é terminada. |
 | **RF02.8** | A palavra-passe nunca é devolvida ao navegador nem registada em logs; em caso de erro, o formulário volta só com o email. |
 | **RF02.9** | A página inicial (`/`) leva à área do aluno com sessão iniciada e ao início de sessão sem ela. As páginas de registo e de início de sessão têm ligações uma para a outra. |

@@ -181,6 +181,8 @@ HIDE_PASSWORD = "Esconder palavra-passe"
 
 # Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
+# Aviso na página inicial depois de terminar a sessão (desde 23/10 volta-se à apresentação).
+LOGOUT_FEITO = "Sessão terminada. Até breve!"
 NAV_LABEL = "Menu"
 # Ícones à direita da barra do topo, em todas as páginas (revisão estética de 23/10, pedido do PO).
 # A lupa abre uma caixa de pesquisa no catálogo; o ícone de conta abre um menu com «Entrar» e
@@ -201,6 +203,9 @@ NAV_DECISOES = "As minhas decisões"
 
 REGISTER_TITLE = "Criar conta"
 REGISTER_INTRO = "Use o seu email pessoal. Vamos enviar-lhe uma ligação para confirmar a conta."
+
+REGISTER_NOME_LABEL = "Nome"
+REGISTER_NOME_HINT = "Como gostava de ser tratado no OptaBem, por exemplo «Ana Silva»."
 
 REGISTER_EMAIL_LABEL = "Email"
 REGISTER_EMAIL_HINT_ANY = "Por exemplo, nome@gmail.com."
@@ -230,6 +235,8 @@ REGISTER_HAVE_ACCOUNT = "Já tem conta? "
 REGISTER_LOGIN_LINK = "Inicie sessão"
 
 # Mensagens de erro do formulário de registo.
+ERROR_NOME_REQUIRED = "Indique o seu nome."
+ERROR_NOME_INVALID = "Use só letras, espaços, hífens e apóstrofos (até {maximo} caracteres)."
 ERROR_EMAIL_REQUIRED = "Indique o seu email."
 ERROR_EMAIL_INVALID = "Indique um email válido, por exemplo nome@gmail.com."
 ERROR_EMAIL_DOMAIN = "Use um email terminado em {dominios}."
@@ -267,8 +274,11 @@ ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que l
 
 HOME_TITLE = "Início"
 HOME_GREETING = "Olá!"
-# Por baixo da saudação, para a pessoa saber com que conta entrou. {email} é preenchido pela aplicação.
-HOME_SESSAO = "Sessão iniciada como {email}."
+# Com nome (desde 23/10): {nome} é o primeiro nome indicado no registo.
+HOME_GREETING_NOME = "Olá, {nome}!"
+# Contas criadas antes de 23/10 ainda não têm nome: um convite para o indicar.
+HOME_SEM_NOME = "Diga-nos como gostava de ser tratado em "
+HOME_SEM_NOME_LIGACAO = "A minha conta"
 # Atalhos por baixo do percurso (revisão estética de 23/10). «destino» é a página (endpoint do Flask).
 HOME_ATALHOS_TITULO = "O que pode fazer"
 HOME_ATALHOS = [
@@ -281,6 +291,10 @@ HOME_ATALHOS = [
 # «Apagar a minha conta» (US17), em vez de no fundo da página inicial (decisão do PO).
 CONTA_TITLE = "A minha conta"
 CONTA_EMAIL = "Email"
+CONTA_NOME = "Nome"
+CONTA_NOME_SEM = "Ainda não indicou o seu nome."
+CONTA_NOME_ALTERAR = "Guardar nome"
+CONTA_NOME_GUARDADO = "Nome guardado."
 CONTA_DESDE = "Conta criada a"
 CONTA_APAGAR_TITULO = "Apagar a conta"
 CONTA_APAGAR_TEXTO = "Apaga a conta e todos os dados do seu percurso. Não pode ser desfeito."
@@ -398,6 +412,20 @@ ORIENTACAO_ERRO_LIMITE_ALUNO = (
 ADMIN_AREA_NAME = "Gestão"
 ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
+# Ativar contas por confirmar (23/10): enquanto o site não envia emails reais, um administrador ativa-as aqui.
+ADMIN_NAV_CONTAS = "Contas por confirmar"
+ADMIN_CONTAS_TITULO = "Contas por confirmar"
+ADMIN_CONTAS_INTRO = (
+    "Enquanto o OptaBem não envia emails a sério, as contas novas ficam aqui até um administrador as ativar. "
+    "Ative só contas de pessoas que conhece: ativar salta a confirmação do email."
+)
+ADMIN_CONTAS_VAZIO = "Não há contas por confirmar."
+ADMIN_COL_NOME = "Nome"
+ADMIN_COL_EMAIL = "Email"
+ADMIN_COL_REGISTO = "Registo"
+ADMIN_ATIVAR = "Ativar"
+ADMIN_ATIVAR_ROTULO = "Ativar a conta {email}"
+ADMIN_CONTA_ATIVADA = "Conta {email} ativada: já pode iniciar sessão."
 
 # Os administradores entram pela página «Iniciar sessão» dos alunos, com o nome de utilizador
 # no campo do email (app/auth/perfis.py). Estes rótulos são do formulário «Novo administrador».
@@ -471,8 +499,9 @@ DEV_LINK_BUTTON = "Confirmar a conta agora"
 # ---------------------------------------------------------------------------
 
 CONFIRMATION_EMAIL_SUBJECT = "Confirme o seu registo"
+CONFIRMATION_EMAIL_HELLO = "Olá,\n\n"
+CONFIRMATION_EMAIL_HELLO_NOME = "Olá, {nome},\n\n"
 CONFIRMATION_EMAIL_BODY = (
-    "Olá,\n\n"
     "Recebemos um pedido de registo com este email. Para ativar a conta, abra a "
     "ligação abaixo nas próximas {horas} horas:\n\n"
     "{ligacao}\n\n"
@@ -511,11 +540,11 @@ PRIVACY_TITLE = "Política de privacidade"
 PRIVACY_VERSION = "Versão {versao}"
 # Texto provisório: a equipa substitui pelo texto final da política (RNF01).
 PRIVACY_BODY = (
-    "Texto provisório. A política final descreve que dados são recolhidos (email, conversa de "
+    "Texto provisório. A política final descreve que dados são recolhidos (nome, email, conversa de "
     "orientação e cursos escolhidos), com que finalidade (sugerir cursos), como são protegidos "
     "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
     "curso) e como exercer os direitos de acesso e de apagamento: cada aluno pode apagar a conta e "
-    "todos os seus dados na página inicial («Apagar a minha conta»)."
+    "todos os seus dados em «A minha conta» («Apagar a minha conta»)."
 )
 
 # ---------------------------------------------------------------------------

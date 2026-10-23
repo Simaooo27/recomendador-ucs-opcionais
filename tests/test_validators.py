@@ -19,6 +19,7 @@ def is_institutional_email(email, domains):
 
 def _validate(domains=(), **overrides):
     data = {
+        "nome": "Ana Silva",
         "email": "aluno@gmail.com",
         "password": "palavra-passe-1",
         "password_confirm": "palavra-passe-1",

@@ -32,6 +32,24 @@ def _render_admins(values: dict | None = None, errors: dict | None = None, statu
     return page, status
 
 
+@bp.get("/contas")
+@sessions.admin_required
+def contas():
+    """Contas de alunos por confirmar, com o botão «Ativar» (23/10: o site ainda não envia emails reais)."""
+    from ..auth import repository as contas_alunos
+
+    return render_template("gestao/contas.html", pendentes=contas_alunos.list_pending(get_db()))
+
+
+@bp.post("/contas/<int:user_id>/ativar")
+@sessions.admin_required
+def contas_ativar(user_id: int):
+    email = services.ativar_conta(get_db(), user_id)
+    if email:
+        flash(texts.ADMIN_CONTA_ATIVADA.format(email=email), "ok")
+    return redirect(url_for("gestao.contas"))
+
+
 @bp.get("/administradores")
 @sessions.admin_required
 def admins():

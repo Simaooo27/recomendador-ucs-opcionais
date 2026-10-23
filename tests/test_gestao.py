@@ -138,7 +138,7 @@ class AdminLoginTests(GestaoTestCase):
     def test_terminar_sessao(self):
         self.admin_login()
         response = self.post("/auth/sair")
-        self.assertTrue(response.headers["Location"].endswith("/auth/entrar"))
+        self.assertTrue(response.headers["Location"].endswith("/"))   # página inicial (23/10)
         self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/auth/entrar"))
 
     def test_login_sem_token_csrf_e_rejeitado(self):
@@ -259,3 +259,38 @@ class ManageAdminsTests(GestaoTestCase):
     def test_criar_sem_token_csrf_e_rejeitado(self):
         response = self.client.post("/gestao/administradores", data={"username": "x.y", "password": "outra-senha-2", "password_confirm": "outra-senha-2"})
         self.assertEqual(response.status_code, 400)
+
+
+class AtivarContasTests(GestaoTestCase):
+    """23/10: enquanto o site não envia emails reais, um administrador ativa as contas por confirmar."""
+
+    def setUp(self):
+        super().setUp()
+        self.cli_create()
+        self.register()                       # conta por confirmar (tests/base.py)
+        self.user_id = self.fetch_user()["id"]
+
+    def test_a_lista_mostra_as_contas_por_confirmar(self):
+        self.admin_login()
+        html = self.client.get("/gestao/contas").get_data(as_text=True)
+        self.assertIn("aluno@gmail.com", html)
+        self.assertIn("Ana Silva", html)
+
+    def test_ativar_deixa_iniciar_sessao(self):
+        self.admin_login()
+        response = self.post(f"/gestao/contas/{self.user_id}/ativar")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.fetch_user()["is_active"], 1)
+        self.assertIn('<p>Não há contas por confirmar.</p>', self.client.get("/gestao/contas").get_data(as_text=True))
+        self.logout()
+        self.assertTrue(self.login().headers["Location"].endswith("/inicio"))
+
+    def test_so_administradores(self):
+        self.assertEqual(self.client.get("/gestao/contas").status_code, 302)
+        self.post(f"/gestao/contas/{self.user_id}/ativar")
+        self.assertEqual(self.fetch_user()["is_active"], 0)
+
+    def test_ativar_exige_csrf(self):
+        self.admin_login()
+        self.client.post(f"/gestao/contas/{self.user_id}/ativar", data={"csrf_token": "errado"})
+        self.assertEqual(self.fetch_user()["is_active"], 0)

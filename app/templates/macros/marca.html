@@ -136,7 +136,7 @@
     <summary class="topo-icone" aria-label="{{ texts.NAV_CONTA }}" title="{{ texts.NAV_CONTA }}">{{ icone_conta() }}</summary>
     <div class="topo-painel topo-painel-conta">
       {% if g.user %}
-        <p class="topo-email">{{ g.user["email"] }}</p>
+        <p class="topo-email">{% if g.user["nome"] %}<strong class="topo-nome">{{ g.user["nome"] }}</strong>{% endif %}{{ g.user["email"] }}</p>
         <a href="{{ url_for('auth.account') }}"{% if request.endpoint == 'auth.account' %} aria-current="page"{% endif %}>{{ texts.NAV_MINHA_CONTA }}</a>
         <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
           <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">

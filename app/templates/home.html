@@ -7,8 +7,12 @@
 {% block content %}
 <div class="inicio">
 <header class="inicio-cabecalho">
-  <h1>{{ texts.HOME_GREETING }}</h1>
-  <p class="sessao-conta">{{ texts.HOME_SESSAO.format(email=g.user["email"]) }}</p>
+  {#- Desde 23/10 a pessoa é tratada pelo primeiro nome, e não pelo email (decisão do PO). -#}
+  {% set primeiro = (g.user["nome"] or "").split() | first | default("") %}
+  <h1>{{ texts.HOME_GREETING_NOME.format(nome=primeiro) if primeiro else texts.HOME_GREETING }}</h1>
+  {% if not primeiro %}
+    <p class="sessao-conta">{{ texts.HOME_SEM_NOME }}<a href="{{ url_for('auth.account') }}">{{ texts.HOME_SEM_NOME_LIGACAO }}</a>.</p>
+  {% endif %}
 </header>
 
 {#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso/__init__.py. -#}

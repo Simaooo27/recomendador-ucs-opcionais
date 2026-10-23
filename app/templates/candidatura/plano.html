@@ -67,6 +67,44 @@
 </section>
 {% endif %}
 
+{#- Que exames lhe abrem mais portas? (23/10) -#}
+{% if combinacoes %}
+<section class="plano-exames" aria-labelledby="plano-exames">
+  <h2 id="plano-exames">{{ texts.EXAMES_TITULO }}</h2>
+  <p>{{ texts.EXAMES_INTRO }}</p>
+  <ol class="exames-lista">
+    {% for combo in combinacoes %}
+      <li class="cartao combinacao">
+        <p class="combinacao-provas">{{ cand.provas(combo.provas, nomes) }}</p>
+        <p class="situacao {{ 'situacao-acima' if not combo.nao_abre else 'situacao-perto' }}">
+          {{- texts.EXAMES_TODAS if not combo.nao_abre else texts.EXAMES_ABRE.format(n=combo.abre | length, total=combo.abre | length + combo.nao_abre | length) -}}
+        </p>
+        {% if combo.nao_abre %}<p class="situacao-detalhe">{{ texts.EXAMES_FALTA.format(cursos=combo.nao_abre | map(attribute="curso") | join(", ")) }}</p>{% endif %}
+        {% if combo.ja_feitas %}<p class="situacao-detalhe">{{ texts.EXAMES_JA_FEZ.format(provas=cand.provas(combo.ja_feitas, nomes)) }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{#- Plano B: cursos com vagas na 2.ª fase de 2025 a que a nota chegava (23/10) -#}
+{% if plano_b %}
+<section class="plano-sugestoes plano-b" aria-labelledby="plano-b">
+  <h2 id="plano-b">{{ texts.PLANO_B_TITULO }}</h2>
+  <p>{{ texts.PLANO_B_INTRO }}</p>
+  <ul class="sugestoes-lista">
+    {% for curso, sim in plano_b %}
+      <li class="cartao sugestao">
+        <h3><a href="{{ url_for('catalogo.ficha', chave=curso.chave) }}">{{ curso.curso }}</a></h3>
+        <p class="opcao-instituicao">{{ curso.instituicao }}{% if curso.localidade %} · {{ curso.localidade }}{% endif %}</p>
+        <p class="situacao-detalhe">{% if curso.ultimo_colocado_2fase %}{{ texts.PLANO_B_DETALHE.format(vagas=curso.vagas_2fase, ultimo=curso.ultimo_colocado_2fase) }}{% else %}{{ texts.PLANO_B_SOBRARAM.format(vagas=curso.vagas_2fase) }}{% endif %}</p>
+        <p class="ficha-simulacao-nota plano-b-nota">{{ sim.nota | pontos }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 {% if sugestoes and not plano.cheio %}
 <section class="plano-sugestoes" aria-labelledby="plano-sugestoes">
   <h2 id="plano-sugestoes">{{ texts.CANDIDATURA_SUGESTOES_TITULO.format(area=area) }}</h2>

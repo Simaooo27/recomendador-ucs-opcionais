@@ -60,6 +60,8 @@ def plano():
         area=area,
         curso_escolhido=curso_escolhido,
         partilha=services.codigo_de_partilha(db, g.user["id"]),
+        combinacoes=services.exames_do_plano(plano, lista),
+        plano_b=services.plano_b(plano, lista, cursos),
         nomes=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
         maximo=services.MAX_OPCOES,
     )

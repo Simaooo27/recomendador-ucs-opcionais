@@ -79,6 +79,11 @@ REQUIRED_PLACEHOLDERS = {
     "CANDIDATURA_PRECISA": {"pontos", "provas"},
     "FICHA_PROCURA_DETALHE": {"candidatos", "vagas", "primeira", "colocados"},
     "PARTILHA_TITULO": {"nome"},
+    "EXAMES_ABRE": {"n", "total"},
+    "EXAMES_FALTA": {"cursos"},
+    "EXAMES_JA_FEZ": {"provas"},
+    "PLANO_B_DETALHE": {"vagas", "ultimo"},
+    "PLANO_B_SOBRARAM": {"vagas"},
     "FICHA_MINIMOS_VALOR": {"candidatura", "provas"},
 }
 

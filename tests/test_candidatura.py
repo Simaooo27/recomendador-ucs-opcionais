@@ -6,7 +6,9 @@ import unittest
 
 from app import texts
 from app.candidatura import services
-from app.candidatura.calculos import Notas, Situacao, nota_de_exame, nota_necessaria, simular
+from app.candidatura.calculos import (
+    Notas, Situacao, chega_na_2a_fase, exames_que_abrem_portas, nota_de_exame, nota_necessaria, simular,
+)
 from app.catalogo.repository import Curso
 from tests.base import CSRF_TOKEN, AppTestCase
 
@@ -134,7 +136,44 @@ class RecolhaDaTabelaTests(unittest.TestCase):
             "ultimo_colocado_1fase_2023": "152,0", "ultimo_colocado_1fase_2024": "144,0",
             "vagas_1fase_2025": "46", "candidatos_1fase_2025": "178", "candidatos_1opcao_1fase_2025": "20",
             "colocados_1fase_2025": "46",
+            # 2.ª fase de 2025 (plano B): vagas 6, colocados 7, último colocado 136,8
+            "vagas_2fase_2025": "6", "colocados_2fase_2025": "7", "ultimo_colocado_2fase_2025": "136,8",
         })
+
+
+class ExamesQueAbremPortasTests(unittest.TestCase):
+    def test_escolhe_a_combinacao_que_serve_para_mais_cursos(self):
+        a = _curso(codigo_instituicao="1", curso="A", provas=(("18",), ("11", "18")))
+        b = _curso(codigo_instituicao="2", curso="B", provas=(("19", "18"),))
+        c = _curso(codigo_instituicao="3", curso="C", provas=(("07", "19"),))
+        melhor = exames_que_abrem_portas([a, b, c], Notas(15, {"18": 140}))[0]
+        # Português + Matemática A abre A e B; para abrir os três seriam precisos 3 exames (07, 18, 19).
+        self.assertEqual(melhor.provas, ("07", "18", "19"))
+        self.assertEqual(len(melhor.abre), 3)
+        self.assertEqual(melhor.ja_feitas, ("18",))
+        seguinte = exames_que_abrem_portas([a, b, c], Notas(15, {}))[1]
+        self.assertEqual((seguinte.provas, [x.curso for x in seguinte.nao_abre]), (("18", "19"), ["C"]))
+
+    def test_matematica_16_e_19_contam_como_a_mesma(self):
+        a = _curso(codigo_instituicao="1", provas=(("16",),))
+        b = _curso(codigo_instituicao="2", provas=(("19",),))
+        self.assertEqual(exames_que_abrem_portas([a, b], Notas())[0].provas, ("19",))
+
+    def test_precisa_de_pelo_menos_dois_cursos_com_regras(self):
+        self.assertEqual(exames_que_abrem_portas([_curso()], Notas()), [])
+
+
+class PlanoBTests(unittest.TestCase):
+    def test_chega_quando_a_nota_passa_o_ultimo_da_2a_fase(self):
+        curso = _curso(ultimo_colocado="150,0", vagas_2fase=6, colocados_2fase=7, ultimo_colocado_2fase="140,0")
+        self.assertIsNotNone(chega_na_2a_fase(curso, Notas(15.2, {"18": 140})))   # 146,0 ≥ 140,0
+        self.assertIsNone(chega_na_2a_fase(curso, Notas(13.0, {"18": 140})))      # 135,0
+        self.assertIsNone(chega_na_2a_fase(_curso(), Notas(15.2, {"18": 140})))   # sem vagas na 2.ª fase
+
+    def test_sem_nota_da_2a_fase_so_conta_se_sobraram_vagas(self):
+        sobraram = _curso(vagas_2fase=10, colocados_2fase=4)
+        self.assertIsNotNone(chega_na_2a_fase(sobraram, Notas(12, {"18": 120})))
+        self.assertIsNone(chega_na_2a_fase(_curso(vagas_2fase=10, colocados_2fase=10), Notas(12, {"18": 120})))
 
 
 class AvisosTests(unittest.TestCase):
@@ -164,7 +203,8 @@ _COLUNAS = [
     "area_cnaef", "descricao", "saidas_profissionais", "fonte_dados_acesso", "fonte_descricao", "provas_ingresso",
     "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas", "pre_requisitos",
     "ultimo_colocado_1fase_2023", "ultimo_colocado_1fase_2024", "vagas_1fase_2025", "candidatos_1fase_2025",
-    "candidatos_1opcao_1fase_2025", "colocados_1fase_2025",
+    "candidatos_1opcao_1fase_2025", "colocados_1fase_2025", "vagas_2fase_2025", "colocados_2fase_2025",
+    "ultimo_colocado_2fase_2025",
 ]
 
 
@@ -179,6 +219,7 @@ def _linha(code, codc, curso, ultimo, provas="18|11+18", pre=""):
         "minimo_provas": "95", "pre_requisitos": pre,
         "ultimo_colocado_1fase_2023": "130,0", "ultimo_colocado_1fase_2024": "", "vagas_1fase_2025": "40",
         "candidatos_1fase_2025": "200", "candidatos_1opcao_1fase_2025": "80", "colocados_1fase_2025": "40",
+        "vagas_2fase_2025": "5", "colocados_2fase_2025": "5", "ultimo_colocado_2fase_2025": "125,0",
     }
 
 
@@ -297,6 +338,21 @@ class PaginasDoPlanoTests(AppTestCase):
         self.login()
         self._post("/candidatura/deixar-de-partilhar")
         self.assertEqual(self.client.get(f"/candidatura/p/{codigo}").status_code, 404)
+
+    def test_o_plano_mostra_exames_que_abrem_portas_e_plano_b(self):
+        self._post("/candidatura/notas", media="15,2", exame_18="140")
+        self._post("/candidatura/juntar/0002-9000")
+        self._post("/candidatura/juntar/0001-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertIn(texts.EXAMES_TITULO, html)
+        self.assertIn(texts.EXAMES_TODAS, html)
+        exames = html[html.index(texts.EXAMES_TITULO):html.index(texts.PLANO_B_TITULO)]
+        self.assertIn('<p class="combinacao-provas">Português</p>', exames)   # Português basta para os dois
+        self.assertEqual(exames.count('class="cartao combinacao"'), 1)
+        self.assertIn(texts.PLANO_B_TITULO, html)
+        plano_b = html[html.index(texts.PLANO_B_TITULO):]
+        self.assertIn("Curso Vizinho", plano_b)           # 146,0 ≥ 125,0 na 2.ª fase
+        self.assertNotIn("Curso Disputado", plano_b)       # já está no plano
 
     def test_codigo_de_partilha_errado_da_404(self):
         self.assertEqual(self.client.get("/candidatura/p/nao-existe").status_code, 404)

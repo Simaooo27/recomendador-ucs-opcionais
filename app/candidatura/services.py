@@ -14,7 +14,10 @@ from typing import Mapping, Sequence
 from .. import texts
 from ..catalogo.repository import Curso
 from . import repository
-from .calculos import Necessidade, Notas, Simulacao, Situacao, ler_numero, nota_de_exame, nota_necessaria, simular
+from .calculos import (
+    Combinacao, Necessidade, Notas, Simulacao, Situacao, chega_na_2a_fase, exames_que_abrem_portas, ler_numero,
+    nota_de_exame, nota_necessaria, simular,
+)
 
 MAX_OPCOES = 6   # o Concurso Nacional de Acesso aceita até 6 pares instituição/curso
 
@@ -175,6 +178,30 @@ def sugestoes(plano: Plano, cursos: Sequence[Curso], area: str, limite: int = 3)
             encontrados.append((curso, simulacao))
     # Primeiro os cursos onde está acima, do mais disputado para o menos; depois os «perto».
     encontrados.sort(key=lambda par: (par[1].situacao is not Situacao.ACIMA, abs(par[1].diferenca or 0)))
+    return encontrados[:limite]
+
+
+# -- Exames que abrem mais portas e plano B (23/10) -----------------------------------------------
+
+def exames_do_plano(plano: Plano, lista: Sequence[Opcao]) -> list[Combinacao]:
+    """Que combinação de exames serve para mais opções do plano (precisa de 2 ou mais opções)."""
+    return exames_que_abrem_portas([o.curso for o in lista], plano.notas)
+
+
+def plano_b(plano: Plano, lista: Sequence[Opcao], cursos: Sequence[Curso], limite: int = 3) -> list[tuple[Curso, Simulacao]]:
+    """Cursos das áreas do plano, fora dele, que em 2025 tiveram vagas na 2.ª fase e a que a nota da
+    pessoa chegava. Primeiro os mais disputados (último colocado da 2.ª fase mais alto)."""
+    if not plano.tem_notas or not lista:
+        return []
+    areas = {o.curso.area for o in lista}
+    encontrados = []
+    for curso in cursos:
+        if curso.area not in areas or curso.chave in plano.opcoes:
+            continue
+        simulacao = chega_na_2a_fase(curso, plano.notas)
+        if simulacao is not None:
+            encontrados.append((curso, simulacao))
+    encontrados.sort(key=lambda par: -(par[0].ultimo_colocado_2fase_numero or 0))
     return encontrados[:limite]
 
 

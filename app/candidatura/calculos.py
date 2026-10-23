@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
+from itertools import combinations
 from enum import Enum
 from typing import Mapping
 
@@ -184,3 +185,80 @@ def nota_necessaria(curso: Curso, notas: Notas) -> Necessidade | None:
         if melhor is None or (candidato.pontos, len(candidato.em_falta)) < (melhor.pontos, len(melhor.em_falta)):
             melhor = candidato
     return melhor
+
+
+# -- Que exames me abrem mais portas? (23/10) ------------------------------------------------------
+
+MAX_EXAMES = 3   # quase ninguém faz mais de 3 exames nacionais como provas de ingresso
+
+
+@dataclass(frozen=True)
+class Combinacao:
+    provas: tuple[str, ...]          # códigos dos exames da combinação
+    abre: tuple[Curso, ...]          # cursos a que estes exames dão para concorrer
+    nao_abre: tuple[Curso, ...]
+    ja_feitas: tuple[str, ...]       # exames da combinação que a pessoa já indicou
+
+
+def _canonico(codigo: str) -> str:
+    """«16 Matemática» conta como «19 Matemática A» (EQUIVALENTES), para não repetir combinações."""
+    return EQUIVALENTES.get(codigo, codigo)
+
+
+def exames_que_abrem_portas(cursos, notas: Notas, limite: int = 3) -> list[Combinacao]:
+    """As combinações de até 3 exames que dão para concorrer a mais cursos da lista.
+
+    Um curso fica «aberto» se um dos seus conjuntos de provas está todo dentro da combinação.
+    Ficam só as combinações mínimas (sem exames a mais para o mesmo resultado), ordenadas por
+    número de cursos abertos, depois por número de exames e, por fim, pelos exames já feitos.
+    """
+    com_regras = [c for c in cursos if c.tem_condicoes_de_acesso]
+    if len(com_regras) < 2:
+        return []
+    conjuntos = {c.chave: [frozenset(_canonico(p) for p in conj) for conj in c.provas] for c in com_regras}
+    codigos = sorted({p for lista in conjuntos.values() for conj in lista for p in conj})
+    feitos = {_canonico(p) for p in notas.exames}
+    candidatas = []
+    for tamanho in range(1, MAX_EXAMES + 1):
+        for combo in combinations(codigos, tamanho):
+            escolhidos = frozenset(combo)
+            abre = tuple(c for c in com_regras if any(conj <= escolhidos for conj in conjuntos[c.chave]))
+            if abre:
+                candidatas.append((escolhidos, abre))
+    # Mínimas: retira as que têm uma combinação mais pequena com os mesmos cursos abertos.
+    minimas = [
+        (combo, abre) for combo, abre in candidatas
+        if not any(outra < combo and set(a.chave for a in abre) <= set(o.chave for o in outros)
+                   for outra, outros in candidatas)
+    ]
+    minimas.sort(key=lambda par: (-len(par[1]), len(par[0]), -len(par[0] & feitos), sorted(par[0])))
+    resultado, vistos = [], set()
+    for combo, abre in minimas:
+        chaves = frozenset(c.chave for c in abre)
+        if chaves in vistos:              # outra combinação abre exatamente os mesmos cursos
+            continue
+        vistos.add(chaves)
+        resultado.append(Combinacao(
+            tuple(sorted(combo)), abre, tuple(c for c in com_regras if c.chave not in chaves),
+            tuple(sorted(combo & feitos)),
+        ))
+        if len(resultado) == limite:
+            break
+    return resultado
+
+
+# -- Plano B: 2.ª fase (23/10) ----------------------------------------------------------------------
+
+def chega_na_2a_fase(curso: Curso, notas: Notas) -> Simulacao | None:
+    """A simulação, se em 2025 o curso teve vagas na 2.ª fase e a nota da pessoa chegava ao último
+    colocado dessa fase (ou, sem essa nota, se sobraram vagas e a pessoa cumpre os mínimos)."""
+    if not curso.vagas_2fase:
+        return None
+    simulacao = simular(curso, notas)
+    if not simulacao.situacao.conta or simulacao.nota is None:
+        return None
+    referencia = curso.ultimo_colocado_2fase_numero
+    if referencia is None:
+        sobraram = curso.colocados_2fase is not None and curso.colocados_2fase < curso.vagas_2fase
+        return simulacao if sobraram else None
+    return simulacao if simulacao.nota >= referencia else None

@@ -47,6 +47,17 @@ class Curso:
     candidatos: int | None = None           # candidatos na 1.ª fase de 2025 (em qualquer opção)
     candidatos_1opcao: int | None = None    # dos quais, com este curso em 1.ª opção
     colocados: int | None = None            # colocados na 1.ª fase de 2025
+    # Plano B (23/10): 2.ª fase de 2025.
+    vagas_2fase: int | None = None
+    colocados_2fase: int | None = None
+    ultimo_colocado_2fase: str | None = None
+
+    @property
+    def ultimo_colocado_2fase_numero(self) -> float | None:
+        try:
+            return float(self.ultimo_colocado_2fase.replace(",", ".")) if self.ultimo_colocado_2fase else None
+        except ValueError:
+            return None
 
     @property
     def ultimo_colocado_numero(self) -> float | None:
@@ -143,6 +154,9 @@ def _ler(caminho: str, modificado: float) -> tuple[Curso, ...]:
             candidatos=_inteiro(l.get("candidatos_1fase_2025", "")),
             candidatos_1opcao=_inteiro(l.get("candidatos_1opcao_1fase_2025", "")),
             colocados=_inteiro(l.get("colocados_1fase_2025", "")),
+            vagas_2fase=_inteiro(l.get("vagas_2fase_2025", "")),
+            colocados_2fase=_inteiro(l.get("colocados_2fase_2025", "")),
+            ultimo_colocado_2fase=(l.get("ultimo_colocado_2fase_2025") or "").strip() or None,
         )
         for l in linhas
         if l.get("curso", "").strip()

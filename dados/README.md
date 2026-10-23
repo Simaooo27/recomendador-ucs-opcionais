@@ -30,6 +30,8 @@ Catálogo do MVP: **30 licenciaturas de 12 instituições**, em três áreas (Ci
 | `ultimo_colocado_1fase_2023`, `ultimo_colocado_1fase_2024` | Nota do último colocado (contingente geral, 1.ª fase) nos dois anos anteriores, para a tendência | DGES |
 | `vagas_1fase_2025`, `candidatos_1fase_2025`, `candidatos_1opcao_1fase_2025`, `colocados_1fase_2025` | Procura na 1.ª fase de 2025: vagas, candidatos (em qualquer opção), candidatos com o curso em 1.ª opção e colocados | DGES |
 
+| `vagas_2fase_2025`, `colocados_2fase_2025`, `ultimo_colocado_2fase_2025` | 2.ª fase de 2025: vagas, colocados e nota do último colocado (plano B) | DGES |
+
 `provas-ingresso.csv` tem o código e o nome de cada prova de ingresso (`18,Português`), também escrito pelo `processar`.
 
 Formato: UTF-8 com BOM (abre diretamente no Excel), separador vírgula.

@@ -1367,6 +1367,11 @@ button.a-enviar::before {
 .ficha-simulacao-nota { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .ficha-simulacao .escolha-acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 0.5rem; }
 .no-plano { color: var(--ok); font-weight: 700; }
+.plano-exames { margin-top: 2rem; }
+.exames-lista { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; }
+.combinacao { margin: 0; display: grid; gap: 0.45rem; align-content: start; }
+.combinacao-provas { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 1.1rem; }
+.plano-b-nota { font-size: 1.4rem; }
 .ficha-contexto { display: grid; gap: 0.6rem; margin: 1rem 0 0.5rem; }
 .ficha-historico, .ficha-procura { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; margin: 0; font-size: 0.95rem; }
 .ficha-historico-titulo { flex-basis: 100%; color: var(--muted); font-size: 0.85rem; }

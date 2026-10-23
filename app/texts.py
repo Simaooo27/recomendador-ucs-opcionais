@@ -596,6 +596,23 @@ CANDIDATURA_JUNTADO = "{curso} juntado ao plano de candidatura."
 CANDIDATURA_CHEIO = "O plano já tem {maximo} opções: retire uma antes de juntar outra."
 CANDIDATURA_NOTAS_GUARDADAS = "Notas guardadas."
 
+# Que exames me abrem mais portas? (23/10): combinações de até 3 exames para as opções do plano.
+EXAMES_TITULO = "Que exames lhe abrem mais portas?"
+EXAMES_INTRO = "Com estes exames nacionais, pode concorrer a mais opções do seu plano. Ajuda a decidir que exames fazer."
+EXAMES_ABRE = "Dá para {n} de {total} opções"
+EXAMES_FALTA = "Não dá para: {cursos}"
+EXAMES_TODAS = "Dá para todas as opções do plano."
+EXAMES_JA_FEZ = "Já fez: {provas}"
+
+# Plano B: 2.ª fase (23/10).
+PLANO_B_TITULO = "Plano B: 2.ª fase"
+PLANO_B_INTRO = (
+    "Se não ficar colocado na 1.ª fase, estes cursos das mesmas áreas tiveram vagas na 2.ª fase de 2025 "
+    "e a sua nota chegava ao último colocado dessa fase. As vagas da 2.ª fase são as que sobram da 1.ª: mudam todos os anos."
+)
+PLANO_B_DETALHE = "Vagas na 2.ª fase de 2025: {vagas} · último colocado: {ultimo}"
+PLANO_B_SOBRARAM = "Vagas na 2.ª fase de 2025: {vagas} · sobraram lugares"
+
 # Partilhar o plano (23/10): ligação só de leitura.
 PARTILHA_SECCAO = "Partilhar o plano"
 PARTILHA_EXPLICACAO = (

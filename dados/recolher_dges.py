@@ -179,6 +179,8 @@ COLUNAS = [
     # Tendência e procura (23/10), da tabela «Dados Estatísticos de Candidaturas Anteriores», 1.ª fase.
     "ultimo_colocado_1fase_2023", "ultimo_colocado_1fase_2024",
     "vagas_1fase_2025", "candidatos_1fase_2025", "candidatos_1opcao_1fase_2025", "colocados_1fase_2025",
+    # Plano B (23/10): 2.ª fase de 2025.
+    "vagas_2fase_2025", "colocados_2fase_2025", "ultimo_colocado_2fase_2025",
 ]
 # Graus que entram no catálogo (o índice da DGES escreve-os entre parênteses retos).
 GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "Mest Integ": "Mestrado integrado"}
@@ -322,7 +324,12 @@ def _pre_requisitos(pagina: str) -> str:
 
 
 def estatisticas_1fase(pagina: str) -> dict[str, dict[int, str]]:
-    """Linha da tabela de estatísticas -> {ano: valor da 1.ª fase}.
+    """Linha da tabela de estatísticas -> {ano: valor da 1.ª fase}."""
+    return estatisticas(pagina, fase=1)
+
+
+def estatisticas(pagina: str, fase: int = 1) -> dict[str, dict[int, str]]:
+    """Linha da tabela de estatísticas -> {ano: valor da fase pedida (1 ou 2)}.
 
     As linhas «Candidatos» e «Colocados» aparecem duas vezes (o título do grupo, vazio, e o total):
     fica a que tem números. «em 1ª Opção» também aparece duas vezes: a 1.ª é dos candidatos, a 2.ª
@@ -338,8 +345,8 @@ def estatisticas_1fase(pagina: str) -> dict[str, dict[int, str]]:
         if len(celulas) < 1 + 2 * len(anos) or not anos:
             continue
         nome, valores = celulas[0], celulas[1:]
-        primeira_fase = {ano: valores[2 * i] for i, ano in enumerate(anos)}
-        if not any(primeira_fase.values()):
+        primeira_fase = {ano: valores[2 * i + fase - 1] for i, ano in enumerate(anos)}
+        if not any(valores):
             continue                       # título de grupo («Candidatos», «Colocados»)
         if nome in linhas:
             nome = "colocados " + nome     # o 2.º «em 1ª Opção» é dos colocados
@@ -455,6 +462,17 @@ def _tendencia_e_procura(pagina: str) -> dict[str, str]:
         "candidatos_1fase_2025": _numero(linhas.get("Candidatos", {}).get(2025, "")),
         "candidatos_1opcao_1fase_2025": _numero(linhas.get("em 1ª Opção", {}).get(2025, "")),
         "colocados_1fase_2025": _numero(linhas.get("Colocados", {}).get(2025, "")),
+        **_segunda_fase(pagina),
+    }
+
+
+def _segunda_fase(pagina: str) -> dict[str, str]:
+    linhas = estatisticas(pagina, fase=2)
+    ultimo = linhas.get("Nota de Candidatura do Último Colocado pelo Contingente Geral", {})
+    return {
+        "vagas_2fase_2025": _numero(linhas.get("Vagas", {}).get(2025, "")),
+        "colocados_2fase_2025": _numero(linhas.get("Colocados", {}).get(2025, "")),
+        "ultimo_colocado_2fase_2025": _numero(ultimo.get(2025, "")),
     }
 
 

@@ -32,6 +32,13 @@ def create_app(config: dict | None = None) -> Flask:
     if not app.config.get("DATABASE"):
         app.config["DATABASE"] = str(Path(app.instance_path) / "app.sqlite3")
 
+    if app.config.get("SESSION_COOKIE_SECURE"):
+        # Pelo túnel do Cloudflare (SESSION_COOKIE_SECURE=true), o Flask recebe os pedidos em
+        # http://localhost. Para as ligações completas (partilhar o plano, confirmar o email)
+        # terem o endereço https://….trycloudflare.com, lê-se o endereço que o túnel indica.
+        from werkzeug.middleware.proxy_fix import ProxyFix
+
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     db.init_app(app)
     from .gestao import cli as gestao_cli
 

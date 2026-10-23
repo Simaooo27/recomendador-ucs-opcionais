@@ -186,6 +186,8 @@ HIDE_PASSWORD = "Esconder palavra-passe"
 
 # Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
+# Aviso na página inicial depois de terminar a sessão (desde 23/10 volta-se à apresentação).
+LOGOUT_FEITO = "Sessão terminada. Até breve!"
 NAV_LABEL = "Menu"
 # Ícones à direita da barra do topo, em todas as páginas (revisão estética de 23/10, pedido do PO).
 # A lupa abre uma caixa de pesquisa no catálogo; o ícone de conta abre um menu com «Entrar» e

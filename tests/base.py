@@ -13,6 +13,7 @@ from app.db import init_db
 CSRF_TOKEN = "token-csrf-de-teste"
 VALID_EMAIL = "aluno@gmail.com"
 VALID_PASSWORD = "palavra-passe-1"
+VALID_NOME = "Ana Silva"
 _TOKEN_IN_LINK = re.compile(r"/auth/confirmar/([A-Za-z0-9_\-.]+)")
 
 
@@ -57,6 +58,7 @@ class AppTestCase(unittest.TestCase):
             self.set_csrf(client)
         data = {
             "csrf_token": CSRF_TOKEN,
+            "nome": VALID_NOME,
             "email": VALID_EMAIL,
             "password": VALID_PASSWORD,
             "password_confirm": VALID_PASSWORD,

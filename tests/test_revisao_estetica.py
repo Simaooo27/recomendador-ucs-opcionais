@@ -73,7 +73,7 @@ class InicioTests(AppTestCase):
         self.create_active_user()
         self.login()
         html = self.client.get("/inicio").get_data(as_text=True)
-        for atalho, destino in zip(texts.HOME_ATALHOS, ("/orientacao/", "/cursos/", "/percurso/")):
+        for atalho, destino in zip(texts.HOME_ATALHOS, ("/orientacao/", "/cursos/", "/candidatura/"), strict=True):
             with self.subTest(atalho=atalho["titulo"]):
                 self.assertIn(atalho["titulo"], html)
                 self.assertIn(f'href="{destino}"', html)

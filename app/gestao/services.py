@@ -133,3 +133,18 @@ def indicadores(db: sqlite3.Connection) -> Indicadores:
     ativas, pendentes = alunos.count_by_status(db)
     ultimo = alunos.last_created_at(db)
     return Indicadores(ativas, pendentes, repository.count(db), ultimo[:10] if ultimo else None)
+
+
+def ativar_conta(db: sqlite3.Connection, user_id: int) -> str | None:
+    """Ativa uma conta de aluno por confirmar (enquanto o site não envia emails a sério, 23/10).
+
+    Devolve o email da conta ativada, ou ``None`` se não existe ou já estava ativa.
+    """
+    from ..auth import repository as contas
+
+    conta = contas.get_by_id(db, user_id)
+    if conta is None or conta["is_active"]:
+        return None
+    contas.activate_user(db, user_id, _utc_now())
+    db.commit()
+    return conta["email"]

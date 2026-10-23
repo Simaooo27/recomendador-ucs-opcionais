@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% import "macros/candidatura.html" as cand with context %}
+{% set page_title = texts.CANDIDATURA_TITULO %}
+{% set largura = "media" %}
+
+{#- Plano de candidatura (protótipo de 23/10): as notas, as até 6 opções por ordem, com a nota de
+    candidatura a cada uma, os avisos e outros cursos da mesma área. Contas em app/candidatura/calculos.py. -#}
+{% block content %}
+<h1>{{ texts.CANDIDATURA_TITULO }}</h1>
+<p class="lead">{{ texts.CANDIDATURA_INTRO }}</p>
+
+<section class="cartao plano-notas" aria-labelledby="plano-notas">
+  <h2 id="plano-notas">{{ texts.CANDIDATURA_AS_MINHAS_NOTAS }}</h2>
+  {% if plano.tem_notas %}
+    <p>{{ texts.CANDIDATURA_MEDIA_RESUMO.format(media=plano.notas.media | pontos) }}</p>
+    {% if plano.notas.exames %}
+      {% set exames %}{% for codigo, valor in plano.notas.exames | dictsort %}{{ nomes.get(codigo, codigo) }} {{ valor | pontos }}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
+      <p>{{ texts.CANDIDATURA_EXAMES_RESUMO.format(exames=exames) }}</p>
+    {% else %}<p>{{ texts.CANDIDATURA_SEM_EXAMES }}</p>{% endif %}
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_MUDAR_NOTAS }}</a>
+  {% else %}
+    <p>{{ texts.CANDIDATURA_SEM_NOTAS }}</p>
+    <a class="button-link" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_INDICAR_NOTAS }}</a>
+  {% endif %}
+</section>
+
+<section class="plano-opcoes" aria-labelledby="plano-opcoes">
+  <h2 id="plano-opcoes">{{ texts.CANDIDATURA_AS_MINHAS_OPCOES.format(n=opcoes | length, maximo=maximo) }}</h2>
+  {% if opcoes %}
+    <ol class="opcoes">
+      {% for opcao in opcoes %}
+        <li class="opcao opcao-{{ opcao.simulacao.situacao.value }}" data-chave="{{ opcao.curso.chave }}">
+          <p class="opcao-posicao">{{ texts.CANDIDATURA_OPCAO.format(posicao=opcao.posicao) }}</p>
+          <div class="opcao-curso">
+            <h3><a href="{{ url_for('catalogo.ficha', chave=opcao.curso.chave) }}">{{ opcao.curso.curso }}</a></h3>
+            <p class="opcao-instituicao">{{ opcao.curso.instituicao }}{% if opcao.curso.localidade %} · {{ opcao.curso.localidade }}{% endif %}</p>
+            {{ cand.situacao(opcao.simulacao, opcao.curso, nomes) }}
+            {% if opcao.necessidade and opcao.simulacao.situacao.value == "falta_prova" and opcao.necessidade.possivel %}
+              <p class="situacao-detalhe">{{ texts.CANDIDATURA_PRECISA.format(pontos=opcao.necessidade.pontos | pontos, provas=cand.provas(opcao.necessidade.em_falta, nomes)) }}</p>
+            {% endif %}
+          </div>
+          <dl class="opcao-numeros">
+            <div><dt>{{ texts.CANDIDATURA_A_SUA_NOTA }}</dt><dd>{{ opcao.simulacao.nota | pontos or "—" }}</dd></div>
+            <div><dt>{{ texts.CANDIDATURA_ULTIMO }}</dt><dd>{{ opcao.curso.ultimo_colocado or "—" }}</dd>{{ cand.tendencia(opcao.curso, compacta=true) }}</div>
+          </dl>
+          <div class="opcao-acoes">
+            {% if not loop.first %}{{ cand.botao("candidatura.subir", opcao.curso.chave, "↑", texts.CANDIDATURA_SUBIR_ROTULO.format(curso=opcao.curso.curso), "botao-icone") }}{% endif %}
+            {% if not loop.last %}{{ cand.botao("candidatura.descer", opcao.curso.chave, "↓", texts.CANDIDATURA_DESCER_ROTULO.format(curso=opcao.curso.curso), "botao-icone") }}{% endif %}
+            {{ cand.botao("candidatura.retirar", opcao.curso.chave, texts.CANDIDATURA_RETIRAR, texts.CANDIDATURA_RETIRAR_ROTULO.format(curso=opcao.curso.curso), "botao-texto") }}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="resultados-vazio">{{ texts.CANDIDATURA_VAZIO }}</p>
+    {% if curso_escolhido %}
+      {{ cand.botao("candidatura.juntar", curso_escolhido.chave, texts.CANDIDATURA_JUNTAR_ESCOLHIDO.format(curso=curso_escolhido.curso, instituicao=curso_escolhido.instituicao), classe="") }}
+    {% endif %}
+  {% endif %}
+  {% if not plano.cheio %}<p><a href="{{ url_for('catalogo.lista') }}">{{ texts.CANDIDATURA_PROCURAR }}</a></p>{% endif %}
+</section>
+
+{% if avisos %}
+<section class="plano-avisos" aria-labelledby="plano-avisos">
+  <h2 id="plano-avisos">{{ texts.CANDIDATURA_AVISOS_TITULO }}</h2>
+  <ul>{% for aviso in avisos %}<li>{{ aviso }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+
+{#- Que exames lhe abrem mais portas? (23/10) -#}
+{% if combinacoes %}
+<section class="plano-exames" aria-labelledby="plano-exames">
+  <h2 id="plano-exames">{{ texts.EXAMES_TITULO }}</h2>
+  <p>{{ texts.EXAMES_INTRO }}</p>
+  <ol class="exames-lista">
+    {% for combo in combinacoes %}
+      <li class="cartao combinacao">
+        <p class="combinacao-provas">{{ cand.provas(combo.provas, nomes) }}</p>
+        <p class="situacao {{ 'situacao-acima' if not combo.nao_abre else 'situacao-perto' }}">
+          {{- texts.EXAMES_TODAS if not combo.nao_abre else texts.EXAMES_ABRE.format(n=combo.abre | length, total=combo.abre | length + combo.nao_abre | length) -}}
+        </p>
+        {% if combo.nao_abre %}<p class="situacao-detalhe">{{ texts.EXAMES_FALTA.format(cursos=combo.nao_abre | map(attribute="curso") | join(", ")) }}</p>{% endif %}
+        {% if combo.ja_feitas %}<p class="situacao-detalhe">{{ texts.EXAMES_JA_FEZ.format(provas=cand.provas(combo.ja_feitas, nomes)) }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{#- Plano B: cursos com vagas na 2.ª fase de 2025 a que a nota chegava (23/10) -#}
+{#- Aparece sempre que há notas e opções; sem cursos, explica porquê (pedido do PO: «onde está o plano B?»). -#}
+{% if plano.tem_notas and opcoes %}
+<section class="plano-sugestoes plano-b" aria-labelledby="plano-b">
+  <h2 id="plano-b">{{ texts.PLANO_B_TITULO }}</h2>
+  {% if not plano_b %}<p>{{ texts.PLANO_B_VAZIO }}</p>{% else %}
+  <p>{{ texts.PLANO_B_INTRO }}</p>
+  <ul class="sugestoes-lista">
+    {% for curso, sim in plano_b %}
+      <li class="cartao sugestao">
+        <h3><a href="{{ url_for('catalogo.ficha', chave=curso.chave) }}">{{ curso.curso }}</a></h3>
+        <p class="opcao-instituicao">{{ curso.instituicao }}{% if curso.localidade %} · {{ curso.localidade }}{% endif %}</p>
+        <p class="situacao-detalhe">{% if curso.ultimo_colocado_2fase %}{{ texts.PLANO_B_DETALHE.format(vagas=curso.vagas_2fase, ultimo=curso.ultimo_colocado_2fase) }}{% else %}{{ texts.PLANO_B_SOBRARAM.format(vagas=curso.vagas_2fase) }}{% endif %}</p>
+        <p class="ficha-simulacao-nota plano-b-nota">{{ sim.nota | pontos }}</p>
+        {{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}
+      </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if sugestoes and not plano.cheio %}
+<section class="plano-sugestoes" aria-labelledby="plano-sugestoes">
+  <h2 id="plano-sugestoes">{{ texts.CANDIDATURA_SUGESTOES_TITULO.format(area=area) }}</h2>
+  <ul class="sugestoes-lista">
+    {% for curso, sim in sugestoes %}
+      <li class="cartao sugestao">
+        <h3><a href="{{ url_for('catalogo.ficha', chave=curso.chave) }}">{{ curso.curso }}</a></h3>
+        <p class="opcao-instituicao">{{ curso.instituicao }}{% if curso.localidade %} · {{ curso.localidade }}{% endif %}</p>
+        <p class="situacao situacao-{{ sim.situacao.value }}">{{ (texts | attr("CANDIDATURA_SITUACAO_" ~ sim.situacao.value | upper)).format(diferenca=sim.diferenca | pontos(sinal=true)) }}</p>
+        {{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="cartao plano-partilha" id="partilhar" aria-labelledby="plano-partilha">
+  <h2 id="plano-partilha">{{ texts.PARTILHA_SECCAO }}</h2>
+  <p>{{ texts.PARTILHA_EXPLICACAO }}</p>
+  {% if partilha %}
+    {% set ligacao = url_for('candidatura.partilhado', codigo=partilha, _external=true) %}
+    <div class="field">
+      <label for="ligacao-partilha">{{ texts.PARTILHA_LIGACAO }}</label>
+      <input id="ligacao-partilha" type="text" readonly value="{{ ligacao }}" aria-describedby="ligacao-partilha-dica">
+      <p class="hint" id="ligacao-partilha-dica">{{ texts.PARTILHA_COPIAR }}</p>
+    </div>
+    <form method="post" action="{{ url_for('candidatura.deixar_de_partilhar') }}" class="form-em-linha">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit" class="botao-secundario">{{ texts.PARTILHA_DESLIGAR }}</button>
+    </form>
+  {% else %}
+    <form method="post" action="{{ url_for('candidatura.partilhar') }}" class="form-em-linha">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit" class="botao-secundario">{{ texts.PARTILHA_CRIAR }}</button>
+    </form>
+  {% endif %}
+</section>
+
+<p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>
+{% endblock %}

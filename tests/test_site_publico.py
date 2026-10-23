@@ -130,3 +130,23 @@ class LimitePorAlunoTests(ConversaTestCase):
         for _ in range(3):
             self.pagina()
         self.assertEqual(self.pedidos_guardados(), [])
+
+
+class LigacoesPeloTunelTests(AppTestCase):
+    """Pelo túnel (SESSION_COOKIE_SECURE=true), as ligações completas usam o endereço público."""
+    config_overrides = {"SESSION_COOKIE_SECURE": True}
+
+    def test_ligacao_de_partilha_tem_o_endereco_do_tunel(self):
+        from tests.base import CSRF_TOKEN
+        self.create_active_user()
+        # O cloudflared liga-se a http://localhost:5000 e indica o endereço público nestes cabeçalhos.
+        pedido = {"base_url": "http://localhost:5000",
+                  "headers": {"X-Forwarded-Proto": "https", "X-Forwarded-Host": "exemplo.trycloudflare.com"}}
+        with self.client.session_transaction(**pedido) as sessao:
+            sessao["csrf_token"] = CSRF_TOKEN
+        self.client.post("/auth/entrar", data={"csrf_token": CSRF_TOKEN, "email": "aluno@gmail.com", "password": "palavra-passe-1"}, **pedido)
+        import re
+        token = re.search(r'name="csrf_token" value="([^"]+)"', self.client.get("/candidatura/", **pedido).get_data(as_text=True)).group(1)
+        self.client.post("/candidatura/partilhar", data={"csrf_token": token}, **pedido)
+        html = self.client.get("/candidatura/", **pedido).get_data(as_text=True)
+        self.assertIn('value="https://exemplo.trycloudflare.com/candidatura/p/', html)

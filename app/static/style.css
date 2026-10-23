@@ -50,6 +50,8 @@
   --danger-bg: #fdedec;    /* fundo das caixas de erro */
   --ok: #17663f;           /* mensagens de sucesso */
   --ok-bg: #e7f4ec;        /* fundo das caixas de sucesso */
+  --warn: #7a4f00;         /* «perto do último colocado» (plano de candidatura) */
+  --warn-bg: #fdf3dc;
 
   --radius: 10px;          /* cantos dos campos, botões e caixas */
 }
@@ -1133,6 +1135,9 @@ td form { margin: 0; }
 .conta-dados > div + div { padding-top: 0.75rem; box-shadow: inset 0 1px 0 var(--line); }
 .conta-dados dt { color: var(--muted); }
 .conta-dados dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.conta-nome { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; margin: 1.5rem 0 0; }
+.conta-nome .field { flex: 1 1 16rem; margin: 0; }
+.topo-nome { display: block; color: var(--ink); font-size: 0.95rem; }
 .zona-perigo { padding: 1.25rem; border-radius: 16px; box-shadow: 0 0 0 1px rgba(179, 38, 30, 0.45); }
 .zona-perigo h2 { margin: 0 0 0.35rem; font-size: 1.1rem; }
 .zona-perigo p { color: var(--muted); }
@@ -1302,6 +1307,90 @@ button.a-enviar::before {
 
 
 /* --------------------------------------------------------------------------
+   Plano de candidatura (/candidatura e caixa «A sua nota» na ficha; 23/10)
+   -------------------------------------------------------------------------- */
+.form-em-linha { display: inline; margin: 0; }
+.botao-icone, .botao-texto { width: auto; min-height: 2.5rem; padding: 0.3rem 0.75rem; font-size: 0.95rem; font-weight: 700; color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.botao-texto { font-weight: 400; color: var(--muted); box-shadow: none; text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) {
+  .botao-icone:hover { background: var(--page); }
+  .botao-texto:hover { background: transparent; color: var(--danger); }
+}
+.plano-notas h2, .plano-partilha h2 { margin-top: 0; }
+.plano-notas p { margin: 0.25rem 0; }
+.plano-notas .button-link, .plano-notas .botao-ligacao { margin-top: 0.75rem; }
+.plano-opcoes { margin-top: 2rem; }
+.opcoes { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: 0.75rem; }
+.opcao {
+  display: grid; grid-template-columns: 4.5rem minmax(0, 1fr) auto; gap: 0.5rem 1.25rem; align-items: start;
+  padding: 1rem 1.25rem; border-radius: 16px; background: var(--paper); box-shadow: 0 0 0 1px var(--line);
+  border-left: 5px solid var(--line);
+}
+.opcao-acima, .opcao-sem_referencia { border-left-color: var(--ok); }
+.opcao-perto { border-left-color: var(--marigold); }
+.opcao-abaixo, .opcao-abaixo_do_minimo, .opcao-falta_prova { border-left-color: var(--danger); }
+.opcao-posicao { margin: 0.15rem 0 0; white-space: nowrap; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 1.05rem; }
+.opcao-curso h3 { margin: 0; font-size: 1.1rem; }
+.opcao-curso h3 a { color: inherit; }
+.opcao-instituicao { margin: 0.15rem 0 0.5rem; color: var(--muted); font-size: 0.95rem; }
+.opcao-numeros { display: flex; gap: 1.25rem; margin: 0; text-align: right; }
+.opcao-numeros dt { color: var(--muted); font-size: 0.8rem; }
+.opcao-numeros dd { margin: 0; font-weight: 700; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.opcao-acoes { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+@media (max-width: 40rem) {
+  .opcao { grid-template-columns: minmax(0, 1fr); }
+  .opcao-numeros { text-align: left; }
+  .opcao-acoes { grid-column: 1; }
+}
+.situacao { display: inline-block; justify-self: start; width: fit-content; margin: 0; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700; background: var(--page); color: var(--muted); }
+.situacao-acima, .situacao-sem_referencia { background: var(--ok-bg); color: var(--ok); }
+.situacao-perto { background: var(--warn-bg); color: var(--warn); }
+.situacao-abaixo, .situacao-abaixo_do_minimo, .situacao-falta_prova { background: var(--danger-bg); color: var(--danger); }
+.situacao-detalhe { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.9rem; }
+.plano-avisos { margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: 16px; background: var(--warn-bg); color: var(--ink); }
+.plano-avisos h2 { margin-top: 0; font-size: 1.1rem; }
+.plano-avisos ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+.plano-sugestoes { margin-top: 2rem; }
+.sugestoes-lista { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; }
+.sugestao { margin: 0; display: grid; gap: 0.5rem; align-content: start; }
+.sugestao h3 { margin: 0; font-size: 1.02rem; }
+.sugestao .opcao-instituicao { margin: 0; }
+.sugestao .botao-secundario { justify-self: start; }
+.plano-estimativa { margin-top: 2rem; color: var(--muted); font-size: 0.9rem; }
+.exames { margin: 1.5rem 0; padding: 0; border: 0; }
+.exames legend { font-weight: 700; padding: 0; }
+.exames-grelha { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 1rem; margin-top: 0.75rem; }
+.acesso-conjuntos { margin: 0.25rem 0 0; padding-left: 1.1rem; }
+.acesso-um-de { color: var(--muted); font-size: 0.9rem; }
+.ficha-simulacao { display: grid; gap: 0.5rem; }
+.ficha-simulacao h2 { margin: 0; }
+.ficha-simulacao-nota { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ficha-simulacao .escolha-acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 0.5rem; }
+.no-plano { color: var(--ok); font-weight: 700; }
+.plano-exames { margin-top: 2rem; }
+.exames-lista { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; }
+.combinacao { margin: 0; display: grid; gap: 0.45rem; align-content: start; }
+.combinacao-provas { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 1.1rem; }
+.plano-b-nota { font-size: 1.4rem; }
+.ficha-contexto { display: grid; gap: 0.6rem; margin: 1rem 0 0.5rem; }
+.ficha-historico, .ficha-procura { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; margin: 0; font-size: 0.95rem; }
+.ficha-historico-titulo { flex-basis: 100%; color: var(--muted); font-size: 0.85rem; }
+.ficha-historico-ano { font-variant-numeric: tabular-nums; }
+.ficha-historico-seta { color: var(--muted); }
+.ficha-procura-detalhe { flex-basis: 100%; color: var(--muted); font-size: 0.9rem; }
+.tendencia, .procura { display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: var(--page); color: var(--muted); }
+.tendencia-sobe { background: var(--danger-bg); color: var(--danger); }     /* mais difícil de entrar */
+.tendencia-desce { background: var(--ok-bg); color: var(--ok); }
+.procura-muita { background: var(--danger-bg); color: var(--danger); }
+.procura-media { background: var(--warn-bg); color: var(--warn); }
+.procura-pouca, .procura-sobraram { background: var(--ok-bg); color: var(--ok); }
+.opcao-numeros .tendencia { margin-top: 0.25rem; font-size: 0.78rem; }
+.ficha-precisa-titulo { margin: 0.75rem 0 0; font-size: 1rem; }
+.ficha-precisa { margin: 0; }
+.ficha-precisa-impossivel { color: var(--danger); }
+
+
+/* --------------------------------------------------------------------------
    15. Modo escuro
    Usado automaticamente quando o computador ou o telemóvel está em modo
    escuro. Fica no fim do ficheiro para se sobrepor às regras de cima.
@@ -1312,6 +1401,7 @@ button.a-enviar::before {
     --paper: #16211e; --page: #0f1715; --accent: #5cc9a7; --accent-hover: #7dd8bb; --accent-ink: #08261e;
     --forest: #0b231d; --marigold: #f5c15c;
     --danger: #ff9c94; --danger-bg: #3a1715; --ok: #7fd9a6; --ok-bg: #10301f;
+    --warn: #f5c15c; --warn-bg: #33270a;
   }
   input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(92, 201, 167, 0.22); }
   .alert-error { border-color: rgba(255, 156, 148, 0.35); }

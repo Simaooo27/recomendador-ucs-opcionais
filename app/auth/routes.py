@@ -9,7 +9,7 @@ from ..mailer import Message
 from . import bp, services, sessions
 from .perfis import criar_cadeia_de_perfis
 from .services import ConfirmationOutcome, LoginOutcome
-from .validators import RegistrationInput, domains_hint
+from .validators import RegistrationInput, domains_hint, primeiro_nome
 
 _PENDING_EMAIL_KEY = "pending_email"
 # Só em desenvolvimento (MAIL_BACKEND=console): a ligação aparece também na página.
@@ -36,9 +36,10 @@ def _render_register(values: dict, errors: dict, status: int = 200):
     return page, status
 
 
-def _confirmation_message(to: str, link: str) -> Message:
+def _confirmation_message(to: str, link: str, nome: str = "") -> Message:
     hours = current_app.config["CONFIRMATION_TOKEN_MAX_AGE_SECONDS"] // 3600
-    body = texts.CONFIRMATION_EMAIL_BODY.format(horas=hours, ligacao=link)
+    saudacao = texts.CONFIRMATION_EMAIL_HELLO_NOME.format(nome=primeiro_nome(nome)) if nome else texts.CONFIRMATION_EMAIL_HELLO
+    body = saudacao + texts.CONFIRMATION_EMAIL_BODY.format(horas=hours, ligacao=link)
     return Message(to=to, subject=texts.CONFIRMATION_EMAIL_SUBJECT, body=body)
 
 
@@ -50,6 +51,7 @@ def register_form():
 @bp.post("/registo")
 def register_submit():
     data = RegistrationInput(
+        nome=request.form.get("nome", ""),
         email=request.form.get("email", ""),
         password=request.form.get("password", ""),
         password_confirm=request.form.get("password_confirm", ""),
@@ -59,15 +61,15 @@ def register_submit():
         pending = services.register_student(get_db(), data, current_app.config)
     except services.RegistrationRejected as rejected:
         # A palavra-passe nunca volta ao navegador; o email sim, para não o reescrever.
-        return _render_register(values={"email": data.email}, errors=rejected.errors, status=422)
+        return _render_register(values={"email": data.email, "nome": data.nome}, errors=rejected.errors, status=422)
 
     link = url_for("auth.confirm", token=pending.token, _external=True)
     try:
-        current_app.extensions["mailer"].send(_confirmation_message(pending.email, link))
+        current_app.extensions["mailer"].send(_confirmation_message(pending.email, link, pending.nome))
     except Exception:  # noqa: BLE001 - qualquer falha de envio deve ser tratada igual
         current_app.logger.exception("Falha ao enviar o email de confirmação")
         return _render_register(
-            values={"email": pending.email}, errors={"form": MSG_EMAIL_SEND_FAILED}, status=503
+            values={"email": pending.email, "nome": pending.nome}, errors={"form": MSG_EMAIL_SEND_FAILED}, status=503
         )
 
     session[_PENDING_EMAIL_KEY] = pending.email
@@ -137,21 +139,40 @@ def login_submit():
 
 @bp.post("/sair")
 def logout():
+    """Termina a sessão e volta à página inicial (a apresentação), não ao login (decisão do PO, 23/10)."""
     sessions.logout_user()
-    return redirect(url_for("auth.login_form"))
+    flash(texts.LOGOUT_FEITO, "ok")
+    return redirect(url_for("main.index"))
 
 
 # ---------------------------------------------------------------------------
 # Apagar a minha conta (US17)
 # ---------------------------------------------------------------------------
 
+def _render_conta(nome: str | None = None, erro_nome: str | None = None, status: int = 200):
+    criada = (g.user["created_at"] or "")[:10]          # AAAA-MM-DD (UTC)
+    criada = "/".join(reversed(criada.split("-"))) if criada else ""
+    nome = g.user["nome"] if nome is None else nome
+    return render_template("auth/conta.html", criada=criada, nome=nome, erro_nome=erro_nome), status
+
+
 @bp.get("/conta")
 @sessions.login_required
 def account():
-    """«A minha conta» (revisão de 23/10): email, data de criação e a ligação para apagar a conta."""
-    criada = (g.user["created_at"] or "")[:10]          # AAAA-MM-DD (UTC)
-    criada = "/".join(reversed(criada.split("-"))) if criada else ""
-    return render_template("auth/conta.html", criada=criada)
+    """«A minha conta» (revisão de 23/10): nome, email, data de criação e a ligação para apagar a conta."""
+    return _render_conta()
+
+
+@bp.post("/conta/nome")
+@sessions.login_required
+def change_nome():
+    """Muda o nome com que o OptaBem trata a pessoa (também para contas criadas antes de 23/10)."""
+    nome = request.form.get("nome", "")
+    erro = services.change_nome(get_db(), g.user["id"], nome)
+    if erro:
+        return _render_conta(nome=nome, erro_nome=erro, status=422)
+    flash(texts.CONTA_NOME_GUARDADO, "ok")
+    return redirect(url_for("auth.account"))
 
 
 def _render_apagar(error: str | None = None, status: int = 200):

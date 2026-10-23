@@ -186,6 +186,8 @@ HIDE_PASSWORD = "Esconder palavra-passe"
 
 # Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
+# Aviso na página inicial depois de terminar a sessão (desde 23/10 volta-se à apresentação).
+LOGOUT_FEITO = "Sessão terminada. Até breve!"
 NAV_LABEL = "Menu"
 # Ícones à direita da barra do topo, em todas as páginas (revisão estética de 23/10, pedido do PO).
 # A lupa abre uma caixa de pesquisa no catálogo; o ícone de conta abre um menu com «Entrar» e
@@ -198,7 +200,7 @@ NAV_MINHA_CONTA = "A minha conta"
 NAV_INICIO = "Início"
 NAV_CONVERSA = "Conversa"
 NAV_CATALOGO = "Catálogo"
-NAV_DECISOES = "As minhas decisões"
+NAV_CANDIDATURA = "Candidatura"
 
 # ---------------------------------------------------------------------------
 # Página «Criar conta» (/auth/registo)
@@ -206,6 +208,9 @@ NAV_DECISOES = "As minhas decisões"
 
 REGISTER_TITLE = "Criar conta"
 REGISTER_INTRO = "Use o seu email pessoal. Vamos enviar-lhe uma ligação para confirmar a conta."
+
+REGISTER_NOME_LABEL = "Nome"
+REGISTER_NOME_HINT = "Como gostava de ser tratado no OptaBem, por exemplo «Ana Silva»."
 
 REGISTER_EMAIL_LABEL = "Email"
 REGISTER_EMAIL_HINT_ANY = "Por exemplo, nome@gmail.com."
@@ -235,6 +240,8 @@ REGISTER_HAVE_ACCOUNT = "Já tem conta? "
 REGISTER_LOGIN_LINK = "Inicie sessão"
 
 # Mensagens de erro do formulário de registo.
+ERROR_NOME_REQUIRED = "Indique o seu nome."
+ERROR_NOME_INVALID = "Use só letras, espaços, hífens e apóstrofos (até {maximo} caracteres)."
 ERROR_EMAIL_REQUIRED = "Indique o seu email."
 ERROR_EMAIL_INVALID = "Indique um email válido, por exemplo nome@gmail.com."
 ERROR_EMAIL_DOMAIN = "Use um email terminado em {dominios}."
@@ -272,21 +279,31 @@ ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que l
 
 HOME_TITLE = "Início"
 HOME_GREETING = "Olá!"
-# Por baixo da saudação, para a pessoa saber com que conta entrou. {email} é preenchido pela aplicação.
-HOME_SESSAO = "Sessão iniciada como {email}."
+# Com nome (desde 23/10): {nome} é o primeiro nome indicado no registo.
+HOME_GREETING_NOME = "Olá, {nome}!"
+# Contas criadas antes de 23/10 ainda não têm nome: um convite para o indicar.
+HOME_SEM_NOME = "Diga-nos como gostava de ser tratado em "
+HOME_SEM_NOME_LIGACAO = "A minha conta"
 # Atalhos por baixo do percurso (revisão estética de 23/10). «destino» é a página (endpoint do Flask).
 HOME_ATALHOS_TITULO = "O que pode fazer"
 HOME_ATALHOS = [
     {"titulo": "Conversar com o assistente", "texto": "Fale dos seus interesses e receba 2 a 3 cursos sugeridos.", "destino": "orientacao.pagina"},
     {"titulo": "Explorar o catálogo", "texto": "Filtre, abra a ficha de cada curso e compare até 3 lado a lado.", "destino": "catalogo.lista"},
-    {"titulo": "As minhas decisões", "texto": "Veja os cursos que foi escolhendo e quando.", "destino": "percurso.linha_tempo"},
+    {"titulo": "Plano de candidatura", "texto": "Calcule a sua nota de candidatura e ordene as suas 6 opções.", "destino": "candidatura.plano"},
 ]
 
 # Página «A minha conta» (/auth/conta), no menu do ícone de conta. Desde 23/10 é aqui que fica
 # «Apagar a minha conta» (US17), em vez de no fundo da página inicial (decisão do PO).
 CONTA_TITLE = "A minha conta"
 CONTA_EMAIL = "Email"
+CONTA_NOME = "Nome"
+CONTA_NOME_SEM = "Ainda não indicou o seu nome."
+CONTA_NOME_ALTERAR = "Guardar nome"
+CONTA_NOME_GUARDADO = "Nome guardado."
 CONTA_DESDE = "Conta criada a"
+# Desde 23/10 «As minhas decisões» (US31) não está no menu: fica aqui e no passo «Escolher curso» do início.
+CONTA_DECISOES = "As minhas decisões"
+CONTA_DECISOES_TEXTO = "Os cursos que foi escolhendo e quando."
 CONTA_APAGAR_TITULO = "Apagar a conta"
 CONTA_APAGAR_TEXTO = "Apaga a conta e todos os dados do seu percurso. Não pode ser desfeito."
 HOME_CONTA_APAGAR = "Apagar a minha conta e todos os meus dados"
@@ -316,7 +333,9 @@ HOME_PATH_STEPS = [
     {"titulo": "Conversa de orientação", "texto": "Responda a algumas perguntas sobre os seus interesses para receber sugestões de curso.",
      "feito": "Pode voltar a conversar com o assistente sempre que quiser."},
     {"titulo": "Escolher curso", "texto": "Compare os cursos sugeridos e registe a sua escolha."},
+    {"titulo": "Preparar a candidatura", "texto": "Indique as suas notas, veja a sua nota em cada curso e ordene as suas 6 opções."},
 ]
+HOME_ACTION_CANDIDATURA = "Preparar a candidatura"
 HOME_STEP_DONE = "Concluído"
 HOME_STEP_CURRENT = "Próximo passo"
 HOME_STEP_LATER = "Depois"
@@ -403,6 +422,20 @@ ORIENTACAO_ERRO_LIMITE_ALUNO = (
 ADMIN_AREA_NAME = "Gestão"
 ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
+# Ativar contas por confirmar (23/10): enquanto o site não envia emails reais, um administrador ativa-as aqui.
+ADMIN_NAV_CONTAS = "Contas por confirmar"
+ADMIN_CONTAS_TITULO = "Contas por confirmar"
+ADMIN_CONTAS_INTRO = (
+    "Enquanto o OptaBem não envia emails a sério, as contas novas ficam aqui até um administrador as ativar. "
+    "Ative só contas de pessoas que conhece: ativar salta a confirmação do email."
+)
+ADMIN_CONTAS_VAZIO = "Não há contas por confirmar."
+ADMIN_COL_NOME = "Nome"
+ADMIN_COL_EMAIL = "Email"
+ADMIN_COL_REGISTO = "Registo"
+ADMIN_ATIVAR = "Ativar"
+ADMIN_ATIVAR_ROTULO = "Ativar a conta {email}"
+ADMIN_CONTA_ATIVADA = "Conta {email} ativada: já pode iniciar sessão."
 
 # Os administradores entram pela página «Iniciar sessão» dos alunos, com o nome de utilizador
 # no campo do email (app/auth/perfis.py). Estes rótulos são do formulário «Novo administrador».
@@ -476,8 +509,9 @@ DEV_LINK_BUTTON = "Confirmar a conta agora"
 # ---------------------------------------------------------------------------
 
 CONFIRMATION_EMAIL_SUBJECT = "Confirme o seu registo"
+CONFIRMATION_EMAIL_HELLO = "Olá,\n\n"
+CONFIRMATION_EMAIL_HELLO_NOME = "Olá, {nome},\n\n"
 CONFIRMATION_EMAIL_BODY = (
-    "Olá,\n\n"
     "Recebemos um pedido de registo com este email. Para ativar a conta, abra a "
     "ligação abaixo nas próximas {horas} horas:\n\n"
     "{ligacao}\n\n"
@@ -509,6 +543,164 @@ INVALID_HELP_LINK = "crie a conta de novo"
 INVALID_HELP_AFTER_LINK = " para receber uma nova."
 
 # ---------------------------------------------------------------------------
+# Plano de candidatura (/candidatura, protótipo de 23/10): notas, nota por curso e as 6 opções
+# do Concurso Nacional de Acesso. As contas estão em app/candidatura/calculos.py.
+# ---------------------------------------------------------------------------
+
+CANDIDATURA_TITULO = "Plano de candidatura"
+CANDIDATURA_INTRO = (
+    "Junte até 6 cursos pela ordem em que os quer: na candidatura, fica colocado na primeira opção "
+    "em que a sua nota chegue. A candidatura em si faz-se no site da DGES."
+)
+CANDIDATURA_AVISO_ESTIMATIVA = (
+    "As contas são uma estimativa para o contingente geral da 1.ª fase, com as regras publicadas pela DGES. "
+    "A nota do último colocado muda todos os anos: é uma referência, não uma garantia."
+)
+CANDIDATURA_AS_MINHAS_NOTAS = "As minhas notas"
+CANDIDATURA_MEDIA_RESUMO = "Média do secundário: {media}"
+CANDIDATURA_EXAMES_RESUMO = "Exames: {exames}"
+CANDIDATURA_SEM_EXAMES = "Ainda não indicou exames."
+CANDIDATURA_SEM_NOTAS = "Indique a sua média do secundário e os exames que fez para ver a sua nota em cada curso."
+CANDIDATURA_INDICAR_NOTAS = "Indicar as minhas notas"
+CANDIDATURA_MUDAR_NOTAS = "Mudar as notas"
+CANDIDATURA_AS_MINHAS_OPCOES = "As minhas opções ({n} de {maximo})"
+CANDIDATURA_VAZIO = "Ainda não juntou nenhum curso. Abra a ficha de um curso no catálogo e carregue em «Juntar ao plano»."
+CANDIDATURA_JUNTAR_ESCOLHIDO = "Juntar {curso} ({instituicao}) como 1.ª opção"
+CANDIDATURA_PROCURAR = "Procurar cursos no catálogo"
+CANDIDATURA_OPCAO = "{posicao}.ª opção"
+CANDIDATURA_A_SUA_NOTA = "A sua nota"
+CANDIDATURA_ULTIMO = "Último colocado 2025"
+CANDIDATURA_SUBIR = "Subir"
+CANDIDATURA_DESCER = "Descer"
+CANDIDATURA_RETIRAR = "Retirar"
+CANDIDATURA_SUBIR_ROTULO = "Subir {curso}"
+CANDIDATURA_DESCER_ROTULO = "Descer {curso}"
+CANDIDATURA_RETIRAR_ROTULO = "Retirar {curso} do plano"
+CANDIDATURA_AVISOS_TITULO = "Antes de submeter"
+CANDIDATURA_AVISO_NAO_CONTAM = "{n} opção(ões) não conta(m) para a colocação: veja o que falta em cada uma."
+CANDIDATURA_AVISO_SEM_SEGURA = (
+    "Nenhuma opção está claramente acima do último colocado. Pense em juntar pelo menos um curso onde fique acima, "
+    "para não arriscar ficar sem colocação."
+)
+CANDIDATURA_AVISO_ORDEM = (
+    "A 1.ª opção ({curso}) é das mais fáceis de entrar. Se ficar colocado nela, as opções seguintes já não contam: "
+    "ponha primeiro os cursos de que mais gosta, mesmo que sejam mais difíceis."
+)
+CANDIDATURA_AVISO_MENOS_DE_6 = "Tem {n} opção(ões). Pode juntar mais {livres}: usar as 6 não prejudica as primeiras."
+CANDIDATURA_AVISO_PRE_REQUISITOS = "Há opções com pré-requisitos (por exemplo, atestados médicos ou provas físicas): confirme-os no site da DGES."
+CANDIDATURA_SUGESTOES_TITULO = "Outros cursos de {area} onde tem hipóteses"
+CANDIDATURA_JUNTAR = "Juntar ao plano"
+CANDIDATURA_NO_PLANO = "Já está no seu plano"
+CANDIDATURA_VER_PLANO = "Ver o meu plano"
+CANDIDATURA_JUNTADO = "{curso} juntado ao plano de candidatura."
+CANDIDATURA_CHEIO = "O plano já tem {maximo} opções: retire uma antes de juntar outra."
+CANDIDATURA_NOTAS_GUARDADAS = "Notas guardadas."
+
+# Que exames me abrem mais portas? (23/10): combinações de até 3 exames para as opções do plano.
+EXAMES_TITULO = "Que exames lhe abrem mais portas?"
+EXAMES_INTRO = "Com estes exames nacionais, pode concorrer a mais opções do seu plano. Ajuda a decidir que exames fazer."
+EXAMES_ABRE = "Dá para {n} de {total} opções"
+EXAMES_FALTA = "Não dá para: {cursos}"
+EXAMES_TODAS = "Dá para todas as opções do plano."
+EXAMES_JA_FEZ = "Já fez: {provas}"
+
+# Plano B: 2.ª fase (23/10).
+PLANO_B_TITULO = "Plano B: 2.ª fase"
+PLANO_B_INTRO = (
+    "Se não ficar colocado na 1.ª fase, estes cursos das mesmas áreas tiveram vagas na 2.ª fase de 2025 "
+    "e a sua nota chegava ao último colocado dessa fase. As vagas da 2.ª fase são as que sobram da 1.ª: mudam todos os anos."
+)
+PLANO_B_VAZIO = (
+    "Ainda não há um plano B: nenhum outro curso das áreas do seu plano teve vagas na 2.ª fase de 2025 "
+    "a que a sua nota chegasse. Com o catálogo completo da DGES (recolha da US04) aparecerão mais cursos."
+)
+PLANO_B_DETALHE = "Vagas na 2.ª fase de 2025: {vagas} · último colocado: {ultimo}"
+PLANO_B_SOBRARAM = "Vagas na 2.ª fase de 2025: {vagas} · sobraram lugares"
+
+# Partilhar o plano (23/10): ligação só de leitura.
+PARTILHA_SECCAO = "Partilhar o plano"
+PARTILHA_EXPLICACAO = (
+    "Crie uma ligação para mostrar o plano a quem o ajuda a decidir (pais, explicador, um colega). "
+    "Quem a abrir vê o seu primeiro nome, as opções, a nota de candidatura e a situação em cada uma. "
+    "Não vê o seu email, a média nem as notas dos exames."
+)
+PARTILHA_CRIAR = "Criar ligação de partilha"
+PARTILHA_LIGACAO = "Ligação para partilhar"
+PARTILHA_COPIAR = "Selecione e copie a ligação. Qualquer pessoa com ela vê o plano, sem iniciar sessão."
+PARTILHA_DESLIGAR = "Deixar de partilhar"
+PARTILHA_LIGADA = "Ligação de partilha criada."
+PARTILHA_DESLIGADA = "A ligação deixou de funcionar."
+PARTILHA_TITULO = "Plano de candidatura de {nome}"
+PARTILHA_TITULO_SEM_NOME = "Plano de candidatura"
+PARTILHA_INTRO = "Plano partilhado no OptaBem, só de leitura. As opções estão pela ordem em que a pessoa as quer."
+PARTILHA_VAZIO = "Este plano ainda não tem opções."
+PARTILHA_NOTA = "Nota de candidatura"
+PARTILHA_CONVITE = "Também está a escolher curso? Experimente o OptaBem."
+
+# Situação de cada opção (CANDIDATURA_SITUACAO_ + o valor de Situacao em app/candidatura/calculos.py).
+# {diferenca} já vem com sinal e vírgula (ex.: «+7,7»).
+CANDIDATURA_SITUACAO_ACIMA = "Acima do último colocado ({diferenca})"
+CANDIDATURA_SITUACAO_PERTO = "Perto do último colocado ({diferenca})"
+CANDIDATURA_SITUACAO_ABAIXO = "Abaixo do último colocado ({diferenca})"
+CANDIDATURA_SITUACAO_SEM_REFERENCIA = "Cumpre os mínimos (sem nota do último colocado em 2025)"
+CANDIDATURA_SITUACAO_ABAIXO_DO_MINIMO = "Abaixo da classificação mínima"
+CANDIDATURA_SITUACAO_FALTA_PROVA = "Falta-lhe uma prova de ingresso"
+CANDIDATURA_SITUACAO_SEM_NOTAS = "Indique as suas notas para ver a sua nota"
+CANDIDATURA_SITUACAO_SEM_REGRAS = "A DGES não publica as condições de acesso deste curso"
+CANDIDATURA_FALTA = "Falta: {provas}"
+CANDIDATURA_MINIMO_PROVA = "Abaixo do mínimo de {minimo} pontos: {provas}"
+CANDIDATURA_MINIMO_NOTA = "A nota de candidatura fica abaixo do mínimo de {minimo} pontos."
+CANDIDATURA_CONJUNTO_USADO = "Conta com: {provas}"
+
+# Formulário das notas (/candidatura/notas)
+CANDIDATURA_NOTAS_TITULO = "As minhas notas"
+CANDIDATURA_NOTAS_INTRO = "Só servem para as contas do plano. Pode mudá-las quando quiser, e saem com a conta se a apagar."
+CANDIDATURA_MEDIA = "Média do secundário"
+CANDIDATURA_MEDIA_DICA = "De 9,5 a 20 valores, por exemplo 15,2."
+CANDIDATURA_EXAMES = "Exames nacionais (provas de ingresso)"
+CANDIDATURA_EXAMES_DICA = "Preencha só os que fez, de 0 a 200 pontos (ou de 0 a 20 valores: 14,5 conta como 145)."
+CANDIDATURA_GUARDAR = "Guardar e ver o plano"
+CANDIDATURA_VOLTAR = "Voltar ao plano"
+CANDIDATURA_ERRO_MEDIA_VAZIA = "Indique a sua média do secundário."
+CANDIDATURA_ERRO_MEDIA = "A média tem de estar entre 9,5 e 20 valores."
+CANDIDATURA_ERRO_EXAME = "Use um número de 0 a 200 (ou de 0 a 20)."
+
+# «Quanto preciso no exame?» (23/10): ficha do curso e opções do plano a que falta uma prova.
+FICHA_PRECISA_TITULO = "Quanto precisa no exame?"
+FICHA_PRECISA = "Para chegar a {alvo} ({referencia}), precisa de {pontos} pontos ({valores} valores) em {provas}."
+FICHA_PRECISA_REF_ULTIMO = "o último colocado em 2025"
+FICHA_PRECISA_REF_MINIMO = "a nota mínima do curso"
+FICHA_PRECISA_VARIAS = "Faltando mais de uma prova, a conta supõe a mesma nota em todas."
+FICHA_PRECISA_IMPOSSIVEL = "Com a sua média, mesmo com 200 pontos nas provas a nota fica em {maximo}, abaixo de {alvo} ({referencia})."
+FICHA_PRECISA_SEM_MEDIA = "Indique a sua média do secundário para saber quanto precisa nos exames."
+CANDIDATURA_PRECISA = "Precisa de {pontos} em {provas}"
+
+# Tendência do último colocado e procura (23/10), na ficha do curso e no plano.
+FICHA_HISTORICO = "Último colocado (1.ª fase)"
+FICHA_TENDENCIA_SOBE = "A subir"
+FICHA_TENDENCIA_DESCE = "A descer"
+FICHA_TENDENCIA_ESTAVEL = "Estável"
+FICHA_PROCURA = "Procura em 2025"
+FICHA_PROCURA_SOBRARAM = "Sobraram vagas na 1.ª fase"
+FICHA_PROCURA_MUITA = "Muito procurado"
+FICHA_PROCURA_MEDIA = "Procurado"
+FICHA_PROCURA_POUCA = "Pouco escolhido em 1.ª opção"
+FICHA_PROCURA_DETALHE = "{candidatos} candidatos para {vagas} vagas; {primeira} puseram-no em 1.ª opção e ficaram {colocados} colocados."
+
+# Ficha do curso: condições de acesso (dados da DGES)
+FICHA_ACESSO = "Condições de acesso"
+FICHA_PROVAS = "Provas de ingresso"
+FICHA_PROVAS_UM_DE = "Basta um destes conjuntos:"
+FICHA_FORMULA = "Fórmula da nota de candidatura"
+FICHA_FORMULA_VALOR = "{secundario}% média do secundário + {provas}% provas de ingresso"
+FICHA_MINIMOS = "Classificações mínimas"
+FICHA_MINIMOS_VALOR = "{candidatura} pontos na nota de candidatura e {provas} em cada prova"
+FICHA_PRE_REQUISITOS = "Pré-requisitos"
+FICHA_SEM_ACESSO = "A DGES ainda não tem as condições de acesso deste curso no OptaBem. Consulte a página da DGES."
+FICHA_A_SUA_NOTA = "A sua nota neste curso"
+FICHA_ENTRE_PARA_SIMULAR = "Inicie sessão para calcular a sua nota de candidatura a este curso."
+
+# ---------------------------------------------------------------------------
 # Página «Política de privacidade» (/privacidade)
 # ---------------------------------------------------------------------------
 
@@ -516,11 +708,11 @@ PRIVACY_TITLE = "Política de privacidade"
 PRIVACY_VERSION = "Versão {versao}"
 # Texto provisório: a equipa substitui pelo texto final da política (RNF01).
 PRIVACY_BODY = (
-    "Texto provisório. A política final descreve que dados são recolhidos (email, conversa de "
-    "orientação e cursos escolhidos), com que finalidade (sugerir cursos), como são protegidos "
+    "Texto provisório. A política final descreve que dados são recolhidos (nome, email, conversa de "
+    "orientação, cursos escolhidos e, no plano de candidatura, as notas que a pessoa indica; o plano só é visto por outras pessoas se ela criar uma ligação de partilha, que pode desligar a qualquer momento), com que finalidade (sugerir cursos), como são protegidos "
     "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
     "curso) e como exercer os direitos de acesso e de apagamento: cada aluno pode apagar a conta e "
-    "todos os seus dados na página inicial («Apagar a minha conta»)."
+    "todos os seus dados em «A minha conta» («Apagar a minha conta»)."
 )
 
 # ---------------------------------------------------------------------------

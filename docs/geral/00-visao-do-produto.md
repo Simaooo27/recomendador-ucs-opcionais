@@ -42,10 +42,13 @@ stateDiagram-v2
 |---|---|---|
 | Escolher curso | Conversa em que o assistente faz perguntas sobre os interesses da pessoa (no máximo 6) e termina com 2 a 3 cursos sugeridos, cada um com explicação | Modelo de linguagem (LLM) que conduz a conversa e sugere só cursos de uma lista fechada do catálogo |
 | Comparar cursos | Fichas lado a lado: descrição, saídas, vagas, nota do último colocado | Dados oficiais da DGES e das instituições |
-| Escolher opcionais (fase seguinte, fora da release de 05/11) | Opcionais sugeridas com explicação | Popularidade e, mais tarde, colegas com gostos parecidos |
+| Preparar a candidatura (desde 23/10) | Condições de acesso de cada curso, a nota de candidatura da pessoa em cada um e a lista das 6 opções, com avisos | Regras e dados oficiais da DGES (contingente geral, 1.ª fase); estimativa, não garantia |
+| Escolher opcionais (fase 2, fora da release de 05/11) | Opcionais sugeridas com explicação | Popularidade e, mais tarde, colegas com gostos parecidos |
 | Repensar | Nova conversa de orientação; as decisões anteriores ficam na linha do tempo | Igual a «Escolher curso» |
 
-**Decisão dos Product Owners (22/10/2026):** até à entrega de 05/11, o centro do produto são os cursos. O site deixa de falar de opcionais e o percurso termina na escolha do curso; as opcionais ficam para uma fase seguinte.
+**Decisão dos Product Owners (22/10/2026):** até à entrega de 05/11, o centro do produto são os cursos. O site deixa de falar de opcionais; as opcionais ficam para uma fase seguinte.
+
+**Decisão do PO (23/10/2026, por confirmar com o docente):** depois da escolha do curso, o percurso continua com o **plano de candidatura** ao Concurso Nacional de Acesso, que substitui as opcionais nesta release (no ensino superior português a escolha de opcionais pesa pouco; a candidatura é a decisão real de quem está a escolher curso). As opcionais passam a fase 2.
 
 **O utilizador decide sempre.** O OptaBem sugere e explica; nunca atribui um curso ou uma opcional sem confirmação.
 

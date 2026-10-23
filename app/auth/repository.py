@@ -16,6 +16,7 @@ def create_user(
     db: sqlite3.Connection,
     *,
     email: str,
+    nome: str,
     password_hash: str,
     nonce: str,
     privacy_version: str,
@@ -23,11 +24,11 @@ def create_user(
 ) -> int:
     cursor = db.execute(
         """
-        INSERT INTO users (email, password_hash, confirmation_nonce,
+        INSERT INTO users (email, nome, password_hash, confirmation_nonce,
                            privacy_policy_version, privacy_accepted_at, created_at)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
-        (email, password_hash, nonce, privacy_version, now, now),
+        (email, nome, password_hash, nonce, privacy_version, now, now),
     )
     return int(cursor.lastrowid)
 
@@ -36,6 +37,7 @@ def refresh_pending_user(
     db: sqlite3.Connection,
     *,
     user_id: int,
+    nome: str,
     password_hash: str,
     nonce: str,
     privacy_version: str,
@@ -45,12 +47,25 @@ def refresh_pending_user(
     db.execute(
         """
         UPDATE users
-           SET password_hash = ?, confirmation_nonce = ?,
+           SET nome = ?, password_hash = ?, confirmation_nonce = ?,
                privacy_policy_version = ?, privacy_accepted_at = ?
          WHERE id = ? AND is_active = 0
         """,
-        (password_hash, nonce, privacy_version, now, user_id),
+        (nome, password_hash, nonce, privacy_version, now, user_id),
     )
+
+
+def update_nome(db: sqlite3.Connection, user_id: int, nome: str) -> None:
+    """Muda o nome da conta («A minha conta»)."""
+    db.execute("UPDATE users SET nome = ? WHERE id = ?", (nome, user_id))
+    db.commit()
+
+
+def list_pending(db: sqlite3.Connection) -> list[sqlite3.Row]:
+    """Contas por confirmar, da mais recente para a mais antiga (ativação pela gestão, 23/10)."""
+    return db.execute(
+        "SELECT id, nome, email, created_at FROM users WHERE is_active = 0 ORDER BY created_at DESC, id DESC"
+    ).fetchall()
 
 
 def activate_user(db: sqlite3.Connection, user_id: int, now: str) -> None:

@@ -6,7 +6,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 por planear · Entrega a 05/11 |
+| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 proposto a 23/10 (plano de candidatura, a confirmar com o docente) · Entrega a 05/11 |
 | **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta |
 | **Testes automáticos** | 337, todos a passar |
 
@@ -32,7 +32,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | Sprint 2 (13 SP, concluído a 22/10) | Uma pessoa indecisa conversa com o assistente (LLM), recebe 2 a 3 cursos do catálogo com explicação e escolhe um, ficando a decisão registada no percurso. |
 | Sprint 3 (7 SP, concluído a 23/10) | Uma pessoa indecisa filtra, consulta e compara cursos de várias instituições, e pode apagar a sua conta e todos os seus dados. |
-| Sprint 4 (29/10 a 05/11) | O percurso continua depois da escolha do curso: story nova a decidir com o docente; US04 se houver folga. O código fecha por volta de 03/11. |
+| Sprint 4 (29/10 a 05/11, proposto a 23/10) | Quem escolheu um curso prepara a candidatura: vê as condições de acesso, calcula a sua nota em cada curso e ordena as 6 opções; o catálogo passa a ter as licenciaturas da DGES (US04, US33 a US36 e US40 a US45, 32 SP; a decidir no Sprint Planning de 29/10 com o docente). O código fecha por volta de 03/11. |
 
 **Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
 
@@ -44,39 +44,33 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint Review do Sprint 3 (23/10/2026, decisão dos Product Owners):** 7 de 7 SP. A US05 (filtros, ficha e comparação, com as melhorias da revisão do PR #37) e a US17 (apagar a conta) foram testadas pelos dois Product Owners e aceites. O sprint fecha antes de 29/10 porque o objetivo foi cumprido; entrou também, sem story, o menu fixo no topo (PR #40). Um teste da US17 dependia da data em que corria e foi corrigido no fecho. O Sprint 4 fica por planear, com a story a decidir com o docente.
 
+**Replaneamento de 23/10/2026 (decisão do PO, com o protótipo do PR #44):** o **plano de candidatura** ao Concurso Nacional de Acesso substitui as opcionais (épico E12): condições de acesso na ficha (US33), notas do candidato (US34), nota de candidatura a cada curso (US35) e as 6 opções com avisos (US36), mais US37 e US38 no backlog. A US04 foi reescrita (catálogo da DGES por recolha) e entra no Sprint 4; a US39 (gestão do catálogo) nasce da sugestão de um colega de editar a base de dados na área de gestão. As 22 stories das opcionais passam a *Won't* (fase 2). O Sprint 4 fica com 18 SP planeados, acima da velocidade (10): o código das US33 a US36 foi feito antes do sprint, como protótipo; se for demais, a US36 sai primeiro. Sem story: o registo pede o nome, terminar sessão volta à página inicial, a gestão ativa contas por confirmar e «As minhas decisões» sai do menu (PR #43 e #44). No mesmo dia entraram as US40 a US43 (quanto preciso no exame, tendência, procura e partilhar o plano): e, ao fim do dia, as US44 (que exames me abrem mais portas) e US45 (plano B da 2.ª fase). O Sprint 4 passa a 32 SP planeados, muito acima da velocidade (10): o código foi feito antes do sprint, como protótipo, e no Sprint Planning de 29/10 decide-se o que entra; o resto volta ao backlog. Falta a documentação por story.
+
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
-| US01 | Registo com email pessoal | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
+| US01 | Registo com email pessoal (desde 23/10 pede também o nome) | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
 | US02 | Autenticação | Sprint 1 | Feita | [docs/US02/](docs/US02/) |
 | US03 | Perfis de aluno e administrador (revista a 14/10: um só início de sessão) | Sprint 1 | Feita | [docs/US03/](docs/US03/) |
 | US29 | Conversa de orientação com o LLM (reescrita a 14/10: sem perguntas fixas) | Sprint 2 | Feita | [docs/US29/](docs/US29/) |
 | US30 | Sugestão de 2 a 3 cursos no fim da conversa | Sprint 2 | Feita | [docs/US30/](docs/US30/) |
-| US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
+| US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10; fora do menu desde 23/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
 | US05 | Consultar e comparar cursos | Sprint 3 | Feita | [docs/US05/](docs/US05/) |
 | US17 | Apagar a minha conta (reduzida a 22/10: a exportação fica no backlog) | Sprint 3 | Feita | [docs/US17/](docs/US17/) |
-| US06 | Registar percurso | Backlog (opcionais, 22/10) | Por fazer | — |
-| US07 | Avaliar opcional concluída (com pseudo_id desde o início) | Backlog (opcionais, 22/10) | Por fazer | — |
-| US04 | Importar catálogo de instituições e cursos | Backlog | Por fazer | — |
-| US09 | Avaliações pseudonimizadas | Backlog | Por fazer | — |
-| US11 | Recomendações de popularidade | Backlog | Por fazer | — |
-| US08 | Avaliação rápida de obrigatórias | Backlog | Por fazer | — |
-| US10 | Dataset sintético | Backlog | Por fazer | — |
-| US12 | Recomendações user-based | Backlog | Por fazer | — |
-| US13 | Excluir UCs inválidas | Backlog | Por fazer | — |
-| US14 | Explicação da recomendação | Backlog | Por fazer | — |
-| US15 | Avaliação offline do motor | Backlog | Por fazer | — |
-| US16 | Períodos de avaliação | Backlog | Por fazer | — |
-| US18 | Comentário livre | Backlog | Por fazer | — |
-| US19 | Moderar comentários | Backlog | Por fazer | — |
-| US20 | Filtrar por semestre e ECTS | Backlog | Por fazer | — |
-| US21 | Preferência de carga de trabalho | Backlog | Por fazer | — |
-| US22 | Comparação de estratégias | Backlog | Por fazer | — |
-| US23 | Esconder UCs sem vagas | Backlog | Por fazer | — |
-| US24 | Feedback sobre recomendações | Backlog | Por fazer | — |
-| US25 | Painel de participação | Backlog | Por fazer | — |
-| US26 | Filtragem baseada em itens | Backlog | Por fazer | — |
-| US27 | Evitar conflitos de horário | Backlog | Por fazer | — |
-| US28 | Lembretes de avaliação | Backlog | Por fazer | — |
+| US04 | Catálogo completo de licenciaturas (DGES) (reescrita a 23/10) | Sprint 4 | Em curso | ramo `feature/US04-catalogo-completo` |
+| US33 | Condições de acesso na ficha do curso | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US34 | Registar as minhas notas | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US35 | Nota de candidatura a cada curso | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US36 | Plano das 6 opções de candidatura | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US40 | Quanto preciso no exame? | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US41 | Tendência do último colocado | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US42 | Procura do curso | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US43 | Partilhar o plano | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US44 | Que exames me abrem mais portas? | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US45 | Plano B: 2.ª fase | Sprint 4 | Em curso (protótipo) | PR #44 |
+| US37 | Assistente que conhece as minhas notas | Backlog | Por fazer | — |
+| US39 | Corrigir e esconder cursos do catálogo (gestão) | Backlog | Por fazer | — |
+| US38 | Datas do concurso no percurso | Backlog | Por fazer | — |
+| US06–US16, US18–US28 | Opcionais (registar percurso, avaliações, recomendações, filtros…) | Backlog (*Won't*: fase 2, 23/10) | Por fazer | [backlog](docs/geral/product-backlog.xlsx) |
 | US32 | Assistente LLM que conversa com o utilizador | — | Fundida na US29 (14/10) | issue #15 |
 
 Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US03 e US29 a US31).
@@ -94,7 +88,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Guia do código](docs/geral/04-guia-do-codigo.md) | Onde está cada coisa (incluindo o CSS), onde mexer para alterar, quem escreveu o quê |
 | [Spike do LLM](docs/geral/05-spike-llm.md) | Gemini e Groq: limites do plano gratuito, custo, privacidade, termos e viabilidade (14/10) |
 | [Abrir noutro dispositivo](docs/geral/06-aceder-noutro-dispositivo.md) | Usar o OptaBem no telemóvel ou noutro computador com um túnel do Cloudflare, sem modo debug (22/10) |
-| [Catálogo de cursos](dados/README.md) | 30 licenciaturas de 12 instituições (DGES), para importar na US04 |
+| [Catálogo de cursos](dados/README.md) | Catálogo do MVP (30 licenciaturas) e catálogo completo recolhido da DGES (US04), com as condições de acesso do plano de candidatura |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |
 | [US01](docs/US01/README.md) | Requisitos, use case, BPMN, prompt e diagramas da US01 |
@@ -225,6 +219,7 @@ app/
   llm/              ligação ao LLM (Gemini, Groq, falso), escolhido por LLM_BACKEND
   orientacao/       conversa de orientação conduzida pelo LLM (US29, US30), limite de pedidos por aluno e comando llm-teste
   percurso/         em que passo está cada aluno (State) e as decisões: escolher curso, linha do tempo (US31)
+  candidatura/      plano de candidatura (protótipo de 23/10): contas da nota de candidatura e as 6 opções
   gestao/           área de gestão (administradores, US03); endereço em ADMIN_URL_PREFIX
     routes.py         entrar, sair, painel e lista de administradores
     services.py       criar, autenticar e remover administradores
@@ -232,7 +227,8 @@ app/
     cli.py            comandos create-admin e list-admins
 tests/              testes automáticos
 docs/               documentação (índice em docs/README.md)
-dados/              catálogo de instituições e cursos (dados públicos, ver dados/README.md)
+dados/              catálogo de instituições e cursos (dados públicos, ver dados/README.md) e recolha da DGES (recolher_dges.py)
+ferramentas/        arrancar o site no Windows (arrancar.ps1, arrancar-tunel.ps1, configurar.ps1, admin.ps1)
   geral/            visão, requisitos, regras de código, arquitetura e registo de uso de IA
   US01/             requisitos, use case, BPMN, prompt e diagramas da US01
   US02/             o mesmo para a US02

@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.7 · rascunho para validação do Product Owner · 2026-10-22.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.8 · rascunho para validação do Product Owner · 2026-10-23.** Esta versão acompanha a [visão do produto](00-visao-do-produto.md): o utilizador pode ainda não ter curso, o catálogo tem várias instituições e um LLM conduz a conversa de orientação e sugere cursos (decisão de 14/10, ver o [spike](05-spike-llm.md)). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os requisitos da US01 estão detalhados em [US01/requisitos.md](../US01/requisitos.md).
 
@@ -80,6 +80,21 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RF38** O fornecedor do LLM deve ser configurável (Google Gemini, Groq e um modelo falso para testes), sem alterar o resto da aplicação. *(Alterado na 1.4: o modelo local saiu, os fornecedores ficaram decididos.)*
 - **RF39** O utilizador deve poder escolher um dos cursos sugeridos, ou outro do catálogo, passando a ter esse curso no perfil (RF03).
 
+### Módulo K — Plano de candidatura *(novo na 1.8, por confirmar com o docente)*
+
+Substitui, nesta release, os módulos C a I (opcionais), que passam a fase 2.
+
+- **RF40** A ficha de cada curso deve mostrar as condições de acesso publicadas pela DGES: conjuntos alternativos de provas de ingresso, fórmula da nota de candidatura (pesos da média do secundário e das provas), classificações mínimas e pré-requisitos.
+- **RF41** O utilizador com sessão iniciada deve poder indicar a média do secundário (9,5 a 20) e as notas dos exames nacionais que fez (0 a 200), e mudá-las quando quiser.
+- **RF42** O sistema deve calcular a nota de candidatura do utilizador a cada curso, com o conjunto de provas mais favorável, e compará-la com a nota do último colocado (acima, perto ou abaixo), assinalando provas em falta e notas abaixo do mínimo. É uma estimativa para o contingente geral da 1.ª fase.
+- **RF43** O utilizador deve poder montar e ordenar uma lista de até 6 opções de candidatura e receber avisos (opções que não contam, nenhuma opção segura, a mais fácil em 1.º lugar, menos de 6 opções, pré-requisitos). O OptaBem não submete a candidatura.
+- **RF44** Na ficha de cada curso, o sistema deve dizer a nota que o utilizador precisa nas provas que ainda não fez para chegar ao último colocado (ou à nota mínima), no conjunto de provas em que é mais fácil, respeitando o mínimo de cada prova, e avisar quando nem 200 pontos chegam.
+- **RF45** A ficha deve mostrar a nota do último colocado da 1.ª fase de 2023 a 2025 e se está a subir, a descer ou estável.
+- **RF46** A ficha deve mostrar a procura na 1.ª fase de 2025: candidatos, candidatos em 1.ª opção, vagas e colocados, com uma etiqueta simples.
+- **RF47** O utilizador deve poder criar e desligar uma ligação só de leitura para o seu plano, que mostra o primeiro nome, as opções, a nota de candidatura e a situação, e nunca o email, a média nem as notas dos exames.
+- **RF48** Com 2 ou mais opções no plano, o sistema deve mostrar as combinações de até 3 exames nacionais que dão para concorrer a mais opções, dizendo para que opções não dão e que exames a pessoa já fez.
+- **RF49** O sistema deve mostrar cursos das áreas do plano, fora dele, que tiveram vagas na 2.ª fase do ano anterior e a que a nota da pessoa chegava (plano B).
+
 ## 2. Requisitos não funcionais
 
 | ID | Categoria | Requisito |
@@ -122,10 +137,23 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | US29 — Conversa de orientação com o LLM | RF36, RNF12 | Sprint 2 | nova (13/10; reescrita a 14/10, absorve a US32) |
 | US30 — Sugestão de 2 a 3 cursos no fim da conversa | RF37, RF38, RNF12, RN09, RN10 | Sprint 2 | nova (13/10; reescrita a 14/10) |
 | US31 — Escolher curso e linha do tempo do percurso | RF03, RF35, RF39, RN10 | Sprint 2 | nova (13/10; antecipada a 20/10) |
-| US05 — Consultar e comparar cursos | RF34 | Sprint 3 | — (desde 22/10: o catálogo é lido do CSV; a US04 passou para o backlog) |
-| US06 — Registar percurso | RF05 (UCs), RF08, RF09 | Sprint 4 | US05 |
-| US07 — Avaliar opcional concluída | RF10, RF13, RF15 (pseudo_id desde o início) | Sprint 4 | US06 |
-| US04 — Importar catálogo de instituições e cursos | RF05 (instituições e cursos) | Backlog | US03 |
+| US05 — Consultar e comparar cursos | RF34 | Sprint 3 | — (desde 22/10: o catálogo é lido do CSV) |
+| US04 — Catálogo completo de licenciaturas (DGES) (reescrita a 23/10) | RF05 (instituições e cursos) | Sprint 4 | US03 |
+| US33 — Condições de acesso na ficha do curso | RF40 | Sprint 4 | nova (23/10) |
+| US34 — Registar as minhas notas | RF41, RF17 | Sprint 4 | nova (23/10) |
+| US35 — Nota de candidatura a cada curso | RF42 | Sprint 4 | nova (23/10) |
+| US36 — Plano das 6 opções de candidatura | RF43 | Sprint 4 | nova (23/10) |
+| US40 — Quanto preciso no exame? | RF44 | Sprint 4 | nova (23/10) |
+| US41 — Tendência do último colocado | RF45 | Sprint 4 | nova (23/10) |
+| US42 — Procura do curso | RF46 | Sprint 4 | nova (23/10) |
+| US43 — Partilhar o plano | RF47, RF17 | Sprint 4 | nova (23/10) |
+| US44 — Que exames me abrem mais portas? | RF48 | Sprint 4 | nova (23/10) |
+| US45 — Plano B: 2.ª fase | RF49 | Sprint 4 | nova (23/10) |
+| US37 — Assistente que conhece as minhas notas | RF37, RF41, RNF12 | Backlog | nova (23/10) |
+| US38 — Datas do concurso no percurso | sem RF associado | Backlog | nova (23/10) |
+| US39 — Corrigir e esconder cursos do catálogo (gestão) | RF04, RF05 | Backlog | nova (23/10) |
+| US06 — Registar percurso *(Won't: fase 2, opcionais)* | RF05 (UCs), RF08, RF09 | Backlog | US05 |
+| US07 — Avaliar opcional concluída *(Won't: fase 2, opcionais)* | RF10, RF13, RF15 (pseudo_id desde o início) | Backlog | US06 |
 | US09 — Avaliações pseudonimizadas | RF15, RF16 | Backlog | US09 |
 | US11 — Recomendações de popularidade | RF07, RF20 | Backlog | US11 |
 | US08 — Avaliação rápida de obrigatórias | RF11 | Backlog | US07 |
@@ -190,6 +218,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
 | 1.5 | 2026-10-20 | Sprint Planning do Sprint 2: ponto 14 decidido (protótipo da equipa, opção a); US31 antecipada para o Sprint 2. |
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
+| 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF49) e stories US33 a US45; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 
-O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 14/10). O ficheiro Word continua na versão 1.0.
+O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 23/10). O ficheiro Word continua na versão 1.0.

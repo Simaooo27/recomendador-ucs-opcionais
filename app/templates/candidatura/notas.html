@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set page_title = texts.CANDIDATURA_NOTAS_TITULO %}
+
+{#- As notas do aluno para o plano de candidatura: a média e os exames que fez (protótipo de 23/10). -#}
+{% block content %}
+<p class="ficha-voltar"><a href="{{ url_for('candidatura.plano') }}">{{ texts.CANDIDATURA_VOLTAR }}</a></p>
+<h1>{{ texts.CANDIDATURA_NOTAS_TITULO }}</h1>
+<p class="lead">{{ texts.CANDIDATURA_NOTAS_INTRO }}</p>
+
+<form method="post" action="{{ url_for('candidatura.notas') }}" novalidate class="form-notas">
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <div class="field">
+    <label for="media">{{ texts.CANDIDATURA_MEDIA }}</label>
+    <input id="media" name="media" type="text" inputmode="decimal" required maxlength="5" value="{{ valores.get('media', '') }}"
+           {% if erros.media %}aria-invalid="true" aria-describedby="media-error"{% else %}aria-describedby="media-hint"{% endif %}>
+    {% if erros.media %}<p class="error" id="media-error">{{ erros.media }}</p>
+    {% else %}<p class="hint" id="media-hint">{{ texts.CANDIDATURA_MEDIA_DICA }}</p>{% endif %}
+  </div>
+
+  <fieldset class="exames">
+    <legend>{{ texts.CANDIDATURA_EXAMES }}</legend>
+    <p class="hint">{{ texts.CANDIDATURA_EXAMES_DICA }}</p>
+    <div class="exames-grelha">
+      {% for codigo, nome in provas %}
+        {% set campo = "exame_" ~ codigo %}
+        <div class="field">
+          <label for="{{ campo }}">{{ nome }}</label>
+          <input id="{{ campo }}" name="{{ campo }}" type="text" inputmode="decimal" maxlength="5" value="{{ valores.get(campo, '') }}"
+                 {% if erros[campo] %}aria-invalid="true" aria-describedby="{{ campo }}-error"{% endif %}>
+          {% if erros[campo] %}<p class="error" id="{{ campo }}-error">{{ erros[campo] }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <button type="submit">{{ texts.CANDIDATURA_GUARDAR }}</button>
+</form>
+{% endblock %}

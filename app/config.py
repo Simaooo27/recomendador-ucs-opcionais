@@ -36,7 +36,7 @@ def default_config() -> dict:
         "PASSWORD_MIN_LENGTH": 8,
         "PASSWORD_MAX_LENGTH": 128,
         "CONFIRMATION_TOKEN_MAX_AGE_SECONDS": 24 * 60 * 60,
-        "PRIVACY_POLICY_VERSION": "1.0",
+        "PRIVACY_POLICY_VERSION": "1.1",   # 1.1 (23/10): passa a recolher o nome
         # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
         "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),
         # Catálogo de cursos (dados públicos da DGES). Por omissão, o catálogo completo gerado por

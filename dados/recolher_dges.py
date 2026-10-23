@@ -9,11 +9,13 @@ volta a pedir nada ao site.
 Corre no computador de um dos membros da equipa (precisa de acesso à internet):
 
     python dados/recolher_dges.py amostra       # 2 índices e 5 cursos, ~10 segundos
+    python dados/recolher_dges.py mvp           # só os ~30 cursos do MVP, ~1 minuto
     python dados/recolher_dges.py descarregar   # todos os cursos, cerca de 1 hora
     python dados/recolher_dges.py processar     # lê as páginas guardadas e escreve o CSV
 
-``processar`` escreve ``dados/catalogo-cursos.csv`` com as mesmas colunas de
-``catalogo-cursos-mvp.csv``. Os cursos que já estão no ficheiro do MVP mantêm a
+``processar`` escreve ``dados/catalogo-cursos.csv`` com as colunas de
+``catalogo-cursos-mvp.csv`` e, desde 23/10, as condições de acesso (provas de ingresso,
+fórmula e classificações mínimas) usadas no plano de candidatura. Os cursos que já estão no ficheiro do MVP mantêm a
 instituição, a área, a descrição e as saídas escritas pela equipa; os outros ficam
 com os dados da DGES e sem descrição.
 
@@ -115,6 +117,19 @@ def amostra() -> None:
     print(f"\nAmostra guardada em {PASTA}")
 
 
+def mvp() -> None:
+    """Descarrega só as páginas dos cursos do MVP (dados/catalogo-cursos-mvp.csv): cerca de 30 pedidos.
+
+    Serve para ter as condições de acesso destes cursos sem esperar pela recolha completa.
+    """
+    with open(MVP, encoding="utf-8-sig", newline="") as ficheiro:
+        pares = [(l["codigo_curso_dges"], l["codigo_instituicao_dges"]) for l in csv.DictReader(ficheiro)]
+    for codc, code in pares:
+        estado = curso(codc, code)
+        print(f"  curso {codc}-{code}: {'descarregado' if estado else 'já estava guardado' if estado is False else 'falhou'}")
+    print("\nAgora corra: python dados/recolher_dges.py processar")
+
+
 def descarregar() -> None:
     pares: list[tuple[str, str]] = []
     for letra in letras_existentes():
@@ -151,11 +166,21 @@ def descarregar() -> None:
 
 MVP = Path(__file__).resolve().parent / "catalogo-cursos-mvp.csv"
 SAIDA = Path(__file__).resolve().parent / "catalogo-cursos.csv"
+# Código e nome de cada prova de ingresso, como a DGES os escreve («18», «Português»).
+PROVAS = Path(__file__).resolve().parent / "provas-ingresso.csv"
 COLUNAS = [
     "instituicao", "unidade_organica", "tipo_ensino", "localidade", "codigo_instituicao_dges",
     "codigo_curso_dges", "curso", "area_optabem", "grau", "duracao_semestres", "ects", "vagas_2026",
     "ultimo_colocado_1fase_2025", "area_cnaef", "descricao", "saidas_profissionais",
     "fonte_dados_acesso", "fonte_descricao",
+    # Condições de acesso (plano de candidatura, 23/10): ver ``_provas_ingresso``.
+    "provas_ingresso", "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas",
+    "pre_requisitos",
+    # Tendência e procura (23/10), da tabela «Dados Estatísticos de Candidaturas Anteriores», 1.ª fase.
+    "ultimo_colocado_1fase_2023", "ultimo_colocado_1fase_2024",
+    "vagas_1fase_2025", "candidatos_1fase_2025", "candidatos_1opcao_1fase_2025", "colocados_1fase_2025",
+    # Plano B (23/10): 2.ª fase de 2025.
+    "vagas_2fase_2025", "colocados_2fase_2025", "ultimo_colocado_2fase_2025",
 ]
 # Graus que entram no catálogo (o índice da DGES escreve-os entre parênteses retos).
 GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "Mest Integ": "Mestrado integrado"}
@@ -206,6 +231,132 @@ def _ultimo_colocado(pagina: str) -> str:
         return ""
     primeira_fase = celulas[2 * (len(anos) - 1)] if len(celulas) >= 2 * len(anos) else ""
     return primeira_fase if re.fullmatch(r"\d{2,3},\d", primeira_fase) else ""
+
+
+def _seccao(pagina: str, titulo: str) -> str:
+    """O HTML entre «<h2>titulo</h2>» e o título seguinte (ou a âncora seguinte)."""
+    encontrado = re.search(r"<h2>" + re.escape(titulo) + r"</h2>(.*?)(?:<h2>|<a name)", pagina, re.S)
+    return encontrado.group(1) if encontrado else ""
+
+
+_PROVA = re.compile(r"^(\d{2})\s+\S")
+_ESCOLHER = {"Uma das seguintes provas:": 1, "Duas das seguintes provas:": 2}
+
+
+def _combinacoes(lista: list[str], quantas: int) -> list[list[str]]:
+    from itertools import combinations
+    return [list(c) for c in combinations(lista, quantas)]
+
+
+def _provas_ingresso(pagina: str) -> str:
+    """As provas de ingresso como conjuntos alternativos: «09|18|17+18» quer dizer «Geografia, ou
+    Português, ou Matemática Aplicada às Ciências Sociais e Português». Basta um conjunto.
+
+    A DGES escreve-as de quatro formas, todas convertidas para conjuntos:
+    - «Um dos seguintes conjuntos:» e conjuntos separados por «ou»;
+    - uma lista simples (são precisas todas);
+    - «Duas das seguintes provas:» (todos os pares possíveis);
+    - «18 Português e Uma das seguintes provas: …» (Português com cada uma das outras).
+    Devolve "" quando a página manda consultar a instituição.
+    """
+    linhas = [_texto(l) for l in _seccao(pagina, "Provas de Ingresso").split("<br>")]
+    linhas = [l for l in linhas if l]
+    if not linhas or not any(_PROVA.match(l) for l in linhas):
+        return ""
+    if linhas[0] == "Um dos seguintes conjuntos:":
+        conjuntos, atual = [], []
+        for linha in linhas[1:] + ["ou"]:
+            if linha == "ou":
+                if atual:
+                    conjuntos.append(atual)
+                atual = []
+            elif _PROVA.match(linha):
+                atual.append(linha[:2])
+    else:
+        # Partes separadas por «e»; cada parte é obrigatória (todas as provas) ou «escolher N de».
+        partes, atual, escolher = [], [], 0
+        for linha in linhas + ["e"]:
+            if linha == "e":
+                if atual:
+                    partes.append(_combinacoes(atual, escolher) if escolher else [atual])
+                atual, escolher = [], 0
+            elif linha in _ESCOLHER:
+                escolher = _ESCOLHER[linha]
+            elif _PROVA.match(linha):
+                atual.append(linha[:2])
+        conjuntos = [[]]
+        for opcoes in partes:
+            conjuntos = [c + o for c in conjuntos for o in opcoes]
+    vistos, unicos = set(), []
+    for conjunto in conjuntos:
+        chave = "+".join(sorted(set(conjunto)))
+        if chave and chave not in vistos:
+            vistos.add(chave)
+            unicos.append(chave)
+    return "|".join(unicos)
+
+
+def nomes_das_provas(pagina: str) -> dict[str, str]:
+    """Código -> nome das provas de ingresso da página («18  Português» -> {"18": "Português"})."""
+    linhas = [_texto(l) for l in _seccao(pagina, "Provas de Ingresso").split("<br>")]
+    return {l[:2]: l[2:].strip() for l in linhas if _PROVA.match(l)}
+
+
+def _pontos(texto: str, nome: str) -> str:
+    """«Nota de candidatura: 95 pontos» ou «Média do secundário: 50%» -> «95» / «50»."""
+    encontrado = re.search(re.escape(nome) + r":\s*(\d+)", _texto(texto))
+    return encontrado.group(1) if encontrado else ""
+
+
+def _pre_requisitos(pagina: str) -> str:
+    """«Tipo: Seleção<br>Grupo A - Comunicação interpessoal» -> «Seleção: Grupo A - Comunicação interpessoal»."""
+    seccao = _seccao(pagina, "Pré-Requisitos")
+    if not seccao:
+        return ""
+    tipo = re.search(r"Tipo:\s*([^<]*)", seccao)
+    # «Grupo - -» é a forma de a DGES dizer que não há grupo: não conta.
+    grupos = [_texto(g) for g in re.findall(r"<span class='vislink'>(.*?)</span>", seccao, re.S)]
+    grupos = [g for g in grupos if re.search(r"[A-Za-zÀ-ú]{2}", g.replace("Grupo", ""))]
+    inicio = _texto(tipo.group(1)) if tipo else ""
+    if not inicio and not grupos:
+        return ""
+    return (inicio or "Pré-requisito") + (": " + "; ".join(grupos) if grupos else "")
+
+
+def estatisticas_1fase(pagina: str) -> dict[str, dict[int, str]]:
+    """Linha da tabela de estatísticas -> {ano: valor da 1.ª fase}."""
+    return estatisticas(pagina, fase=1)
+
+
+def estatisticas(pagina: str, fase: int = 1) -> dict[str, dict[int, str]]:
+    """Linha da tabela de estatísticas -> {ano: valor da fase pedida (1 ou 2)}.
+
+    As linhas «Candidatos» e «Colocados» aparecem duas vezes (o título do grupo, vazio, e o total):
+    fica a que tem números. «em 1ª Opção» também aparece duas vezes: a 1.ª é dos candidatos, a 2.ª
+    dos colocados (guardadas como «em 1ª Opção» e «colocados em 1ª Opção»).
+    """
+    tabela = re.search(r"Dados Estatísticos de Candidaturas Anteriores</h2>(.*?)</table>", pagina, re.S)
+    if not tabela:
+        return {}
+    anos = [int(a) for a in re.findall(r'<th colspan="2" class="th1">(\d{4})</th>', tabela.group(1))]
+    linhas: dict[str, dict[int, str]] = {}
+    for linha in re.findall(r"<tr>(.*?)</tr>", tabela.group(1), re.S):
+        celulas = [_texto(c) for c in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", linha, re.S)]
+        if len(celulas) < 1 + 2 * len(anos) or not anos:
+            continue
+        nome, valores = celulas[0], celulas[1:]
+        primeira_fase = {ano: valores[2 * i + fase - 1] for i, ano in enumerate(anos)}
+        if not any(valores):
+            continue                       # título de grupo («Candidatos», «Colocados»)
+        if nome in linhas:
+            nome = "colocados " + nome     # o 2.º «em 1ª Opção» é dos colocados
+        linhas[nome] = primeira_fase
+    return linhas
+
+
+def _numero(valor: str) -> str:
+    """«138,3» ou «46» como estão; tudo o resto (vazio, «-») -> ""."""
+    return valor if re.fullmatch(r"\d+(,\d)?", valor or "") else ""
 
 
 def _tipo_ensino(texto: str) -> str:
@@ -291,6 +442,37 @@ def ler_curso(pagina: str, codc: str, code: str) -> dict[str, str]:
         "saidas_profissionais": "",
         "fonte_dados_acesso": f"{BASE}detcursopi.asp?codc={codc}&code={code}",
         "fonte_descricao": "",
+        "provas_ingresso": _provas_ingresso(pagina),
+        "peso_secundario": _pontos(_seccao(pagina, "Fórmula de Cálculo"), "Média do secundário"),
+        "peso_provas": _pontos(_seccao(pagina, "Fórmula de Cálculo"), "Provas de ingresso"),
+        "minimo_candidatura": _pontos(_seccao(pagina, "Classificações Mínimas"), "Nota de candidatura"),
+        "minimo_provas": _pontos(_seccao(pagina, "Classificações Mínimas"), "Provas de ingresso"),
+        "pre_requisitos": _pre_requisitos(pagina),
+        **_tendencia_e_procura(pagina),
+    }
+
+
+def _tendencia_e_procura(pagina: str) -> dict[str, str]:
+    linhas = estatisticas_1fase(pagina)
+    ultimo = linhas.get("Nota de Candidatura do Último Colocado pelo Contingente Geral", {})
+    return {
+        "ultimo_colocado_1fase_2023": _numero(ultimo.get(2023, "")),
+        "ultimo_colocado_1fase_2024": _numero(ultimo.get(2024, "")),
+        "vagas_1fase_2025": _numero(linhas.get("Vagas", {}).get(2025, "")),
+        "candidatos_1fase_2025": _numero(linhas.get("Candidatos", {}).get(2025, "")),
+        "candidatos_1opcao_1fase_2025": _numero(linhas.get("em 1ª Opção", {}).get(2025, "")),
+        "colocados_1fase_2025": _numero(linhas.get("Colocados", {}).get(2025, "")),
+        **_segunda_fase(pagina),
+    }
+
+
+def _segunda_fase(pagina: str) -> dict[str, str]:
+    linhas = estatisticas(pagina, fase=2)
+    ultimo = linhas.get("Nota de Candidatura do Último Colocado pelo Contingente Geral", {})
+    return {
+        "vagas_2fase_2025": _numero(linhas.get("Vagas", {}).get(2025, "")),
+        "colocados_2fase_2025": _numero(linhas.get("Colocados", {}).get(2025, "")),
+        "ultimo_colocado_2fase_2025": _numero(ultimo.get(2025, "")),
     }
 
 
@@ -312,13 +494,19 @@ def processar() -> None:
             for linha in csv.DictReader(ficheiro):
                 equipa[f"{linha['codigo_curso_dges']}-{linha['codigo_instituicao_dges']}"] = linha
     linhas, ignorados = [], {}
+    provas: dict[str, str] = {}
+    if PROVAS.exists():
+        with open(PROVAS, encoding="utf-8-sig", newline="") as ficheiro:
+            provas = {l["codigo"]: l["nome"] for l in csv.DictReader(ficheiro)}
     for pagina_html in sorted((PASTA / "cursos").glob("*.html")):
         codc, code = pagina_html.stem.split("-", 1)
         grau = graus.get(codc, "")
         if grau and grau not in GRAUS:
             ignorados[grau] = ignorados.get(grau, 0) + 1
             continue
-        linha = ler_curso(pagina_html.read_text(encoding="latin-1"), codc, code)
+        texto = pagina_html.read_text(encoding="latin-1")
+        provas.update(nomes_das_provas(texto))
+        linha = ler_curso(texto, codc, code)
         da_equipa = equipa.get(f"{codc}-{code}")
         if da_equipa:   # o que a equipa escreveu e verificou à mão tem prioridade
             # A área não: é a mesma regra para todos, para os filtros serem coerentes.
@@ -338,15 +526,21 @@ def processar() -> None:
         escritor = csv.DictWriter(ficheiro, fieldnames=COLUNAS)
         escritor.writeheader()
         escritor.writerows(linhas)
+    with open(PROVAS, "w", encoding="utf-8-sig", newline="") as ficheiro:
+        escritor = csv.writer(ficheiro)
+        escritor.writerow(["codigo", "nome"])
+        escritor.writerows(sorted(provas.items()))
     sem_nota = sum(1 for l in linhas if not l["ultimo_colocado_1fase_2025"])
+    sem_provas = sum(1 for l in linhas if not l.get("provas_ingresso"))
     com_descricao = sum(1 for l in linhas if l["descricao"])
-    print(f"{len(linhas)} cursos em {SAIDA.name} ({com_descricao} com descrição; {sem_nota} sem nota do último colocado).")
+    print(f"{len(linhas)} cursos em {SAIDA.name} ({com_descricao} com descrição; {sem_nota} sem nota do último colocado; "
+          f"{sem_provas} sem provas de ingresso).")
     if ignorados:
         print("Fora do catálogo (outros graus): " + ", ".join(f"{g}: {n}" for g, n in sorted(ignorados.items())))
 
 
 if __name__ == "__main__":
-    acoes = {"amostra": amostra, "descarregar": descarregar, "processar": processar}
+    acoes = {"amostra": amostra, "mvp": mvp, "descarregar": descarregar, "processar": processar}
     if len(sys.argv) != 2 or sys.argv[1] not in acoes:
         print(__doc__)
         sys.exit(1)

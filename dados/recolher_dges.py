@@ -9,11 +9,13 @@ volta a pedir nada ao site.
 Corre no computador de um dos membros da equipa (precisa de acesso à internet):
 
     python dados/recolher_dges.py amostra       # 2 índices e 5 cursos, ~10 segundos
+    python dados/recolher_dges.py mvp           # só os ~30 cursos do MVP, ~1 minuto
     python dados/recolher_dges.py descarregar   # todos os cursos, cerca de 1 hora
     python dados/recolher_dges.py processar     # lê as páginas guardadas e escreve o CSV
 
-``processar`` escreve ``dados/catalogo-cursos.csv`` com as mesmas colunas de
-``catalogo-cursos-mvp.csv``. Os cursos que já estão no ficheiro do MVP mantêm a
+``processar`` escreve ``dados/catalogo-cursos.csv`` com as colunas de
+``catalogo-cursos-mvp.csv`` e, desde 23/10, as condições de acesso (provas de ingresso,
+fórmula e classificações mínimas) usadas no plano de candidatura. Os cursos que já estão no ficheiro do MVP mantêm a
 instituição, a área, a descrição e as saídas escritas pela equipa; os outros ficam
 com os dados da DGES e sem descrição.
 
@@ -115,6 +117,19 @@ def amostra() -> None:
     print(f"\nAmostra guardada em {PASTA}")
 
 
+def mvp() -> None:
+    """Descarrega só as páginas dos cursos do MVP (dados/catalogo-cursos-mvp.csv): cerca de 30 pedidos.
+
+    Serve para ter as condições de acesso destes cursos sem esperar pela recolha completa.
+    """
+    with open(MVP, encoding="utf-8-sig", newline="") as ficheiro:
+        pares = [(l["codigo_curso_dges"], l["codigo_instituicao_dges"]) for l in csv.DictReader(ficheiro)]
+    for codc, code in pares:
+        estado = curso(codc, code)
+        print(f"  curso {codc}-{code}: {'descarregado' if estado else 'já estava guardado' if estado is False else 'falhou'}")
+    print("\nAgora corra: python dados/recolher_dges.py processar")
+
+
 def descarregar() -> None:
     pares: list[tuple[str, str]] = []
     for letra in letras_existentes():
@@ -156,6 +171,9 @@ COLUNAS = [
     "codigo_curso_dges", "curso", "area_optabem", "grau", "duracao_semestres", "ects", "vagas_2026",
     "ultimo_colocado_1fase_2025", "area_cnaef", "descricao", "saidas_profissionais",
     "fonte_dados_acesso", "fonte_descricao",
+    # Condições de acesso (plano de candidatura, 23/10): ver ``_provas_ingresso``.
+    "provas_ingresso", "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas",
+    "pre_requisitos",
 ]
 # Graus que entram no catálogo (o índice da DGES escreve-os entre parênteses retos).
 GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "Mest Integ": "Mestrado integrado"}
@@ -206,6 +224,90 @@ def _ultimo_colocado(pagina: str) -> str:
         return ""
     primeira_fase = celulas[2 * (len(anos) - 1)] if len(celulas) >= 2 * len(anos) else ""
     return primeira_fase if re.fullmatch(r"\d{2,3},\d", primeira_fase) else ""
+
+
+def _seccao(pagina: str, titulo: str) -> str:
+    """O HTML entre «<h2>titulo</h2>» e o título seguinte (ou a âncora seguinte)."""
+    encontrado = re.search(r"<h2>" + re.escape(titulo) + r"</h2>(.*?)(?:<h2>|<a name)", pagina, re.S)
+    return encontrado.group(1) if encontrado else ""
+
+
+_PROVA = re.compile(r"^(\d{2})\s+\S")
+_ESCOLHER = {"Uma das seguintes provas:": 1, "Duas das seguintes provas:": 2}
+
+
+def _combinacoes(lista: list[str], quantas: int) -> list[list[str]]:
+    from itertools import combinations
+    return [list(c) for c in combinations(lista, quantas)]
+
+
+def _provas_ingresso(pagina: str) -> str:
+    """As provas de ingresso como conjuntos alternativos: «09|18|17+18» quer dizer «Geografia, ou
+    Português, ou Matemática Aplicada às Ciências Sociais e Português». Basta um conjunto.
+
+    A DGES escreve-as de quatro formas, todas convertidas para conjuntos:
+    - «Um dos seguintes conjuntos:» e conjuntos separados por «ou»;
+    - uma lista simples (são precisas todas);
+    - «Duas das seguintes provas:» (todos os pares possíveis);
+    - «18 Português e Uma das seguintes provas: …» (Português com cada uma das outras).
+    Devolve "" quando a página manda consultar a instituição.
+    """
+    linhas = [_texto(l) for l in _seccao(pagina, "Provas de Ingresso").split("<br>")]
+    linhas = [l for l in linhas if l]
+    if not linhas or not any(_PROVA.match(l) for l in linhas):
+        return ""
+    if linhas[0] == "Um dos seguintes conjuntos:":
+        conjuntos, atual = [], []
+        for linha in linhas[1:] + ["ou"]:
+            if linha == "ou":
+                if atual:
+                    conjuntos.append(atual)
+                atual = []
+            elif _PROVA.match(linha):
+                atual.append(linha[:2])
+    else:
+        # Partes separadas por «e»; cada parte é obrigatória (todas as provas) ou «escolher N de».
+        partes, atual, escolher = [], [], 0
+        for linha in linhas + ["e"]:
+            if linha == "e":
+                if atual:
+                    partes.append(_combinacoes(atual, escolher) if escolher else [atual])
+                atual, escolher = [], 0
+            elif linha in _ESCOLHER:
+                escolher = _ESCOLHER[linha]
+            elif _PROVA.match(linha):
+                atual.append(linha[:2])
+        conjuntos = [[]]
+        for opcoes in partes:
+            conjuntos = [c + o for c in conjuntos for o in opcoes]
+    vistos, unicos = set(), []
+    for conjunto in conjuntos:
+        chave = "+".join(sorted(set(conjunto)))
+        if chave and chave not in vistos:
+            vistos.add(chave)
+            unicos.append(chave)
+    return "|".join(unicos)
+
+
+def _pontos(texto: str, nome: str) -> str:
+    """«Nota de candidatura: 95 pontos» ou «Média do secundário: 50%» -> «95» / «50»."""
+    encontrado = re.search(re.escape(nome) + r":\s*(\d+)", _texto(texto))
+    return encontrado.group(1) if encontrado else ""
+
+
+def _pre_requisitos(pagina: str) -> str:
+    """«Tipo: Seleção<br>Grupo A - Comunicação interpessoal» -> «Seleção: Grupo A - Comunicação interpessoal»."""
+    seccao = _seccao(pagina, "Pré-Requisitos")
+    if not seccao:
+        return ""
+    tipo = re.search(r"Tipo:\s*([^<]*)", seccao)
+    # «Grupo - -» é a forma de a DGES dizer que não há grupo: não conta.
+    grupos = [_texto(g) for g in re.findall(r"<span class='vislink'>(.*?)</span>", seccao, re.S)]
+    grupos = [g for g in grupos if re.search(r"[A-Za-zÀ-ú]{2}", g.replace("Grupo", ""))]
+    inicio = _texto(tipo.group(1)) if tipo else ""
+    if not inicio and not grupos:
+        return ""
+    return (inicio or "Pré-requisito") + (": " + "; ".join(grupos) if grupos else "")
 
 
 def _tipo_ensino(texto: str) -> str:
@@ -291,6 +393,12 @@ def ler_curso(pagina: str, codc: str, code: str) -> dict[str, str]:
         "saidas_profissionais": "",
         "fonte_dados_acesso": f"{BASE}detcursopi.asp?codc={codc}&code={code}",
         "fonte_descricao": "",
+        "provas_ingresso": _provas_ingresso(pagina),
+        "peso_secundario": _pontos(_seccao(pagina, "Fórmula de Cálculo"), "Média do secundário"),
+        "peso_provas": _pontos(_seccao(pagina, "Fórmula de Cálculo"), "Provas de ingresso"),
+        "minimo_candidatura": _pontos(_seccao(pagina, "Classificações Mínimas"), "Nota de candidatura"),
+        "minimo_provas": _pontos(_seccao(pagina, "Classificações Mínimas"), "Provas de ingresso"),
+        "pre_requisitos": _pre_requisitos(pagina),
     }
 
 
@@ -339,14 +447,16 @@ def processar() -> None:
         escritor.writeheader()
         escritor.writerows(linhas)
     sem_nota = sum(1 for l in linhas if not l["ultimo_colocado_1fase_2025"])
+    sem_provas = sum(1 for l in linhas if not l.get("provas_ingresso"))
     com_descricao = sum(1 for l in linhas if l["descricao"])
-    print(f"{len(linhas)} cursos em {SAIDA.name} ({com_descricao} com descrição; {sem_nota} sem nota do último colocado).")
+    print(f"{len(linhas)} cursos em {SAIDA.name} ({com_descricao} com descrição; {sem_nota} sem nota do último colocado; "
+          f"{sem_provas} sem provas de ingresso).")
     if ignorados:
         print("Fora do catálogo (outros graus): " + ", ".join(f"{g}: {n}" for g, n in sorted(ignorados.items())))
 
 
 if __name__ == "__main__":
-    acoes = {"amostra": amostra, "descarregar": descarregar, "processar": processar}
+    acoes = {"amostra": amostra, "mvp": mvp, "descarregar": descarregar, "processar": processar}
     if len(sys.argv) != 2 or sys.argv[1] not in acoes:
         print(__doc__)
         sys.exit(1)

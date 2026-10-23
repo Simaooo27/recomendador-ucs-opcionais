@@ -90,12 +90,13 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 ├── templates/                        AS PÁGINAS (HTML)
 │   ├── base.html                     moldura comum: painel do percurso (páginas de entrada) ou barra do topo
 │   ├── landing.html                  apresentação pública (/): pesquisa de cursos, como funciona, para quem
-│   ├── home.html                     página inicial do aluno, com «O seu percurso»
+│   ├── home.html                     página inicial do aluno: «O seu percurso» e atalhos
 │   ├── privacy.html                  política de privacidade
 │   ├── error.html                    páginas de erro (404, pedido inválido)
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
-│   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow»
-│   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão
+│   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow», lupa e conta da barra do topo
+│   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão,
+│   │                                 «A minha conta» (conta.html) e apagar a conta (US17)
 │   ├── orientacao/conversa.html      a conversa com o assistente (US29) e os cursos sugeridos (US30)
 │   ├── percurso/                     confirmar a escolha do curso e a linha do tempo das decisões (US31)
 │   ├── catalogo/lista.html           página /cursos/: pesquisa e filtros por área, instituição e localidade (US05)
@@ -154,19 +155,19 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 |---|---|---|
 | 1. Cores | 32 | Todas as cores: texto, fundos, verde dos botões, verde-escuro do painel, amarelo do caminho escolhido, erros, sucesso |
 | 2. Tipos de letra | 59 | Letra dos títulos (Bricolage Grotesque) e do texto (Atkinson Hyperlegible Next), em `app/static/fonts/` |
-| 3. Página e colunas | 93 | Fundo da página, tamanho base da letra, largura da coluna (alunos e gestão) |
-| 4. Barra do topo | 119 | Marca «OptaBem», «Gestão», menu, nome do administrador, «Terminar sessão», versão telemóvel |
-| 5. Páginas de entrada | 195 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
-| 6. Texto | 268 | Títulos, parágrafos, ligações, listas, contorno do teclado |
-| 7. Formulários | 297 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
-| 8. Botões | 368 | Botão principal, «Terminar sessão» e «Remover» |
-| 9. Caixas de mensagem | 420 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
-| 10. Tabelas | 436 | Lista de administradores na gestão |
-| 11. Página de apresentação | 447 | A página inicial pública: caixa de pesquisa, nota escrita à mão, fichas dos cursos, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
-| 12. O meu percurso | 747 | A linha do tempo da página inicial do aluno e a conversa de orientação (mensagens, aviso, «Recomeçar») |
-| 13. Gestão, erros e detalhes | 793 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
-| 14. Movimento | 873 | Todas as animações (e o que acontece a quem pede menos movimento) |
-| 15. Modo escuro | 914 | Cores quando o computador está em modo escuro (fica sempre no fim) |
+| 3. Página e colunas | 93 | Fundo da página, tamanho base da letra, margens (`--margem`) e larguras (alunos, início, gestão e apresentação) |
+| 4. Barra do topo | 129 | Marca «OptaBem», «Gestão», menu, lupa e ícone de conta (com os painéis), nome do administrador, versão telemóvel |
+| 5. Páginas de entrada | 280 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
+| 6. Texto | 363 | Títulos, parágrafos, ligações, listas, contorno do teclado |
+| 7. Formulários | 392 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
+| 8. Botões | 483 | Botão principal, «Terminar sessão» e «Remover» |
+| 9. Caixas de mensagem | 535 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
+| 10. Tabelas | 551 | Lista de administradores na gestão |
+| 11. Página de apresentação | 562 | A página inicial pública: caixa de pesquisa, nota escrita à mão, fichas dos cursos, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
+| 12. O meu percurso | 875 | A linha do tempo da página inicial do aluno e a conversa de orientação (mensagens, aviso, «Recomeçar») |
+| 13. Gestão, erros e detalhes | 1142 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
+| 14. Movimento | 1222 | Todas as animações (e o que acontece a quem pede menos movimento) |
+| 15. Modo escuro | 1263 | Cores quando o computador está em modo escuro (fica sempre no fim) |
 
 **Exemplos de alterações comuns:**
 
@@ -238,6 +239,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 22/10 | US17: apagar a minha conta e todos os dados (confirmação pela palavra-passe); guia do túnel sem comentários no `.env` | `app/auth/`, `app/templates/auth/apagar.html`, `home.html`, `docs/US17/`, `06-aceder-noutro-dispositivo.md` | PR da US17 |
 | 22/10 | Barra do topo presa ao topo em todas as páginas; na apresentação, secções (Cursos, Como funciona, Para quem) e um só «Entrar» e «Criar conta» | `app/templates/base.html`, `landing.html`, `app/static/style.css` (secções 4 e 11) | PR do menu fixo |
 | 23/10 | Sprint Review do Sprint 3: US05 e US17 aceites; teste da US17 deixa de depender da data | `PROJETO.md`, `docs/geral/product-backlog.xlsx`, `docs/US05/`, `docs/US17/`, `tests/test_apagar_conta.py` | PR do fecho do Sprint 3 |
+| 23/10 | Revisão estética (pedido do PO): barra do topo encostada às margens, com lupa e ícone de conta; pesquisa da apresentação numa só caixa; pesquisa pelo início das palavras e sem a escola; ilustração da entrada alinhada com o formulário; início com o percurso numa caixa e atalhos; página «A minha conta» com «Apagar a conta» | `app/templates/` (`base.html`, `landing.html`, `home.html`, `auth/conta.html`, `macros/marca.html`), `app/static/style.css`, `app/static/app.js`, `app/catalogo/services.py`, `app/auth/routes.py`, `docs/US17/` | PR da revisão estética |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

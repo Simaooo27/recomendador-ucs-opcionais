@@ -4,6 +4,7 @@ Tudo funciona sem sessão iniciada (RF34). Os cursos vêm de ``repository.todos`
 """
 from __future__ import annotations
 
+import re
 import unicodedata
 from dataclasses import dataclass
 from typing import Mapping
@@ -18,6 +19,33 @@ def _normalizar(texto: str) -> str:
     return "".join(c for c in decomposto if unicodedata.category(c) != "Mn")
 
 
+def _palavras_do_texto(texto: str) -> list[str]:
+    return re.findall(r"[a-z0-9]+", _normalizar(texto))
+
+
+def _corresponde(palavras: list[str], *campos: str) -> bool:
+    """Cada palavra pesquisada tem de ser o início de uma palavra dos campos («gest» encontra
+    «Gestão»; «ti» já não encontra «Informática»). Revisão estética de 23/10: a procura por
+    pedaços do meio das palavras trazia cursos sem relação com o que se escreveu."""
+    existentes = _palavras_do_texto(" ".join(campos))
+    return all(any(e.startswith(p) for e in existentes) for p in palavras)
+
+
+def _campos_pesquisados(curso: Curso) -> tuple[str, ...]:
+    """Onde se procura: nome do curso, instituição, localidade e área. A escola ou faculdade
+    (unidade orgânica) fica de fora a 23/10 (decisão do PO): «gestão» encontrava Engenharia
+    Informática só por ser dada numa «Escola Superior de Tecnologia e Gestão»."""
+    return (curso.curso, curso.instituicao, curso.localidade, curso.area)
+
+
+def _relevancia(palavras: list[str], curso: Curso) -> int:
+    """Ordem dos resultados: 0 = o nome do curso é exatamente o que se escreveu («Gestão»),
+    1 = o termo está no nome do curso, 2 = só na instituição, localidade ou área."""
+    if _palavras_do_texto(curso.curso) == palavras:
+        return 0
+    return 1 if _corresponde(palavras, curso.curso) else 2
+
+
 def cursos(config: Mapping) -> tuple[Curso, ...]:
     return repository.todos(config["CATALOGO_CSV"])
 
@@ -30,12 +58,12 @@ class Resultado:
 
 
 def pesquisar(config: Mapping, termo: str, limite: int = 60) -> Resultado:
-    """Cursos em que todas as palavras do termo aparecem no nome, instituição, localidade ou área.
+    """Cursos em que todas as palavras do termo começam uma palavra do nome, instituição, localidade ou área.
 
     Sem termo, devolve uma amostra variada (um curso de cada instituição, por ordem de vagas).
     """
     todos = cursos(config)
-    palavras = _normalizar(termo or "").split()
+    palavras = _palavras_do_texto(termo or "")
     if not palavras:
         vistos, amostra = set(), []
         for curso in sorted(todos, key=lambda c: -(c.vagas or 0)):
@@ -45,11 +73,10 @@ def pesquisar(config: Mapping, termo: str, limite: int = 60) -> Resultado:
         return Resultado(amostra[:6], len(todos), True)
     encontrados = []
     for curso in todos:
-        texto = _normalizar(" ".join((curso.curso, curso.instituicao, curso.unidade_organica, curso.localidade, curso.area)))
-        if all(palavra in texto for palavra in palavras):
+        if _corresponde(palavras, *_campos_pesquisados(curso)):
             encontrados.append(curso)
     # Primeiro os que têm o termo no nome do curso, depois por número de vagas.
-    encontrados.sort(key=lambda c: (not all(p in _normalizar(c.curso) for p in palavras), -(c.vagas or 0)))
+    encontrados.sort(key=lambda c: (_relevancia(palavras, c), -(c.vagas or 0)))
     return Resultado(encontrados[:limite], len(encontrados), False)
 
 
@@ -133,7 +160,7 @@ def ler_filtros(argumentos: Mapping, config: Mapping) -> Filtros:
 
 def filtrar(config: Mapping, filtros: Filtros) -> list[Curso]:
     """Os cursos que respeitam todos os filtros. Sem filtros, o catálogo todo, por número de vagas."""
-    palavras = _normalizar(filtros.termo).split()
+    palavras = _palavras_do_texto(filtros.termo)
     escolhidos = []
     for curso in cursos(config):
         if filtros.area and curso.area != filtros.area:
@@ -142,12 +169,10 @@ def filtrar(config: Mapping, filtros: Filtros) -> list[Curso]:
             continue
         if filtros.localidade and curso.localidade != filtros.localidade:
             continue
-        if palavras:
-            texto = _normalizar(" ".join((curso.curso, curso.instituicao, curso.unidade_organica, curso.localidade, curso.area)))
-            if not all(palavra in texto for palavra in palavras):
-                continue
+        if palavras and not _corresponde(palavras, *_campos_pesquisados(curso)):
+            continue
         escolhidos.append(curso)
-    escolhidos.sort(key=lambda c: (bool(palavras) and not all(p in _normalizar(c.curso) for p in palavras), -(c.vagas or 0), _normalizar(c.curso)))
+    escolhidos.sort(key=lambda c: (_relevancia(palavras, c) if palavras else 0, -(c.vagas or 0), _normalizar(c.curso)))
     return escolhidos
 
 

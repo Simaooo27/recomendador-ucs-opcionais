@@ -5,9 +5,17 @@
 
 {% block content %}
 <section class="hero">
+  {#- Revisão estética de 23/10: à esquerda, a frase, o apoio e os números do catálogo; à direita,
+      uma só caixa de pesquisa com as áreas lá dentro (antes eram quatro blocos empilhados). -#}
   <div class="hero-texto">
     <h1 class="hero-titulo">{{ texts.BRAND_TAGLINE }}</h1>
     <p class="hero-apoio">{{ texts.BRAND_SUPPORT }}</p>
+    <p class="procura-numeros">
+      {{- texts.LANDING_STATS.format(
+            cursos='<strong data-contar="%d">%d</strong>'|format(resumo.cursos, resumo.cursos),
+            instituicoes='<strong data-contar="%d">%d</strong>'|format(resumo.instituicoes, resumo.instituicoes),
+            vagas='<strong data-contar="%d">%d</strong>'|format(resumo.vagas, resumo.vagas))|safe -}}
+    </p>
   </div>
 
   {#- Pesquisa no catálogo real (app/catalogo). Sem JavaScript, o formulário recarrega a
@@ -17,27 +25,23 @@
       {{ marca.escrita(texts.LANDING_SEARCH_NOTE, manuscrito(texts.LANDING_SEARCH_NOTE)) }}
       <svg class="procura-seta" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path d="M8 6c18 2 34 12 38 34" /><path d="M36 34l10 8 6-12" /></svg>
     </div>
-    <form class="procura-form" method="get" action="{{ url_for('main.index') }}#resultados" role="search">
-      <label for="q" class="procura-etiqueta">{{ texts.LANDING_SEARCH_LABEL }}</label>
-      <div class="procura-campo">
-        <svg class="procura-lupa" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-        <input id="q" name="q" type="search" value="{{ termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
-               autocomplete="off" spellcheck="false" aria-controls="lista-cursos" data-procura-campo>
-        <button type="submit" class="procura-botao">{{ texts.LANDING_SEARCH_BUTTON }}</button>
-      </div>
-    </form>
-    <p class="procura-areas">
-      <span>{{ texts.LANDING_SEARCH_AREAS }}</span>
-      {% for area in resumo.areas %}
-        <a class="procura-area" href="{{ url_for('main.index', q=area) }}#resultados" data-termo="{{ area }}">{{ area }}</a>
-      {% endfor %}
-    </p>
-    <p class="procura-numeros">
-      {{- texts.LANDING_STATS.format(
-            cursos='<strong data-contar="%d">%d</strong>'|format(resumo.cursos, resumo.cursos),
-            instituicoes='<strong data-contar="%d">%d</strong>'|format(resumo.instituicoes, resumo.instituicoes),
-            vagas='<strong data-contar="%d">%d</strong>'|format(resumo.vagas, resumo.vagas))|safe -}}
-    </p>
+    <div class="procura-caixa">
+      <form class="procura-form" method="get" action="{{ url_for('main.index') }}#resultados" role="search">
+        <label for="q" class="procura-etiqueta">{{ texts.LANDING_SEARCH_LABEL }}</label>
+        <div class="procura-campo">
+          <svg class="procura-lupa" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          <input id="q" name="q" type="search" value="{{ termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
+                 autocomplete="off" spellcheck="false" aria-controls="lista-cursos" data-procura-campo>
+          <button type="submit" class="procura-botao">{{ texts.LANDING_SEARCH_BUTTON }}</button>
+        </div>
+      </form>
+      <p class="procura-areas">
+        <span>{{ texts.LANDING_SEARCH_AREAS }}</span>
+        {% for area in resumo.areas %}
+          <a class="procura-area" href="{{ url_for('main.index', q=area) }}#resultados" data-termo="{{ area }}">{{ area }}</a>
+        {% endfor %}
+      </p>
+    </div>
   </div>
 </section>
 

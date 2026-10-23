@@ -9,6 +9,7 @@
  *   3. Regras da palavra-passe marcadas enquanto escreve (criar conta)
  *   4. Botões que mostram «a enviar» e evitam envios repetidos
  *   5. Números do painel de gestão que contam até ao valor
+ *   6. Lupa e menu da conta na barra do topo: fechar ao clicar fora, com Esc ou ao abrir o outro
  */
 (function () {
   "use strict";
@@ -54,6 +55,8 @@
   }
 
   // Põe <mark> à volta das palavras pesquisadas, sem mexer nos acentos do texto original.
+  // Só se marca o início de uma palavra (como a pesquisa em app/catalogo/services.py): ao
+  // escrever «ge», não ficam marcadas letras soltas a meio de «Engenharia» (revisão de 23/10).
   function realcar(elemento, texto, palavras) {
     elemento.textContent = "";
     if (!palavras.length) { elemento.textContent = texto; return; }
@@ -66,8 +69,10 @@
     palavras.forEach(function (palavra) {
       var desde = 0, pos;
       while (palavra && (pos = normal.indexOf(palavra, desde)) !== -1) {
-        for (var k = pos; k < pos + palavra.length; k++) marcas[mapa[k]] = true;
-        desde = pos + palavra.length;
+        if (pos === 0 || !/[a-z0-9]/.test(normal[pos - 1])) {
+          for (var k = pos; k < pos + palavra.length; k++) marcas[mapa[k]] = true;
+        }
+        desde = pos + 1;
       }
     });
     var atual = null, marcado = null;
@@ -116,7 +121,7 @@
     }
 
     function mostrar(dados) {
-      var palavras = semAcentos(dados.termo || "").split(/\s+/).filter(Boolean);
+      var palavras = semAcentos(dados.termo || "").split(/[^a-z0-9]+/).filter(Boolean);
       // FLIP: guardar onde estava cada ficha antes de mudar a lista.
       var antes = {};
       lista.querySelectorAll("[data-chave]").forEach(function (el) {
@@ -311,5 +316,25 @@
     }
     caixas.forEach(function (caixa) { caixa.addEventListener("change", atualizar); });
     atualizar();   // o navegador pode repor caixas marcadas ao voltar atrás
+  });
+  /* 6. Lupa e menu da conta ----------------------------------------------- */
+  // Sem JavaScript os painéis abrem e fecham no próprio ícone (são <details>).
+  var menus = Array.prototype.slice.call(document.querySelectorAll("[data-topo-menu]"));
+  menus.forEach(function (menu) {
+    menu.addEventListener("toggle", function () {
+      if (!menu.open) return;
+      menus.forEach(function (outro) { if (outro !== menu) outro.open = false; });
+      var campo = menu.querySelector("input[type=search]");
+      if (campo) campo.focus();
+    });
+  });
+  document.addEventListener("click", function (evento) {
+    menus.forEach(function (menu) { if (menu.open && !menu.contains(evento.target)) menu.open = false; });
+  });
+  document.addEventListener("keydown", function (evento) {
+    if (evento.key !== "Escape") return;
+    menus.forEach(function (menu) {
+      if (menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+    });
   });
 })();

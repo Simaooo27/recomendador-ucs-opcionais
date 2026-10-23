@@ -55,9 +55,11 @@ class ApagarContaTestCase(AppTestCase):
 class PaginaTests(ApagarContaTestCase):
     """A página explica o que se perde e pede a palavra-passe."""
 
-    def test_o_inicio_tem_a_ligacao(self):
-        html = self.client.get("/inicio").get_data(as_text=True)
+    def test_a_minha_conta_tem_a_ligacao(self):
+        """Desde 23/10 a ligação está em «A minha conta», e não no fundo da página inicial."""
+        html = self.client.get("/auth/conta").get_data(as_text=True)
         self.assertIn('href="/auth/conta/apagar"', html)
+        self.assertNotIn('href="/auth/conta/apagar"', self.client.get("/inicio").get_data(as_text=True))
         self.assertIn(texts.HOME_CONTA_APAGAR, html)
 
     def test_a_pagina_explica_e_pede_a_palavra_passe(self):

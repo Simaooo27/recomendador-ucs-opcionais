@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set page_title = texts.CONTA_TITLE %}
+
+{#- «A minha conta» (revisão estética de 23/10). Chega-se pelo ícone de conta da barra do topo.
+    «Apagar a minha conta» (US17) saiu da página inicial e fica aqui, numa caixa à parte. -#}
+{% block content %}
+<h1>{{ texts.CONTA_TITLE }}</h1>
+
+<dl class="conta-dados">
+  <div><dt>{{ texts.CONTA_EMAIL }}</dt><dd>{{ g.user["email"] }}</dd></div>
+  {% if criada %}<div><dt>{{ texts.CONTA_DESDE }}</dt><dd>{{ criada }}</dd></div>{% endif %}
+</dl>
+
+<section class="zona-perigo" aria-labelledby="apagar-conta">
+  <h2 id="apagar-conta">{{ texts.CONTA_APAGAR_TITULO }}</h2>
+  <p>{{ texts.CONTA_APAGAR_TEXTO }}</p>
+  <a class="ligacao-perigo" href="{{ url_for('auth.delete_account_form') }}">{{ texts.HOME_CONTA_APAGAR }}</a>
+</section>
+{% endblock %}

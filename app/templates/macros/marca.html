@@ -107,3 +107,46 @@
   {{ seta("flow-seta flow-seta-sai") }}
 </a>
 {%- endmacro %}
+
+{#- Ícones da barra do topo (desenhos do Lucide, licença ISC): lupa e pessoa. -#}
+{% macro icone_lupa() -%}
+<svg class="icone" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+{%- endmacro %}
+{% macro icone_conta() -%}
+<svg class="icone" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4.5" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
+{%- endmacro %}
+
+{#- Lupa e conta, à direita da barra do topo (revisão estética de 23/10, pedido do PO).
+    Cada ícone abre um painel (<details>): funciona sem JavaScript; o app.js só fecha o painel
+    ao clicar fora, com Esc ou ao abrir o outro. ``destino_pesquisa``: página onde a pesquisa
+    mostra os resultados (a apresentação ou o catálogo). -#}
+{% macro acoes_topo(destino_pesquisa, ancora="") -%}
+<div class="topo-acoes">
+  <details class="topo-menu" data-topo-menu>
+    <summary class="topo-icone" aria-label="{{ texts.NAV_PROCURAR }}" title="{{ texts.NAV_PROCURAR }}">{{ icone_lupa() }}</summary>
+    <div class="topo-painel topo-painel-procura">
+      <form method="get" action="{{ destino_pesquisa }}{{ ancora }}" role="search">
+        <label for="procura-topo" class="visually-hidden">{{ texts.LANDING_SEARCH_LABEL }}</label>
+        <input id="procura-topo" name="q" type="search" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}" autocomplete="off" spellcheck="false" maxlength="80">
+        <button type="submit">{{ texts.LANDING_SEARCH_BUTTON }}</button>
+      </form>
+    </div>
+  </details>
+  <details class="topo-menu" data-topo-menu>
+    <summary class="topo-icone" aria-label="{{ texts.NAV_CONTA }}" title="{{ texts.NAV_CONTA }}">{{ icone_conta() }}</summary>
+    <div class="topo-painel topo-painel-conta">
+      {% if g.user %}
+        <p class="topo-email">{{ g.user["email"] }}</p>
+        <a href="{{ url_for('auth.account') }}"{% if request.endpoint == 'auth.account' %} aria-current="page"{% endif %}>{{ texts.NAV_MINHA_CONTA }}</a>
+        <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
+          <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+          <button type="submit">{{ texts.LOGOUT_BUTTON }}</button>
+        </form>
+      {% else %}
+        <a class="topo-entrar" href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_NAV_LOGIN }}</a>
+        {{ flow(texts.LANDING_NAV_REGISTER, url_for('auth.register_form'), pequeno=true) }}
+      {% endif %}
+    </div>
+  </details>
+</div>
+{%- endmacro %}

@@ -21,7 +21,7 @@
         <bpmn:flowNodeRef>T6</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="S1" name="Na página inicial">
+    <bpmn:startEvent id="S1" name="Em «A minha conta»">
       <bpmn:outgoing>F1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="T1" name="Carregar em «Apagar a minha conta e todos os meus dados»">
@@ -58,7 +58,7 @@
       <bpmn:incoming>F6</bpmn:incoming>
       <bpmn:outgoing>F7</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="C1" name="Cancelar e voltar ao início">
+    <bpmn:task id="C1" name="Cancelar e voltar à conta">
       <bpmn:incoming>F10</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
     </bpmn:task>

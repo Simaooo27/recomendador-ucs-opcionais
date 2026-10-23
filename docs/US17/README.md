@@ -14,7 +14,7 @@
 
 ## A ideia em três pontos
 
-1. **Na página inicial há «Apagar a minha conta e todos os meus dados».** A página seguinte diz exatamente o que se perde.
+1. **Em «A minha conta» (ícone de conta na barra do topo) há «Apagar a minha conta e todos os meus dados»** (desde 23/10; antes ficava no fim da página inicial). A página seguinte diz exatamente o que se perde.
 2. **Confirma-se com a palavra-passe.** Com a palavra-passe errada, nada é apagado.
 3. **Apaga tudo de uma vez:** a conta, a conversa de orientação, as decisões do percurso e o registo de pedidos ao LLM. A sessão termina e a página de apresentação confirma que os dados foram apagados.
 
@@ -22,7 +22,7 @@
 
 ## Experimentar
 
-Iniciar sessão como aluno, descer até ao fim da página inicial («A sua conta») e carregar em **«Apagar a minha conta e todos os meus dados»**.
+Iniciar sessão como aluno, abrir o ícone de conta na barra do topo, escolher «A minha conta» e carregar em **«Apagar a minha conta e todos os meus dados»**.
 
 ## Documentos
 
@@ -43,7 +43,7 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): `pytho
 | `app/auth/services.py` | `delete_account`: verifica a palavra-passe e apaga |
 | `app/auth/repository.py` | `delete_user`: um só `DELETE`; o resto sai por `ON DELETE CASCADE` (`app/schema.sql`) |
 | `app/templates/auth/apagar.html` | Página de confirmação |
-| `app/templates/home.html` | Secção «A sua conta», no fim da página inicial |
+| `app/templates/auth/conta.html` | Página «A minha conta» (/auth/conta), com a ligação para apagar (desde 23/10; antes era uma secção no fim de `home.html`) |
 | `app/templates/base.html` | Avisos com margens na página de apresentação |
 | `app/texts.py` | Textos `HOME_CONTA_*` e `APAGAR_*`; política de privacidade provisória |
 | `tests/test_apagar_conta.py` | 12 testes |

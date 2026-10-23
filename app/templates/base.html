@@ -26,24 +26,26 @@
 {% if layout == "apresentacao" %}
   <header class="site-header site-header-apresentacao">
     <p class="marca">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></p>
-    {#- Barra presa ao topo: secções da página à esquerda, conta à direita. É o único sítio
-        da apresentação com «Entrar» e «Criar conta» (o botão «flow» da secção 11 do CSS). -#}
+    {#- Barra presa ao topo, encostada às margens: secções da página e, à direita, a lupa e o
+        ícone de conta. «Entrar» e «Criar conta» ficam no menu do ícone de conta (revisão de 23/10). -#}
     <nav class="landing-nav" aria-label="{{ texts.NAV_LABEL }}">
       <a class="landing-seccao" href="{{ url_for('catalogo.lista') }}">{{ texts.LANDING_NAV_CURSOS }}</a>
       <a class="landing-seccao" href="{{ url_for('main.index', _anchor='como-funciona') }}">{{ texts.LANDING_NAV_COMO }}</a>
       <a class="landing-seccao" href="{{ url_for('main.index', _anchor='para-quem') }}">{{ texts.LANDING_NAV_PARA_QUEM }}</a>
-      <a class="landing-entrar" href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_NAV_LOGIN }}</a>
-      {{ marca.flow(texts.LANDING_NAV_REGISTER, url_for('auth.register_form'), "claro", pequeno=true) }}
     </nav>
+    {{ marca.acoes_topo(url_for('main.index'), "#resultados") }}
   </header>
   <main class="apresentacao">
 {% elif layout == "entrada" %}
   <div class="entrada">
     <aside class="entrada-marca">
       <p class="marca"><a class="marca-ligacao" href="{{ url_for('main.index') }}">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></a></p>
-      {{ marca.percurso() }}
-      <p class="entrada-frase">{{ texts.BRAND_TAGLINE }}</p>
-      <p class="entrada-apoio">{{ texts.BRAND_SUPPORT }}</p>
+      {#- Bloco centrado à altura do formulário (revisão estética de 23/10). -#}
+      <div class="entrada-destaque">
+        {{ marca.percurso() }}
+        <p class="entrada-frase">{{ texts.BRAND_TAGLINE }}</p>
+        <p class="entrada-apoio">{{ texts.BRAND_SUPPORT }}</p>
+      </div>
     </aside>
     <main class="entrada-conteudo">
       <div class="entrada-coluna">
@@ -68,14 +70,17 @@
         <span class="role-badge">{{ g.admin["username"] }}</span>
       </nav>
     {% endif %}
-    {% if g.admin or g.user %}
+    {% if not g.admin %}
+      {#- Lupa e conta (com ou sem sessão). Com sessão, «Terminar sessão» está no menu da conta. -#}
+      {{ marca.acoes_topo(url_for('catalogo.lista')) }}
+    {% else %}
       <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
         <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
         <button type="submit">{{ texts.LOGOUT_BUTTON }}</button>
       </form>
     {% endif %}
   </header>
-  <main class="conteudo{% if g.admin %} wide{% endif %}">
+  <main class="conteudo{% if g.admin %} wide{% elif largura == "media" %} media{% endif %}">
 {% endif %}
     {#- Na apresentação, os avisos ficam numa coluna com margens (ex.: «conta apagada», US17). -#}
     {% with avisos = get_flashed_messages(with_categories=true) %}

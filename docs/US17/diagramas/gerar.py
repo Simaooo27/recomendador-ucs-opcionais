@@ -17,7 +17,7 @@ GR, ER = 25, 18   # losango (meia diagonal), evento (raio)
 
 # id: (tipo, cx, cy, nome, faixa)
 NOS = {
-    "S1": ("start", 125, 110, "Na página inicial", 0),
+    "S1": ("start", 125, 110, "Em «A minha conta»", 0),
     "T1": ("task", 260, 110, "Carregar em «Apagar a minha conta e todos os meus dados»", 0),
     "T2": ("task", 260, 380, "Mostrar o que vai ser apagado e pedir a palavra-passe", 1),
     "T3": ("task", 480, 110, "Escrever a palavra-passe e confirmar", 0),
@@ -26,7 +26,7 @@ NOS = {
     "T5": ("task", 840, 380, "Terminar a sessão e avisar na página de apresentação", 1),
     "E1": ("end", 970, 380, "Conta e dados apagados", 1),
     "T6": ("task", 480, 480, "Avisar que a palavra-passe não está certa (nada é apagado)", 1),
-    "C1": ("task", 680, 110, "Cancelar e voltar ao início", 0),
+    "C1": ("task", 680, 110, "Cancelar e voltar à conta", 0),
     "E2": ("end", 840, 110, "Nada muda", 0),
 }
 

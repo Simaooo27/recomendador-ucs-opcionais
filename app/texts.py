@@ -32,6 +32,7 @@ BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opiniã
 LANDING_TITLE = "Escolher curso"
 # Barra do topo da apresentação: fica presa ao topo ao percorrer a página, por isso é o único
 # sítio com «Entrar» e «Criar conta» (decisão do PO de 22/10: antes havia 2 e 3 de cada).
+# Desde 23/10 ficam no menu do ícone de conta (NAV_CONTA), ao lado da lupa (NAV_PROCURAR).
 LANDING_NAV_CURSOS = "Cursos"
 LANDING_NAV_COMO = "Como funciona"
 LANDING_NAV_PARA_QUEM = "Para quem"
@@ -147,6 +148,12 @@ COMPARAR_IGNORADOS = "Alguns cursos não foram encontrados no catálogo e ficara
 COMPARAR_CURSO = "Curso"
 COMPARAR_DESLIZAR = "Deslize a tabela para o lado para ver todos os cursos."   # só no telemóvel
 COMPARAR_ESCOLHER_OUTROS = "Escolher outros cursos"
+# Grupos de linhas da comparação (revisão estética de 23/10).
+COMPARAR_GRUPO_NUMEROS = "Em números"
+COMPARAR_GRUPO_ONDE = "Onde e como"
+COMPARAR_GRUPO_CURSO = "O curso"
+COMPARAR_DURACAO = "{anos} anos ({semestres} semestres)"
+COMPARAR_VER_DGES = "Ver na DGES"
 
 LANDING_HOW_TITLE = "Como funciona"
 # Os três passos, pela ordem em que acontecem.
@@ -175,6 +182,13 @@ HIDE_PASSWORD = "Esconder palavra-passe"
 # Barra do topo quando há sessão iniciada.
 LOGOUT_BUTTON = "Terminar sessão"
 NAV_LABEL = "Menu"
+# Ícones à direita da barra do topo, em todas as páginas (revisão estética de 23/10, pedido do PO).
+# A lupa abre uma caixa de pesquisa no catálogo; o ícone de conta abre um menu com «Entrar» e
+# «Criar conta» (sem sessão) ou «A minha conta» e «Terminar sessão» (com sessão). Os textos são
+# lidos por leitores de ecrã e aparecem ao passar o rato.
+NAV_PROCURAR = "Procurar cursos"
+NAV_CONTA = "Conta"
+NAV_MINHA_CONTA = "A minha conta"
 # Menu dos alunos, na barra do topo (app/templates/base.html).
 NAV_INICIO = "Início"
 NAV_CONVERSA = "Conversa"
@@ -255,8 +269,21 @@ HOME_TITLE = "Início"
 HOME_GREETING = "Olá!"
 # Por baixo da saudação, para a pessoa saber com que conta entrou. {email} é preenchido pela aplicação.
 HOME_SESSAO = "Sessão iniciada como {email}."
-# Fundo da página inicial: ligação para apagar a conta (US17).
-HOME_CONTA_TITULO = "A sua conta"
+# Atalhos por baixo do percurso (revisão estética de 23/10). «destino» é a página (endpoint do Flask).
+HOME_ATALHOS_TITULO = "O que pode fazer"
+HOME_ATALHOS = [
+    {"titulo": "Conversar com o assistente", "texto": "Fale dos seus interesses e receba 2 a 3 cursos sugeridos.", "destino": "orientacao.pagina"},
+    {"titulo": "Explorar o catálogo", "texto": "Filtre, abra a ficha de cada curso e compare até 3 lado a lado.", "destino": "catalogo.lista"},
+    {"titulo": "As minhas decisões", "texto": "Veja os cursos que foi escolhendo e quando.", "destino": "percurso.linha_tempo"},
+]
+
+# Página «A minha conta» (/auth/conta), no menu do ícone de conta. Desde 23/10 é aqui que fica
+# «Apagar a minha conta» (US17), em vez de no fundo da página inicial (decisão do PO).
+CONTA_TITLE = "A minha conta"
+CONTA_EMAIL = "Email"
+CONTA_DESDE = "Conta criada a"
+CONTA_APAGAR_TITULO = "Apagar a conta"
+CONTA_APAGAR_TEXTO = "Apaga a conta e todos os dados do seu percurso. Não pode ser desfeito."
 HOME_CONTA_APAGAR = "Apagar a minha conta e todos os meus dados"
 
 # Página «Apagar a minha conta» (/auth/conta/apagar, US17).
@@ -270,7 +297,7 @@ APAGAR_ITENS = [
 ]
 APAGAR_PASSWORD_LABEL = "Para confirmar, escreva a sua palavra-passe"
 APAGAR_BOTAO = "Apagar a minha conta"
-APAGAR_CANCELAR = "Cancelar e voltar ao início"
+APAGAR_CANCELAR = "Cancelar e voltar à minha conta"
 APAGAR_ERRO_PASSWORD = "A palavra-passe não está certa. A conta não foi apagada."
 APAGAR_FEITO = "A sua conta e todos os seus dados foram apagados."
 HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."

@@ -105,6 +105,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Margens e largura comuns (revisão estética de 23/10). Só a barra do topo fica encostada às
+   margens (--margem); o conteúdo da apresentação fica centrado, com no máximo --largura
+   (a mesma do painel verde antes da revisão). */
+:root {
+  --margem: clamp(1.25rem, 3vw, 2.5rem);
+  --largura: 72rem;
+  --lado: max(var(--margem), calc((100% - var(--largura)) / 2));   /* recuo do conteúdo largo */
+}
+
 /* Coluna das páginas com barra do topo (página inicial, privacidade, gestão). */
 .conteudo {
   max-width: 40rem;        /* largura máxima nas páginas dos alunos */
@@ -113,6 +122,8 @@ body {
 }
 /* As páginas da gestão usam uma coluna mais larga, por causa das tabelas. */
 .conteudo.wide { max-width: 60rem; }
+/* A página inicial do aluno usa uma coluna média, para os atalhos caberem lado a lado. */
+.conteudo.media { max-width: 56rem; }
 
 
 /* --------------------------------------------------------------------------
@@ -136,7 +147,7 @@ html { scroll-padding-top: calc(var(--altura-topo) + 1rem); }
   align-items: center;
   gap: 1.5rem;
   min-height: 4rem;
-  padding: 0.5rem 1.25rem;
+  padding: 0.5rem var(--margem);   /* encostada às margens, não centrada (revisão de 23/10) */
   background: var(--paper);
   box-shadow: 0 1px 0 var(--line);
 }
@@ -200,10 +211,71 @@ html { scroll-padding-top: calc(var(--altura-topo) + 1rem); }
 
 .logout { margin: 0; }
 
-/* Ecrãs estreitos (telemóvel): o menu passa para uma segunda linha. */
+/* Lupa e ícone de conta (revisão estética de 23/10). Cada um é um <details>: o painel abre por
+   baixo do ícone. app.js fecha-o ao clicar fora, com Esc ou ao abrir o outro. */
+.topo-acoes { display: flex; align-items: center; gap: 0.25rem; margin-left: -0.5rem; }
+.topo-menu { position: relative; }
+.topo-icone {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  list-style: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.topo-icone::-webkit-details-marker { display: none; }
+.topo-menu[open] > .topo-icone { background: rgba(127, 143, 137, 0.2); }
+@media (hover: hover) {
+  .topo-icone:hover { background: rgba(127, 143, 137, 0.16); }
+}
+.icone { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.topo-painel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 15rem;
+  padding: 0.6rem;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--line), 0 16px 40px rgba(0, 0, 0, 0.18);
+  font-size: 1rem;
+}
+.topo-painel a:not(.flow-button) { padding: 0.6rem 0.75rem; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.topo-painel a[aria-current="page"] { font-weight: 700; }
+@media (hover: hover) {
+  .topo-painel a:not(.flow-button):hover { background: var(--page); }
+}
+/* «Criar conta» é o botão «flow» (secção 11), à largura do painel. */
+.topo-painel .flow-button { display: flex; justify-content: center; margin-top: 0.25rem; border-color: var(--field-line); }
+.flow-button-pequeno { min-height: 2.75rem; padding: 0.5rem 2.4rem; }
+.topo-email { margin: 0 0 0.25rem; padding: 0.25rem 0.75rem 0.6rem; font-size: 0.85rem; color: var(--muted); overflow-wrap: anywhere; box-shadow: inset 0 -1px 0 var(--line); }
+.topo-painel .logout button {
+  width: 100%;
+  min-height: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: none;
+  font-size: 1rem;
+  text-align: left;
+}
+.topo-painel-procura { width: min(26rem, calc(100vw - 2 * var(--margem))); }
+.topo-painel-procura form { display: flex; gap: 0.5rem; }
+.topo-painel-procura input[type="search"] { min-height: 2.75rem; }
+.topo-painel-procura button { width: auto; min-height: 2.75rem; padding: 0.5rem 1rem; }
+
+/* Ecrãs estreitos (telemóvel): o menu passa para uma segunda linha e os painéis da lupa e da
+   conta ocupam a largura do ecrã, por baixo da barra. */
 @media (max-width: 40rem) {
   .site-header { flex-wrap: wrap; gap: 0.25rem 1rem; }
   .user-nav { order: 3; width: 100%; flex-wrap: wrap; gap: 0 1.1rem; }
+  .topo-painel { position: fixed; top: calc(var(--altura-topo) - 0.25rem); left: var(--margem); right: var(--margem); width: auto; min-width: 0; }
 }
 
 
@@ -220,18 +292,26 @@ html { scroll-padding-top: calc(var(--altura-topo) + 1rem); }
 }
 
 .entrada-marca {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  justify-content: center;      /* a ilustração e a frase ficam à altura do formulário (revisão de 23/10) */
   padding: clamp(1.5rem, 4vw, 3.5rem);
   background: var(--forest);
   color: #ffffff;
 }
+/* O símbolo e o nome ficam no canto; o resto do painel é um bloco centrado, da mesma largura
+   que a coluna do formulário, para os dois lados ficarem alinhados. */
+.entrada-marca > .marca { position: absolute; top: clamp(1.5rem, 4vw, 3.5rem); left: clamp(1.5rem, 4vw, 3.5rem); }
+.entrada-destaque { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 26rem; margin: 0 auto; }
+/* O desenho começa 24 de 320 unidades para dentro: recua-se o mesmo para o ponto inicial
+   ficar alinhado com a frase por baixo. */
+.entrada-destaque .percurso { margin-left: -7.5%; }
 .entrada-marca .simbolo-tronco { stroke: #ffffff; }
 .entrada-marca .simbolo-ramo { stroke: rgba(255, 255, 255, 0.35); }
 
 /* A ilustração do percurso (app/templates/macros/marca.html). */
-.percurso { display: block; width: 100%; max-width: 26rem; margin-top: auto; overflow: visible; }
+.percurso { display: block; width: 100%; max-width: 26rem; overflow: visible; }
 .percurso-opcoes path { fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 2; stroke-linecap: round; }
 .percurso-opcoes circle { fill: var(--forest); stroke: rgba(255, 255, 255, 0.45); stroke-width: 2; }
 .percurso-escolhido {
@@ -273,6 +353,8 @@ html { scroll-padding-top: calc(var(--altura-topo) + 1rem); }
 @media (max-width: 56rem) {
   .entrada { grid-template-columns: 1fr; min-height: 0; }
   .entrada-marca { gap: 1rem; padding: 1.25rem 1.25rem 1.5rem; }
+  .entrada-marca > .marca { position: static; }
+  .entrada-destaque { gap: 1rem; margin: 0; }
   .percurso { max-width: 16rem; margin-top: 0.5rem; }
   .entrada-frase { max-width: 22ch; font-size: 1.6rem; }
   .entrada-apoio { display: none; }
@@ -505,24 +587,31 @@ td form { margin: 0; }
 }
 
 /* Barra do topo da apresentação: sobre o verde do painel. */
-.site-header-apresentacao { background: var(--forest); color: #ffffff; box-shadow: none; padding-inline: max(1.25rem, calc((100% - 72rem) / 2)); }
+.site-header-apresentacao { background: var(--forest); color: #ffffff; box-shadow: none; }
 .site-header-apresentacao .simbolo-tronco { stroke: #ffffff; }
 .site-header-apresentacao .simbolo-ramo { stroke: rgba(255, 255, 255, 0.35); }
 .landing-nav { display: flex; align-items: center; gap: 1.5rem; }
 .landing-nav > a:not(.flow-button) { color: #ffffff; text-decoration: none; padding: 0.6rem 0; }
 .landing-nav > a:not(.flow-button):hover { text-decoration: underline; }
 .landing-seccao { color: rgba(255, 255, 255, 0.8) !important; }
-.landing-entrar { margin-left: 1rem; font-weight: 700; }   /* separa a conta das secções */
-.flow-button-pequeno { min-height: 2.6rem; padding: 0.45rem 1.9rem; font-size: 0.95rem; }
+.site-header-apresentacao .topo-acoes { margin-left: 0.75rem; }   /* separa os ícones das secções */
+.site-header-apresentacao :focus-visible { outline-color: var(--marigold); }
 
 .apresentacao { display: block; }
 
+/* Grelha da apresentação: a caixa de pesquisa fica na mesma altura que o apoio e o «comece por
+   aqui», para a seta apontar para ela (decisão do PO de 23/10). */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-  padding: clamp(2rem, 6vw, 4.5rem) max(1.25rem, calc((100% - 72rem) / 2)) clamp(3rem, 7vw, 6rem);
+  grid-template-areas:
+    "titulo   ."
+    "apoio    procura"
+    "nota     procura"
+    "numeros  .";
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  padding: clamp(2rem, 6vw, 4.5rem) var(--lado) clamp(3rem, 7vw, 6rem);
   background: var(--forest);
   color: #ffffff;
 }
@@ -536,11 +625,17 @@ td form { margin: 0; }
   letter-spacing: -0.025em;
 }
 .hero-apoio { max-width: 36ch; margin: 0; font-size: 1.15rem; color: rgba(255, 255, 255, 0.8); }
+.hero-texto { display: contents; }
+.hero-titulo { grid-area: titulo; }
+.hero-apoio { grid-area: apoio; }
+.hero .procura-nota { grid-area: nota; }
+.hero .procura-numeros { grid-area: numeros; }
+.hero .procura { grid-area: procura; align-self: center; }
 
 .hero :focus-visible { outline-color: var(--marigold); }
 
 /* Secções por baixo do painel. */
-.seccao { padding: clamp(3rem, 7vw, 5.5rem) max(1.25rem, calc((100% - 64rem) / 2)); }
+.seccao { padding: clamp(3rem, 7vw, 5.5rem) var(--lado); }
 .seccao h2 { margin: 0; font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.7rem); font-weight: 700; }
 .seccao h3 { margin: 0.15rem 0 0.4rem; font-family: var(--font-display); font-size: 1.3rem; font-weight: 650; font-stretch: 92%; line-height: 1.2; }
 
@@ -591,7 +686,7 @@ td form { margin: 0; }
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.5rem 2rem;
-  padding: 2rem max(1.25rem, calc((100% - 64rem) / 2));
+  padding: 2rem var(--lado);
   font-size: 0.95rem;
   color: var(--muted);
 }
@@ -599,26 +694,26 @@ td form { margin: 0; }
 
 /* Pesquisa de cursos (lado direito do painel verde). */
 .procura { position: relative; }
-.procura-nota { display: flex; align-items: flex-end; gap: 0.25rem; margin: 0 0 0.35rem 0.5rem; color: var(--marigold); }
+.procura-nota { display: flex; align-items: center; gap: 0.5rem; margin: 1.75rem 0 0; color: var(--marigold); }
 .manuscrito { display: block; height: 2.6rem; width: auto; overflow: visible; }
 .manuscrito-tinta { fill: currentColor; }
 .manuscrito-traco { fill: none; stroke: currentColor; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
 .manuscrito-texto { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
-.procura-seta { width: 2.6rem; height: 2.6rem; margin-bottom: -1.2rem; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+/* Seta para a direita, até à caixa de pesquisa (estica com o espaço livre). */
+.procura-seta { flex: 1; min-width: 4rem; max-width: 9rem; height: 2.5rem; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 
-.procura-etiqueta { margin-bottom: 0.6rem; font-weight: 400; color: rgba(255, 255, 255, 0.8); }
-.procura-campo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.4rem 0.4rem 1rem;
-  border-radius: 16px;
+/* Uma só caixa branca: etiqueta, campo e áreas (revisão estética de 23/10). */
+.procura-caixa {
+  padding: 0.4rem;
+  border-radius: 18px;
   background: #ffffff;
   color: #13221e;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   transition: box-shadow 200ms ease;
 }
-.procura-campo:focus-within { box-shadow: 0 0 0 4px rgba(242, 179, 61, 0.55), 0 10px 30px rgba(0, 0, 0, 0.25); }
+.procura-caixa:focus-within { box-shadow: 0 0 0 4px rgba(242, 179, 61, 0.55), 0 10px 30px rgba(0, 0, 0, 0.25); }
+.procura-etiqueta { margin: 0; padding: 0.6rem 0.85rem 0; font-size: 0.9rem; font-weight: 400; color: #4c5f59; }
+.procura-campo { display: flex; align-items: center; gap: 0.5rem; padding: 0 0 0 0.85rem; }
 .procura-lupa { flex: none; fill: none; stroke: #4c5f59; stroke-width: 2; stroke-linecap: round; }
 .procura-campo input[type="search"] {
   flex: 1;
@@ -636,22 +731,32 @@ td form { margin: 0; }
 .procura-campo input::placeholder { color: #6b7d76; }
 .procura-botao { width: auto; min-height: 2.75rem; padding: 0.5rem 1.1rem; border-radius: 12px; }
 
-.procura-areas { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1.1rem 0 0; font-size: 0.95rem; color: rgba(255, 255, 255, 0.75); }
+.procura-areas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0;
+  padding: 0.75rem 0.85rem 0.6rem;
+  font-size: 0.92rem;
+  color: #4c5f59;
+  box-shadow: inset 0 1px 0 #e1e9e5;
+}
 .procura-area {
   display: inline-flex;
   align-items: center;
   min-height: 2.25rem;
   padding: 0.3rem 0.9rem;
   border-radius: 999px;
-  color: #ffffff;
+  color: #13221e;
   text-decoration: none;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 0 0 1px #cad6d0;
   transition: background-color 150ms ease, color 150ms ease;
 }
 @media (hover: hover) {
   .procura-area:hover { background: var(--marigold); color: #13221e; text-decoration: none; box-shadow: none; }
 }
-.procura-numeros { margin: 1.5rem 0 0; color: rgba(255, 255, 255, 0.8); }
+.procura-numeros { margin: 1.75rem 0 0; padding-top: 1.25rem; max-width: 36ch; color: rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); }
 .procura-numeros strong { color: #ffffff; font-variant-numeric: tabular-nums; }
 
 /* Resultados: fichas dos cursos. */
@@ -768,19 +873,19 @@ td form { margin: 0; }
 }
 
 @media (max-width: 56rem) {
-  .hero { grid-template-columns: 1fr; }
+  /* Numa só coluna, a pesquisa vem logo a seguir à frase de apoio e os números ficam no fim. */
+  .hero { grid-template-columns: 1fr; grid-template-areas: "titulo" "apoio" "nota" "procura" "numeros"; row-gap: 1.75rem; }
+  .hero-titulo, .hero-apoio { margin: 0; }
+  .procura-numeros { margin: 0; }
+  .procura-nota { margin: 0; }
+  .procura-seta { flex: none; width: 2.6rem; transform: rotate(35deg); }
   .para-quem-lista { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 @media (max-width: 40rem) {
   .procura-botao { display: none; }   /* no telemóvel pesquisa-se ao escrever; o teclado tem «Ir» */
 }
 @media (max-width: 48rem) {
-  .landing-seccao { display: none; }   /* em ecrãs estreitos ficam só «Entrar» e «Criar conta» */
-  .landing-entrar { margin-left: 0; }
-}
-@media (max-width: 30rem) {
-  .landing-nav { gap: 1rem; }
-  .flow-button-pequeno { padding: 0.45rem 2.1rem 0.45rem 1.6rem; }   /* espaço para a seta à direita */
+  .landing-seccao { display: none; }   /* em ecrãs estreitos ficam só a lupa e a conta */
 }
 
 
@@ -788,10 +893,37 @@ td form { margin: 0; }
    12. O meu percurso (página inicial do aluno)
    Linha do tempo com os passos feitos, o atual e os seguintes (app/percurso.py).
    -------------------------------------------------------------------------- */
-.meu-percurso h2 { margin-top: 0.5rem; }
+/* Cabeçalho, percurso numa caixa e atalhos (revisão estética de 23/10). */
+.inicio-cabecalho h1 { margin-bottom: 0.25rem; }
+.inicio-cabecalho .sessao-conta { margin: 0; }
+.cartao { margin-top: 1.75rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: 18px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
+.meu-percurso h2 { margin-top: 0; }
+.meu-percurso .lead { margin-bottom: 0.5rem; }
+.atalhos h2 { margin: 2.5rem 0 1rem; }
+.atalhos-lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.atalho {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.atalho-titulo { font-family: var(--font-display); font-size: 1.1rem; font-weight: 650; font-stretch: 92%; color: var(--accent); }
+.atalho-titulo::after { content: " →"; }
+.atalho-texto { font-size: 0.95rem; color: var(--muted); }
+@media (hover: hover) {
+  .atalho:hover { box-shadow: 0 0 0 1px var(--field-line), 0 10px 24px rgba(19, 34, 30, 0.1); transform: translateY(-2px); }
+}
 /* «Sessão iniciada como …», por baixo da saudação (emails compridos partem a linha). */
 .sessao-conta { margin: -0.5rem 0 0.75rem; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
-.linha-tempo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+/* Uma coluna por passo, seja qual for o número de passos (hoje são 3). */
+.linha-tempo { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
 .etapa { position: relative; padding: 2.25rem 0.75rem 0 0; }
 .etapa-no {
   position: absolute;
@@ -946,15 +1078,31 @@ td form { margin: 0; }
 
 /* Comparação lado a lado (/cursos/comparar, US05): uma coluna por curso. No telemóvel a tabela
    desliza para o lado dentro da sua caixa (.table-wrap, secção 10), sem deslocar a página. */
-.comparacao { min-width: 34rem; table-layout: fixed; }   /* cabe na coluna de leitura; mais estreito, desliza */
-.comparacao th[scope="row"] { width: 8rem; padding-left: 0; position: sticky; left: 0; z-index: 1; background: var(--page); }   /* o nome da linha fica visível ao deslizar */
+/* Revisão estética de 23/10: coluna média (56rem), cabeçalho de cada curso numa caixa, linhas
+   em grupos e números grandes. Os textos longos (descrição, saídas) não partem palavras. */
+.comparacao { min-width: 38rem; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.comparacao th[scope="row"] { width: 9.5rem; padding: 0.85rem 1rem 0.85rem 0; position: sticky; left: 0; z-index: 1; background: var(--page); font-size: 0.9rem; font-weight: 400; color: var(--muted); text-align: left; }   /* o nome da linha fica visível ao deslizar */
+.comparacao td { padding: 0.85rem 1rem 0.85rem 0; border-bottom: 1px solid var(--line); }
+.comparacao th[scope="row"] { border-bottom: 1px solid var(--line); }
 .comparacao-deslizar { display: none; }
-.comparacao thead th { font-family: var(--font-display); font-size: 1.05rem; font-weight: 650; color: var(--ink); vertical-align: bottom; }
-.comparacao-cabecalho-instituicao { display: block; margin-top: 0.3rem; font-family: var(--font-text); font-size: 0.88rem; font-weight: 400; color: var(--muted); }
+/* Cabeçalhos alinhados em cima e todos da mesma altura (height: 1px deixa a caixa ocupar a célula). */
+.comparacao thead th, .comparacao thead td { height: 1px; padding: 0 0.75rem 1rem 0; vertical-align: top; text-align: left; font-weight: 400; border: 0; hyphens: manual; }
+.comparacao-cartao { display: flex; flex-direction: column; gap: 0.2rem; height: 100%; padding: 1rem 1.1rem; border-radius: 16px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
+.comparacao-cartao .curso-area { margin: 0 0 0.25rem; }
+.comparacao-nome { font-family: var(--font-display); font-size: 1.2rem; font-weight: 650; font-stretch: 92%; line-height: 1.15; }
+.comparacao-cabecalho-instituicao { display: block; margin-top: 0.3rem; font-size: 0.92rem; color: var(--ink); }
+.comparacao-cabecalho-unidade { display: block; font-size: 0.85rem; color: var(--muted); }
+.comparacao-cartao .curso-escolher { margin-top: 0.6rem; }
+.comparacao-grupo th { padding: 1.75rem 0 0.5rem; border-bottom: 2px solid var(--ink); font-family: var(--font-display); font-size: 1.05rem; font-weight: 650; text-align: left; background: none; position: static; }
 /* As palavras só se partem quando não cabem numa linha inteira, e com hífen (pt-PT). */
 .comparacao td, .comparacao th { vertical-align: top; overflow-wrap: break-word; hyphens: auto; }
-.comparacao-vagas, .comparacao-ultimo_colocado { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.comparacao .comparacao-texto { hyphens: manual; font-size: 0.97rem; line-height: 1.5; }   /* frases: sem palavras partidas */
+.comparacao-numero { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.comparacao-duracao_semestres, .comparacao-ects { font-size: 1.05rem; font-weight: 650; }
+.comparacao-saidas { margin: 0; padding-left: 1.1rem; }
+.comparacao-saidas li + li { margin-top: 0.2rem; }
 .comparacao .sem-dados { font-family: var(--font-text); font-size: 0.95rem; font-weight: 400; color: var(--muted); }
+.comparacao-fonte { font-size: 0.92rem; }
 .comparacao-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 @media (max-width: 40rem) {
@@ -967,13 +1115,20 @@ td form { margin: 0; }
 }
 
 /* Avisos na página de apresentação (ex.: depois de apagar a conta). */
-.avisos { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1.5rem; }
+.avisos { padding: 1.25rem var(--lado); }
 .avisos .alert { margin: 0; }
 
-/* Apagar a minha conta (US17): ligação discreta no início e botão vermelho na página de confirmação. */
-.minha-conta { margin-top: 3rem; padding-top: 1.25rem; box-shadow: inset 0 1px 0 var(--line); }
-.minha-conta h2 { font-size: 1.1rem; }
-.ligacao-perigo { color: var(--danger); }
+/* «A minha conta» (/auth/conta, revisão de 23/10): os dados da conta numa caixa e «Apagar a
+   conta» (US17) numa caixa à parte, com contorno vermelho. */
+.conta-dados { display: grid; gap: 0.75rem; margin: 1.5rem 0 2rem; padding: 1.25rem; border-radius: 16px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
+.conta-dados > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; }
+.conta-dados > div + div { padding-top: 0.75rem; box-shadow: inset 0 1px 0 var(--line); }
+.conta-dados dt { color: var(--muted); }
+.conta-dados dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.zona-perigo { padding: 1.25rem; border-radius: 16px; box-shadow: 0 0 0 1px rgba(179, 38, 30, 0.45); }
+.zona-perigo h2 { margin: 0 0 0.35rem; font-size: 1.1rem; }
+.zona-perigo p { color: var(--muted); }
+.ligacao-perigo { color: var(--danger); font-weight: 700; }
 .apagar-lista { margin: 0 0 1.5rem; padding-left: 1.2rem; }
 .apagar-form { max-width: 28rem; }
 .apagar-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
@@ -1010,7 +1165,7 @@ td form { margin: 0; }
 .mudar-curso { margin-top: 2rem; }
 
 @media (max-width: 40rem) {
-  .linha-tempo { grid-template-columns: 1fr; gap: 0; }
+  .linha-tempo { grid-auto-flow: row; grid-template-columns: 1fr; gap: 0; }
   .etapa { padding: 0 0 1.75rem 2.25rem; }
   .etapa:not(:last-child)::before { top: 1.6rem; bottom: 0.3rem; left: 0.53rem; right: auto; width: 3px; height: auto; }
   .etapa-feito::before { transform-origin: top; }

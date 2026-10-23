@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% set page_title = texts.HOME_TITLE %}
+{% set largura = "media" %}
 
+{#- Revisão estética de 23/10: o percurso numa caixa, atalhos por baixo, e «Apagar a minha conta»
+    passou para «A minha conta» (ícone de conta na barra do topo). -#}
 {% block content %}
-<h1>{{ texts.HOME_GREETING }}</h1>
-<p class="sessao-conta">{{ texts.HOME_SESSAO.format(email=g.user["email"]) }}</p>
-<p class="lead">{{ texts.HOME_INTRO }}</p>
+<div class="inicio">
+<header class="inicio-cabecalho">
+  <h1>{{ texts.HOME_GREETING }}</h1>
+  <p class="sessao-conta">{{ texts.HOME_SESSAO.format(email=g.user["email"]) }}</p>
+</header>
 
 {#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso/__init__.py. -#}
-<section class="meu-percurso" aria-labelledby="meu-percurso">
+<section class="meu-percurso cartao" aria-labelledby="meu-percurso">
   <h2 id="meu-percurso">{{ texts.HOME_PATH_TITLE }}</h2>
+  <p class="lead">{{ texts.HOME_INTRO }}</p>
   <ol class="linha-tempo" data-linha-tempo>
     {% for passo in passos %}
       <li class="etapa etapa-{{ passo.situacao }}"{% if passo.situacao == "atual" %} aria-current="step"{% endif %}>
@@ -27,9 +33,13 @@
   </ol>
 </section>
 
-{#- US17: apagar a conta e todos os dados (direito ao apagamento). -#}
-<section class="minha-conta" aria-labelledby="minha-conta">
-  <h2 id="minha-conta">{{ texts.HOME_CONTA_TITULO }}</h2>
-  <p><a class="ligacao-perigo" href="{{ url_for('auth.delete_account_form') }}">{{ texts.HOME_CONTA_APAGAR }}</a></p>
+<section class="atalhos" aria-labelledby="atalhos">
+  <h2 id="atalhos">{{ texts.HOME_ATALHOS_TITULO }}</h2>
+  <ul class="atalhos-lista">
+    {% for atalho in texts.HOME_ATALHOS %}
+      <li><a class="atalho" href="{{ url_for(atalho.destino) }}"><span class="atalho-titulo">{{ atalho.titulo }}</span><span class="atalho-texto">{{ atalho.texto }}</span></a></li>
+    {% endfor %}
+  </ul>
 </section>
+</div>
 {% endblock %}

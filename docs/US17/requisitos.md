@@ -20,7 +20,7 @@
 
 | ID | Requisito |
 |---|---|
-| **RF17.1** | No fim da página inicial do aluno há a secção «A sua conta», com a ligação «Apagar a minha conta e todos os meus dados». |
+| **RF17.1** | A página «A minha conta» (/auth/conta, no menu do ícone de conta da barra do topo) tem a ligação «Apagar a minha conta e todos os meus dados». Alterado a 23/10 (revisão estética, decisão do PO): antes ficava no fim da página inicial. |
 | **RF17.2** | A página `/auth/conta/apagar` (só com sessão de aluno) diz que a ação não pode ser desfeita e enumera o que é apagado: a conta e o email, a conversa de orientação, as decisões do percurso e o registo de pedidos ao assistente. Abrir a página não apaga nada. |
 | **RF17.3** | A confirmação pede a palavra-passe atual. Com a palavra-passe errada ou vazia, nada é apagado e a página diz porquê (422). O pedido tem proteção CSRF. |
 | **RF17.4** | Com a palavra-passe certa, a conta é apagada e, com ela, todas as linhas ligadas: `conversas_orientacao`, `decisoes` e `pedidos_llm` (`ON DELETE CASCADE`). Os dados de outros alunos não mudam. |
@@ -31,7 +31,7 @@
 
 | Situação | Mensagem |
 |---|---|
-| Ligação na página inicial | Apagar a minha conta e todos os meus dados |
+| Ligação em «A minha conta» | Apagar a minha conta e todos os meus dados |
 | Introdução | Esta ação não pode ser desfeita. São apagados para sempre: (lista) |
 | Campo | Para confirmar, escreva a sua palavra-passe |
 | Palavra-passe errada | A palavra-passe não está certa. A conta não foi apagada. |

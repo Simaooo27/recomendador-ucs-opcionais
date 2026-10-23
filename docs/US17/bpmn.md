@@ -6,7 +6,7 @@ O ficheiro editável é [diagramas/bpmn.bpmn](diagramas/bpmn.bpmn) (BPMN 2.0). A
 
 ## Processo
 
-1. Na página inicial, o aluno **carrega em «Apagar a minha conta e todos os meus dados»**.
+1. Em «A minha conta» (desde 23/10; antes ficava no fim da página inicial), o aluno **carrega em «Apagar a minha conta e todos os meus dados»**.
 2. O sistema **mostra o que vai ser apagado e pede a palavra-passe**.
 3. O aluno **escreve a palavra-passe e confirma**, ou cancela e nada muda.
 4. *Palavra-passe certa?* **sim:** o sistema apaga a conta e todos os dados ligados, termina a sessão e avisa na página de apresentação. **não:** avisa e nada é apagado.

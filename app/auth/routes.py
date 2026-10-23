@@ -145,6 +145,15 @@ def logout():
 # Apagar a minha conta (US17)
 # ---------------------------------------------------------------------------
 
+@bp.get("/conta")
+@sessions.login_required
+def account():
+    """«A minha conta» (revisão de 23/10): email, data de criação e a ligação para apagar a conta."""
+    criada = (g.user["created_at"] or "")[:10]          # AAAA-MM-DD (UTC)
+    criada = "/".join(reversed(criada.split("-"))) if criada else ""
+    return render_template("auth/conta.html", criada=criada)
+
+
 def _render_apagar(error: str | None = None, status: int = 200):
     return render_template("auth/apagar.html", error=error), status
 

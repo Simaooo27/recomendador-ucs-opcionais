@@ -35,8 +35,9 @@ class Curso:
 
     @property
     def lista_saidas(self) -> list[str]:
-        """As saídas profissionais, que o CSV separa com «;»."""
-        return [s.strip() for s in self.saidas.split(";") if s.strip()]
+        """As saídas profissionais, que o CSV separa com «;», cada uma a começar por maiúscula
+        (no CSV só a primeira tem maiúscula: «Finanças e banca; consultoria…»)."""
+        return [s.strip()[:1].upper() + s.strip()[1:] for s in self.saidas.split(";") if s.strip()]
 
     @property
     def chave(self) -> str:

@@ -14,6 +14,7 @@ cursos com regras próprias. Usa-se sempre o conjunto de provas que dá a nota m
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Mapping
@@ -135,3 +136,51 @@ def _comparar(curso: Curso, nota: float, conjunto: tuple[str, ...]) -> Simulacao
     else:
         situacao = Situacao.ABAIXO
     return Simulacao(situacao, nota, conjunto, diferenca)
+
+
+@dataclass(frozen=True)
+class Necessidade:
+    """Quanto precisa nas provas que faltam para chegar a uma nota (US «quanto preciso no exame?»)."""
+    pontos: float                 # nota necessária em cada prova em falta (0 a 200)
+    conjunto: tuple[str, ...]     # o conjunto de provas em que é mais fácil lá chegar
+    em_falta: tuple[str, ...]     # as provas desse conjunto que ainda não fez
+    alvo: float                   # a nota de candidatura a atingir
+    alvo_e_o_ultimo: bool         # True = último colocado; False = só a nota mínima do curso
+    maximo: float = 200.0         # a nota mais alta possível com esta média (200 em todas as provas)
+
+    @property
+    def possivel(self) -> bool:
+        return self.pontos <= 200
+
+
+def nota_necessaria(curso: Curso, notas: Notas) -> Necessidade | None:
+    """A nota que precisa em cada prova que ainda não fez para chegar ao último colocado (ou, sem
+    essa referência, à nota mínima do curso), no conjunto de provas em que é mais fácil.
+
+    Usa a média do secundário indicada e as provas já feitas. Se faltar mais de uma prova no
+    conjunto, supõe a mesma nota em todas. ``None`` sem média, sem regras ou quando já fez as
+    provas de todos os conjuntos (aí a ``simular`` já diz a nota).
+    """
+    if not curso.tem_condicoes_de_acesso or notas.media is None or not curso.peso_provas:
+        return None
+    referencia = curso.ultimo_colocado_numero
+    alvo = referencia if referencia is not None else float(curso.minimo_candidatura or 0)
+    if curso.minimo_candidatura is not None:
+        alvo = max(alvo, float(curso.minimo_candidatura))
+    parte_secundario = notas.media * 10 * curso.peso_secundario / 100
+    melhor: Necessidade | None = None
+    for conjunto in curso.provas:
+        feitas = [notas.exame(p) for p in conjunto if notas.exame(p) is not None]
+        faltam = tuple(p for p in conjunto if notas.exame(p) is None)
+        if not faltam:
+            continue
+        media_provas = (alvo - parte_secundario) / (curso.peso_provas / 100)
+        pontos = (media_provas * len(conjunto) - sum(feitas)) / len(faltam)
+        pontos = max(pontos, float(curso.minimo_provas or 0))
+        pontos = math.ceil(round(pontos * 10, 6)) / 10   # arredonda para cima: 124,01 -> 124,1
+        maximo = round(parte_secundario + 200 * curso.peso_provas / 100, 1)
+        candidato = Necessidade(pontos, conjunto, faltam, alvo, referencia is not None, maximo)
+        # O conjunto que pede a nota mais baixa; entre iguais, o que tem menos provas por fazer.
+        if melhor is None or (candidato.pontos, len(candidato.em_falta)) < (melhor.pontos, len(melhor.em_falta)):
+            melhor = candidato
+    return melhor

@@ -40,6 +40,13 @@ class Curso:
     minimo_candidatura: int | None = None # pontos (0 a 200)
     minimo_provas: int | None = None      # pontos (0 a 200), em cada prova
     pre_requisitos: str = ""
+    # Tendência e procura (23/10): 1.ª fase, contingente geral (tabela de estatísticas da DGES).
+    ultimo_colocado_2023: str | None = None
+    ultimo_colocado_2024: str | None = None
+    vagas_1fase: int | None = None          # vagas da 1.ª fase de 2025 (as de 2026 estão em ``vagas``)
+    candidatos: int | None = None           # candidatos na 1.ª fase de 2025 (em qualquer opção)
+    candidatos_1opcao: int | None = None    # dos quais, com este curso em 1.ª opção
+    colocados: int | None = None            # colocados na 1.ª fase de 2025
 
     @property
     def ultimo_colocado_numero(self) -> float | None:
@@ -48,6 +55,32 @@ class Curso:
             return float(self.ultimo_colocado.replace(",", ".")) if self.ultimo_colocado else None
         except ValueError:
             return None
+
+    @property
+    def historico(self) -> list[tuple[int, float]]:
+        """Nota do último colocado (1.ª fase) por ano, só dos anos com valor: [(2023, 152.0), …]."""
+        anos = ((2023, self.ultimo_colocado_2023), (2024, self.ultimo_colocado_2024), (2025, self.ultimo_colocado))
+        return [(ano, float(v.replace(",", "."))) for ano, v in anos if v]
+
+    @property
+    def tendencia(self) -> str | None:
+        """«sobe», «desce» ou «estavel», comparando o ano mais recente com o mais antigo (3 pontos de margem)."""
+        historico = self.historico
+        if len(historico) < 2:
+            return None
+        diferenca = historico[-1][1] - historico[0][1]
+        return "sobe" if diferenca >= 3 else "desce" if diferenca <= -3 else "estavel"
+
+    @property
+    def procura(self) -> str | None:
+        """Procura na 1.ª fase de 2025: «sobraram» (ficaram vagas por preencher), «muita» (1,5 ou mais
+        candidatos em 1.ª opção por vaga), «media» (0,75 a 1,5) ou «pouca». ``None`` sem dados."""
+        if not self.vagas_1fase or self.colocados is None or self.candidatos_1opcao is None:
+            return None
+        if self.colocados < self.vagas_1fase:
+            return "sobraram"
+        por_vaga = self.candidatos_1opcao / self.vagas_1fase
+        return "muita" if por_vaga >= 1.5 else "media" if por_vaga >= 0.75 else "pouca"
 
     @property
     def tem_condicoes_de_acesso(self) -> bool:
@@ -104,6 +137,12 @@ def _ler(caminho: str, modificado: float) -> tuple[Curso, ...]:
             minimo_candidatura=_inteiro(l.get("minimo_candidatura", "")),
             minimo_provas=_inteiro(l.get("minimo_provas", "")),
             pre_requisitos=(l.get("pre_requisitos") or "").strip(),
+            ultimo_colocado_2023=(l.get("ultimo_colocado_1fase_2023") or "").strip() or None,
+            ultimo_colocado_2024=(l.get("ultimo_colocado_1fase_2024") or "").strip() or None,
+            vagas_1fase=_inteiro(l.get("vagas_1fase_2025", "")),
+            candidatos=_inteiro(l.get("candidatos_1fase_2025", "")),
+            candidatos_1opcao=_inteiro(l.get("candidatos_1opcao_1fase_2025", "")),
+            colocados=_inteiro(l.get("colocados_1fase_2025", "")),
         )
         for l in linhas
         if l.get("curso", "").strip()

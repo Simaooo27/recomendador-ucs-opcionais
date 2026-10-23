@@ -59,6 +59,7 @@ def plano():
         sugestoes=services.sugestoes(plano, cursos, area),
         area=area,
         curso_escolhido=curso_escolhido,
+        partilha=services.codigo_de_partilha(db, g.user["id"]),
         nomes=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
         maximo=services.MAX_OPCOES,
     )
@@ -128,3 +129,35 @@ def subir(chave: str):
 def descer(chave: str):
     services.mover(get_db(), g.user["id"], chave, +1)
     return _voltar()
+
+
+# -- Partilhar o plano (23/10) --------------------------------------------------------------------
+
+@bp.post("/partilhar")
+@login_required
+def partilhar():
+    services.partilhar(get_db(), g.user["id"])
+    flash(texts.PARTILHA_LIGADA, "ok")
+    return redirect(url_for("candidatura.plano") + "#partilhar")
+
+
+@bp.post("/deixar-de-partilhar")
+@login_required
+def deixar_de_partilhar():
+    services.deixar_de_partilhar(get_db(), g.user["id"])
+    flash(texts.PARTILHA_DESLIGADA, "ok")
+    return redirect(url_for("candidatura.plano") + "#partilhar")
+
+
+@bp.get("/p/<codigo>")
+def partilhado(codigo: str):
+    """O plano de alguém, só de leitura, para quem tem a ligação. Sem sessão; código errado = 404."""
+    plano = services.plano_partilhado(get_db(), codigo, catalogo.cursos(current_app.config))
+    if plano is None:
+        abort(404)
+    resposta = current_app.make_response(render_template(
+        "candidatura/partilhado.html", partilhado=plano, nomes=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
+    ))
+    resposta.headers["Cache-Control"] = "no-store"
+    resposta.headers["Referrer-Policy"] = "no-referrer"     # o código não sai para outros sites
+    return resposta

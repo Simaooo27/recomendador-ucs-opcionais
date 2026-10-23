@@ -596,6 +596,26 @@ CANDIDATURA_JUNTADO = "{curso} juntado ao plano de candidatura."
 CANDIDATURA_CHEIO = "O plano já tem {maximo} opções: retire uma antes de juntar outra."
 CANDIDATURA_NOTAS_GUARDADAS = "Notas guardadas."
 
+# Partilhar o plano (23/10): ligação só de leitura.
+PARTILHA_SECCAO = "Partilhar o plano"
+PARTILHA_EXPLICACAO = (
+    "Crie uma ligação para mostrar o plano a quem o ajuda a decidir (pais, explicador, um colega). "
+    "Quem a abrir vê o seu primeiro nome, as opções, a nota de candidatura e a situação em cada uma. "
+    "Não vê o seu email, a média nem as notas dos exames."
+)
+PARTILHA_CRIAR = "Criar ligação de partilha"
+PARTILHA_LIGACAO = "Ligação para partilhar"
+PARTILHA_COPIAR = "Selecione e copie a ligação. Qualquer pessoa com ela vê o plano, sem iniciar sessão."
+PARTILHA_DESLIGAR = "Deixar de partilhar"
+PARTILHA_LIGADA = "Ligação de partilha criada."
+PARTILHA_DESLIGADA = "A ligação deixou de funcionar."
+PARTILHA_TITULO = "Plano de candidatura de {nome}"
+PARTILHA_TITULO_SEM_NOME = "Plano de candidatura"
+PARTILHA_INTRO = "Plano partilhado no OptaBem, só de leitura. As opções estão pela ordem em que a pessoa as quer."
+PARTILHA_VAZIO = "Este plano ainda não tem opções."
+PARTILHA_NOTA = "Nota de candidatura"
+PARTILHA_CONVITE = "Também está a escolher curso? Experimente o OptaBem."
+
 # Situação de cada opção (CANDIDATURA_SITUACAO_ + o valor de Situacao em app/candidatura/calculos.py).
 # {diferenca} já vem com sinal e vírgula (ex.: «+7,7»).
 CANDIDATURA_SITUACAO_ACIMA = "Acima do último colocado ({diferenca})"
@@ -624,6 +644,28 @@ CANDIDATURA_ERRO_MEDIA_VAZIA = "Indique a sua média do secundário."
 CANDIDATURA_ERRO_MEDIA = "A média tem de estar entre 9,5 e 20 valores."
 CANDIDATURA_ERRO_EXAME = "Use um número de 0 a 200 (ou de 0 a 20)."
 
+# «Quanto preciso no exame?» (23/10): ficha do curso e opções do plano a que falta uma prova.
+FICHA_PRECISA_TITULO = "Quanto precisa no exame?"
+FICHA_PRECISA = "Para chegar a {alvo} ({referencia}), precisa de {pontos} pontos ({valores} valores) em {provas}."
+FICHA_PRECISA_REF_ULTIMO = "o último colocado em 2025"
+FICHA_PRECISA_REF_MINIMO = "a nota mínima do curso"
+FICHA_PRECISA_VARIAS = "Faltando mais de uma prova, a conta supõe a mesma nota em todas."
+FICHA_PRECISA_IMPOSSIVEL = "Com a sua média, mesmo com 200 pontos nas provas a nota fica em {maximo}, abaixo de {alvo} ({referencia})."
+FICHA_PRECISA_SEM_MEDIA = "Indique a sua média do secundário para saber quanto precisa nos exames."
+CANDIDATURA_PRECISA = "Precisa de {pontos} em {provas}"
+
+# Tendência do último colocado e procura (23/10), na ficha do curso e no plano.
+FICHA_HISTORICO = "Último colocado (1.ª fase)"
+FICHA_TENDENCIA_SOBE = "A subir"
+FICHA_TENDENCIA_DESCE = "A descer"
+FICHA_TENDENCIA_ESTAVEL = "Estável"
+FICHA_PROCURA = "Procura em 2025"
+FICHA_PROCURA_SOBRARAM = "Sobraram vagas na 1.ª fase"
+FICHA_PROCURA_MUITA = "Muito procurado"
+FICHA_PROCURA_MEDIA = "Procurado"
+FICHA_PROCURA_POUCA = "Pouco escolhido em 1.ª opção"
+FICHA_PROCURA_DETALHE = "{candidatos} candidatos para {vagas} vagas; {primeira} puseram-no em 1.ª opção e ficaram {colocados} colocados."
+
 # Ficha do curso: condições de acesso (dados da DGES)
 FICHA_ACESSO = "Condições de acesso"
 FICHA_PROVAS = "Provas de ingresso"
@@ -646,7 +688,7 @@ PRIVACY_VERSION = "Versão {versao}"
 # Texto provisório: a equipa substitui pelo texto final da política (RNF01).
 PRIVACY_BODY = (
     "Texto provisório. A política final descreve que dados são recolhidos (nome, email, conversa de "
-    "orientação, cursos escolhidos e, no plano de candidatura, as notas que a pessoa indica), com que finalidade (sugerir cursos), como são protegidos "
+    "orientação, cursos escolhidos e, no plano de candidatura, as notas que a pessoa indica; o plano só é visto por outras pessoas se ela criar uma ligação de partilha, que pode desligar a qualquer momento), com que finalidade (sugerir cursos), como são protegidos "
     "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
     "curso) e como exercer os direitos de acesso e de apagamento: cada aluno pode apagar a conta e "
     "todos os seus dados em «A minha conta» («Apagar a minha conta»)."

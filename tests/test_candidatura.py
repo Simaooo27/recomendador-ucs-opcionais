@@ -6,7 +6,7 @@ import unittest
 
 from app import texts
 from app.candidatura import services
-from app.candidatura.calculos import Notas, Situacao, nota_de_exame, simular
+from app.candidatura.calculos import Notas, Situacao, nota_de_exame, nota_necessaria, simular
 from app.catalogo.repository import Curso
 from tests.base import CSRF_TOKEN, AppTestCase
 
@@ -67,6 +67,76 @@ class ContasTests(unittest.TestCase):
         self.assertIsNone(nota_de_exame("abc"))
 
 
+class QuantoPrecisaTests(unittest.TestCase):
+    def test_nota_necessaria_para_chegar_ao_ultimo_colocado(self):
+        # 138,3 = 50% × 152 + 50% × x  ->  x = 124,6 em Português (o conjunto mais fácil).
+        nec = nota_necessaria(_curso(), Notas(15.2, {}))
+        self.assertEqual((nec.pontos, nec.em_falta, nec.alvo), (124.6, ("18",), 138.3))
+        self.assertTrue(nec.possivel and nec.alvo_e_o_ultimo)
+
+    def test_conta_com_a_prova_ja_feita_do_conjunto(self):
+        # História + Português: média das provas tem de ser 124,6; com 180 a História basta 69,2,
+        # mas o mínimo de cada prova é 95.
+        nec = nota_necessaria(_curso(provas=(("11", "18"),)), Notas(15.2, {"11": 180}))
+        self.assertEqual((nec.pontos, nec.em_falta), (95.0, ("18",)))
+
+    def test_avisa_quando_nem_200_chegam(self):
+        nec = nota_necessaria(_curso(ultimo_colocado="190,0"), Notas(12.0, {}))
+        self.assertFalse(nec.possivel)
+        self.assertEqual(nec.maximo, 160.0)                # 50% × 120 + 50% × 200
+
+    def test_sem_referencia_usa_a_nota_minima(self):
+        nec = nota_necessaria(_curso(ultimo_colocado=None), Notas(12.0, {}))
+        self.assertFalse(nec.alvo_e_o_ultimo)
+        self.assertEqual(nec.alvo, 95.0)
+
+    def test_sem_media_ou_com_tudo_feito_nao_ha_conta(self):
+        self.assertIsNone(nota_necessaria(_curso(), Notas()))
+        self.assertIsNone(nota_necessaria(_curso(provas=(("18",),)), Notas(15, {"18": 150})))
+
+
+class TendenciaEProcuraTests(unittest.TestCase):
+    def test_tendencia_compara_o_ano_mais_recente_com_o_mais_antigo(self):
+        self.assertEqual(_curso(ultimo_colocado_2023="152,0", ultimo_colocado_2024="144,0").tendencia, "desce")
+        self.assertEqual(_curso(ultimo_colocado_2023="130,0").tendencia, "sobe")
+        self.assertEqual(_curso(ultimo_colocado_2024="137,0").tendencia, "estavel")
+        self.assertIsNone(_curso().tendencia)                       # só um ano
+
+    def test_procura(self):
+        base = dict(vagas_1fase=46, candidatos=178)
+        self.assertEqual(_curso(**base, candidatos_1opcao=20, colocados=46).procura, "pouca")
+        self.assertEqual(_curso(**base, candidatos_1opcao=40, colocados=46).procura, "media")
+        self.assertEqual(_curso(**base, candidatos_1opcao=90, colocados=46).procura, "muita")
+        self.assertEqual(_curso(**base, candidatos_1opcao=90, colocados=30).procura, "sobraram")
+        self.assertIsNone(_curso().procura)
+
+
+class RecolhaDaTabelaTests(unittest.TestCase):
+    def test_le_a_1a_fase_de_cada_ano_e_distingue_as_duas_linhas_em_1a_opcao(self):
+        import importlib.util
+        from pathlib import Path
+        spec = importlib.util.spec_from_file_location("recolher_dges", Path(__file__).resolve().parents[1] / "dados" / "recolher_dges.py")
+        recolha = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(recolha)
+        def linha(nome, *valores):
+            return "<tr><th>" + nome + "</th>" + "".join(f"<td>{v}</td>" for v in valores) + "</tr>"
+        pagina = (
+            "<h2>Dados Estatísticos de Candidaturas Anteriores</h2><table>"
+            '<tr><td></td><th colspan="2" class="th1">2023</th><th colspan="2" class="th1">2024</th><th colspan="2" class="th1">2025</th></tr>'
+            + linha("Vagas", 46, 8, 46, 11, 46, 6) + linha("Candidatos", *[""] * 6) + linha("Candidatos", 331, 98, 200, 91, 178, 36)
+            + linha("em 1ª Opção", 41, 16, 28, 14, 20, 7) + linha("Colocados", 46, 10, 47, 14, 46, 7)
+            + linha("em 1ª Opção", 10, 1, 15, 2, 17, 5)
+            + linha("Nota de Candidatura do Último Colocado pelo Contingente Geral", "152,0", "150,8", "144,0", "147,0", "138,3", "136,8")
+            + "</table>"
+        )
+        dados = recolha._tendencia_e_procura(pagina)
+        self.assertEqual(dados, {
+            "ultimo_colocado_1fase_2023": "152,0", "ultimo_colocado_1fase_2024": "144,0",
+            "vagas_1fase_2025": "46", "candidatos_1fase_2025": "178", "candidatos_1opcao_1fase_2025": "20",
+            "colocados_1fase_2025": "46",
+        })
+
+
 class AvisosTests(unittest.TestCase):
     def _lista(self, *cursos, notas=Notas(15.2, {"18": 140})):
         plano = services.Plano(notas, tuple(c.chave for c in cursos))
@@ -93,6 +163,8 @@ _COLUNAS = [
     "curso", "area_optabem", "grau", "duracao_semestres", "ects", "vagas_2026", "ultimo_colocado_1fase_2025",
     "area_cnaef", "descricao", "saidas_profissionais", "fonte_dados_acesso", "fonte_descricao", "provas_ingresso",
     "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas", "pre_requisitos",
+    "ultimo_colocado_1fase_2023", "ultimo_colocado_1fase_2024", "vagas_1fase_2025", "candidatos_1fase_2025",
+    "candidatos_1opcao_1fase_2025", "colocados_1fase_2025",
 ]
 
 
@@ -105,6 +177,8 @@ def _linha(code, codc, curso, ultimo, provas="18|11+18", pre=""):
         "saidas_profissionais": "", "fonte_dados_acesso": "https://www.dges.gov.pt/", "fonte_descricao": "",
         "provas_ingresso": provas, "peso_secundario": "50", "peso_provas": "50", "minimo_candidatura": "95",
         "minimo_provas": "95", "pre_requisitos": pre,
+        "ultimo_colocado_1fase_2023": "130,0", "ultimo_colocado_1fase_2024": "", "vagas_1fase_2025": "40",
+        "candidatos_1fase_2025": "200", "candidatos_1opcao_1fase_2025": "80", "colocados_1fase_2025": "40",
     }
 
 
@@ -187,6 +261,52 @@ class PaginasDoPlanoTests(AppTestCase):
         self.assertIn("146,0", html)
         self.assertIn(texts.CANDIDATURA_JUNTAR, html)
         self.assertIn(texts.FICHA_SEM_ACESSO, self.client.get("/cursos/0004-9000").get_data(as_text=True))
+
+    def test_a_ficha_mostra_tendencia_procura_e_quanto_precisa(self):
+        self._post("/candidatura/notas", media="15,2")
+        html = self.client.get("/cursos/0003-9000").get_data(as_text=True)    # 130,0 (2023) -> 130,0 (2025)
+        self.assertIn(texts.FICHA_TENDENCIA_ESTAVEL, html)
+        self.assertIn(texts.FICHA_PROCURA_MUITA, html)                          # 80 em 1.ª opção para 40 vagas
+        self.assertIn(texts.FICHA_PRECISA_TITULO, html)
+        self.assertIn("108,0 pontos", html)                                      # 130 = 76 + 50% × 108
+
+    def test_partilhar_mostra_o_plano_sem_dados_pessoais_e_desligar_invalida(self):
+        self._post("/candidatura/notas", media="15,2", exame_18="140")
+        self._post("/candidatura/juntar/0001-9000")
+        self._post("/candidatura/partilhar")
+        import sqlite3
+        connection = sqlite3.connect(self.db_path)
+        codigo = connection.execute("SELECT partilha FROM planos_candidatura").fetchone()[0]
+        connection.close()
+        self.assertGreaterEqual(len(codigo), 20)
+        self.assertIn(f"/candidatura/p/{codigo}", self.client.get("/candidatura/").get_data(as_text=True))
+
+        self.logout()
+        resposta = self.client.get(f"/candidatura/p/{codigo}")
+        html = resposta.get_data(as_text=True)
+        self.assertEqual(resposta.status_code, 200)
+        self.assertIn(texts.PARTILHA_TITULO.format(nome="Ana"), html)
+        self.assertIn("Curso Acessível", html)
+        self.assertIn("146,0", html)
+        self.assertNotIn("aluno@gmail.com", html)
+        self.assertNotIn("15,2", html)                    # nem a média…
+        self.assertNotIn("140,0", html)                   # …nem a nota do exame
+        self.assertIn("noindex", html)
+        self.assertEqual(resposta.headers["Referrer-Policy"], "no-referrer")
+
+        self.login()
+        self._post("/candidatura/deixar-de-partilhar")
+        self.assertEqual(self.client.get(f"/candidatura/p/{codigo}").status_code, 404)
+
+    def test_codigo_de_partilha_errado_da_404(self):
+        self.assertEqual(self.client.get("/candidatura/p/nao-existe").status_code, 404)
+
+    def test_partilhar_exige_csrf(self):
+        self.client.post("/candidatura/partilhar", data={"csrf_token": "errado"})
+        import sqlite3
+        connection = sqlite3.connect(self.db_path)
+        self.assertIsNone(connection.execute("SELECT partilha FROM planos_candidatura").fetchone())
+        connection.close()
 
     def test_voltar_so_aceita_caminhos_do_proprio_site(self):
         response = self._post("/candidatura/juntar/0001-9000", voltar="//exemplo.com/")

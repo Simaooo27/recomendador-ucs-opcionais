@@ -42,3 +42,39 @@
   <button type="submit" class="{{ classe }}"{% if rotulo %} aria-label="{{ rotulo }}"{% endif %}>{{ texto }}</button>
 </form>
 {%- endmacro %}
+
+{#- Tendência da nota do último colocado (2023–2025), com seta. -#}
+{% macro tendencia(curso, compacta=false) -%}
+{% if curso.tendencia %}
+  {% set seta = {"sobe": "↑", "desce": "↓", "estavel": "→"}[curso.tendencia] %}
+  {% set rotulo = (texts | attr("FICHA_TENDENCIA_" ~ curso.tendencia | upper)) %}
+  {% if compacta %}<span class="tendencia tendencia-{{ curso.tendencia }}" title="{% for ano, nota in curso.historico %}{{ ano }}: {{ nota | pontos }}{% if not loop.last %} · {% endif %}{% endfor %}"><span aria-hidden="true">{{ seta }}</span> {{ rotulo }}</span>
+  {% else %}
+  <p class="ficha-historico"><span class="ficha-historico-titulo">{{ texts.FICHA_HISTORICO }}</span>
+    {% for ano, nota in curso.historico %}<span class="ficha-historico-ano">{{ ano }} <strong>{{ nota | pontos }}</strong></span>{% if not loop.last %}<span aria-hidden="true" class="ficha-historico-seta">›</span>{% endif %}{% endfor %}
+    <span class="tendencia tendencia-{{ curso.tendencia }}"><span aria-hidden="true">{{ seta }}</span> {{ rotulo }}</span></p>
+  {% endif %}
+{% endif %}
+{%- endmacro %}
+
+{#- Procura do curso na 1.ª fase de 2025 (candidatos, 1.ª opção, vagas, colocados). -#}
+{% macro procura(curso) -%}
+{% if curso.procura %}
+<p class="ficha-procura"><span class="ficha-historico-titulo">{{ texts.FICHA_PROCURA }}</span>
+  <span class="procura procura-{{ curso.procura }}">{{ texts | attr("FICHA_PROCURA_" ~ curso.procura | upper) }}</span>
+  <span class="ficha-procura-detalhe">{{ texts.FICHA_PROCURA_DETALHE.format(candidatos=curso.candidatos, vagas=curso.vagas_1fase, primeira=curso.candidatos_1opcao, colocados=curso.colocados) }}</span></p>
+{% endif %}
+{%- endmacro %}
+
+{#- «Quanto precisa no exame?» -#}
+{% macro necessidade(nec, nomes) -%}
+{% if nec %}
+  {% set alvo = nec.alvo | pontos %}
+  {% if nec.possivel %}
+    <p class="ficha-precisa">{{ texts.FICHA_PRECISA.format(alvo=alvo, referencia=texts.FICHA_PRECISA_REF_ULTIMO if nec.alvo_e_o_ultimo else texts.FICHA_PRECISA_REF_MINIMO, pontos=nec.pontos | pontos, valores=(nec.pontos / 10) | pontos, provas=provas(nec.em_falta, nomes)) }}</p>
+    {% if nec.em_falta | length > 1 %}<p class="situacao-detalhe">{{ texts.FICHA_PRECISA_VARIAS }}</p>{% endif %}
+  {% else %}
+    <p class="ficha-precisa ficha-precisa-impossivel">{{ texts.FICHA_PRECISA_IMPOSSIVEL.format(maximo=nec.maximo | pontos, alvo=alvo, referencia=texts.FICHA_PRECISA_REF_ULTIMO if nec.alvo_e_o_ultimo else texts.FICHA_PRECISA_REF_MINIMO) }}</p>
+  {% endif %}
+{% endif %}
+{%- endmacro %}

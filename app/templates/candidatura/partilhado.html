@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "macros/candidatura.html" as cand with context %}
+{% set page_title = texts.PARTILHA_TITULO.format(nome=partilhado.nome) if partilhado.nome else texts.PARTILHA_TITULO_SEM_NOME %}
+{% set noindex = true %}
+{% set largura = "media" %}
+
+{#- Plano partilhado (23/10): só de leitura e sem sessão. Nunca mostra o email, a média nem os exames. -#}
+{% block content %}
+<h1>{{ page_title }}</h1>
+<p class="lead">{{ texts.PARTILHA_INTRO }}</p>
+
+{% if partilhado.opcoes %}
+  <ol class="opcoes">
+    {% for opcao in partilhado.opcoes %}
+      <li class="opcao opcao-{{ opcao.simulacao.situacao.value }}">
+        <p class="opcao-posicao">{{ texts.CANDIDATURA_OPCAO.format(posicao=opcao.posicao) }}</p>
+        <div class="opcao-curso">
+          <h3><a href="{{ url_for('catalogo.ficha', chave=opcao.curso.chave) }}">{{ opcao.curso.curso }}</a></h3>
+          <p class="opcao-instituicao">{{ opcao.curso.instituicao }}{% if opcao.curso.localidade %} · {{ opcao.curso.localidade }}{% endif %}</p>
+          <p class="situacao situacao-{{ opcao.simulacao.situacao.value }}">{{ (texts | attr("CANDIDATURA_SITUACAO_" ~ opcao.simulacao.situacao.value | upper)).format(diferenca=opcao.simulacao.diferenca | pontos(sinal=true)) }}</p>
+        </div>
+        <dl class="opcao-numeros">
+          <div><dt>{{ texts.PARTILHA_NOTA }}</dt><dd>{{ opcao.simulacao.nota | pontos or "—" }}</dd></div>
+          <div><dt>{{ texts.CANDIDATURA_ULTIMO }}</dt><dd>{{ opcao.curso.ultimo_colocado or "—" }}</dd>{{ cand.tendencia(opcao.curso, compacta=true) }}</div>
+        </dl>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <p class="resultados-vazio">{{ texts.PARTILHA_VAZIO }}</p>
+{% endif %}
+
+<p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>
+{% if not g.user %}<p><a href="{{ url_for('main.index') }}">{{ texts.PARTILHA_CONVITE }}</a></p>{% endif %}
+{% endblock %}

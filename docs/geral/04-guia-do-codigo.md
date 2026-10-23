@@ -48,9 +48,9 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── services.py                   regras: escolher curso, mudar de curso, curso atual, apagar a conversa
 │   └── repository.py                 consultas SQL à tabela decisoes
 ├── candidatura/                      PLANO DE CANDIDATURA (protótipo de 23/10; US33 a US36)
-│   ├── calculos.py                   as contas: nota de candidatura, provas em falta, mínimos (funções puras)
+│   ├── calculos.py                   as contas: nota de candidatura, provas em falta, mínimos e «quanto preciso» (funções puras)
 │   ├── services.py                   regras do plano: notas, até 6 opções, subir/descer, avisos, sugestões
-│   ├── routes.py                     /candidatura/ (o plano), /candidatura/notas e os botões juntar/retirar/subir/descer
+│   ├── routes.py                     /candidatura/ (o plano), /candidatura/notas, os botões e a partilha (/candidatura/p/<código>)
 │   └── repository.py                 consultas SQL à tabela planos_candidatura
 ├── manuscrito.py                     converte palavras em traços «escritos à mão» (fontTools)
 ├── recursos/                         tipo de letra manuscrito Caveat, usado pelo servidor (licença OFL)
@@ -246,6 +246,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 23/10 | Sprint Review do Sprint 3: US05 e US17 aceites; teste da US17 deixa de depender da data | `PROJETO.md`, `docs/geral/product-backlog.xlsx`, `docs/US05/`, `docs/US17/`, `tests/test_apagar_conta.py` | PR do fecho do Sprint 3 |
 | 23/10 | Nome no registo e tratamento pelo nome; terminar sessão volta à página inicial | `app/auth/`, `app/db.py` (migração), `app/templates/home.html`, `auth/conta.html`, `docs/US01/`, `docs/US02/` | PR #43 |
 | 23/10 | Protótipo do plano de candidatura (substitui as opcionais): condições de acesso na ficha, notas, nota por curso, 6 opções; «As minhas decisões» sai do menu | `app/candidatura/`, `app/templates/candidatura/`, `macros/candidatura.html`, `catalogo/ficha.html`, `dados/recolher_dges.py`, `dados/provas-ingresso.csv` | PR #44 |
+| 23/10 | Quanto preciso no exame, tendência do último colocado, procura do curso e partilhar o plano (US40 a US43); gestão ativa contas por confirmar | `app/candidatura/`, `app/catalogo/repository.py`, `catalogo/ficha.html`, `candidatura/partilhado.html`, `app/gestao/`, `dados/recolher_dges.py` | PR #43 e #44 |
 | 23/10 | Revisão estética (pedido do PO): barra do topo encostada às margens, com lupa e ícone de conta; pesquisa da apresentação numa só caixa; pesquisa pelo início das palavras e sem a escola; ilustração da entrada alinhada com o formulário; início com o percurso numa caixa e atalhos; página «A minha conta» com «Apagar a conta»; comparação de cursos com caixas, grupos de linhas e textos sem palavras partidas | `app/templates/` (`base.html`, `landing.html`, `home.html`, `auth/conta.html`, `macros/marca.html`), `app/static/style.css`, `app/static/app.js`, `app/catalogo/services.py`, `app/auth/routes.py`, `docs/US17/` | PR da revisão estética |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.

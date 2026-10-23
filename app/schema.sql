@@ -70,5 +70,6 @@ CREATE TABLE IF NOT EXISTS planos_candidatura (
     media           REAL,              -- média do secundário, 0 a 20 (vazio = ainda não indicou)
     exames          TEXT    NOT NULL DEFAULT '{}',  -- JSON: {"18": 140.0, …} (código da prova -> 0 a 200)
     opcoes          TEXT    NOT NULL DEFAULT '[]',  -- JSON: chaves do catálogo, pela ordem da candidatura
+    partilha        TEXT    UNIQUE,    -- código aleatório da ligação só de leitura (vazio = não partilhado)
     atualizado_em   TEXT    NOT NULL   -- UTC, ISO 8601
 );

@@ -5,6 +5,7 @@ As contas estão em ``calculos.py``. Aqui só se lê e guarda o plano e se decid
 from __future__ import annotations
 
 import json
+import secrets
 import sqlite3
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -13,7 +14,7 @@ from typing import Mapping, Sequence
 from .. import texts
 from ..catalogo.repository import Curso
 from . import repository
-from .calculos import Notas, Simulacao, Situacao, ler_numero, nota_de_exame, simular
+from .calculos import Necessidade, Notas, Simulacao, Situacao, ler_numero, nota_de_exame, nota_necessaria, simular
 
 MAX_OPCOES = 6   # o Concurso Nacional de Acesso aceita até 6 pares instituição/curso
 
@@ -37,6 +38,7 @@ class Opcao:
     posicao: int
     curso: Curso
     simulacao: Simulacao
+    necessidade: Necessidade | None = None   # quanto precisa nas provas em falta (23/10)
 
 
 def _agora() -> str:
@@ -129,7 +131,7 @@ def opcoes(plano: Plano, cursos: Sequence[Curso]) -> list[Opcao]:
     for chave in plano.opcoes:
         curso = por_chave.get(chave)
         if curso is not None:
-            resultado.append(Opcao(len(resultado) + 1, curso, simular(curso, plano.notas)))
+            resultado.append(Opcao(len(resultado) + 1, curso, simular(curso, plano.notas), nota_necessaria(curso, plano.notas)))
     return resultado
 
 
@@ -174,3 +176,46 @@ def sugestoes(plano: Plano, cursos: Sequence[Curso], area: str, limite: int = 3)
     # Primeiro os cursos onde está acima, do mais disputado para o menos; depois os «perto».
     encontrados.sort(key=lambda par: (par[1].situacao is not Situacao.ACIMA, abs(par[1].diferenca or 0)))
     return encontrados[:limite]
+
+
+# -- Partilhar (23/10) ----------------------------------------------------------------------------
+# Uma ligação só de leitura para mostrar o plano a pais, a um explicador ou a um colega. Quem tem a
+# ligação vê o primeiro nome, as opções, a nota de candidatura e a situação em cada uma; nunca vê o
+# email, a média nem as notas dos exames. Desligar a partilha invalida a ligação de imediato.
+
+def partilhar(db: sqlite3.Connection, user_id: int) -> str:
+    """Liga a partilha (se ainda não estiver ligada) e devolve o código da ligação."""
+    atual = repository.partilha(db, user_id)
+    if atual:
+        return atual
+    if repository.obter(db, user_id) is None:
+        _guardar(db, user_id, Plano(Notas(), ()))
+    codigo = secrets.token_urlsafe(16)
+    repository.mudar_partilha(db, user_id, codigo)
+    return codigo
+
+
+def deixar_de_partilhar(db: sqlite3.Connection, user_id: int) -> None:
+    repository.mudar_partilha(db, user_id, None)
+
+
+def codigo_de_partilha(db: sqlite3.Connection, user_id: int) -> str | None:
+    return repository.partilha(db, user_id)
+
+
+@dataclass(frozen=True)
+class PlanoPartilhado:
+    nome: str            # primeiro nome (pode estar vazio em contas antigas)
+    opcoes: list[Opcao]
+
+
+def plano_partilhado(db: sqlite3.Connection, codigo: str, cursos: Sequence[Curso]) -> PlanoPartilhado | None:
+    if not codigo or len(codigo) > 64:
+        return None
+    linha = repository.por_partilha(db, codigo)
+    if linha is None:
+        return None
+    exames = {c: float(v) for c, v in json.loads(linha["exames"]).items()}
+    plano = Plano(Notas(linha["media"], exames), tuple(json.loads(linha["opcoes"])))
+    primeiro = (linha["nome"] or "").split()
+    return PlanoPartilhado(primeiro[0] if primeiro else "", opcoes(plano, cursos))

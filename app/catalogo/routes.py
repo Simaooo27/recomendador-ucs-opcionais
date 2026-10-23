@@ -50,20 +50,22 @@ def ficha(chave: str):
     curso = services.por_chave(current_app.config, chave)
     if curso is None:
         abort(404)
-    simulacao, no_plano = None, False
+    simulacao, no_plano, necessidade = None, False, None
     if g.user is not None:   # plano de candidatura (23/10): a nota do aluno neste curso
         from ..candidatura import services as candidatura
-        from ..candidatura.calculos import simular
+        from ..candidatura.calculos import nota_necessaria, simular
         from ..db import get_db
 
         plano = candidatura.obter(get_db(), g.user["id"])
         simulacao, no_plano = simular(curso, plano.notas), chave in plano.opcoes
+        necessidade = nota_necessaria(curso, plano.notas)
     return render_template(
         "catalogo/ficha.html",
         curso=curso,
         nomes_provas=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
         simulacao=simulacao,
         no_plano=no_plano,
+        necessidade=necessidade,
     )
 
 

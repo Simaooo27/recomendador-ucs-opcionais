@@ -88,6 +88,10 @@ Substitui, nesta release, os módulos C a I (opcionais), que passam a fase 2.
 - **RF41** O utilizador com sessão iniciada deve poder indicar a média do secundário (9,5 a 20) e as notas dos exames nacionais que fez (0 a 200), e mudá-las quando quiser.
 - **RF42** O sistema deve calcular a nota de candidatura do utilizador a cada curso, com o conjunto de provas mais favorável, e compará-la com a nota do último colocado (acima, perto ou abaixo), assinalando provas em falta e notas abaixo do mínimo. É uma estimativa para o contingente geral da 1.ª fase.
 - **RF43** O utilizador deve poder montar e ordenar uma lista de até 6 opções de candidatura e receber avisos (opções que não contam, nenhuma opção segura, a mais fácil em 1.º lugar, menos de 6 opções, pré-requisitos). O OptaBem não submete a candidatura.
+- **RF44** Na ficha de cada curso, o sistema deve dizer a nota que o utilizador precisa nas provas que ainda não fez para chegar ao último colocado (ou à nota mínima), no conjunto de provas em que é mais fácil, respeitando o mínimo de cada prova, e avisar quando nem 200 pontos chegam.
+- **RF45** A ficha deve mostrar a nota do último colocado da 1.ª fase de 2023 a 2025 e se está a subir, a descer ou estável.
+- **RF46** A ficha deve mostrar a procura na 1.ª fase de 2025: candidatos, candidatos em 1.ª opção, vagas e colocados, com uma etiqueta simples.
+- **RF47** O utilizador deve poder criar e desligar uma ligação só de leitura para o seu plano, que mostra o primeiro nome, as opções, a nota de candidatura e a situação, e nunca o email, a média nem as notas dos exames.
 
 ## 2. Requisitos não funcionais
 
@@ -137,6 +141,10 @@ As stories foram renumeradas a 07/10/2026 pela ordem do backlog replaneado ([pro
 | US34 — Registar as minhas notas | RF41, RF17 | Sprint 4 | nova (23/10) |
 | US35 — Nota de candidatura a cada curso | RF42 | Sprint 4 | nova (23/10) |
 | US36 — Plano das 6 opções de candidatura | RF43 | Sprint 4 | nova (23/10) |
+| US40 — Quanto preciso no exame? | RF44 | Sprint 4 | nova (23/10) |
+| US41 — Tendência do último colocado | RF45 | Sprint 4 | nova (23/10) |
+| US42 — Procura do curso | RF46 | Sprint 4 | nova (23/10) |
+| US43 — Partilhar o plano | RF47, RF17 | Sprint 4 | nova (23/10) |
 | US37 — Assistente que conhece as minhas notas | RF37, RF41, RNF12 | Backlog | nova (23/10) |
 | US38 — Datas do concurso no percurso | sem RF associado | Backlog | nova (23/10) |
 | US39 — Corrigir e esconder cursos do catálogo (gestão) | RF04, RF05 | Backlog | nova (23/10) |
@@ -206,7 +214,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.4 | 2026-10-14 | Decisão do PO (issue #15): o LLM conduz a conversa de orientação. RF36, RF37, RF38 e RNF12 reescritos; US29 e US30 reescritas e US32 fundida na US29; plano a 10 SP por sprint (pontos 10 e 13 fechados); novos pontos 14 (termos do Gemini) e 15 (guardar a conversa). Spike em [05-spike-llm.md](05-spike-llm.md). |
 | 1.5 | 2026-10-20 | Sprint Planning do Sprint 2: ponto 14 decidido (protótipo da equipa, opção a); US31 antecipada para o Sprint 2. |
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
-| 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF43) e stories US33 a US39; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
+| 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF47) e stories US33 a US43; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 
 O Excel do backlog acompanha esta versão (stories, critérios e plano de sprints de 23/10). O ficheiro Word continua na versão 1.0.

@@ -176,6 +176,9 @@ COLUNAS = [
     # Condições de acesso (plano de candidatura, 23/10): ver ``_provas_ingresso``.
     "provas_ingresso", "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas",
     "pre_requisitos",
+    # Tendência e procura (23/10), da tabela «Dados Estatísticos de Candidaturas Anteriores», 1.ª fase.
+    "ultimo_colocado_1fase_2023", "ultimo_colocado_1fase_2024",
+    "vagas_1fase_2025", "candidatos_1fase_2025", "candidatos_1opcao_1fase_2025", "colocados_1fase_2025",
 ]
 # Graus que entram no catálogo (o índice da DGES escreve-os entre parênteses retos).
 GRAUS = {"Lic-1º cic": "Licenciatura (1.º ciclo)", "Mest Integ": "Mestrado integrado"}
@@ -318,6 +321,37 @@ def _pre_requisitos(pagina: str) -> str:
     return (inicio or "Pré-requisito") + (": " + "; ".join(grupos) if grupos else "")
 
 
+def estatisticas_1fase(pagina: str) -> dict[str, dict[int, str]]:
+    """Linha da tabela de estatísticas -> {ano: valor da 1.ª fase}.
+
+    As linhas «Candidatos» e «Colocados» aparecem duas vezes (o título do grupo, vazio, e o total):
+    fica a que tem números. «em 1ª Opção» também aparece duas vezes: a 1.ª é dos candidatos, a 2.ª
+    dos colocados (guardadas como «em 1ª Opção» e «colocados em 1ª Opção»).
+    """
+    tabela = re.search(r"Dados Estatísticos de Candidaturas Anteriores</h2>(.*?)</table>", pagina, re.S)
+    if not tabela:
+        return {}
+    anos = [int(a) for a in re.findall(r'<th colspan="2" class="th1">(\d{4})</th>', tabela.group(1))]
+    linhas: dict[str, dict[int, str]] = {}
+    for linha in re.findall(r"<tr>(.*?)</tr>", tabela.group(1), re.S):
+        celulas = [_texto(c) for c in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", linha, re.S)]
+        if len(celulas) < 1 + 2 * len(anos) or not anos:
+            continue
+        nome, valores = celulas[0], celulas[1:]
+        primeira_fase = {ano: valores[2 * i] for i, ano in enumerate(anos)}
+        if not any(primeira_fase.values()):
+            continue                       # título de grupo («Candidatos», «Colocados»)
+        if nome in linhas:
+            nome = "colocados " + nome     # o 2.º «em 1ª Opção» é dos colocados
+        linhas[nome] = primeira_fase
+    return linhas
+
+
+def _numero(valor: str) -> str:
+    """«138,3» ou «46» como estão; tudo o resto (vazio, «-») -> ""."""
+    return valor if re.fullmatch(r"\d+(,\d)?", valor or "") else ""
+
+
 def _tipo_ensino(texto: str) -> str:
     """«Ensino Superior Público Universitário» -> «Público universitário»; sem «Público» é privado."""
     publico = "Público" if "Público" in texto else "Privado"
@@ -407,6 +441,20 @@ def ler_curso(pagina: str, codc: str, code: str) -> dict[str, str]:
         "minimo_candidatura": _pontos(_seccao(pagina, "Classificações Mínimas"), "Nota de candidatura"),
         "minimo_provas": _pontos(_seccao(pagina, "Classificações Mínimas"), "Provas de ingresso"),
         "pre_requisitos": _pre_requisitos(pagina),
+        **_tendencia_e_procura(pagina),
+    }
+
+
+def _tendencia_e_procura(pagina: str) -> dict[str, str]:
+    linhas = estatisticas_1fase(pagina)
+    ultimo = linhas.get("Nota de Candidatura do Último Colocado pelo Contingente Geral", {})
+    return {
+        "ultimo_colocado_1fase_2023": _numero(ultimo.get(2023, "")),
+        "ultimo_colocado_1fase_2024": _numero(ultimo.get(2024, "")),
+        "vagas_1fase_2025": _numero(linhas.get("Vagas", {}).get(2025, "")),
+        "candidatos_1fase_2025": _numero(linhas.get("Candidatos", {}).get(2025, "")),
+        "candidatos_1opcao_1fase_2025": _numero(linhas.get("em 1ª Opção", {}).get(2025, "")),
+        "colocados_1fase_2025": _numero(linhas.get("Colocados", {}).get(2025, "")),
     }
 
 

@@ -35,10 +35,13 @@
             <h3><a href="{{ url_for('catalogo.ficha', chave=opcao.curso.chave) }}">{{ opcao.curso.curso }}</a></h3>
             <p class="opcao-instituicao">{{ opcao.curso.instituicao }}{% if opcao.curso.localidade %} · {{ opcao.curso.localidade }}{% endif %}</p>
             {{ cand.situacao(opcao.simulacao, opcao.curso, nomes) }}
+            {% if opcao.necessidade and opcao.simulacao.situacao.value == "falta_prova" and opcao.necessidade.possivel %}
+              <p class="situacao-detalhe">{{ texts.CANDIDATURA_PRECISA.format(pontos=opcao.necessidade.pontos | pontos, provas=cand.provas(opcao.necessidade.em_falta, nomes)) }}</p>
+            {% endif %}
           </div>
           <dl class="opcao-numeros">
             <div><dt>{{ texts.CANDIDATURA_A_SUA_NOTA }}</dt><dd>{{ opcao.simulacao.nota | pontos or "—" }}</dd></div>
-            <div><dt>{{ texts.CANDIDATURA_ULTIMO }}</dt><dd>{{ opcao.curso.ultimo_colocado or "—" }}</dd></div>
+            <div><dt>{{ texts.CANDIDATURA_ULTIMO }}</dt><dd>{{ opcao.curso.ultimo_colocado or "—" }}</dd>{{ cand.tendencia(opcao.curso, compacta=true) }}</div>
           </dl>
           <div class="opcao-acoes">
             {% if not loop.first %}{{ cand.botao("candidatura.subir", opcao.curso.chave, "↑", texts.CANDIDATURA_SUBIR_ROTULO.format(curso=opcao.curso.curso), "botao-icone") }}{% endif %}
@@ -79,6 +82,28 @@
   </ul>
 </section>
 {% endif %}
+
+<section class="cartao plano-partilha" id="partilhar" aria-labelledby="plano-partilha">
+  <h2 id="plano-partilha">{{ texts.PARTILHA_SECCAO }}</h2>
+  <p>{{ texts.PARTILHA_EXPLICACAO }}</p>
+  {% if partilha %}
+    {% set ligacao = url_for('candidatura.partilhado', codigo=partilha, _external=true) %}
+    <div class="field">
+      <label for="ligacao-partilha">{{ texts.PARTILHA_LIGACAO }}</label>
+      <input id="ligacao-partilha" type="text" readonly value="{{ ligacao }}" aria-describedby="ligacao-partilha-dica">
+      <p class="hint" id="ligacao-partilha-dica">{{ texts.PARTILHA_COPIAR }}</p>
+    </div>
+    <form method="post" action="{{ url_for('candidatura.deixar_de_partilhar') }}" class="form-em-linha">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit" class="botao-secundario">{{ texts.PARTILHA_DESLIGAR }}</button>
+    </form>
+  {% else %}
+    <form method="post" action="{{ url_for('candidatura.partilhar') }}" class="form-em-linha">
+      <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+      <button type="submit" class="botao-secundario">{{ texts.PARTILHA_CRIAR }}</button>
+    </form>
+  {% endif %}
+</section>
 
 <p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>
 {% endblock %}

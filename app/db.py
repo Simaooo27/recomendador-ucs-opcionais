@@ -30,6 +30,7 @@ def close_db(_exception: BaseException | None = None) -> None:
 # tabela já criada, por isso uma base de dados antiga recebe-as aqui (sem perder dados).
 _COLUNAS_NOVAS = (
     ("users", "nome", "TEXT NOT NULL DEFAULT ''"),   # nome no registo (23/10)
+    ("planos_candidatura", "partilha", "TEXT"),      # partilhar o plano (23/10); único: índice abaixo
 )
 
 
@@ -39,6 +40,9 @@ def migrar(connection: sqlite3.Connection) -> None:
         existentes = {linha[1] for linha in connection.execute(f"PRAGMA table_info({tabela})")}
         if existentes and coluna not in existentes:
             connection.execute(f"ALTER TABLE {tabela} ADD COLUMN {coluna} {definicao}")
+    # SQLite não acrescenta colunas UNIQUE: o código da partilha fica único por um índice.
+    if {linha[1] for linha in connection.execute("PRAGMA table_info(planos_candidatura)")}:
+        connection.execute("CREATE UNIQUE INDEX IF NOT EXISTS planos_por_partilha ON planos_candidatura (partilha)")
     connection.commit()
 
 

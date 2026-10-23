@@ -74,6 +74,11 @@ REQUIRED_PLACEHOLDERS = {
     "CANDIDATURA_SITUACAO_PERTO": {"diferenca"},
     "CANDIDATURA_SITUACAO_ABAIXO": {"diferenca"},
     "FICHA_FORMULA_VALOR": {"secundario", "provas"},
+    "FICHA_PRECISA": {"alvo", "referencia", "pontos", "valores", "provas"},
+    "FICHA_PRECISA_IMPOSSIVEL": {"maximo", "alvo", "referencia"},
+    "CANDIDATURA_PRECISA": {"pontos", "provas"},
+    "FICHA_PROCURA_DETALHE": {"candidatos", "vagas", "primeira", "colocados"},
+    "PARTILHA_TITULO": {"nome"},
     "FICHA_MINIMOS_VALOR": {"candidatura", "provas"},
 }
 

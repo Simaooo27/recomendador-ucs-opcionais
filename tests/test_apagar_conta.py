@@ -44,7 +44,9 @@ class ApagarContaTestCase(AppTestCase):
         self.client.post("/orientacao/comecar", data={"csrf_token": CSRF_TOKEN})   # a escolha apagou a conversa
         ligacao = sqlite3.connect(self.db_path)
         try:
-            ligacao.execute("INSERT OR IGNORE INTO pedidos_llm (user_id, dia, total) VALUES (?, '2026-10-22', 3)", (self.user_id,))
+            # Um dia passado fixo: o teste não pode depender da data em que corre (a 23/10 falhou
+            # porque os pedidos do próprio dia passaram a ser outra linha).
+            ligacao.execute("INSERT OR IGNORE INTO pedidos_llm (user_id, dia, total) VALUES (?, '2026-10-01', 3)", (self.user_id,))
             ligacao.commit()
         finally:
             ligacao.close()
@@ -101,7 +103,8 @@ class ApagarTudoTests(ApagarContaTestCase):
         self._criar_dados()
         self.assertEqual(self._contar("decisoes"), 1)
         self.assertEqual(self._contar("conversas_orientacao"), 1)
-        self.assertEqual(self._contar("pedidos_llm"), 1)
+        # Pelo menos o dia fixo de _criar_dados; os pedidos de hoje juntam outra linha.
+        self.assertGreaterEqual(self._contar("pedidos_llm"), 1)
 
         response = self._apagar()
         self.assertEqual(response.status_code, 302)

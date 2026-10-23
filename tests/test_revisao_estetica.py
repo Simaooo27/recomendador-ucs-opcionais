@@ -108,3 +108,17 @@ class PesquisaTests(AppTestCase):
     def test_os_filtros_do_catalogo_seguem_as_mesmas_regras(self):
         filtros = services.ler_filtros({"q": "ti"}, self.config)
         self.assertEqual(services.filtrar(self.config, filtros), [])
+
+
+class ComparacaoTests(AppTestCase):
+    """A comparação (US05) redesenhada a 23/10: grupos de linhas, duração em anos e saídas em lista."""
+
+    def test_grupos_duracao_e_saidas(self):
+        cursos = [c for c in services.cursos(default_config()) if c.saidas][:2]
+        pagina = self.client.get("/cursos/comparar?" + "&".join(f"c={c.chave}" for c in cursos)).get_data(as_text=True)
+        for grupo in (texts.COMPARAR_GRUPO_NUMEROS, texts.COMPARAR_GRUPO_ONDE, texts.COMPARAR_GRUPO_CURSO):
+            self.assertIn(grupo, pagina)
+        self.assertIn(texts.COMPARAR_DURACAO.format(anos="3", semestres=6), pagina)
+        self.assertIn('<ul class="comparacao-saidas">', pagina)
+        self.assertIn(f"<li>{cursos[0].lista_saidas[1]}</li>", pagina)
+        self.assertTrue(cursos[0].lista_saidas[1][0].isupper())   # cada saída começa por maiúscula

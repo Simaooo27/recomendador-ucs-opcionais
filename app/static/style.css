@@ -1078,15 +1078,31 @@ td form { margin: 0; }
 
 /* Comparação lado a lado (/cursos/comparar, US05): uma coluna por curso. No telemóvel a tabela
    desliza para o lado dentro da sua caixa (.table-wrap, secção 10), sem deslocar a página. */
-.comparacao { min-width: 34rem; table-layout: fixed; }   /* cabe na coluna de leitura; mais estreito, desliza */
-.comparacao th[scope="row"] { width: 8rem; padding-left: 0; position: sticky; left: 0; z-index: 1; background: var(--page); }   /* o nome da linha fica visível ao deslizar */
+/* Revisão estética de 23/10: coluna média (56rem), cabeçalho de cada curso numa caixa, linhas
+   em grupos e números grandes. Os textos longos (descrição, saídas) não partem palavras. */
+.comparacao { min-width: 38rem; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.comparacao th[scope="row"] { width: 9.5rem; padding: 0.85rem 1rem 0.85rem 0; position: sticky; left: 0; z-index: 1; background: var(--page); font-size: 0.9rem; font-weight: 400; color: var(--muted); text-align: left; }   /* o nome da linha fica visível ao deslizar */
+.comparacao td { padding: 0.85rem 1rem 0.85rem 0; border-bottom: 1px solid var(--line); }
+.comparacao th[scope="row"] { border-bottom: 1px solid var(--line); }
 .comparacao-deslizar { display: none; }
-.comparacao thead th { font-family: var(--font-display); font-size: 1.05rem; font-weight: 650; color: var(--ink); vertical-align: bottom; }
-.comparacao-cabecalho-instituicao { display: block; margin-top: 0.3rem; font-family: var(--font-text); font-size: 0.88rem; font-weight: 400; color: var(--muted); }
+/* Cabeçalhos alinhados em cima e todos da mesma altura (height: 1px deixa a caixa ocupar a célula). */
+.comparacao thead th, .comparacao thead td { height: 1px; padding: 0 0.75rem 1rem 0; vertical-align: top; text-align: left; font-weight: 400; border: 0; hyphens: manual; }
+.comparacao-cartao { display: flex; flex-direction: column; gap: 0.2rem; height: 100%; padding: 1rem 1.1rem; border-radius: 16px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
+.comparacao-cartao .curso-area { margin: 0 0 0.25rem; }
+.comparacao-nome { font-family: var(--font-display); font-size: 1.2rem; font-weight: 650; font-stretch: 92%; line-height: 1.15; }
+.comparacao-cabecalho-instituicao { display: block; margin-top: 0.3rem; font-size: 0.92rem; color: var(--ink); }
+.comparacao-cabecalho-unidade { display: block; font-size: 0.85rem; color: var(--muted); }
+.comparacao-cartao .curso-escolher { margin-top: 0.6rem; }
+.comparacao-grupo th { padding: 1.75rem 0 0.5rem; border-bottom: 2px solid var(--ink); font-family: var(--font-display); font-size: 1.05rem; font-weight: 650; text-align: left; background: none; position: static; }
 /* As palavras só se partem quando não cabem numa linha inteira, e com hífen (pt-PT). */
 .comparacao td, .comparacao th { vertical-align: top; overflow-wrap: break-word; hyphens: auto; }
-.comparacao-vagas, .comparacao-ultimo_colocado { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.comparacao .comparacao-texto { hyphens: manual; font-size: 0.97rem; line-height: 1.5; }   /* frases: sem palavras partidas */
+.comparacao-numero { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.comparacao-duracao_semestres, .comparacao-ects { font-size: 1.05rem; font-weight: 650; }
+.comparacao-saidas { margin: 0; padding-left: 1.1rem; }
+.comparacao-saidas li + li { margin-top: 0.2rem; }
 .comparacao .sem-dados { font-family: var(--font-text); font-size: 0.95rem; font-weight: 400; color: var(--muted); }
+.comparacao-fonte { font-size: 0.92rem; }
 .comparacao-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 @media (max-width: 40rem) {

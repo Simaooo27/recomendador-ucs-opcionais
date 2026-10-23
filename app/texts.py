@@ -148,6 +148,12 @@ COMPARAR_IGNORADOS = "Alguns cursos não foram encontrados no catálogo e ficara
 COMPARAR_CURSO = "Curso"
 COMPARAR_DESLIZAR = "Deslize a tabela para o lado para ver todos os cursos."   # só no telemóvel
 COMPARAR_ESCOLHER_OUTROS = "Escolher outros cursos"
+# Grupos de linhas da comparação (revisão estética de 23/10).
+COMPARAR_GRUPO_NUMEROS = "Em números"
+COMPARAR_GRUPO_ONDE = "Onde e como"
+COMPARAR_GRUPO_CURSO = "O curso"
+COMPARAR_DURACAO = "{anos} anos ({semestres} semestres)"
+COMPARAR_VER_DGES = "Ver na DGES"
 
 LANDING_HOW_TITLE = "Como funciona"
 # Os três passos, pela ordem em que acontecem.

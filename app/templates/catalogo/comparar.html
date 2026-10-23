@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% set page_title = texts.COMPARAR_TITLE %}
+{% set largura = "media" %}
 
 {#- Comparação lado a lado de 2 ou 3 cursos (/cursos/comparar?c=…&c=…, US05). Em computador é uma
     tabela com uma coluna por curso; no telemóvel a tabela desliza para o lado dentro da sua caixa
@@ -16,46 +17,50 @@
   <p><a class="button-link" href="{{ url_for('catalogo.lista') }}">{{ texts.COMPARAR_ESCOLHER_OUTROS }}</a></p>
 {% else %}
   <p class="lead">{{ texts.COMPARAR_INTRO }}</p>
-  {% set linhas = [
-      (texts.FICHA_LOCALIDADE, "localidade"), (texts.FICHA_TIPO, "tipo_ensino"),
-      (texts.CATALOGO_FILTRO_AREA, "area"), (texts.LANDING_CARD_VAGAS, "vagas"), (texts.LANDING_CARD_NOTA, "ultimo_colocado"),
-      (texts.FICHA_DURACAO, "duracao_semestres"), (texts.FICHA_ECTS, "ects"), (texts.FICHA_SOBRE, "descricao")] %}
+  {#- Revisão estética de 23/10: coluna mais larga, cabeçalho de cada curso em caixa, linhas
+      agrupadas («Em números», «Onde e como», «O curso») e os textos sem palavras partidas. -#}
+  {% set grupos = [
+      (texts.COMPARAR_GRUPO_NUMEROS, [(texts.LANDING_CARD_VAGAS, "vagas"), (texts.LANDING_CARD_NOTA, "ultimo_colocado"),
+                                     (texts.FICHA_DURACAO, "duracao_semestres"), (texts.FICHA_ECTS, "ects")]),
+      (texts.COMPARAR_GRUPO_ONDE, [(texts.FICHA_LOCALIDADE, "localidade"), (texts.FICHA_TIPO, "tipo_ensino")]),
+      (texts.COMPARAR_GRUPO_CURSO, [(texts.FICHA_SOBRE, "descricao"), (texts.FICHA_SAIDAS, "saidas")])] %}
+  {% set numeros = ["vagas", "ultimo_colocado", "duracao_semestres", "ects"] %}
   <p class="hint comparacao-deslizar">{{ texts.COMPARAR_DESLIZAR }}</p>
   <div class="table-wrap comparacao-wrap" role="region" aria-labelledby="comparacao-legenda" tabindex="0">
-    <table class="comparacao">
+    <table class="comparacao comparacao-{{ comparacao.cursos|length }}">
       <caption id="comparacao-legenda" class="visually-hidden">{{ texts.COMPARAR_TITLE }}</caption>
       <thead>
         <tr>
           <td></td>
           {#- A instituição vai logo por baixo do nome: há cursos com o mesmo nome em várias instituições. -#}
-          {% for c in comparacao.cursos %}<th scope="col"><a href="{{ url_for('catalogo.ficha', chave=c.chave) }}">{{ c.curso }}</a><span class="comparacao-cabecalho-instituicao">{{ c.instituicao }}</span></th>{% endfor %}
+          {% for c in comparacao.cursos %}<th scope="col"><div class="comparacao-cartao">
+            <p class="curso-area"><span class="curso-area-ponto" aria-hidden="true"></span>{{ c.area }}</p>
+            <a class="comparacao-nome" href="{{ url_for('catalogo.ficha', chave=c.chave) }}">{{ c.curso }}</a><span class="comparacao-cabecalho-instituicao">{{ c.instituicao }}</span>
+            {% if c.unidade_organica %}<span class="comparacao-cabecalho-unidade">{{ c.unidade_organica }}</span>{% endif %}
+            {% if g.user %}<a class="curso-escolher" href="{{ url_for('percurso.confirmar', chave=c.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>{% endif %}
+          </div></th>{% endfor %}
         </tr>
       </thead>
+      {% for titulo, linhas in grupos %}
       <tbody>
+        <tr class="comparacao-grupo"><th scope="rowgroup" colspan="{{ comparacao.cursos|length + 1 }}">{{ titulo }}</th></tr>
         {% for rotulo, campo in linhas %}
         <tr>
           <th scope="row">{{ rotulo }}</th>
           {% for c in comparacao.cursos %}
-            {% set valor = c[campo] %}
-            <td class="comparacao-{{ campo }}">
-              {%- if campo == "duracao_semestres" and valor %}{{ texts.FICHA_DURACAO_VALOR.format(semestres=valor) }}
-              {%- elif valor is none or valor == "" %}<span class="sem-dados">{{ texts.FICHA_SEM_DADOS }}</span>
+            {% set valor = c.lista_saidas if campo == "saidas" else c[campo] %}
+            <td class="comparacao-{{ campo }}{% if campo in numeros %} comparacao-numero{% else %} comparacao-texto{% endif %}">
+              {%- if campo == "duracao_semestres" and valor %}{{ texts.COMPARAR_DURACAO.format(anos=(valor / 2)|round(1)|string|replace(".0", "")|replace(".", ","), semestres=valor) }}
+              {%- elif campo == "saidas" and valor %}<ul class="comparacao-saidas">{% for saida in valor %}<li>{{ saida }}</li>{% endfor %}</ul>
+              {%- elif valor is none or valor == "" or valor == [] %}<span class="sem-dados">{{ texts.FICHA_SEM_DADOS }}</span>
+                {%- if campo == "descricao" %} <a class="comparacao-fonte" href="{{ c.fonte }}" target="_blank" rel="noopener">{{ texts.COMPARAR_VER_DGES }}</a>{% endif %}
               {%- else %}{{ valor }}{% endif -%}
             </td>
           {% endfor %}
         </tr>
         {% endfor %}
-        <tr>
-          <th scope="row">{{ texts.FICHA_SAIDAS }}</th>
-          {% for c in comparacao.cursos %}<td>{{ c.lista_saidas|join(", ") or texts.FICHA_SEM_DADOS }}</td>{% endfor %}
-        </tr>
-        {% if g.user %}
-        <tr>
-          <td></td>
-          {% for c in comparacao.cursos %}<td><a class="curso-escolher" href="{{ url_for('percurso.confirmar', chave=c.chave) }}">{{ texts.CURSO_ESCOLHER }}</a></td>{% endfor %}
-        </tr>
-        {% endif %}
       </tbody>
+      {% endfor %}
     </table>
   </div>
   <p><a href="{{ url_for('catalogo.lista') }}">{{ texts.COMPARAR_ESCOLHER_OUTROS }}</a></p>

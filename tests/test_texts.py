@@ -39,6 +39,7 @@ REQUIRED_PLACEHOLDERS = {
     # Catálogo, ficha e comparação (US05)
     "CATALOGO_INTRO": {"maximo"},
     "CATALOGO_CONTA": {"mostrados", "total"},
+    "COMPARAR_DURACAO": {"anos", "semestres"},
     "CATALOGO_CONTA_TODOS": {"total"},
     "CATALOGO_COMPARAR_AJUDA": {"maximo"},
     "CATALOGO_COMPARAR_MARCADOS": {"n", "maximo"},

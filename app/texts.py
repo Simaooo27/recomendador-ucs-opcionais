@@ -412,6 +412,20 @@ ORIENTACAO_ERRO_LIMITE_ALUNO = (
 ADMIN_AREA_NAME = "Gestão"
 ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
+# Ativar contas por confirmar (23/10): enquanto o site não envia emails reais, um administrador ativa-as aqui.
+ADMIN_NAV_CONTAS = "Contas por confirmar"
+ADMIN_CONTAS_TITULO = "Contas por confirmar"
+ADMIN_CONTAS_INTRO = (
+    "Enquanto o OptaBem não envia emails a sério, as contas novas ficam aqui até um administrador as ativar. "
+    "Ative só contas de pessoas que conhece: ativar salta a confirmação do email."
+)
+ADMIN_CONTAS_VAZIO = "Não há contas por confirmar."
+ADMIN_COL_NOME = "Nome"
+ADMIN_COL_EMAIL = "Email"
+ADMIN_COL_REGISTO = "Registo"
+ADMIN_ATIVAR = "Ativar"
+ADMIN_ATIVAR_ROTULO = "Ativar a conta {email}"
+ADMIN_CONTA_ATIVADA = "Conta {email} ativada: já pode iniciar sessão."
 
 # Os administradores entram pela página «Iniciar sessão» dos alunos, com o nome de utilizador
 # no campo do email (app/auth/perfis.py). Estes rótulos são do formulário «Novo administrador».

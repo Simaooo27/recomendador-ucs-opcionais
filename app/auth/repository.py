@@ -61,6 +61,13 @@ def update_nome(db: sqlite3.Connection, user_id: int, nome: str) -> None:
     db.commit()
 
 
+def list_pending(db: sqlite3.Connection) -> list[sqlite3.Row]:
+    """Contas por confirmar, da mais recente para a mais antiga (ativação pela gestão, 23/10)."""
+    return db.execute(
+        "SELECT id, nome, email, created_at FROM users WHERE is_active = 0 ORDER BY created_at DESC, id DESC"
+    ).fetchall()
+
+
 def activate_user(db: sqlite3.Connection, user_id: int, now: str) -> None:
     db.execute("UPDATE users SET is_active = 1, confirmed_at = ? WHERE id = ?", (now, user_id))
 

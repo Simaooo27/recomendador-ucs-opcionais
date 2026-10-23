@@ -29,7 +29,8 @@
 | **RF04.7** | A área de gestão está **escondida**: nenhuma página dos alunos tem ligações para ela; o endereço é configurável (`ADMIN_URL_PREFIX`, por omissão `/gestao`); as páginas pedem para não ser indexadas (`noindex`). |
 | **RF04.8** | Um administrador vê a lista de administradores (nome, data de criação, quem o criou, última entrada) e cria outros administradores, com as regras do RF04.4. |
 | **RF04.9** | Um administrador remove outros administradores, mas **não a si próprio** (assim fica sempre pelo menos um). |
-| **RF04.10** | Com sessão de administrador, a barra do topo mostra «Gestão», «Painel», «Administradores», o nome do administrador e «Terminar sessão». |
+| **RF04.10** | Com sessão de administrador, a barra do topo mostra «Gestão», «Painel», «Administradores», «Contas por confirmar», o nome do administrador e «Terminar sessão». |
+| **RF04.11** | *(23/10, pedido do PO)* Enquanto o site não envia emails reais, a página «Contas por confirmar» (`/gestao/contas`) lista as contas de alunos ainda inativas (nome, email, data do registo) e um administrador pode ativá-las com um botão (POST com CSRF). Ativar salta a confirmação do email: só para pessoas conhecidas. Testes em `tests/test_gestao.py` (`AtivarContasTests`). |
 
 ## 3. Mensagens
 

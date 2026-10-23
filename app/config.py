@@ -8,6 +8,12 @@ from __future__ import annotations
 import os
 
 
+def _catalogo_por_omissao() -> str:
+    dados = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dados")
+    completo = os.path.join(dados, "catalogo-cursos.csv")
+    return completo if os.path.exists(completo) else os.path.join(dados, "catalogo-cursos-mvp.csv")
+
+
 def _env_bool(name: str, default: bool) -> bool:
     raw = os.environ.get(name)
     if raw is None:
@@ -33,11 +39,9 @@ def default_config() -> dict:
         "PRIVACY_POLICY_VERSION": "1.0",
         # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
         "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),
-        # Catálogo de cursos (dados públicos da DGES). A US04 vai importá-lo para a base de dados.
-        "CATALOGO_CSV": os.environ.get(
-            "CATALOGO_CSV",
-            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dados", "catalogo-cursos-mvp.csv"),
-        ),
+        # Catálogo de cursos (dados públicos da DGES). Por omissão, o catálogo completo gerado por
+        # dados/recolher_dges.py (US04); se ainda não existir, o do MVP (30 cursos).
+        "CATALOGO_CSV": os.environ.get("CATALOGO_CSV") or _catalogo_por_omissao(),
         # LLM (spike da US30; ver app/llm/fabrica.py e docs/geral/05-spike-llm.md).
         # "falso" por omissão: quem clona o projeto corre tudo sem chaves nem rede.
         "LLM_BACKEND": os.environ.get("LLM_BACKEND", "falso"),

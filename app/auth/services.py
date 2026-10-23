@@ -16,7 +16,9 @@ from .tokens import TokenExpired, TokenInvalid, make_confirmation_token, read_co
 from .validators import (
     MSG_EMAIL_DUPLICATE,
     RegistrationInput,
+    nome_error,
     normalize_email,
+    normalize_nome,
     validate_registration,
 )
 
@@ -34,6 +36,7 @@ class PendingConfirmation:
     user_id: int
     email: str
     token: str
+    nome: str = ""
 
 
 class LoginOutcome(str, Enum):
@@ -71,7 +74,7 @@ def register_student(db: sqlite3.Connection, data: RegistrationInput, config: Ma
     - Email já registado mas por confirmar: atualiza a palavra-passe e gera um novo
       token (as ligações anteriores deixam de funcionar).
     """
-    data = replace(data, email=normalize_email(data.email))
+    data = replace(data, email=normalize_email(data.email), nome=normalize_nome(data.nome))
     errors = validate_registration(
         data,
         allowed_domains=config["ALLOWED_EMAIL_DOMAINS"],
@@ -93,12 +96,12 @@ def register_student(db: sqlite3.Connection, data: RegistrationInput, config: Ma
     try:
         if existing is None:
             user_id = repository.create_user(
-                db, email=data.email, password_hash=password_hash, nonce=nonce, privacy_version=version, now=now
+                db, email=data.email, nome=data.nome, password_hash=password_hash, nonce=nonce, privacy_version=version, now=now
             )
         else:
             user_id = int(existing["id"])
             repository.refresh_pending_user(
-                db, user_id=user_id, password_hash=password_hash, nonce=nonce, privacy_version=version, now=now
+                db, user_id=user_id, nome=data.nome, password_hash=password_hash, nonce=nonce, privacy_version=version, now=now
             )
         db.commit()
     except sqlite3.IntegrityError as exc:  # corrida: outro pedido criou o mesmo email entretanto
@@ -106,7 +109,7 @@ def register_student(db: sqlite3.Connection, data: RegistrationInput, config: Ma
         raise RegistrationRejected({"email": MSG_EMAIL_DUPLICATE}) from exc
 
     token = make_confirmation_token(config["SECRET_KEY"], user_id, nonce)
-    return PendingConfirmation(user_id=user_id, email=data.email, token=token)
+    return PendingConfirmation(user_id=user_id, email=data.email, token=token, nome=data.nome)
 
 
 def confirm_email(db: sqlite3.Connection, token: str, config: Mapping) -> ConfirmationOutcome:
@@ -159,3 +162,12 @@ def delete_account(db: sqlite3.Connection, user_id: int, password: str) -> bool:
         return False
     repository.delete_user(db, user_id)
     return True
+
+
+def change_nome(db: sqlite3.Connection, user_id: int, raw: str) -> str | None:
+    """Muda o nome da conta. Devolve a mensagem de erro, ou ``None`` se mudou."""
+    nome = normalize_nome(raw)
+    erro = nome_error(nome)
+    if erro is None:
+        repository.update_nome(db, user_id, nome)
+    return erro

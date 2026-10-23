@@ -1,6 +1,8 @@
 """US02 — iniciar e terminar sessão (critérios de aceitação 1 a 4 + segurança)."""
 import sqlite3
 
+from app import texts
+
 from tests.base import CSRF_TOKEN, VALID_EMAIL, VALID_PASSWORD, AppTestCase
 
 
@@ -121,7 +123,9 @@ class LogoutTests(AppTestCase):
     def test_logout_termina_a_sessao(self):
         response = self.logout()
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(_location(response).endswith("/auth/entrar"))
+        # Desde 23/10 volta à página inicial (apresentação), com o aviso de sessão terminada.
+        self.assertTrue(_location(response).endswith("/"))
+        self.assertIn(texts.LOGOUT_FEITO, self.client.get("/").get_data(as_text=True))
         with self.client.session_transaction() as session:
             self.assertNotIn("user_id", session)
         self.assertTrue(_location(self.client.get("/inicio")).endswith("/auth/entrar"))

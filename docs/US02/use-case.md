@@ -61,7 +61,7 @@
 
 1. O aluno carrega em «Terminar sessão».
 2. O sistema valida o token CSRF e apaga a sessão. *(inclui: Apagar a sessão)*
-3. O sistema mostra a página de início de sessão. O caso de uso termina.
+3. O sistema mostra a página inicial (a apresentação) com o aviso «Sessão terminada» (desde 23/10). O caso de uso termina.
 
 **Pós-condições:** as páginas privadas voltam a pedir início de sessão.
 

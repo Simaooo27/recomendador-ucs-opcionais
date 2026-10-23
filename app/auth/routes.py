@@ -139,8 +139,10 @@ def login_submit():
 
 @bp.post("/sair")
 def logout():
+    """Termina a sessão e volta à página inicial (a apresentação), não ao login (decisão do PO, 23/10)."""
     sessions.logout_user()
-    return redirect(url_for("auth.login_form"))
+    flash(texts.LOGOUT_FEITO, "ok")
+    return redirect(url_for("main.index"))
 
 
 # ---------------------------------------------------------------------------

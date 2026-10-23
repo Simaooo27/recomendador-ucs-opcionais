@@ -138,7 +138,7 @@ class AdminLoginTests(GestaoTestCase):
     def test_terminar_sessao(self):
         self.admin_login()
         response = self.post("/auth/sair")
-        self.assertTrue(response.headers["Location"].endswith("/auth/entrar"))
+        self.assertTrue(response.headers["Location"].endswith("/"))   # página inicial (23/10)
         self.assertTrue(self.client.get("/gestao/").headers["Location"].endswith("/auth/entrar"))
 
     def test_login_sem_token_csrf_e_rejeitado(self):

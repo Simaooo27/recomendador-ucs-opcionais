@@ -17,6 +17,9 @@ instance/*
 *.sqlite3
 *.db
 
+# Páginas da DGES descarregadas por dados/recolher_dges.py (US04): só servem para gerar o CSV
+dados/dges_html/
+
 # Editor / sistema
 .vscode/
 .idea/

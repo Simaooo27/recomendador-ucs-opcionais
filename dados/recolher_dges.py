@@ -9,7 +9,7 @@ volta a pedir nada ao site.
 Corre no computador de um dos membros da equipa (precisa de acesso à internet):
 
     python dados/recolher_dges.py amostra       # 2 índices e 5 cursos, ~10 segundos
-    python dados/recolher_dges.py descarregar   # todos os cursos, 20 a 30 minutos
+    python dados/recolher_dges.py descarregar   # todos os cursos, cerca de 1 hora
     python dados/recolher_dges.py processar     # lê as páginas guardadas e escreve o CSV
 
 ``processar`` escreve ``dados/catalogo-cursos.csv`` com as mesmas colunas de
@@ -33,7 +33,9 @@ from pathlib import Path
 
 BASE = "https://www.dges.gov.pt/guias/"
 PASTA = Path(__file__).resolve().parent / "dges_html"
-ESPERA = 1.0   # segundos entre pedidos, para não sobrecarregar o site da DGES
+ESPERA = 2.0   # segundos entre pedidos, para não sobrecarregar o site da DGES
+PAUSAS = (10, 30, 60)   # segundos de espera antes de cada nova tentativa, quando o site não responde
+PAUSA_LONGA = 120       # depois de vários cursos seguidos com erro, o site pode estar a travar pedidos
 CABECALHOS = {
     # Identifica o pedido como um trabalho académico, com contacto do projeto.
     "User-Agent": "OptaBem/1.0 (projeto academico ISCAP; https://github.com/Simaooo27/recomendador-ucs-opcionais)",
@@ -52,20 +54,20 @@ def _guardar(caminho: Path, endereco: str, forcar: bool = False) -> tuple[bytes,
     """Devolve o conteúdo da página e se foi preciso pedi-la (False = já estava guardada)."""
     if caminho.exists() and not forcar:
         return caminho.read_bytes(), False
-    for tentativa in range(3):
+    for tentativa in range(len(PAUSAS) + 1):
         try:
             conteudo = _pedir(endereco)
             break
         except urllib.error.HTTPError as erro:
-            if erro.code < 500 or tentativa == 2:   # 4xx não melhora a tentar outra vez
+            if erro.code < 500 or tentativa == len(PAUSAS):   # 4xx não melhora a tentar outra vez
                 raise
-            print(f"  erro ({erro}); nova tentativa daqui a 5 s")
-            time.sleep(5)
-        except (urllib.error.URLError, TimeoutError) as erro:
-            if tentativa == 2:
+            print(f"  erro ({erro.code}); nova tentativa daqui a {PAUSAS[tentativa]} s")
+            time.sleep(PAUSAS[tentativa])
+        except OSError as erro:   # sem ligação, tempo esgotado, ligação cortada (inclui URLError)
+            if tentativa == len(PAUSAS):
                 raise
-            print(f"  erro ({erro}); nova tentativa daqui a 5 s")
-            time.sleep(5)
+            print(f"  o site não respondeu; nova tentativa daqui a {PAUSAS[tentativa]} s")
+            time.sleep(PAUSAS[tentativa])
     caminho.parent.mkdir(parents=True, exist_ok=True)
     caminho.write_bytes(conteudo)
     time.sleep(ESPERA)
@@ -95,8 +97,8 @@ def curso(codc: str, code: str) -> bool | None:
     None se o site deu erro (fica registado e a recolha continua)."""
     try:
         _, pedida = _guardar(PASTA / "cursos" / f"{codc}-{code}.html", f"{BASE}detcursopi.asp?codc={codc}&code={code}")
-    except urllib.error.URLError as erro:
-        print(f"  ! curso {codc}-{code}: {erro} (fica de fora; volte a correr para tentar outra vez)")
+    except OSError as erro:
+        print(f"  ! curso {codc}-{code}: sem resposta ({type(erro).__name__}); fica de fora por agora")
         return None
     return pedida
 
@@ -118,18 +120,24 @@ def descarregar() -> None:
     for letra in letras_existentes():
         try:
             encontrados = indice(letra)
-        except urllib.error.URLError as erro:
-            print(f"Índice {letra}: erro ({erro}); fica de fora")
+        except OSError as erro:
+            print(f"Índice {letra}: sem resposta ({type(erro).__name__}); fica de fora")
             continue
         print(f"Índice {letra}: {len(encontrados)} cursos")
         pares += encontrados
     pares = list(dict.fromkeys(pares))
-    print(f"\n{len(pares)} cursos no total. A descarregar (1 por segundo; pode interromper com Ctrl+C e retomar).")
-    novos, falhados = 0, 0
+    em_falta = sum(1 for codc, code in pares if not (PASTA / "cursos" / f"{codc}-{code}.html").exists())
+    print(f"\n{len(pares)} cursos no total, {em_falta} por descarregar. Um de 2 em 2 segundos; pode interromper com Ctrl+C e retomar.")
+    novos, falhados, seguidos = 0, 0, 0
     for numero, (codc, code) in enumerate(pares, 1):
         resultado = curso(codc, code)
         novos += resultado is True
         falhados += resultado is None
+        seguidos = seguidos + 1 if resultado is None else 0
+        if seguidos == 3:
+            print(f"  3 cursos seguidos sem resposta: pausa de {PAUSA_LONGA // 60} minutos antes de continuar")
+            time.sleep(PAUSA_LONGA)
+            seguidos = 0
         if numero % 50 == 0 or numero == len(pares):
             print(f"  {numero}/{len(pares)} ({novos} descarregados agora)")
     print(f"\nFeito. Páginas em {PASTA}")

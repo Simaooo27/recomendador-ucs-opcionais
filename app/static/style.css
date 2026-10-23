@@ -105,11 +105,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Margens e largura comuns (revisão estética de 23/10). A barra do topo fica encostada às
-   margens (--margem) em todas as larguras; o conteúdo da apresentação usa no máximo --largura. */
+/* Margens e largura comuns (revisão estética de 23/10). Só a barra do topo fica encostada às
+   margens (--margem); o conteúdo da apresentação fica centrado, com no máximo --largura
+   (a mesma do painel verde antes da revisão). */
 :root {
   --margem: clamp(1.25rem, 3vw, 2.5rem);
-  --largura: 88rem;
+  --largura: 72rem;
   --lado: max(var(--margem), calc((100% - var(--largura)) / 2));   /* recuo do conteúdo largo */
 }
 
@@ -598,11 +599,18 @@ td form { margin: 0; }
 
 .apresentacao { display: block; }
 
+/* Grelha da apresentação: a caixa de pesquisa fica na mesma altura que o apoio e o «comece por
+   aqui», para a seta apontar para ela (decisão do PO de 23/10). */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
+  grid-template-areas:
+    "titulo   ."
+    "apoio    procura"
+    "nota     procura"
+    "numeros  .";
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
   padding: clamp(2rem, 6vw, 4.5rem) var(--lado) clamp(3rem, 7vw, 6rem);
   background: var(--forest);
   color: #ffffff;
@@ -617,6 +625,12 @@ td form { margin: 0; }
   letter-spacing: -0.025em;
 }
 .hero-apoio { max-width: 36ch; margin: 0; font-size: 1.15rem; color: rgba(255, 255, 255, 0.8); }
+.hero-texto { display: contents; }
+.hero-titulo { grid-area: titulo; }
+.hero-apoio { grid-area: apoio; }
+.hero .procura-nota { grid-area: nota; }
+.hero .procura-numeros { grid-area: numeros; }
+.hero .procura { grid-area: procura; align-self: center; }
 
 .hero :focus-visible { outline-color: var(--marigold); }
 
@@ -680,12 +694,13 @@ td form { margin: 0; }
 
 /* Pesquisa de cursos (lado direito do painel verde). */
 .procura { position: relative; }
-.procura-nota { display: flex; align-items: flex-end; gap: 0.25rem; margin: 0 0 0.35rem 0.5rem; color: var(--marigold); }
+.procura-nota { display: flex; align-items: center; gap: 0.5rem; margin: 1.75rem 0 0; color: var(--marigold); }
 .manuscrito { display: block; height: 2.6rem; width: auto; overflow: visible; }
 .manuscrito-tinta { fill: currentColor; }
 .manuscrito-traco { fill: none; stroke: currentColor; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
 .manuscrito-texto { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
-.procura-seta { width: 2.6rem; height: 2.6rem; margin-bottom: -1.2rem; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+/* Seta para a direita, até à caixa de pesquisa (estica com o espaço livre). */
+.procura-seta { flex: 1; min-width: 4rem; max-width: 9rem; height: 2.5rem; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 
 /* Uma só caixa branca: etiqueta, campo e áreas (revisão estética de 23/10). */
 .procura-caixa {
@@ -859,10 +874,11 @@ td form { margin: 0; }
 
 @media (max-width: 56rem) {
   /* Numa só coluna, a pesquisa vem logo a seguir à frase de apoio e os números ficam no fim. */
-  .hero { grid-template-columns: 1fr; gap: 1.75rem; }
-  .hero-texto { display: contents; }
+  .hero { grid-template-columns: 1fr; grid-template-areas: "titulo" "apoio" "nota" "procura" "numeros"; row-gap: 1.75rem; }
   .hero-titulo, .hero-apoio { margin: 0; }
-  .procura-numeros { order: 1; margin: 0; }
+  .procura-numeros { margin: 0; }
+  .procura-nota { margin: 0; }
+  .procura-seta { flex: none; width: 2.6rem; transform: rotate(35deg); }
   .para-quem-lista { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 @media (max-width: 40rem) {

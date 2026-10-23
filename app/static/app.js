@@ -207,7 +207,7 @@
       });
     });
 
-    escrever(procura.querySelector(".procura-nota svg.manuscrito"));
+    escrever(document.querySelector(".procura-nota svg.manuscrito"));
   });
 
   /* 2. Linha de «Como funciona» ------------------------------------------- */

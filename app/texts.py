@@ -200,7 +200,6 @@ NAV_MINHA_CONTA = "A minha conta"
 NAV_INICIO = "Início"
 NAV_CONVERSA = "Conversa"
 NAV_CATALOGO = "Catálogo"
-NAV_DECISOES = "As minhas decisões"
 NAV_CANDIDATURA = "Candidatura"
 
 # ---------------------------------------------------------------------------
@@ -290,7 +289,6 @@ HOME_ATALHOS_TITULO = "O que pode fazer"
 HOME_ATALHOS = [
     {"titulo": "Conversar com o assistente", "texto": "Fale dos seus interesses e receba 2 a 3 cursos sugeridos.", "destino": "orientacao.pagina"},
     {"titulo": "Explorar o catálogo", "texto": "Filtre, abra a ficha de cada curso e compare até 3 lado a lado.", "destino": "catalogo.lista"},
-    {"titulo": "As minhas decisões", "texto": "Veja os cursos que foi escolhendo e quando.", "destino": "percurso.linha_tempo"},
     {"titulo": "Plano de candidatura", "texto": "Calcule a sua nota de candidatura e ordene as suas 6 opções.", "destino": "candidatura.plano"},
 ]
 
@@ -303,6 +301,9 @@ CONTA_NOME_SEM = "Ainda não indicou o seu nome."
 CONTA_NOME_ALTERAR = "Guardar nome"
 CONTA_NOME_GUARDADO = "Nome guardado."
 CONTA_DESDE = "Conta criada a"
+# Desde 23/10 «As minhas decisões» (US31) não está no menu: fica aqui e no passo «Escolher curso» do início.
+CONTA_DECISOES = "As minhas decisões"
+CONTA_DECISOES_TEXTO = "Os cursos que foi escolhendo e quando."
 CONTA_APAGAR_TITULO = "Apagar a conta"
 CONTA_APAGAR_TEXTO = "Apaga a conta e todos os dados do seu percurso. Não pode ser desfeito."
 HOME_CONTA_APAGAR = "Apagar a minha conta e todos os meus dados"

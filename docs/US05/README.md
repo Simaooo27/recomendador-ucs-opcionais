@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita (por rever; issue #12) |
+| Estado | Feita (aceite na Sprint Review do Sprint 3, 23/10) |
 | Sprint | Sprint 3 (22/10 a 29/10) |
 | Story points | 5 |
 | Épico | E2 — Catálogo |

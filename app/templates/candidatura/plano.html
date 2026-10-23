@@ -88,9 +88,11 @@
 {% endif %}
 
 {#- Plano B: cursos com vagas na 2.ª fase de 2025 a que a nota chegava (23/10) -#}
-{% if plano_b %}
+{#- Aparece sempre que há notas e opções; sem cursos, explica porquê (pedido do PO: «onde está o plano B?»). -#}
+{% if plano.tem_notas and opcoes %}
 <section class="plano-sugestoes plano-b" aria-labelledby="plano-b">
   <h2 id="plano-b">{{ texts.PLANO_B_TITULO }}</h2>
+  {% if not plano_b %}<p>{{ texts.PLANO_B_VAZIO }}</p>{% else %}
   <p>{{ texts.PLANO_B_INTRO }}</p>
   <ul class="sugestoes-lista">
     {% for curso, sim in plano_b %}
@@ -99,9 +101,11 @@
         <p class="opcao-instituicao">{{ curso.instituicao }}{% if curso.localidade %} · {{ curso.localidade }}{% endif %}</p>
         <p class="situacao-detalhe">{% if curso.ultimo_colocado_2fase %}{{ texts.PLANO_B_DETALHE.format(vagas=curso.vagas_2fase, ultimo=curso.ultimo_colocado_2fase) }}{% else %}{{ texts.PLANO_B_SOBRARAM.format(vagas=curso.vagas_2fase) }}{% endif %}</p>
         <p class="ficha-simulacao-nota plano-b-nota">{{ sim.nota | pontos }}</p>
+        {{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}
       </li>
     {% endfor %}
   </ul>
+  {% endif %}
 </section>
 {% endif %}
 

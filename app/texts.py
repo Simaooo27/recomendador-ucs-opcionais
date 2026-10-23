@@ -610,6 +610,10 @@ PLANO_B_INTRO = (
     "Se não ficar colocado na 1.ª fase, estes cursos das mesmas áreas tiveram vagas na 2.ª fase de 2025 "
     "e a sua nota chegava ao último colocado dessa fase. As vagas da 2.ª fase são as que sobram da 1.ª: mudam todos os anos."
 )
+PLANO_B_VAZIO = (
+    "Ainda não há um plano B: nenhum outro curso das áreas do seu plano teve vagas na 2.ª fase de 2025 "
+    "a que a sua nota chegasse. Com o catálogo completo da DGES (recolha da US04) aparecerão mais cursos."
+)
 PLANO_B_DETALHE = "Vagas na 2.ª fase de 2025: {vagas} · último colocado: {ultimo}"
 PLANO_B_SOBRARAM = "Vagas na 2.ª fase de 2025: {vagas} · sobraram lugares"
 

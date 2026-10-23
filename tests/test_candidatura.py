@@ -354,6 +354,13 @@ class PaginasDoPlanoTests(AppTestCase):
         self.assertIn("Curso Vizinho", plano_b)           # 146,0 ≥ 125,0 na 2.ª fase
         self.assertNotIn("Curso Disputado", plano_b)       # já está no plano
 
+    def test_plano_b_vazio_explica_porque(self):
+        self._post("/candidatura/notas", media="10", exame_18="100")     # 100,0: não chega a nenhum
+        self._post("/candidatura/juntar/0001-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertIn(texts.PLANO_B_TITULO, html)
+        self.assertIn(texts.PLANO_B_VAZIO, html)
+
     def test_codigo_de_partilha_errado_da_404(self):
         self.assertEqual(self.client.get("/candidatura/p/nao-existe").status_code, 404)
 

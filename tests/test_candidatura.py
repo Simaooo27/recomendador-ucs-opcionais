@@ -1,0 +1,205 @@
+"""Plano de candidatura (protótipo de 23/10): contas, opções, avisos e páginas."""
+import csv
+import os
+import tempfile
+import unittest
+
+from app import texts
+from app.candidatura import services
+from app.candidatura.calculos import Notas, Situacao, nota_de_exame, simular
+from app.catalogo.repository import Curso
+from tests.base import CSRF_TOKEN, AppTestCase
+
+
+def _curso(**campos) -> Curso:
+    base = dict(
+        codigo_instituicao="1107", codigo_curso="9694", curso="Ciência da Informação", instituicao="Universidade do Porto",
+        unidade_organica="Faculdade de Letras", localidade="Porto", tipo_ensino="Público universitário",
+        area="Ciência da Informação", vagas=46, ultimo_colocado="138,3", descricao="", saidas="", fonte="",
+        provas=(("18",), ("11", "18")), peso_secundario=50, peso_provas=50, minimo_candidatura=95, minimo_provas=95,
+    )
+    base.update(campos)
+    return Curso(**base)
+
+
+class ContasTests(unittest.TestCase):
+    def test_nota_de_candidatura_com_a_formula_do_curso(self):
+        # 50% × 152 + 50% × 140 = 146,0; o último colocado teve 138,3.
+        sim = simular(_curso(), Notas(15.2, {"18": 140}))
+        self.assertEqual(sim.nota, 146.0)
+        self.assertEqual(sim.diferenca, 7.7)
+        self.assertIs(sim.situacao, Situacao.ACIMA)
+        self.assertEqual(sim.conjunto, ("18",))
+
+    def test_usa_o_conjunto_de_provas_que_da_a_nota_mais_alta(self):
+        # Só Português: 145; Português e História (média 165): 50% × 150 + 50% × 165 = 157,5.
+        sim = simular(_curso(), Notas(15.0, {"18": 140, "11": 190}))
+        self.assertEqual(sim.conjunto, ("11", "18"))
+        self.assertEqual(sim.nota, 157.5)
+
+    def test_perto_e_abaixo_do_ultimo_colocado(self):
+        self.assertIs(simular(_curso(), Notas(13.5, {"18": 140})).situacao, Situacao.PERTO)     # 137,5
+        self.assertIs(simular(_curso(), Notas(12.0, {"18": 120})).situacao, Situacao.ABAIXO)    # 120,0
+
+    def test_falta_prova_diz_qual_falta(self):
+        sim = simular(_curso(provas=(("16", "07"),)), Notas(15.0, {"07": 150}))
+        self.assertIs(sim.situacao, Situacao.FALTA_PROVA)
+        self.assertEqual(sim.em_falta, ("16",))
+
+    def test_matematica_e_matematica_a_contam_com_o_mesmo_exame(self):
+        sim = simular(_curso(provas=(("16",),)), Notas(15.0, {"19": 150}))
+        self.assertEqual(sim.nota, 150.0)
+
+    def test_prova_abaixo_do_minimo_nao_conta(self):
+        sim = simular(_curso(), Notas(18.0, {"18": 90}))
+        self.assertIs(sim.situacao, Situacao.ABAIXO_DO_MINIMO)
+        self.assertEqual(sim.abaixo_do_minimo, ("18",))
+        self.assertFalse(sim.situacao.conta)
+
+    def test_sem_notas_sem_regras_e_sem_referencia(self):
+        self.assertIs(simular(_curso(), Notas()).situacao, Situacao.SEM_NOTAS)
+        self.assertIs(simular(_curso(provas=()), Notas(15, {"18": 150})).situacao, Situacao.SEM_REGRAS)
+        self.assertIs(simular(_curso(ultimo_colocado=None), Notas(15, {"18": 150})).situacao, Situacao.SEM_REFERENCIA)
+
+    def test_exames_em_valores_ou_em_pontos(self):
+        self.assertEqual(nota_de_exame("14,5"), 145.0)
+        self.assertEqual(nota_de_exame("145"), 145.0)
+        self.assertIsNone(nota_de_exame("abc"))
+
+
+class AvisosTests(unittest.TestCase):
+    def _lista(self, *cursos, notas=Notas(15.2, {"18": 140})):
+        plano = services.Plano(notas, tuple(c.chave for c in cursos))
+        return plano, services.opcoes(plano, cursos)
+
+    def test_avisa_quando_nenhuma_opcao_e_segura_e_quando_ha_menos_de_6(self):
+        dificil = _curso(codigo_instituicao="1", ultimo_colocado="170,0")
+        plano, lista = self._lista(dificil)
+        avisos = services.avisos(plano, lista)
+        self.assertIn(texts.CANDIDATURA_AVISO_SEM_SEGURA, avisos)
+        self.assertIn(texts.CANDIDATURA_AVISO_MENOS_DE_6.format(n=1, livres=5), avisos)
+
+    def test_avisa_quando_a_opcao_mais_facil_esta_em_primeiro(self):
+        facil = _curso(codigo_instituicao="1", curso="Fácil", ultimo_colocado="120,0")
+        dificil = _curso(codigo_instituicao="2", ultimo_colocado="145,0")
+        plano, lista = self._lista(facil, dificil)
+        self.assertIn(texts.CANDIDATURA_AVISO_ORDEM.format(curso="Fácil"), services.avisos(plano, lista))
+        plano, lista = self._lista(dificil, facil)
+        self.assertNotIn(texts.CANDIDATURA_AVISO_ORDEM.format(curso="Fácil"), services.avisos(plano, lista))
+
+
+_COLUNAS = [
+    "instituicao", "unidade_organica", "tipo_ensino", "localidade", "codigo_instituicao_dges", "codigo_curso_dges",
+    "curso", "area_optabem", "grau", "duracao_semestres", "ects", "vagas_2026", "ultimo_colocado_1fase_2025",
+    "area_cnaef", "descricao", "saidas_profissionais", "fonte_dados_acesso", "fonte_descricao", "provas_ingresso",
+    "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas", "pre_requisitos",
+]
+
+
+def _linha(code, codc, curso, ultimo, provas="18|11+18", pre=""):
+    return {
+        "instituicao": f"Instituição {code}", "unidade_organica": "", "tipo_ensino": "Público universitário",
+        "localidade": "Porto", "codigo_instituicao_dges": code, "codigo_curso_dges": codc, "curso": curso,
+        "area_optabem": "Ciência da Informação", "grau": "Licenciatura (1.º ciclo)", "duracao_semestres": "6",
+        "ects": "180", "vagas_2026": "40", "ultimo_colocado_1fase_2025": ultimo, "area_cnaef": "", "descricao": "",
+        "saidas_profissionais": "", "fonte_dados_acesso": "https://www.dges.gov.pt/", "fonte_descricao": "",
+        "provas_ingresso": provas, "peso_secundario": "50", "peso_provas": "50", "minimo_candidatura": "95",
+        "minimo_provas": "95", "pre_requisitos": pre,
+    }
+
+
+class PaginasDoPlanoTests(AppTestCase):
+    def setUp(self):
+        self._dados = tempfile.TemporaryDirectory()
+        caminho = os.path.join(self._dados.name, "catalogo-cursos.csv")
+        with open(caminho, "w", encoding="utf-8-sig", newline="") as ficheiro:
+            escritor = csv.DictWriter(ficheiro, fieldnames=_COLUNAS)
+            escritor.writeheader()
+            escritor.writerow(_linha("0001", "9000", "Curso Acessível", "120,0"))
+            escritor.writerow(_linha("0002", "9000", "Curso Disputado", "170,0"))
+            escritor.writerow(_linha("0003", "9000", "Curso Vizinho", "130,0"))
+            escritor.writerow(_linha("0004", "9000", "Curso Sem Regras", "", provas=""))
+        with open(os.path.join(self._dados.name, "provas-ingresso.csv"), "w", encoding="utf-8-sig", newline="") as ficheiro:
+            ficheiro.write("codigo,nome\n11,História\n16,Matemática\n18,Português\n19,Matemática A\n")
+        self.config_overrides = {"CATALOGO_CSV": caminho}
+        super().setUp()
+        self.create_active_user()
+        self.login()
+
+    def tearDown(self):
+        super().tearDown()
+        self._dados.cleanup()
+
+    def _post(self, caminho, **dados):
+        self.set_csrf()
+        return self.client.post(caminho, data={"csrf_token": CSRF_TOKEN, **dados})
+
+    def test_e_preciso_ter_sessao(self):
+        self.logout()
+        self.assertEqual(self.client.get("/candidatura/").status_code, 302)
+
+    def test_notas_invalidas_nao_sao_guardadas(self):
+        response = self._post("/candidatura/notas", media="25", exame_18="abc")
+        self.assertEqual(response.status_code, 422)
+        html = response.get_data(as_text=True)
+        self.assertIn(texts.CANDIDATURA_ERRO_MEDIA, html)
+        self.assertIn(texts.CANDIDATURA_ERRO_EXAME, html)
+
+    def test_o_formulario_mostra_matematica_a_uma_so_vez(self):
+        html = self.client.get("/candidatura/notas").get_data(as_text=True)
+        self.assertIn('name="exame_19"', html)
+        self.assertNotIn('name="exame_16"', html)
+
+    def test_percurso_completo_notas_juntar_ordenar_e_retirar(self):
+        self.assertEqual(self._post("/candidatura/notas", media="15,2", exame_18="14").status_code, 302)
+        self._post("/candidatura/juntar/0002-9000")
+        self._post("/candidatura/juntar/0001-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertLess(html.index("Curso Disputado"), html.index("Curso Acessível"))
+        self.assertIn("146,0", html)                      # 50% × 152 + 50% × 140
+        self.assertIn("Curso Vizinho", html)              # sugestão da mesma área onde fica acima
+
+        self._post("/candidatura/subir/0001-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertLess(html.index('data-chave="0001-9000"'), html.index('data-chave="0002-9000"'))
+
+        self._post("/candidatura/retirar/0001-9000")
+        self.assertNotIn('data-chave="0001-9000"', self.client.get("/candidatura/").get_data(as_text=True))
+
+    def test_no_maximo_6_opcoes_e_sem_repetidos(self):
+        with self.app.app_context():
+            from app.db import get_db
+            user_id = get_db().execute("SELECT id FROM users").fetchone()["id"]
+            for i in range(6):
+                services.juntar(get_db(), user_id, f"x-{i}")
+            self.assertFalse(services.juntar(get_db(), user_id, "x-0"))
+            with self.assertRaises(services.PlanoCheio):
+                services.juntar(get_db(), user_id, "x-6")
+
+    def test_curso_inexistente_da_404(self):
+        self.assertEqual(self._post("/candidatura/juntar/nao-existe").status_code, 404)
+
+    def test_a_ficha_mostra_as_condicoes_de_acesso_e_a_nota_do_aluno(self):
+        self._post("/candidatura/notas", media="15,2", exame_18="140")
+        html = self.client.get("/cursos/0001-9000").get_data(as_text=True)
+        self.assertIn(texts.FICHA_ACESSO, html)
+        self.assertIn("História + Português", html)
+        self.assertIn("146,0", html)
+        self.assertIn(texts.CANDIDATURA_JUNTAR, html)
+        self.assertIn(texts.FICHA_SEM_ACESSO, self.client.get("/cursos/0004-9000").get_data(as_text=True))
+
+    def test_voltar_so_aceita_caminhos_do_proprio_site(self):
+        response = self._post("/candidatura/juntar/0001-9000", voltar="//exemplo.com/")
+        self.assertTrue(response.headers["Location"].endswith("/candidatura/"))
+
+    def test_apagar_a_conta_apaga_o_plano(self):
+        self._post("/candidatura/notas", media="15")
+        self._post("/auth/conta/apagar", password="palavra-passe-1")
+        import sqlite3
+        connection = sqlite3.connect(self.db_path)
+        self.assertEqual(connection.execute("SELECT COUNT(*) FROM planos_candidatura").fetchone()[0], 0)
+        connection.close()
+
+
+if __name__ == "__main__":
+    unittest.main()

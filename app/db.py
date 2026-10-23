@@ -60,10 +60,11 @@ def init_app(app: Flask) -> None:
     caminho = Path(app.config["DATABASE"])
     caminho.parent.mkdir(parents=True, exist_ok=True)
     if caminho.exists():
-        # Uma base de dados criada antes de uma coluna nova continua a funcionar sem ter de
-        # correr «flask init-db» outra vez.
+        # Uma base de dados criada antes de uma tabela ou coluna nova continua a funcionar sem
+        # ter de correr «flask init-db» outra vez (o esquema só cria o que falta).
         connection = sqlite3.connect(caminho)
         try:
+            connection.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
             migrar(connection)
         finally:
             connection.close()

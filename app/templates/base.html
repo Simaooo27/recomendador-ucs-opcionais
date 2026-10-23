@@ -61,6 +61,7 @@
         <a href="{{ url_for('orientacao.pagina') }}"{% if request.blueprint == 'orientacao' %} aria-current="page"{% endif %}>{{ texts.NAV_CONVERSA }}</a>
         <a href="{{ url_for('catalogo.lista') }}"{% if request.blueprint == 'catalogo' %} aria-current="page"{% endif %}>{{ texts.NAV_CATALOGO }}</a>
         <a href="{{ url_for('percurso.linha_tempo') }}"{% if request.blueprint == 'percurso' %} aria-current="page"{% endif %}>{{ texts.NAV_DECISOES }}</a>
+        <a href="{{ url_for('candidatura.plano') }}"{% if request.blueprint == 'candidatura' %} aria-current="page"{% endif %}>{{ texts.NAV_CANDIDATURA }}</a>
       </nav>
     {% endif %}
     {% if g.admin %}

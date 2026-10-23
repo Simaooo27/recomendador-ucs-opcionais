@@ -62,3 +62,13 @@ CREATE TABLE IF NOT EXISTS decisoes (
     decidida_em     TEXT    NOT NULL   -- UTC, ISO 8601
 );
 CREATE INDEX IF NOT EXISTS decisoes_por_utilizador ON decisoes (user_id, decidida_em);
+
+-- Plano de candidatura (23/10, protótipo): as notas do aluno e as até 6 opções, por ordem.
+-- Uma linha por aluno; sai com a conta (US17). As notas só servem para as contas do OptaBem.
+CREATE TABLE IF NOT EXISTS planos_candidatura (
+    user_id         INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    media           REAL,              -- média do secundário, 0 a 20 (vazio = ainda não indicou)
+    exames          TEXT    NOT NULL DEFAULT '{}',  -- JSON: {"18": 140.0, …} (código da prova -> 0 a 200)
+    opcoes          TEXT    NOT NULL DEFAULT '[]',  -- JSON: chaves do catálogo, pela ordem da candidatura
+    atualizado_em   TEXT    NOT NULL   -- UTC, ISO 8601
+);

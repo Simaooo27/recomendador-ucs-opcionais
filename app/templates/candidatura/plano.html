@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% import "macros/candidatura.html" as cand with context %}
+{% set page_title = texts.CANDIDATURA_TITULO %}
+{% set largura = "media" %}
+
+{#- Plano de candidatura (protótipo de 23/10): as notas, as até 6 opções por ordem, com a nota de
+    candidatura a cada uma, os avisos e outros cursos da mesma área. Contas em app/candidatura/calculos.py. -#}
+{% block content %}
+<h1>{{ texts.CANDIDATURA_TITULO }}</h1>
+<p class="lead">{{ texts.CANDIDATURA_INTRO }}</p>
+
+<section class="cartao plano-notas" aria-labelledby="plano-notas">
+  <h2 id="plano-notas">{{ texts.CANDIDATURA_AS_MINHAS_NOTAS }}</h2>
+  {% if plano.tem_notas %}
+    <p>{{ texts.CANDIDATURA_MEDIA_RESUMO.format(media=plano.notas.media | pontos) }}</p>
+    {% if plano.notas.exames %}
+      {% set exames %}{% for codigo, valor in plano.notas.exames | dictsort %}{{ nomes.get(codigo, codigo) }} {{ valor | pontos }}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
+      <p>{{ texts.CANDIDATURA_EXAMES_RESUMO.format(exames=exames) }}</p>
+    {% else %}<p>{{ texts.CANDIDATURA_SEM_EXAMES }}</p>{% endif %}
+    <a class="botao-secundario botao-ligacao" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_MUDAR_NOTAS }}</a>
+  {% else %}
+    <p>{{ texts.CANDIDATURA_SEM_NOTAS }}</p>
+    <a class="button-link" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_INDICAR_NOTAS }}</a>
+  {% endif %}
+</section>
+
+<section class="plano-opcoes" aria-labelledby="plano-opcoes">
+  <h2 id="plano-opcoes">{{ texts.CANDIDATURA_AS_MINHAS_OPCOES.format(n=opcoes | length, maximo=maximo) }}</h2>
+  {% if opcoes %}
+    <ol class="opcoes">
+      {% for opcao in opcoes %}
+        <li class="opcao opcao-{{ opcao.simulacao.situacao.value }}" data-chave="{{ opcao.curso.chave }}">
+          <p class="opcao-posicao">{{ texts.CANDIDATURA_OPCAO.format(posicao=opcao.posicao) }}</p>
+          <div class="opcao-curso">
+            <h3><a href="{{ url_for('catalogo.ficha', chave=opcao.curso.chave) }}">{{ opcao.curso.curso }}</a></h3>
+            <p class="opcao-instituicao">{{ opcao.curso.instituicao }}{% if opcao.curso.localidade %} · {{ opcao.curso.localidade }}{% endif %}</p>
+            {{ cand.situacao(opcao.simulacao, opcao.curso, nomes) }}
+          </div>
+          <dl class="opcao-numeros">
+            <div><dt>{{ texts.CANDIDATURA_A_SUA_NOTA }}</dt><dd>{{ opcao.simulacao.nota | pontos or "—" }}</dd></div>
+            <div><dt>{{ texts.CANDIDATURA_ULTIMO }}</dt><dd>{{ opcao.curso.ultimo_colocado or "—" }}</dd></div>
+          </dl>
+          <div class="opcao-acoes">
+            {% if not loop.first %}{{ cand.botao("candidatura.subir", opcao.curso.chave, "↑", texts.CANDIDATURA_SUBIR_ROTULO.format(curso=opcao.curso.curso), "botao-icone") }}{% endif %}
+            {% if not loop.last %}{{ cand.botao("candidatura.descer", opcao.curso.chave, "↓", texts.CANDIDATURA_DESCER_ROTULO.format(curso=opcao.curso.curso), "botao-icone") }}{% endif %}
+            {{ cand.botao("candidatura.retirar", opcao.curso.chave, texts.CANDIDATURA_RETIRAR, texts.CANDIDATURA_RETIRAR_ROTULO.format(curso=opcao.curso.curso), "botao-texto") }}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="resultados-vazio">{{ texts.CANDIDATURA_VAZIO }}</p>
+    {% if curso_escolhido %}
+      {{ cand.botao("candidatura.juntar", curso_escolhido.chave, texts.CANDIDATURA_JUNTAR_ESCOLHIDO.format(curso=curso_escolhido.curso, instituicao=curso_escolhido.instituicao), classe="") }}
+    {% endif %}
+  {% endif %}
+  {% if not plano.cheio %}<p><a href="{{ url_for('catalogo.lista') }}">{{ texts.CANDIDATURA_PROCURAR }}</a></p>{% endif %}
+</section>
+
+{% if avisos %}
+<section class="plano-avisos" aria-labelledby="plano-avisos">
+  <h2 id="plano-avisos">{{ texts.CANDIDATURA_AVISOS_TITULO }}</h2>
+  <ul>{% for aviso in avisos %}<li>{{ aviso }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+
+{% if sugestoes and not plano.cheio %}
+<section class="plano-sugestoes" aria-labelledby="plano-sugestoes">
+  <h2 id="plano-sugestoes">{{ texts.CANDIDATURA_SUGESTOES_TITULO.format(area=area) }}</h2>
+  <ul class="sugestoes-lista">
+    {% for curso, sim in sugestoes %}
+      <li class="cartao sugestao">
+        <h3><a href="{{ url_for('catalogo.ficha', chave=curso.chave) }}">{{ curso.curso }}</a></h3>
+        <p class="opcao-instituicao">{{ curso.instituicao }}{% if curso.localidade %} · {{ curso.localidade }}{% endif %}</p>
+        <p class="situacao situacao-{{ sim.situacao.value }}">{{ (texts | attr("CANDIDATURA_SITUACAO_" ~ sim.situacao.value | upper)).format(diferenca=sim.diferenca | pontos(sinal=true)) }}</p>
+        {{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>
+{% endblock %}

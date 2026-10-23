@@ -32,6 +32,26 @@ class Curso:
     ects: int | None = None
     area_cnaef: str = ""          # área de estudo oficial (CNAEF), ex.: «481 Ciências informáticas»
     fonte_descricao: str = ""     # página da instituição de onde veio a descrição
+    # Condições de acesso (plano de candidatura, 23/10). ``provas``: conjuntos alternativos de
+    # códigos de provas de ingresso; basta ter um conjunto. Vazio = a DGES não as publica.
+    provas: tuple[tuple[str, ...], ...] = ()
+    peso_secundario: int | None = None    # % da média do secundário na nota de candidatura
+    peso_provas: int | None = None        # % das provas de ingresso
+    minimo_candidatura: int | None = None # pontos (0 a 200)
+    minimo_provas: int | None = None      # pontos (0 a 200), em cada prova
+    pre_requisitos: str = ""
+
+    @property
+    def ultimo_colocado_numero(self) -> float | None:
+        """A nota do último colocado como número («138,3» -> 138.3)."""
+        try:
+            return float(self.ultimo_colocado.replace(",", ".")) if self.ultimo_colocado else None
+        except ValueError:
+            return None
+
+    @property
+    def tem_condicoes_de_acesso(self) -> bool:
+        return bool(self.provas) and self.peso_secundario is not None and self.peso_provas is not None
 
     @property
     def lista_saidas(self) -> list[str]:
@@ -47,6 +67,11 @@ class Curso:
 def _inteiro(valor: str) -> int | None:
     valor = (valor or "").strip()
     return int(valor) if valor.isdigit() else None
+
+
+def _conjuntos(valor: str) -> tuple[tuple[str, ...], ...]:
+    """«09|17+18» -> (("09",), ("17", "18"))."""
+    return tuple(tuple(p for p in c.split("+") if p) for c in (valor or "").split("|") if c.strip())
 
 
 @lru_cache(maxsize=4)
@@ -73,6 +98,12 @@ def _ler(caminho: str, modificado: float) -> tuple[Curso, ...]:
             ects=_inteiro(l.get("ects", "")),
             area_cnaef=(l.get("area_cnaef") or "").strip(),
             fonte_descricao=(l.get("fonte_descricao") or "").strip(),
+            provas=_conjuntos(l.get("provas_ingresso", "")),
+            peso_secundario=_inteiro(l.get("peso_secundario", "")),
+            peso_provas=_inteiro(l.get("peso_provas", "")),
+            minimo_candidatura=_inteiro(l.get("minimo_candidatura", "")),
+            minimo_provas=_inteiro(l.get("minimo_provas", "")),
+            pre_requisitos=(l.get("pre_requisitos") or "").strip(),
         )
         for l in linhas
         if l.get("curso", "").strip()
@@ -85,3 +116,17 @@ def todos(caminho: str | Path) -> tuple[Curso, ...]:
     if not caminho.exists():
         return ()
     return _ler(str(caminho), caminho.stat().st_mtime)
+
+
+def nomes_das_provas(caminho_catalogo: str | Path) -> dict[str, str]:
+    """Código -> nome das provas de ingresso (dados/provas-ingresso.csv, ao lado do catálogo)."""
+    caminho = Path(caminho_catalogo).with_name("provas-ingresso.csv")
+    if not caminho.exists():
+        return {}
+    return dict(_ler_provas(str(caminho), caminho.stat().st_mtime))
+
+
+@lru_cache(maxsize=2)
+def _ler_provas(caminho: str, modificado: float) -> tuple[tuple[str, str], ...]:
+    with open(caminho, encoding="utf-8-sig", newline="") as ficheiro:
+        return tuple((l["codigo"].strip(), l["nome"].strip()) for l in csv.DictReader(ficheiro) if l.get("codigo"))

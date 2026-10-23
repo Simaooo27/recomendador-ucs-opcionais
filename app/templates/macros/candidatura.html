@@ -1,0 +1,44 @@
+{#- Partes do plano de candidatura usadas na ficha do curso e em /candidatura (protótipo de 23/10). -#}
+
+{#- Lista de códigos de provas -> «Português + História». -#}
+{% macro provas(codigos, nomes) -%}
+{% for codigo in codigos %}{{ nomes.get(codigo, texts.FICHA_SEM_DADOS) }}{% if not loop.last %} + {% endif %}{% endfor %}
+{%- endmacro %}
+
+{#- A situação de uma opção: etiqueta colorida e, por baixo, o que falta ou que provas contam. -#}
+{% macro situacao(sim, curso, nomes) -%}
+<p class="situacao situacao-{{ sim.situacao.value }}">
+  {{- (texts | attr("CANDIDATURA_SITUACAO_" ~ sim.situacao.value | upper)).format(diferenca=sim.diferenca | pontos(sinal=true)) -}}
+</p>
+{% if sim.em_falta %}<p class="situacao-detalhe">{{ texts.CANDIDATURA_FALTA.format(provas=provas(sim.em_falta, nomes)) }}</p>
+{% elif sim.abaixo_do_minimo == ("",) %}<p class="situacao-detalhe">{{ texts.CANDIDATURA_MINIMO_NOTA.format(minimo=curso.minimo_candidatura) }}</p>
+{% elif sim.abaixo_do_minimo %}<p class="situacao-detalhe">{{ texts.CANDIDATURA_MINIMO_PROVA.format(minimo=curso.minimo_provas, provas=provas(sim.abaixo_do_minimo, nomes)) }}</p>
+{% elif sim.conjunto %}<p class="situacao-detalhe">{{ texts.CANDIDATURA_CONJUNTO_USADO.format(provas=provas(sim.conjunto, nomes)) }}</p>
+{% endif %}
+{%- endmacro %}
+
+{#- Condições de acesso da DGES, na ficha do curso. -#}
+{% macro condicoes(curso, nomes) -%}
+{% if curso.tem_condicoes_de_acesso %}
+<dl class="ficha-dados acesso-dados">
+  <div class="acesso-provas"><dt>{{ texts.FICHA_PROVAS }}</dt><dd>
+    {% if curso.provas | length > 1 %}<span class="acesso-um-de">{{ texts.FICHA_PROVAS_UM_DE }}</span>{% endif %}
+    <ul class="acesso-conjuntos">{% for conjunto in curso.provas %}<li>{{ provas(conjunto, nomes) }}</li>{% endfor %}</ul>
+  </dd></div>
+  <div><dt>{{ texts.FICHA_FORMULA }}</dt><dd>{{ texts.FICHA_FORMULA_VALOR.format(secundario=curso.peso_secundario, provas=curso.peso_provas) }}</dd></div>
+  {% if curso.minimo_candidatura is not none %}<div><dt>{{ texts.FICHA_MINIMOS }}</dt><dd>{{ texts.FICHA_MINIMOS_VALOR.format(candidatura=curso.minimo_candidatura, provas=curso.minimo_provas) }}</dd></div>{% endif %}
+  {% if curso.pre_requisitos %}<div><dt>{{ texts.FICHA_PRE_REQUISITOS }}</dt><dd>{{ curso.pre_requisitos }}</dd></div>{% endif %}
+</dl>
+{% else %}
+<p class="sem-dados">{{ texts.FICHA_SEM_ACESSO }}</p>
+{% endif %}
+{%- endmacro %}
+
+{#- Botão de formulário (POST com CSRF) para juntar, retirar ou mover uma opção. -#}
+{% macro botao(destino, chave, texto, rotulo=none, classe="botao-secundario") -%}
+<form method="post" action="{{ url_for(destino, chave=chave) }}" class="form-em-linha">
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <input type="hidden" name="voltar" value="{{ request.full_path if request.query_string else request.path }}">
+  <button type="submit" class="{{ classe }}"{% if rotulo %} aria-label="{{ rotulo }}"{% endif %}>{{ texto }}</button>
+</form>
+{%- endmacro %}

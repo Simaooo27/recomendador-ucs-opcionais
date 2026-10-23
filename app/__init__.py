@@ -43,6 +43,7 @@ def create_app(config: dict | None = None) -> Flask:
     app.extensions["mailer"] = create_mailer(app.config)
 
     from .auth import bp as auth_bp
+    from .candidatura.routes import bp as candidatura_bp
     from .catalogo import bp as catalogo_bp
     from .gestao import bp as gestao_bp
     from .main import bp as main_bp
@@ -54,6 +55,7 @@ def create_app(config: dict | None = None) -> Flask:
     app.register_blueprint(catalogo_bp)
     app.register_blueprint(orientacao_bp)
     app.register_blueprint(percurso_bp)
+    app.register_blueprint(candidatura_bp)
     app.register_blueprint(gestao_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
 
     # Todos os templates recebem os textos de app/texts.py como «texts».

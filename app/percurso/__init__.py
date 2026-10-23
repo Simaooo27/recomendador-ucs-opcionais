@@ -7,7 +7,7 @@ página inicial mostra. As decisões (escolher curso, US31) estão em ``services
 
 - sem curso: conta criada; a seguir, a conversa de orientação (US29);
 - a escolher curso: a conversa terminou com sugestões (US30);
-- com curso: escolheu um curso (US31); o percurso desta release termina aqui (decisão dos PO, 22/10).
+- com curso: escolheu um curso (US31); a seguir, preparar a candidatura (protótipo de 23/10).
 """
 from __future__ import annotations
 
@@ -20,11 +20,11 @@ from .. import texts
 class EstadoPercurso(str, Enum):
     SEM_CURSO = "sem_curso"                  # conta criada; a seguir, a conversa de orientação
     A_ESCOLHER_CURSO = "a_escolher_curso"    # a conversa terminou com sugestões (US29)
-    COM_CURSO = "com_curso"                  # escolheu o curso (US31); todos os passos ficam feitos
+    COM_CURSO = "com_curso"                  # escolheu o curso (US31); a seguir, o plano de candidatura
 
 
-# Índice do passo atual (em texts.HOME_PATH_STEPS) em cada estado. «Com curso» aponta para depois
-# do último passo: todos ficam «feito» (as opcionais saíram desta release, 22/10).
+# Índice do passo atual (em texts.HOME_PATH_STEPS) em cada estado. «Com curso» aponta para o plano
+# de candidatura (23/10), o último passo.
 _PASSO_ATUAL = {
     EstadoPercurso.SEM_CURSO: 1,
     EstadoPercurso.A_ESCOLHER_CURSO: 2,
@@ -36,6 +36,7 @@ _PASSO_ATUAL = {
 _ACAO = {
     EstadoPercurso.SEM_CURSO: (texts.HOME_ACTION_CONVERSA, "orientacao.pagina"),
     EstadoPercurso.A_ESCOLHER_CURSO: (texts.HOME_ACTION_CONTINUAR, "orientacao.pagina"),
+    EstadoPercurso.COM_CURSO: (texts.HOME_ACTION_CANDIDATURA, "candidatura.plano"),
 }
 
 # Índice do passo «Escolher curso» em texts.HOME_PATH_STEPS: depois de escolher, mostra o curso.

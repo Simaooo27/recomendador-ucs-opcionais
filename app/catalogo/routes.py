@@ -6,9 +6,10 @@ endereço (?area=…&c=…). As regras estão em ``services.py``.
 """
 from __future__ import annotations
 
-from flask import abort, current_app, jsonify, render_template, request, url_for
+from flask import abort, current_app, g, jsonify, render_template, request, url_for
 
 from . import bp, services
+from .repository import nomes_das_provas
 
 
 @bp.get("/")
@@ -49,7 +50,21 @@ def ficha(chave: str):
     curso = services.por_chave(current_app.config, chave)
     if curso is None:
         abort(404)
-    return render_template("catalogo/ficha.html", curso=curso)
+    simulacao, no_plano = None, False
+    if g.user is not None:   # plano de candidatura (23/10): a nota do aluno neste curso
+        from ..candidatura import services as candidatura
+        from ..candidatura.calculos import simular
+        from ..db import get_db
+
+        plano = candidatura.obter(get_db(), g.user["id"])
+        simulacao, no_plano = simular(curso, plano.notas), chave in plano.opcoes
+    return render_template(
+        "catalogo/ficha.html",
+        curso=curso,
+        nomes_provas=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
+        simulacao=simulacao,
+        no_plano=no_plano,
+    )
 
 
 @bp.get("/pesquisa")

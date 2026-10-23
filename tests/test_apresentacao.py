@@ -119,7 +119,7 @@ class PathTimelineTests(AppTestCase):
 
     def test_sem_curso_o_proximo_passo_e_o_questionario(self):
         passos = percurso.passos(EstadoPercurso.SEM_CURSO)
-        self.assertEqual([p.situacao for p in passos], ["feito", "atual", "depois"])
+        self.assertEqual([p.situacao for p in passos], ["feito", "atual", "depois", "depois"])
         self.assertEqual(passos[1].titulo, texts.HOME_PATH_STEPS[1]["titulo"])
 
     def test_cada_estado_avanca_o_passo_atual(self):
@@ -129,10 +129,11 @@ class PathTimelineTests(AppTestCase):
         ]
         self.assertEqual(atuais, [1, 2])
 
-    def test_com_curso_o_percurso_esta_concluido(self):
-        # As opcionais saíram desta release (22/10): escolher o curso é o último passo.
+    def test_com_curso_o_proximo_passo_e_o_plano_de_candidatura(self):
+        # Protótipo de 23/10: depois de escolher o curso, prepara-se a candidatura.
         passos = percurso.passos(EstadoPercurso.COM_CURSO)
-        self.assertEqual([p.situacao for p in passos], ["feito", "feito", "feito"])
+        self.assertEqual([p.situacao for p in passos], ["feito", "feito", "feito", "atual"])
+        self.assertEqual(passos[3].acao, (texts.HOME_ACTION_CANDIDATURA, "candidatura.plano"))
 
     def test_nao_ha_referencias_a_opcionais(self):
         # Decisão dos PO (22/10): nesta release o site não fala de opcionais.

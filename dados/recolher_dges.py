@@ -166,6 +166,8 @@ def descarregar() -> None:
 
 MVP = Path(__file__).resolve().parent / "catalogo-cursos-mvp.csv"
 SAIDA = Path(__file__).resolve().parent / "catalogo-cursos.csv"
+# Código e nome de cada prova de ingresso, como a DGES os escreve («18», «Português»).
+PROVAS = Path(__file__).resolve().parent / "provas-ingresso.csv"
 COLUNAS = [
     "instituicao", "unidade_organica", "tipo_ensino", "localidade", "codigo_instituicao_dges",
     "codigo_curso_dges", "curso", "area_optabem", "grau", "duracao_semestres", "ects", "vagas_2026",
@@ -287,6 +289,12 @@ def _provas_ingresso(pagina: str) -> str:
             vistos.add(chave)
             unicos.append(chave)
     return "|".join(unicos)
+
+
+def nomes_das_provas(pagina: str) -> dict[str, str]:
+    """Código -> nome das provas de ingresso da página («18  Português» -> {"18": "Português"})."""
+    linhas = [_texto(l) for l in _seccao(pagina, "Provas de Ingresso").split("<br>")]
+    return {l[:2]: l[2:].strip() for l in linhas if _PROVA.match(l)}
 
 
 def _pontos(texto: str, nome: str) -> str:
@@ -420,13 +428,19 @@ def processar() -> None:
             for linha in csv.DictReader(ficheiro):
                 equipa[f"{linha['codigo_curso_dges']}-{linha['codigo_instituicao_dges']}"] = linha
     linhas, ignorados = [], {}
+    provas: dict[str, str] = {}
+    if PROVAS.exists():
+        with open(PROVAS, encoding="utf-8-sig", newline="") as ficheiro:
+            provas = {l["codigo"]: l["nome"] for l in csv.DictReader(ficheiro)}
     for pagina_html in sorted((PASTA / "cursos").glob("*.html")):
         codc, code = pagina_html.stem.split("-", 1)
         grau = graus.get(codc, "")
         if grau and grau not in GRAUS:
             ignorados[grau] = ignorados.get(grau, 0) + 1
             continue
-        linha = ler_curso(pagina_html.read_text(encoding="latin-1"), codc, code)
+        texto = pagina_html.read_text(encoding="latin-1")
+        provas.update(nomes_das_provas(texto))
+        linha = ler_curso(texto, codc, code)
         da_equipa = equipa.get(f"{codc}-{code}")
         if da_equipa:   # o que a equipa escreveu e verificou à mão tem prioridade
             # A área não: é a mesma regra para todos, para os filtros serem coerentes.
@@ -446,6 +460,10 @@ def processar() -> None:
         escritor = csv.DictWriter(ficheiro, fieldnames=COLUNAS)
         escritor.writeheader()
         escritor.writerows(linhas)
+    with open(PROVAS, "w", encoding="utf-8-sig", newline="") as ficheiro:
+        escritor = csv.writer(ficheiro)
+        escritor.writerow(["codigo", "nome"])
+        escritor.writerows(sorted(provas.items()))
     sem_nota = sum(1 for l in linhas if not l["ultimo_colocado_1fase_2025"])
     sem_provas = sum(1 for l in linhas if not l.get("provas_ingresso"))
     com_descricao = sum(1 for l in linhas if l["descricao"])

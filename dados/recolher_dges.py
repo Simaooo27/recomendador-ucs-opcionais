@@ -56,6 +56,11 @@ def _guardar(caminho: Path, endereco: str, forcar: bool = False) -> tuple[bytes,
         try:
             conteudo = _pedir(endereco)
             break
+        except urllib.error.HTTPError as erro:
+            if erro.code < 500 or tentativa == 2:   # 4xx não melhora a tentar outra vez
+                raise
+            print(f"  erro ({erro}); nova tentativa daqui a 5 s")
+            time.sleep(5)
         except (urllib.error.URLError, TimeoutError) as erro:
             if tentativa == 2:
                 raise
@@ -77,9 +82,22 @@ def indice(letra: str) -> list[tuple[str, str]]:
     return list(vistos)
 
 
-def curso(codc: str, code: str) -> bool:
-    """Descarrega a página de um curso. Devolve True se foi preciso pedi-la ao site."""
-    _, pedida = _guardar(PASTA / "cursos" / f"{codc}-{code}.html", f"{BASE}detcursopi.asp?codc={codc}&code={code}")
+def letras_existentes() -> list[str]:
+    """As letras que têm índice no site (lidas das ligações do índice A). A DGES não tem índice
+    para algumas letras (K, U, W, …) e responde com erro 500 se forem pedidas."""
+    conteudo, _ = _guardar(PASTA / "indices" / "A.html", f"{BASE}indcurso.asp?letra=A")
+    letras = re.findall(r"indcurso\.asp\?letra=([A-Z])", conteudo.decode("latin-1"))
+    return sorted(set(letras) | {"A"}) or list(string.ascii_uppercase)
+
+
+def curso(codc: str, code: str) -> bool | None:
+    """Descarrega a página de um curso. True se foi pedida ao site, False se já estava guardada,
+    None se o site deu erro (fica registado e a recolha continua)."""
+    try:
+        _, pedida = _guardar(PASTA / "cursos" / f"{codc}-{code}.html", f"{BASE}detcursopi.asp?codc={codc}&code={code}")
+    except urllib.error.URLError as erro:
+        print(f"  ! curso {codc}-{code}: {erro} (fica de fora; volte a correr para tentar outra vez)")
+        return None
     return pedida
 
 
@@ -97,19 +115,26 @@ def amostra() -> None:
 
 def descarregar() -> None:
     pares: list[tuple[str, str]] = []
-    for letra in string.ascii_uppercase:
-        encontrados = indice(letra)
+    for letra in letras_existentes():
+        try:
+            encontrados = indice(letra)
+        except urllib.error.URLError as erro:
+            print(f"Índice {letra}: erro ({erro}); fica de fora")
+            continue
         print(f"Índice {letra}: {len(encontrados)} cursos")
         pares += encontrados
     pares = list(dict.fromkeys(pares))
     print(f"\n{len(pares)} cursos no total. A descarregar (1 por segundo; pode interromper com Ctrl+C e retomar).")
-    novos = 0
+    novos, falhados = 0, 0
     for numero, (codc, code) in enumerate(pares, 1):
-        if curso(codc, code):
-            novos += 1
+        resultado = curso(codc, code)
+        novos += resultado is True
+        falhados += resultado is None
         if numero % 50 == 0 or numero == len(pares):
             print(f"  {numero}/{len(pares)} ({novos} descarregados agora)")
     print(f"\nFeito. Páginas em {PASTA}")
+    if falhados:
+        print(f"{falhados} cursos deram erro: volte a correr «descarregar» para tentar só esses.")
 
 
 # ---------------------------------------------------------------------------

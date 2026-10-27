@@ -196,6 +196,14 @@ class AvisosTests(unittest.TestCase):
         plano, lista = self._lista(dificil, facil)
         self.assertNotIn(texts.CANDIDATURA_AVISO_ORDEM.format(curso="Fácil"), services.avisos(plano, lista))
 
+    def test_avisa_opcoes_que_nao_contam_e_pre_requisitos(self):
+        sem_prova = _curso(codigo_instituicao="1", provas=(("02",),))                 # não fez o exame 02
+        com_requisitos = _curso(codigo_instituicao="2", pre_requisitos="Atestado médico")
+        plano, lista = self._lista(sem_prova, com_requisitos)
+        avisos = services.avisos(plano, lista)
+        self.assertIn(texts.CANDIDATURA_AVISO_NAO_CONTAM.format(n=1), avisos)
+        self.assertIn(texts.CANDIDATURA_AVISO_PRE_REQUISITOS, avisos)
+
 
 _COLUNAS = [
     "instituicao", "unidade_organica", "tipo_ensino", "localidade", "codigo_instituicao_dges", "codigo_curso_dges",
@@ -291,6 +299,21 @@ class PaginasDoPlanoTests(AppTestCase):
             with self.assertRaises(services.PlanoCheio):
                 services.juntar(get_db(), user_id, "x-6")
 
+    def test_o_curso_escolhido_pode_ser_a_1a_opcao(self):
+        # US36 (RF43.7): quem já escolheu um curso (US31) e tem o plano vazio pode juntá-lo como 1.ª opção.
+        from app.catalogo import services as catalogo
+        from app.db import get_db
+        from app.percurso import services as percurso
+        with self.app.app_context():
+            user_id = get_db().execute("SELECT id FROM users").fetchone()["id"]
+            percurso.escolher(get_db(), user_id, "0001-9000", catalogo.cursos(self.app.config))
+        texto = texts.CANDIDATURA_JUNTAR_ESCOLHIDO.format(curso="Curso Acessível", instituicao="Instituição 0001")
+        self.assertIn(texto, self.client.get("/candidatura/").get_data(as_text=True))
+        self._post("/candidatura/juntar/0001-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertNotIn(texto, html)
+        self.assertIn('data-chave="0001-9000"', html)
+
     def test_curso_inexistente_da_404(self):
         self.assertEqual(self._post("/candidatura/juntar/nao-existe").status_code, 404)
 
@@ -302,6 +325,22 @@ class PaginasDoPlanoTests(AppTestCase):
         self.assertIn("146,0", html)
         self.assertIn(texts.CANDIDATURA_JUNTAR, html)
         self.assertIn(texts.FICHA_SEM_ACESSO, self.client.get("/cursos/0004-9000").get_data(as_text=True))
+
+    def test_sem_sessao_a_ficha_mostra_as_condicoes_e_pede_para_entrar(self):
+        self.logout()
+        html = self.client.get("/cursos/0001-9000").get_data(as_text=True)
+        self.assertIn(texts.FICHA_PROVAS_UM_DE, html)          # 2 conjuntos: «Português» ou «História + Português»
+        self.assertIn("História + Português", html)
+        self.assertIn(texts.FICHA_ENTRE_PARA_SIMULAR, html)
+        self.assertNotIn(texts.CANDIDATURA_JUNTAR, html)
+
+    def test_a_ficha_e_o_plano_dizem_que_a_nota_e_uma_estimativa(self):
+        sem_notas = self.client.get("/cursos/0001-9000").get_data(as_text=True)
+        self.assertNotIn(texts.CANDIDATURA_AVISO_ESTIMATIVA, sem_notas)      # sem nota, não há o que avisar
+        self._post("/candidatura/notas", media="15,2", exame_18="140")
+        self._post("/candidatura/juntar/0001-9000")
+        self.assertIn(texts.CANDIDATURA_AVISO_ESTIMATIVA, self.client.get("/cursos/0001-9000").get_data(as_text=True))
+        self.assertIn(texts.CANDIDATURA_AVISO_ESTIMATIVA, self.client.get("/candidatura/").get_data(as_text=True))
 
     def test_a_ficha_mostra_tendencia_procura_e_quanto_precisa(self):
         self._post("/candidatura/notas", media="15,2")

@@ -150,3 +150,43 @@ class FiltroPorAreaTests(unittest.TestCase):
         passo = conversa.proximo_passo(llm, CATALOGO_GRANDE, [Mensagem("utilizador", "a"), Mensagem("assistente", "b"), Mensagem("utilizador", "c")])
         self.assertIsInstance(passo, conversa.Sugestao)
         self.assertEqual(len(llm.pedidos), 2)
+
+
+PAGINAS_GUARDADAS = sorted((RAIZ / "dados" / "dges_html" / "cursos").glob("*.html"))
+
+
+@unittest.skipUnless(PAGINAS_GUARDADAS, "sem páginas da DGES guardadas em dados/dges_html/")
+class CondicoesDeAcessoTests(unittest.TestCase):
+    """US33: as condições de acesso lidas das páginas da DGES são as que estão no catálogo (27/10)."""
+
+    @classmethod
+    def setUpClass(cls):
+        import csv
+        with open(RAIZ / "dados" / "catalogo-cursos.csv", encoding="utf-8-sig", newline="") as ficheiro:
+            cls.catalogo = {(l["codigo_instituicao_dges"], l["codigo_curso_dges"]): l for l in csv.DictReader(ficheiro)}
+
+    def _ler(self, nome: str) -> dict[str, str]:
+        codc, code = nome.removesuffix(".html").split("-")
+        pagina = (RAIZ / "dados" / "dges_html" / "cursos" / nome).read_text(encoding="latin-1")   # como em processar()
+        return recolha.ler_curso(pagina, codc, code)
+
+    def test_conjuntos_alternativos_formula_e_minimos(self):
+        if not (RAIZ / "dados" / "dges_html" / "cursos" / "8093-3062.html").exists():
+            self.skipTest("página de exemplo não guardada")
+        linha = self._ler("8093-3062.html")      # Animação Socioeducativa, Politécnico de Coimbra
+        conjuntos = linha["provas_ingresso"].split("|")
+        self.assertIn("17+18", conjuntos)          # um conjunto com duas provas
+        self.assertIn("09", conjuntos)             # e um conjunto de uma só prova
+        self.assertEqual((linha["peso_secundario"], linha["peso_provas"]), ("50", "50"))
+        self.assertEqual((linha["minimo_candidatura"], linha["minimo_provas"]), ("95", "95"))
+
+    def test_todas_as_paginas_guardadas_dao_as_condicoes_do_catalogo(self):
+        campos = ("provas_ingresso", "peso_secundario", "peso_provas", "minimo_candidatura", "minimo_provas", "pre_requisitos")
+        for caminho in PAGINAS_GUARDADAS:
+            codc, code = caminho.stem.split("-")
+            esperado = self.catalogo.get((code, codc))
+            if esperado is None:
+                continue
+            with self.subTest(pagina=caminho.name):
+                linha = self._ler(caminho.name)
+                self.assertEqual({c: linha[c] for c in campos}, {c: esperado[c] for c in campos})

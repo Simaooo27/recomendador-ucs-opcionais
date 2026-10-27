@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US33" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US33">
+    <bpmn:participant id="Participant_US33" name="Condições de acesso na ficha do curso (US33)" processRef="Process_US33" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US33" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US33">
+      <bpmn:lane id="Lane_US33_0" name="Pessoa (com ou sem sessão)">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US33_1" name="Sistema (OptaBem)">
+        <bpmn:flowNodeRef>T1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Abre a ficha de um curso">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T1" name="Ler as condições de acesso do curso no catálogo">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G1" name="A DGES publica as condições?">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T2" name="Mostrar provas, fórmula, mínimos e pré-requisitos">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T3" name="Mostrar que não há dados e a ligação para a DGES">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E1" name="Sabe o que precisa para entrar">
+      <bpmn:incoming>F5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="E2" name="Consulta a página da DGES">
+      <bpmn:incoming>F6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" name="" sourceRef="S1" targetRef="T1" />
+    <bpmn:sequenceFlow id="F2" name="" sourceRef="T1" targetRef="G1" />
+    <bpmn:sequenceFlow id="F3" name="sim" sourceRef="G1" targetRef="T2" />
+    <bpmn:sequenceFlow id="F4" name="não" sourceRef="G1" targetRef="T3" />
+    <bpmn:sequenceFlow id="F5" name="" sourceRef="T2" targetRef="E1" />
+    <bpmn:sequenceFlow id="F6" name="" sourceRef="T3" targetRef="E2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_US33">
+    <bpmndi:BPMNPlane id="Plane_US33" bpmnElement="Collaboration_US33">
+      <bpmndi:BPMNShape id="Participant_US33_di" bpmnElement="Participant_US33" isHorizontal="true"><dc:Bounds x="30" y="20" width="1000" height="520" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US33_0_di" bpmnElement="Lane_US33_0" isHorizontal="true"><dc:Bounds x="60" y="20" width="970" height="210" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US33_1_di" bpmnElement="Lane_US33_1" isHorizontal="true"><dc:Bounds x="60" y="230" width="970" height="310" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S1_di" bpmnElement="S1"><dc:Bounds x="132" y="92" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T1_di" bpmnElement="T1"><dc:Bounds x="205" y="298" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G1_di" bpmnElement="G1" isMarkerVisible="true"><dc:Bounds x="435" y="305" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T2_di" bpmnElement="T2"><dc:Bounds x="585" y="298" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T3_di" bpmnElement="T3"><dc:Bounds x="585" y="438" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E1_di" bpmnElement="E1"><dc:Bounds x="842" y="92" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E2_di" bpmnElement="E2"><dc:Bounds x="842" y="452" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="150" y="128" /><di:waypoint x="150" y="330" /><di:waypoint x="205" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="355" y="330" /><di:waypoint x="435" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="485" y="330" /><di:waypoint x="585" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="460" y="355" /><di:waypoint x="460" y="470" /><di:waypoint x="585" y="470" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="735" y="330" /><di:waypoint x="860" y="330" /><di:waypoint x="860" y="128" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6"><di:waypoint x="735" y="470" /><di:waypoint x="842" y="470" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

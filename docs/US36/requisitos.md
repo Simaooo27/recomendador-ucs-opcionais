@@ -15,7 +15,7 @@
 
 **Dentro:** juntar cursos ao plano, ordenar e retirar opções, ver cada opção com a nota e a situação, os avisos e as sugestões da mesma área, e o passo «Preparar a candidatura» no percurso.
 
-**Fora:** submeter a candidatura (faz-se no site da DGES); quanto precisa nos exames, tendência, procura, combinações de exames, plano B e partilha (US40 a US45, no backlog, com código no mesmo PR).
+**Fora:** submeter a candidatura (faz-se no site da DGES); quanto precisa nos exames, tendência, procura, combinações de exames, plano B e partilha, que são as US40 a US45 (também no Sprint 4) e acrescentam informação a este plano.
 
 ## 2. Requisitos funcionais da US36
 
@@ -70,4 +70,4 @@ RNF02 (CSRF em todos os botões; o regresso só aceita caminhos do próprio site
 | # | Questão | Estado |
 |---|---|---|
 | 1 | O OptaBem não submete a candidatura: ajuda a prepará-la. | **Decidido** (PO, 23/10) |
-| 2 | A US36 é Should e é a primeira a sair do Sprint 4 se o docente achar o sprint demasiado cheio. | **Decidido** (reestruturação de 27/10) |
+| 2 | Se o docente achar o Sprint 4 demasiado cheio, saem primeiro as stories Could (US43 e US45), não a US36. | **Decidido** (PO, 27/10) |

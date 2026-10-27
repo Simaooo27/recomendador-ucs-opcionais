@@ -6,9 +6,9 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11) proposto a 27/10: US04 e US33 a US36, 18 SP, a confirmar com o docente · Entrega a 05/11 |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · protótipos do Sprint 4, por aceitar: US04 e US33 a US36 (e US40 a US45, no backlog) |
-| **Testes automáticos** | 430, todos a passar |
+| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11) proposto a 27/10: US04, US33 a US36 e US40 a US45, 32 SP, a confirmar com o docente · Entrega a 05/11 |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · protótipos do Sprint 4, por aceitar: US04, US33 a US36 e US40 a US45 |
+| **Testes automáticos** | 431, todos a passar |
 
 ## Índice
 
@@ -32,7 +32,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | Sprint 2 (13 SP, concluído a 22/10) | Uma pessoa indecisa conversa com o assistente (LLM), recebe 2 a 3 cursos do catálogo com explicação e escolhe um, ficando a decisão registada no percurso. |
 | Sprint 3 (7 SP, concluído a 23/10) | Uma pessoa indecisa filtra, consulta e compara cursos de várias instituições, e pode apagar a sua conta e todos os seus dados. |
-| Sprint 4 (29/10 a 05/11, proposto a 27/10) | Quem escolheu um curso prepara a candidatura: vê as condições de acesso de cada curso, indica as suas notas, vê a sua nota de candidatura em cada curso e ordena as 6 opções; o catálogo passa a ter as licenciaturas da DGES (US04 e US33 a US36, 18 SP; a confirmar no Sprint Planning de 29/10 com o docente). O código fecha por volta de 03/11. |
+| Sprint 4 (29/10 a 05/11, proposto a 27/10) | Quem escolheu um curso prepara a candidatura: vê as condições de acesso, a tendência e a procura de cada curso, indica as suas notas, vê a sua nota em cada curso e quanto precisa nos exames, ordena as 6 opções, descobre que exames lhe abrem mais portas, tem um plano B para a 2.ª fase e pode partilhar o plano; o catálogo passa a ter as licenciaturas recolhidas da DGES (US04, US33 a US36 e US40 a US45, 32 SP; a confirmar no Sprint Planning de 29/10 com o docente). O código fecha por volta de 03/11. |
 
 **Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
 
@@ -47,6 +47,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 **Replaneamento de 23/10/2026 (decisão do PO, com o protótipo do PR #44):** o **plano de candidatura** ao Concurso Nacional de Acesso substitui as opcionais (épico E12): condições de acesso na ficha (US33), notas do candidato (US34), nota de candidatura a cada curso (US35) e as 6 opções com avisos (US36), mais US37 e US38 no backlog. A US04 foi reescrita (catálogo da DGES por recolha) e entra no Sprint 4; a US39 (gestão do catálogo) nasce da sugestão de um colega de editar a base de dados na área de gestão. As 22 stories das opcionais passam a *Won't* (fase 2). O Sprint 4 fica com 18 SP planeados, acima da velocidade (10): o código das US33 a US36 foi feito antes do sprint, como protótipo; se for demais, a US36 sai primeiro. Sem story: o registo pede o nome, terminar sessão volta à página inicial, a gestão ativa contas por confirmar e «As minhas decisões» sai do menu (PR #43 e #44). No mesmo dia entraram as US40 a US43 (quanto preciso no exame, tendência, procura e partilhar o plano): e, ao fim do dia, as US44 (que exames me abrem mais portas) e US45 (plano B da 2.ª fase). O Sprint 4 passa a 32 SP planeados, muito acima da velocidade (10): o código foi feito antes do sprint, como protótipo, e no Sprint Planning de 29/10 decide-se o que entra; o resto volta ao backlog. Falta a documentação por story.
 
 **Reestruturação do backlog (27/10/2026, autorizada pelo docente; decisão do PO):** o OptaBem passa a ser só um recomendador de cursos. As 22 stories das opcionais e a US32 (fundida) saem do Product Backlog para a folha «Arquivo (opcionais)», com o motivo de cada uma; os requisitos correspondentes passam para o anexo A dos [requisitos](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) (versão 1.9). Épicos novos: E1 Conta e privacidade, E2 Catálogo de cursos, E3 Orientação com o assistente, E4 Plano de candidatura. O Sprint 4 fica com o essencial (US04 e US33 a US36, 18 SP); as US40 a US45 voltam ao backlog com o código pronto, no estado novo «Protótipo». Stories novas no backlog: US46 (exportar os meus dados) e US47 (recuperar a palavra-passe). A US04 foi dividida: fica o catálogo com os 174 cursos já recolhidos da DGES, e a recolha de todas as licenciaturas passa a ser a US48, porque exige o computador ligado uma noite inteira. Mesmo assim, o Sprint 4 passa a velocidade (18 para 10 SP), o que só se justifica porque o código foi feito antes, como protótipo.
+
+**Sprint 4 alargado (27/10/2026, mais tarde; decisão do PO):** as US40 a US45 voltam ao Sprint 4, porque são partes importantes do produto e o código já está feito. O Sprint 4 passa a 32 SP para uma velocidade de 10: não é um planeamento realista de trabalho novo, e só se defende porque o código foi feito antes do sprint, como protótipo; no sprint sobra documentação, testes, revisão e aceitação. A documentação das stories do Sprint 4 está em `docs/USNN/`.
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
@@ -63,22 +65,22 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US34 | Registar as minhas notas | Sprint 4 | Protótipo | [docs/US34/](docs/US34/) · PR #44 |
 | US35 | Nota de candidatura a cada curso | Sprint 4 | Protótipo | [docs/US35/](docs/US35/) · PR #44 |
 | US36 | Plano das 6 opções de candidatura | Sprint 4 | Protótipo | [docs/US36/](docs/US36/) · PR #44 |
-| US40 | Quanto preciso no exame? | Backlog | Protótipo | PR #44 |
-| US41 | Tendência do último colocado | Backlog | Protótipo | PR #44 |
-| US42 | Procura do curso | Backlog | Protótipo | PR #44 |
-| US44 | Que exames me abrem mais portas? | Backlog | Protótipo | PR #44 |
+| US40 | Quanto preciso no exame? | Sprint 4 | Protótipo | [docs/US40/](docs/US40/) · PR #44 |
+| US41 | Tendência do último colocado | Sprint 4 | Protótipo | [docs/US41/](docs/US41/) · PR #44 |
+| US42 | Procura do curso | Sprint 4 | Protótipo | [docs/US42/](docs/US42/) · PR #44 |
+| US44 | Que exames me abrem mais portas? | Sprint 4 | Protótipo | [docs/US44/](docs/US44/) · PR #44 |
+| US43 | Partilhar o plano | Sprint 4 | Protótipo | [docs/US43/](docs/US43/) · PR #44 |
+| US45 | Plano B: 2.ª fase | Sprint 4 | Protótipo | [docs/US45/](docs/US45/) · PR #44 |
 | US37 | Assistente que conhece as minhas notas | Backlog | Por fazer | — |
 | US46 | Exportar os meus dados | Backlog | Por fazer | — |
 | US47 | Recuperar a palavra-passe | Backlog | Por fazer | — |
 | US48 | Recolha completa das licenciaturas (DGES) | Backlog | Por fazer | — |
 | US39 | Corrigir e esconder cursos do catálogo (gestão) | Backlog | Por fazer | — |
-| US43 | Partilhar o plano | Backlog | Protótipo | PR #44 |
-| US45 | Plano B: 2.ª fase | Backlog | Protótipo | PR #44 |
 | US38 | Datas do concurso no percurso | Backlog | Por fazer | — |
 
 *Protótipo* = código feito antes do sprint, ainda não aceite numa Sprint Review. As stories das opcionais (US06 a US16, US18 a US28) e a US32 (fundida na US29) estão na folha «Arquivo (opcionais)» do [backlog](docs/geral/product-backlog.xlsx).
 
-Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31 e US33 a US36).
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31, US33 a US36 e US40 a US45).
 
 ## 2. Documentação do projeto
 
@@ -109,6 +111,12 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [US34](docs/US34/README.md) | Registar as minhas notas (média e exames) |
 | [US35](docs/US35/README.md) | Nota de candidatura a cada curso e situação face ao último colocado |
 | [US36](docs/US36/README.md) | Plano das 6 opções de candidatura, com avisos e sugestões |
+| [US40](docs/US40/README.md) | Quanto preciso no exame? |
+| [US41](docs/US41/README.md) | Tendência do último colocado (2023 a 2025) |
+| [US42](docs/US42/README.md) | Procura do curso (1.ª fase de 2025) |
+| [US44](docs/US44/README.md) | Que exames me abrem mais portas? |
+| [US43](docs/US43/README.md) | Partilhar o plano com uma ligação só de leitura |
+| [US45](docs/US45/README.md) | Plano B: 2.ª fase |
 
 ## 3. Alterar textos e cores
 

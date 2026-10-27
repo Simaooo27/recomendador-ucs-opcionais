@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US43" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US43">
+    <bpmn:participant id="Participant_US43" name="Partilhar o plano (US43)" processRef="Process_US43" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US43" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US43">
+      <bpmn:lane id="Lane_US43_0" name="Aluno (com sessão)">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E3</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US43_1" name="Sistema (OptaBem)">
+        <bpmn:flowNodeRef>T1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T4</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US43_2" name="Quem recebe a ligação">
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Carrega em «Criar ligação de partilha»">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T1" name="Criar um código aleatório (ou reutilizar o que existe)">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T2" name="Copiar a ligação e enviá-la">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T3" name="Abre a ligação, sem iniciar sessão">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G1" name="Código válido?">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T4" name="Mostrar nome, opções, nota e situação; sem email, média nem exames">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E1" name="Vê o plano">
+      <bpmn:incoming>F7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="E2" name="Página não encontrada">
+      <bpmn:incoming>F6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="S2" name="Carrega em «Deixar de partilhar»">
+      <bpmn:outgoing>F8</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T5" name="Apagar o código">
+      <bpmn:incoming>F8</bpmn:incoming>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E3" name="A ligação deixa de funcionar">
+      <bpmn:incoming>F9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" name="" sourceRef="S1" targetRef="T1" />
+    <bpmn:sequenceFlow id="F2" name="" sourceRef="T1" targetRef="T2" />
+    <bpmn:sequenceFlow id="F3" name="" sourceRef="T2" targetRef="T3" />
+    <bpmn:sequenceFlow id="F4" name="" sourceRef="T3" targetRef="G1" />
+    <bpmn:sequenceFlow id="F5" name="sim" sourceRef="G1" targetRef="T4" />
+    <bpmn:sequenceFlow id="F6" name="não" sourceRef="G1" targetRef="E2" />
+    <bpmn:sequenceFlow id="F7" name="" sourceRef="T4" targetRef="E1" />
+    <bpmn:sequenceFlow id="F8" name="" sourceRef="S2" targetRef="T5" />
+    <bpmn:sequenceFlow id="F9" name="" sourceRef="T5" targetRef="E3" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_US43">
+    <bpmndi:BPMNPlane id="Plane_US43" bpmnElement="Collaboration_US43">
+      <bpmndi:BPMNShape id="Participant_US43_di" bpmnElement="Participant_US43" isHorizontal="true"><dc:Bounds x="30" y="20" width="1100" height="660" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US43_0_di" bpmnElement="Lane_US43_0" isHorizontal="true"><dc:Bounds x="60" y="20" width="1070" height="210" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US43_1_di" bpmnElement="Lane_US43_1" isHorizontal="true"><dc:Bounds x="60" y="230" width="1070" height="250" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US43_2_di" bpmnElement="Lane_US43_2" isHorizontal="true"><dc:Bounds x="60" y="480" width="1070" height="200" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S1_di" bpmnElement="S1"><dc:Bounds x="132" y="82" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T1_di" bpmnElement="T1"><dc:Bounds x="195" y="318" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T2_di" bpmnElement="T2"><dc:Bounds x="355" y="88" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T3_di" bpmnElement="T3"><dc:Bounds x="355" y="548" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G1_di" bpmnElement="G1" isMarkerVisible="true"><dc:Bounds x="575" y="325" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T4_di" bpmnElement="T4"><dc:Bounds x="715" y="318" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E1_di" bpmnElement="E1"><dc:Bounds x="772" y="562" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E2_di" bpmnElement="E2"><dc:Bounds x="582" y="562" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S2_di" bpmnElement="S2"><dc:Bounds x="742" y="82" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T5_di" bpmnElement="T5"><dc:Bounds x="855" y="68" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E3_di" bpmnElement="E3"><dc:Bounds x="1042" y="82" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="150" y="118" /><di:waypoint x="150" y="350" /><di:waypoint x="195" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="270" y="318" /><di:waypoint x="270" y="120" /><di:waypoint x="355" y="120" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="430" y="152" /><di:waypoint x="430" y="548" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="505" y="580" /><di:waypoint x="540" y="580" /><di:waypoint x="540" y="350" /><di:waypoint x="575" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="625" y="350" /><di:waypoint x="715" y="350" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6"><di:waypoint x="600" y="375" /><di:waypoint x="600" y="562" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7"><di:waypoint x="790" y="382" /><di:waypoint x="790" y="562" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8"><di:waypoint x="778" y="100" /><di:waypoint x="855" y="100" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9"><di:waypoint x="1005" y="100" /><di:waypoint x="1042" y="100" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

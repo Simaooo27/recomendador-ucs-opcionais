@@ -612,7 +612,7 @@ PLANO_B_INTRO = (
 )
 PLANO_B_VAZIO = (
     "Ainda não há um plano B: nenhum outro curso das áreas do seu plano teve vagas na 2.ª fase de 2025 "
-    "a que a sua nota chegasse. Com o catálogo completo da DGES (recolha da US04) aparecerão mais cursos."
+    "a que a sua nota chegasse. Quando o catálogo tiver todas as licenciaturas da DGES, aparecerão mais cursos."
 )
 PLANO_B_DETALHE = "Vagas na 2.ª fase de 2025: {vagas} · último colocado: {ultimo}"
 PLANO_B_SOBRARAM = "Vagas na 2.ª fase de 2025: {vagas} · sobraram lugares"

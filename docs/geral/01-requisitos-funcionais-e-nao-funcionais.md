@@ -92,17 +92,17 @@ A partir de 13/10/2026 os números das stories ficam fixos: as stories novas rec
 | US34 — Registar as minhas notas | E4 | RF41, RF17 | Sprint 4 | Protótipo |
 | US35 — Nota de candidatura a cada curso | E4 | RF42, RN11 | Sprint 4 | Protótipo |
 | US36 — Plano das 6 opções de candidatura | E4 | RF43, RN11 | Sprint 4 | Protótipo |
-| US40 — Quanto preciso no exame? | E4 | RF44 | Backlog | Protótipo |
-| US41 — Tendência do último colocado | E4 | RF45 | Backlog | Protótipo |
-| US42 — Procura do curso | E4 | RF46 | Backlog | Protótipo |
-| US44 — Que exames me abrem mais portas? | E4 | RF48 | Backlog | Protótipo |
+| US40 — Quanto preciso no exame? | E4 | RF44 | Sprint 4 | Protótipo |
+| US41 — Tendência do último colocado | E4 | RF45 | Sprint 4 | Protótipo |
+| US42 — Procura do curso | E4 | RF46 | Sprint 4 | Protótipo |
+| US44 — Que exames me abrem mais portas? | E4 | RF48 | Sprint 4 | Protótipo |
+| US43 — Partilhar o plano | E4 | RF47, RF17 | Sprint 4 | Protótipo |
+| US45 — Plano B: 2.ª fase | E4 | RF49 | Sprint 4 | Protótipo |
 | US37 — Assistente que conhece as minhas notas | E3 | RF37, RF41, RNF12 | Backlog | Por fazer |
 | US46 — Exportar os meus dados | E1 | RF17 (exportação), RNF01 | Backlog | Por fazer |
 | US47 — Recuperar a palavra-passe | E1 | RF02 (recuperação) | Backlog | Por fazer |
 | US48 — Recolha completa das licenciaturas (DGES) | E2 | RF05, RNF03 | Backlog | Por fazer |
 | US39 — Corrigir e esconder cursos do catálogo (gestão) | E2 | RF04, RF05 | Backlog | Por fazer |
-| US43 — Partilhar o plano | E4 | RF47, RF17 | Backlog | Protótipo |
-| US45 — Plano B: 2.ª fase | E4 | RF49 | Backlog | Protótipo |
 | US38 — Datas do concurso no percurso | E4 | RF50 | Backlog | Por fazer |
 
 **Épicos (desde 27/10):** E1 Conta e privacidade · E2 Catálogo de cursos · E3 Orientação com o assistente · E4 Plano de candidatura. **Protótipo** = código feito antes do sprint, ainda não aceite numa Sprint Review.
@@ -119,7 +119,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 |---|---|---|---|---|
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
 | 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Aceitar email pessoal; a restrição a um domínio fica como opção (`ALLOWED_EMAIL_DOMAINS`, ver [US01/requisitos.md](../US01/requisitos.md)). | **Alterado:** RF01 (versão 1.2). |
-| 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Planear a 10 SP por sprint. | **Alterado (14/10):** Sprints 2 a 4 com 8, 10 e 10 SP. **27/10:** o Sprint 4 volta a ter 18 SP (US04, US33 a US36), com o código feito antes como protótipo; as US40 a US45 ficam no backlog. A confirmar com o docente a 29/10. |
+| 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Planear a 10 SP por sprint. | **Alterado (14/10):** Sprints 2 a 4 com 8, 10 e 10 SP. **27/10:** o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45 (32 SP), por decisão do PO. Só se defende porque o código foi feito antes do sprint, como protótipo: no sprint sobra documentação, testes, revisão e aceitação. A confirmar com o docente a 29/10. |
 | 11 | A exportação e o apagamento de dados (RF17) ficavam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | **Decidido (22/10):** a US17 ficou com o apagamento (Sprint 3). **27/10:** a exportação passa a ser a US46 (backlog). |
 | 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições do catálogo do MVP; com o catálogo completo (US04), os cursos sem descrição usam os dados da DGES. | Por decidir |
 | 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar. | **Alterado (14/10):** o LLM conduz a conversa; US32 fundida na US29; RF36 a RF38 e RNF12 reescritos. Custo e privacidade avaliados no [spike](05-spike-llm.md). |
@@ -140,7 +140,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 | 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF49) e stories US33 a US45; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
-| 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); US04 dividida (a recolha de todas as licenciaturas passa a ser a US48); épicos E1 a E4; o Sprint 4 fica com a US04 e as US33 a US36. |
+| 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); US04 dividida (a recolha de todas as licenciaturas passa a ser a US48); épicos E1 a E4; o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45. |
 
 O Excel do backlog acompanha esta versão. O ficheiro Word continua na versão 1.0.
 

@@ -60,10 +60,10 @@ stateDiagram-v2
 - Consulta e comparação de cursos.
 - Conversa de orientação conduzida por um LLM e sugestão de 2 a 3 cursos do catálogo.
 - Escolha de curso e linha do tempo das decisões.
-- Plano de candidatura: condições de acesso, notas do candidato, nota de candidatura a cada curso e as 6 opções com avisos (US33 a US36).
+- Plano de candidatura: condições de acesso, notas do candidato, nota de candidatura a cada curso e as 6 opções com avisos (US33 a US36); quanto precisa nos exames, tendência e procura dos cursos, combinações de exames, plano B da 2.ª fase e partilhar o plano (US40 a US45).
 - Apagar a conta e todos os dados.
 
-**Fora (backlog):** quanto preciso no exame, tendência e procura dos cursos, combinações de exames, plano B da 2.ª fase e partilhar o plano (código feito como protótipo, por aceitar); assistente que conhece as notas; exportar os dados; recuperar a palavra-passe; gestão do catálogo; datas do concurso; recolha de todas as licenciaturas da DGES (US48).
+**Fora (backlog):** assistente que conhece as notas; exportar os dados; recuperar a palavra-passe; gestão do catálogo; datas do concurso; recolha de todas as licenciaturas da DGES (US48).
 
 **Fora do produto (arquivado a 27/10):** tudo o que era das opcionais — percurso por UCs, avaliações, recomendação colaborativa, comentários e horários.
 

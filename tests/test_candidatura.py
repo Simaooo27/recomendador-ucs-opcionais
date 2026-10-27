@@ -391,7 +391,17 @@ class PaginasDoPlanoTests(AppTestCase):
         self.assertIn(texts.PLANO_B_TITULO, html)
         plano_b = html[html.index(texts.PLANO_B_TITULO):]
         self.assertIn("Curso Vizinho", plano_b)           # 146,0 ≥ 125,0 na 2.ª fase
+        self.assertIn(texts.PLANO_B_INTRO, plano_b)        # aviso: as vagas da 2.ª fase mudam todos os anos
         self.assertNotIn("Curso Disputado", plano_b)       # já está no plano
+
+    def test_cada_opcao_do_plano_mostra_quanto_precisa_e_a_tendencia(self):
+        # US40 e US41 (27/10): no plano, e não só na ficha.
+        self._post("/candidatura/notas", media="15,2")                   # sem exames: falta Português
+        self._post("/candidatura/juntar/0003-9000")
+        html = self.client.get("/candidatura/").get_data(as_text=True)
+        opcao = html[html.index('data-chave="0003-9000"'):]
+        self.assertIn(texts.CANDIDATURA_PRECISA.format(pontos="108,0", provas="Português"), opcao)
+        self.assertIn(texts.FICHA_TENDENCIA_ESTAVEL, opcao)
 
     def test_plano_b_vazio_explica_porque(self):
         self._post("/candidatura/notas", media="10", exame_18="100")     # 100,0: não chega a nenhum

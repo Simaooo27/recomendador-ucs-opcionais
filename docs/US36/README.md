@@ -8,10 +8,10 @@
 | Sprint | Sprint 4 (29/10 a 05/11) |
 | Story points | 5 |
 | Épico | E4 — Plano de candidatura |
-| Prioridade | Should (a primeira a sair do Sprint 4 se for demais) |
+| Prioridade | Should |
 | Requisito de origem | RF43, RN11 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Depende de | US35 (nota de candidatura), US34 (notas), US31 (curso escolhido) |
-| Necessária para | US40 a US45 (backlog), que acrescentam informação ao plano |
+| Necessária para | US40 a US45 (Sprint 4), que acrescentam informação ao plano |
 
 ## A ideia em três pontos
 

@@ -65,6 +65,7 @@
     {% if g.user %}
       {% if simulacao.nota is not none %}<p class="ficha-simulacao-nota">{{ simulacao.nota | pontos }}</p>{% endif %}
       {{ cand.situacao(simulacao, curso, nomes_provas) }}
+      {% if simulacao.nota is not none %}<p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>{% endif %}
       {% if necessidade or simulacao.situacao.value == "sem_notas" %}
         <h3 class="ficha-precisa-titulo">{{ texts.FICHA_PRECISA_TITULO }}</h3>
         {% if necessidade %}{{ cand.necessidade(necessidade, nomes_provas) }}{% else %}<p>{{ texts.FICHA_PRECISA_SEM_MEDIA }}</p>{% endif %}

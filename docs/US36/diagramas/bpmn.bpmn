@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_US36" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_US36">
+    <bpmn:participant id="Participant_US36" name="Plano das 6 opções de candidatura (US36)" processRef="Process_US36" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_US36" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_US36">
+      <bpmn:lane id="Lane_US36_0" name="Aluno (com sessão)">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_US36_1" name="Sistema (OptaBem)">
+        <bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Carrega em «Juntar ao plano» na ficha">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="G1" name="Já está no plano ou já há 6?">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T1" name="Avisar que o plano está cheio (ou não mudar nada)">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T2" name="Juntar o curso ao fim da lista">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T3" name="Mostrar cada opção com a nota e a situação, os avisos e sugestões da mesma área">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:incoming>F8</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G2" name="Mudar a ordem?">
+      <bpmn:incoming>F6</bpmn:incoming>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T4" name="Subir, descer ou retirar uma opção">
+      <bpmn:incoming>F7</bpmn:incoming>
+      <bpmn:outgoing>F8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E1" name="Leva a lista para a candidatura no site da DGES">
+      <bpmn:incoming>F9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="E2" name="Volta à ficha">
+      <bpmn:incoming>F3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" name="" sourceRef="S1" targetRef="G1" />
+    <bpmn:sequenceFlow id="F2" name="sim" sourceRef="G1" targetRef="T1" />
+    <bpmn:sequenceFlow id="F3" name="" sourceRef="T1" targetRef="E2" />
+    <bpmn:sequenceFlow id="F4" name="não" sourceRef="G1" targetRef="T2" />
+    <bpmn:sequenceFlow id="F5" name="" sourceRef="T2" targetRef="T3" />
+    <bpmn:sequenceFlow id="F6" name="" sourceRef="T3" targetRef="G2" />
+    <bpmn:sequenceFlow id="F7" name="sim" sourceRef="G2" targetRef="T4" />
+    <bpmn:sequenceFlow id="F8" name="" sourceRef="T4" targetRef="T3" />
+    <bpmn:sequenceFlow id="F9" name="não" sourceRef="G2" targetRef="E1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_US36">
+    <bpmndi:BPMNPlane id="Plane_US36" bpmnElement="Collaboration_US36">
+      <bpmndi:BPMNShape id="Participant_US36_di" bpmnElement="Participant_US36" isHorizontal="true"><dc:Bounds x="30" y="20" width="1100" height="600" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US36_0_di" bpmnElement="Lane_US36_0" isHorizontal="true"><dc:Bounds x="60" y="20" width="1070" height="280" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_US36_1_di" bpmnElement="Lane_US36_1" isHorizontal="true"><dc:Bounds x="60" y="300" width="1070" height="320" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S1_di" bpmnElement="S1"><dc:Bounds x="132" y="92" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G1_di" bpmnElement="G1" isMarkerVisible="true"><dc:Bounds x="265" y="395" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T1_di" bpmnElement="T1"><dc:Bounds x="215" y="518" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T2_di" bpmnElement="T2"><dc:Bounds x="405" y="388" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T3_di" bpmnElement="T3"><dc:Bounds x="605" y="388" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G2_di" bpmnElement="G2" isMarkerVisible="true"><dc:Bounds x="655" y="85" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T4_di" bpmnElement="T4"><dc:Bounds x="405" y="178" width="150" height="64" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E1_di" bpmnElement="E1"><dc:Bounds x="882" y="92" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E2_di" bpmnElement="E2"><dc:Bounds x="132" y="532" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="150" y="128" /><di:waypoint x="150" y="420" /><di:waypoint x="265" y="420" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="290" y="445" /><di:waypoint x="290" y="518" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="215" y="550" /><di:waypoint x="168" y="550" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="315" y="420" /><di:waypoint x="405" y="420" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="555" y="420" /><di:waypoint x="605" y="420" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6"><di:waypoint x="680" y="388" /><di:waypoint x="680" y="135" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7"><di:waypoint x="655" y="110" /><di:waypoint x="480" y="110" /><di:waypoint x="480" y="178" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8"><di:waypoint x="480" y="242" /><di:waypoint x="480" y="340" /><di:waypoint x="640" y="340" /><di:waypoint x="640" y="388" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9"><di:waypoint x="705" y="110" /><di:waypoint x="882" y="110" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

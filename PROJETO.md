@@ -7,8 +7,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | | |
 |---|---|
 | **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11) proposto a 27/10: US04 e US33 a US36, 18 SP, a confirmar com o docente · Entrega a 05/11 |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta |
-| **Testes automáticos** | 337, todos a passar |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · protótipos do Sprint 4, por aceitar: US04 e US33 a US36 (e US40 a US45, no backlog) |
+| **Testes automáticos** | 430, todos a passar |
 
 ## Índice
 
@@ -46,7 +46,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Replaneamento de 23/10/2026 (decisão do PO, com o protótipo do PR #44):** o **plano de candidatura** ao Concurso Nacional de Acesso substitui as opcionais (épico E12): condições de acesso na ficha (US33), notas do candidato (US34), nota de candidatura a cada curso (US35) e as 6 opções com avisos (US36), mais US37 e US38 no backlog. A US04 foi reescrita (catálogo da DGES por recolha) e entra no Sprint 4; a US39 (gestão do catálogo) nasce da sugestão de um colega de editar a base de dados na área de gestão. As 22 stories das opcionais passam a *Won't* (fase 2). O Sprint 4 fica com 18 SP planeados, acima da velocidade (10): o código das US33 a US36 foi feito antes do sprint, como protótipo; se for demais, a US36 sai primeiro. Sem story: o registo pede o nome, terminar sessão volta à página inicial, a gestão ativa contas por confirmar e «As minhas decisões» sai do menu (PR #43 e #44). No mesmo dia entraram as US40 a US43 (quanto preciso no exame, tendência, procura e partilhar o plano): e, ao fim do dia, as US44 (que exames me abrem mais portas) e US45 (plano B da 2.ª fase). O Sprint 4 passa a 32 SP planeados, muito acima da velocidade (10): o código foi feito antes do sprint, como protótipo, e no Sprint Planning de 29/10 decide-se o que entra; o resto volta ao backlog. Falta a documentação por story.
 
-**Reestruturação do backlog (27/10/2026, autorizada pelo docente; decisão do PO):** o OptaBem passa a ser só um recomendador de cursos. As 22 stories das opcionais e a US32 (fundida) saem do Product Backlog para a folha «Arquivo (opcionais)», com o motivo de cada uma; os requisitos correspondentes passam para o anexo A dos [requisitos](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) (versão 1.9). Épicos novos: E1 Conta e privacidade, E2 Catálogo de cursos, E3 Orientação com o assistente, E4 Plano de candidatura. O Sprint 4 fica com o essencial (US04 e US33 a US36, 18 SP); as US40 a US45 voltam ao backlog com o código pronto, no estado novo «Protótipo». Stories novas no backlog: US46 (exportar os meus dados) e US47 (recuperar a palavra-passe). Mesmo assim, o Sprint 4 passa a velocidade (18 para 10 SP), o que só se justifica porque o código foi feito antes, como protótipo.
+**Reestruturação do backlog (27/10/2026, autorizada pelo docente; decisão do PO):** o OptaBem passa a ser só um recomendador de cursos. As 22 stories das opcionais e a US32 (fundida) saem do Product Backlog para a folha «Arquivo (opcionais)», com o motivo de cada uma; os requisitos correspondentes passam para o anexo A dos [requisitos](docs/geral/01-requisitos-funcionais-e-nao-funcionais.md) (versão 1.9). Épicos novos: E1 Conta e privacidade, E2 Catálogo de cursos, E3 Orientação com o assistente, E4 Plano de candidatura. O Sprint 4 fica com o essencial (US04 e US33 a US36, 18 SP); as US40 a US45 voltam ao backlog com o código pronto, no estado novo «Protótipo». Stories novas no backlog: US46 (exportar os meus dados) e US47 (recuperar a palavra-passe). A US04 foi dividida: fica o catálogo com os 174 cursos já recolhidos da DGES, e a recolha de todas as licenciaturas passa a ser a US48, porque exige o computador ligado uma noite inteira. Mesmo assim, o Sprint 4 passa a velocidade (18 para 10 SP), o que só se justifica porque o código foi feito antes, como protótipo.
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
@@ -58,11 +58,11 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10; fora do menu desde 23/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
 | US05 | Consultar e comparar cursos | Sprint 3 | Feita | [docs/US05/](docs/US05/) |
 | US17 | Apagar a minha conta (reduzida a 22/10: a exportação fica no backlog) | Sprint 3 | Feita | [docs/US17/](docs/US17/) |
-| US04 | Catálogo completo de licenciaturas (DGES) (reescrita a 23/10) | Sprint 4 | Protótipo | PR #44 |
-| US33 | Condições de acesso na ficha do curso | Sprint 4 | Protótipo | PR #44 |
-| US34 | Registar as minhas notas | Sprint 4 | Protótipo | PR #44 |
-| US35 | Nota de candidatura a cada curso | Sprint 4 | Protótipo | PR #44 |
-| US36 | Plano das 6 opções de candidatura | Sprint 4 | Protótipo | PR #44 |
+| US04 | Catálogo de licenciaturas recolhido da DGES (dividida a 27/10) | Sprint 4 | Protótipo | [docs/US04/](docs/US04/) · PR #44 |
+| US33 | Condições de acesso na ficha do curso | Sprint 4 | Protótipo | [docs/US33/](docs/US33/) · PR #44 |
+| US34 | Registar as minhas notas | Sprint 4 | Protótipo | [docs/US34/](docs/US34/) · PR #44 |
+| US35 | Nota de candidatura a cada curso | Sprint 4 | Protótipo | [docs/US35/](docs/US35/) · PR #44 |
+| US36 | Plano das 6 opções de candidatura | Sprint 4 | Protótipo | [docs/US36/](docs/US36/) · PR #44 |
 | US40 | Quanto preciso no exame? | Backlog | Protótipo | PR #44 |
 | US41 | Tendência do último colocado | Backlog | Protótipo | PR #44 |
 | US42 | Procura do curso | Backlog | Protótipo | PR #44 |
@@ -70,6 +70,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US37 | Assistente que conhece as minhas notas | Backlog | Por fazer | — |
 | US46 | Exportar os meus dados | Backlog | Por fazer | — |
 | US47 | Recuperar a palavra-passe | Backlog | Por fazer | — |
+| US48 | Recolha completa das licenciaturas (DGES) | Backlog | Por fazer | — |
 | US39 | Corrigir e esconder cursos do catálogo (gestão) | Backlog | Por fazer | — |
 | US43 | Partilhar o plano | Backlog | Protótipo | PR #44 |
 | US45 | Plano B: 2.ª fase | Backlog | Protótipo | PR #44 |
@@ -77,7 +78,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 *Protótipo* = código feito antes do sprint, ainda não aceite numa Sprint Review. As stories das opcionais (US06 a US16, US18 a US28) e a US32 (fundida na US29) estão na folha «Arquivo (opcionais)» do [backlog](docs/geral/product-backlog.xlsx).
 
-Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US03 e US29 a US31).
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31 e US33 a US36).
 
 ## 2. Documentação do projeto
 
@@ -103,6 +104,11 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [US31](docs/US31/README.md) | Escolher curso e linha do tempo do percurso: requisitos, use case, BPMN e como experimentar |
 | [US05](docs/US05/README.md) | Consultar e comparar cursos: filtros, ficha completa e comparação de até 3 cursos |
 | [US17](docs/US17/README.md) | Apagar a minha conta e todos os dados, com confirmação pela palavra-passe |
+| [US04](docs/US04/README.md) | Catálogo recolhido da DGES: script de recolha, paginação e filtro por área no assistente |
+| [US33](docs/US33/README.md) | Condições de acesso na ficha do curso |
+| [US34](docs/US34/README.md) | Registar as minhas notas (média e exames) |
+| [US35](docs/US35/README.md) | Nota de candidatura a cada curso e situação face ao último colocado |
+| [US36](docs/US36/README.md) | Plano das 6 opções de candidatura, com avisos e sugestões |
 
 ## 3. Alterar textos e cores
 

@@ -128,6 +128,76 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US17/diagramas/bpmn.bpmn](US17/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 | [US17/diagramas/gerar.py](US17/diagramas/gerar.py) | Script que gera os três diagramas |
 
+### [US04 — Catálogo de licenciaturas recolhido da DGES](US04/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US04/README.md](US04/README.md) | Resumo, como experimentar, código e testes |
+| [US04/requisitos.md](US04/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US04/use-case.md](US04/use-case.md) | Use case |
+| [US04/bpmn.md](US04/bpmn.md) | Processo BPMN |
+| [US04/prompt.md](US04/prompt.md) | Pedido feito à IA |
+| [US04/diagramas/use-case.svg](US04/diagramas/use-case.svg) | Diagrama de use case |
+| [US04/diagramas/bpmn.svg](US04/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US04/diagramas/bpmn.bpmn](US04/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US04/diagramas/gerar.py](US04/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US33 — Condições de acesso na ficha do curso](US33/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US33/README.md](US33/README.md) | Resumo, como experimentar, código e testes |
+| [US33/requisitos.md](US33/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US33/use-case.md](US33/use-case.md) | Use case |
+| [US33/bpmn.md](US33/bpmn.md) | Processo BPMN |
+| [US33/prompt.md](US33/prompt.md) | Pedido feito à IA |
+| [US33/diagramas/use-case.svg](US33/diagramas/use-case.svg) | Diagrama de use case |
+| [US33/diagramas/bpmn.svg](US33/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US33/diagramas/bpmn.bpmn](US33/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US33/diagramas/gerar.py](US33/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US34 — Registar as minhas notas](US34/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US34/README.md](US34/README.md) | Resumo, como experimentar, código e testes |
+| [US34/requisitos.md](US34/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US34/use-case.md](US34/use-case.md) | Use case |
+| [US34/bpmn.md](US34/bpmn.md) | Processo BPMN |
+| [US34/prompt.md](US34/prompt.md) | Pedido feito à IA |
+| [US34/diagramas/use-case.svg](US34/diagramas/use-case.svg) | Diagrama de use case |
+| [US34/diagramas/bpmn.svg](US34/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US34/diagramas/bpmn.bpmn](US34/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US34/diagramas/gerar.py](US34/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US35 — Nota de candidatura a cada curso](US35/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US35/README.md](US35/README.md) | Resumo, como experimentar, código e testes |
+| [US35/requisitos.md](US35/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US35/use-case.md](US35/use-case.md) | Use case |
+| [US35/bpmn.md](US35/bpmn.md) | Processo BPMN |
+| [US35/prompt.md](US35/prompt.md) | Pedido feito à IA |
+| [US35/diagramas/use-case.svg](US35/diagramas/use-case.svg) | Diagrama de use case |
+| [US35/diagramas/bpmn.svg](US35/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US35/diagramas/bpmn.bpmn](US35/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US35/diagramas/gerar.py](US35/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US36 — Plano das 6 opções de candidatura](US36/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US36/README.md](US36/README.md) | Resumo, como experimentar, código e testes |
+| [US36/requisitos.md](US36/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US36/use-case.md](US36/use-case.md) | Use case |
+| [US36/bpmn.md](US36/bpmn.md) | Processo BPMN |
+| [US36/prompt.md](US36/prompt.md) | Pedido feito à IA |
+| [US36/diagramas/use-case.svg](US36/diagramas/use-case.svg) | Diagrama de use case |
+| [US36/diagramas/bpmn.svg](US36/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US36/diagramas/bpmn.bpmn](US36/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US36/diagramas/gerar.py](US36/diagramas/gerar.py) | Script que gera os três diagramas |
+
 ## Nova story
 
 Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [PROJETO.md](../PROJETO.md#1-estado-do-projeto).

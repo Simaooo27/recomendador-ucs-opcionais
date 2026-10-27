@@ -63,7 +63,7 @@ stateDiagram-v2
 - Plano de candidatura: condições de acesso, notas do candidato, nota de candidatura a cada curso e as 6 opções com avisos (US33 a US36).
 - Apagar a conta e todos os dados.
 
-**Fora (backlog):** quanto preciso no exame, tendência e procura dos cursos, combinações de exames, plano B da 2.ª fase e partilhar o plano (código feito como protótipo, por aceitar); assistente que conhece as notas; exportar os dados; recuperar a palavra-passe; gestão do catálogo; datas do concurso.
+**Fora (backlog):** quanto preciso no exame, tendência e procura dos cursos, combinações de exames, plano B da 2.ª fase e partilhar o plano (código feito como protótipo, por aceitar); assistente que conhece as notas; exportar os dados; recuperar a palavra-passe; gestão do catálogo; datas do concurso; recolha de todas as licenciaturas da DGES (US48).
 
 **Fora do produto (arquivado a 27/10):** tudo o que era das opcionais — percurso por UCs, avaliações, recomendação colaborativa, comentários e horários.
 

@@ -87,7 +87,7 @@ A partir de 13/10/2026 os números das stories ficam fixos: as stories novas rec
 | US31 — Escolher curso e linha do tempo do percurso | E3 | RF03, RF35, RF39, RN10 | Sprint 2 | Feita |
 | US05 — Consultar e comparar cursos | E2 | RF34 | Sprint 3 | Feita |
 | US17 — Apagar a minha conta | E1 | RF17 (apagamento) | Sprint 3 | Feita |
-| US04 — Catálogo completo de licenciaturas (DGES) | E2 | RF05 | Sprint 4 | Protótipo |
+| US04 — Catálogo de licenciaturas recolhido da DGES | E2 | RF05 | Sprint 4 | Protótipo |
 | US33 — Condições de acesso na ficha do curso | E4 | RF40 | Sprint 4 | Protótipo |
 | US34 — Registar as minhas notas | E4 | RF41, RF17 | Sprint 4 | Protótipo |
 | US35 — Nota de candidatura a cada curso | E4 | RF42, RN11 | Sprint 4 | Protótipo |
@@ -99,6 +99,7 @@ A partir de 13/10/2026 os números das stories ficam fixos: as stories novas rec
 | US37 — Assistente que conhece as minhas notas | E3 | RF37, RF41, RNF12 | Backlog | Por fazer |
 | US46 — Exportar os meus dados | E1 | RF17 (exportação), RNF01 | Backlog | Por fazer |
 | US47 — Recuperar a palavra-passe | E1 | RF02 (recuperação) | Backlog | Por fazer |
+| US48 — Recolha completa das licenciaturas (DGES) | E2 | RF05, RNF03 | Backlog | Por fazer |
 | US39 — Corrigir e esconder cursos do catálogo (gestão) | E2 | RF04, RF05 | Backlog | Por fazer |
 | US43 — Partilhar o plano | E4 | RF47, RF17 | Backlog | Protótipo |
 | US45 — Plano B: 2.ª fase | E4 | RF49 | Backlog | Protótipo |
@@ -139,7 +140,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 | 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF49) e stories US33 a US45; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
-| 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); épicos E1 a E4; o Sprint 4 fica com a US04 e as US33 a US36. |
+| 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); US04 dividida (a recolha de todas as licenciaturas passa a ser a US48); épicos E1 a E4; o Sprint 4 fica com a US04 e as US33 a US36. |
 
 O Excel do backlog acompanha esta versão. O ficheiro Word continua na versão 1.0.
 

@@ -9,7 +9,7 @@ Pedido feito ao Claude (23/10/2026), seguindo as [regras de geração de código
 **Decisões do Claude, aceites pelo PO:**
 
 - Os exames aceitam pontos (0 a 200) ou valores (0 a 20), porque muita gente pensa nas notas em valores.
-- Um só campo para Matemática e Matemática A (a confirmar pela equipa na DGES).
+- Um só campo para Matemática e Matemática A (a confirmar pela equipa na DGES). **27/10:** a verificação na tabela da DGES mostrou que estava incompleto; o formulário passou a pedir Matemática A, Matemática B e MACS, cada um a contar para as provas certas.
 - As notas ficam numa tabela própria, apagada com a conta (US17), e nunca vão para o LLM.
 
 **Documentação desta pasta:** escrita pelo Claude a 27/10, a partir do código do PR #44.

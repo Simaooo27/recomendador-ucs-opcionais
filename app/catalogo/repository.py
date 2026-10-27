@@ -94,6 +94,13 @@ class Curso:
         return "muita" if por_vaga >= 1.5 else "media" if por_vaga >= 0.75 else "pouca"
 
     @property
+    def concurso_nacional(self) -> bool:
+        """True se o curso entra no Concurso Nacional de Acesso. Nas páginas da DGES, os cursos do ensino
+        privado têm «Concurso: Institucional» (candidatura na própria instituição) e os públicos
+        «Nacional» (verificado a 27/10 nas 144 páginas guardadas)."""
+        return not self.tipo_ensino.lower().startswith("privado")
+
+    @property
     def tem_condicoes_de_acesso(self) -> bool:
         return bool(self.provas) and self.peso_secundario is not None and self.peso_provas is not None
 

@@ -23,7 +23,7 @@
 |---|---|
 | **RF49.1** | A recolha (US04) lê, da tabela da DGES, as vagas, os colocados e o último colocado da 2.ª fase de 2025. |
 | **RF49.2** | Só aparece com notas indicadas e pelo menos uma opção no plano. |
-| **RF49.3** | Procura cursos das áreas das opções, fora do plano, que tiveram vagas na 2.ª fase e em que a pessoa cumpre provas e mínimos. |
+| **RF49.3** | Procura cursos das áreas das opções, fora do plano, do concurso nacional (RN12), que tiveram vagas na 2.ª fase e em que a pessoa cumpre provas e mínimos. |
 | **RF49.4** | Um curso entra se a nota da pessoa chega ao último colocado da 2.ª fase; sem essa nota, só se ficaram vagas por preencher. |
 | **RF49.5** | Mostra até 3, os mais disputados primeiro, com as vagas e o último colocado (ou «sobraram lugares»), e o aviso de que as vagas da 2.ª fase mudam todos os anos. |
 | **RF49.6** | Sem nenhum curso, a secção explica porque ainda não há plano B. |

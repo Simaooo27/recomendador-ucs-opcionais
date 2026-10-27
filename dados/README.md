@@ -43,6 +43,9 @@ Formato: UTF-8 com BOM (abre diretamente no Excel), separador vírgula.
 - **Sem nota do último colocado:** os três cursos da Universidade Portucalense, Gestão do ISCAP e Sistemas de Informação para a Gestão da ESTG (a DGES não mostra o valor).
 - A DGES classifica as licenciaturas em Engenharia Informática na área CNAEF «523 Eletrónica e Automação»; o valor foi mantido tal como está na fonte.
 - As descrições são a base das sugestões do LLM (US30): devem ser revistas pelos Product Owners antes dessa story.
+- **Ensino privado (27/10):** no catálogo recolhido há 36 cursos do ensino privado. Nas páginas da DGES têm «Concurso: Institucional»: a candidatura é feita na instituição e não entra nas 6 opções do concurso nacional. O CSV não tem uma coluna «concurso»; a aplicação usa o `tipo_ensino` (`Curso.concurso_nacional`), o que bate certo nas 144 páginas guardadas. Se a recolha passar a guardar o campo «Concurso», usar esse.
+- **Sem nota do último colocado em 2025 (catálogo recolhido):** 48 de 174 cursos, quase todos privados. Nestes cursos o plano diz só se a pessoa cumpre os mínimos.
+- **Matemáticas (27/10):** as provas de ingresso 16 «Matemática», 17 «MACS» e 19 «Matemática A» fazem-se com exames diferentes (635, 735, 835); a correspondência está em `ACEITA`, em `app/candidatura/calculos.py`.
 
 ### Acrescentar instituições ou cursos
 

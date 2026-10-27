@@ -6,9 +6,9 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11) proposto a 27/10: US04, US33 a US36 e US40 a US45, 32 SP, a confirmar com o docente · Entrega a 05/11 |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · protótipos do Sprint 4, por aceitar: US04, US33 a US36 e US40 a US45 |
-| **Testes automáticos** | 431, todos a passar |
+| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11): US04, US33 a US36 e US40 a US45, 32 SP, aceites pelo PO a 27/10 (revisão do Simão pendente) · Entrega a 05/11 |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · Sprint 4 (aceites pelo PO a 27/10): US04, US33 a US36 e US40 a US45 |
+| **Testes automáticos** | 436, todos a passar |
 
 ## Índice
 
@@ -50,6 +50,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint 4 alargado (27/10/2026, mais tarde; decisão do PO):** as US40 a US45 voltam ao Sprint 4, porque são partes importantes do produto e o código já está feito. O Sprint 4 passa a 32 SP para uma velocidade de 10: não é um planeamento realista de trabalho novo, e só se defende porque o código foi feito antes do sprint, como protótipo; no sprint sobra documentação, testes, revisão e aceitação. A documentação das stories do Sprint 4 está em `docs/USNN/`.
 
+**Verificação e aceitação do Sprint 4 (27/10/2026, decisão do PO):** antes de aceitar, as 11 stories foram verificadas com o catálogo real (174 cursos). Encontraram-se e corrigiram-se dois erros: os cursos do ensino privado entravam no plano do concurso nacional (nova RN12) e as Matemáticas só ligavam a prova 16 à 19 (correspondência completa da DGES: a Matemática A dá as provas 16, 17 e 19, a Matemática B a 16 e a 17, o MACS a 17). Depois disso, o PO aceitou as 11 stories (32 de 32 SP). A aceitação aconteceu antes da data de início marcada para o sprint (29/10) e com a revisão do Simão ainda pendente.
+
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal (desde 23/10 pede também o nome) | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
@@ -60,17 +62,17 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US31 | Escolher curso e linha do tempo do percurso (antecipada a 20/10; fora do menu desde 23/10) | Sprint 2 | Feita | [docs/US31/](docs/US31/) |
 | US05 | Consultar e comparar cursos | Sprint 3 | Feita | [docs/US05/](docs/US05/) |
 | US17 | Apagar a minha conta (reduzida a 22/10: a exportação fica no backlog) | Sprint 3 | Feita | [docs/US17/](docs/US17/) |
-| US04 | Catálogo de licenciaturas recolhido da DGES (dividida a 27/10) | Sprint 4 | Protótipo | [docs/US04/](docs/US04/) · PR #44 |
-| US33 | Condições de acesso na ficha do curso | Sprint 4 | Protótipo | [docs/US33/](docs/US33/) · PR #44 |
-| US34 | Registar as minhas notas | Sprint 4 | Protótipo | [docs/US34/](docs/US34/) · PR #44 |
-| US35 | Nota de candidatura a cada curso | Sprint 4 | Protótipo | [docs/US35/](docs/US35/) · PR #44 |
-| US36 | Plano das 6 opções de candidatura | Sprint 4 | Protótipo | [docs/US36/](docs/US36/) · PR #44 |
-| US40 | Quanto preciso no exame? | Sprint 4 | Protótipo | [docs/US40/](docs/US40/) · PR #44 |
-| US41 | Tendência do último colocado | Sprint 4 | Protótipo | [docs/US41/](docs/US41/) · PR #44 |
-| US42 | Procura do curso | Sprint 4 | Protótipo | [docs/US42/](docs/US42/) · PR #44 |
-| US44 | Que exames me abrem mais portas? | Sprint 4 | Protótipo | [docs/US44/](docs/US44/) · PR #44 |
-| US43 | Partilhar o plano | Sprint 4 | Protótipo | [docs/US43/](docs/US43/) · PR #44 |
-| US45 | Plano B: 2.ª fase | Sprint 4 | Protótipo | [docs/US45/](docs/US45/) · PR #44 |
+| US04 | Catálogo de licenciaturas recolhido da DGES (dividida a 27/10) | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US04/](docs/US04/) · PR #44 |
+| US33 | Condições de acesso na ficha do curso | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US33/](docs/US33/) · PR #44 |
+| US34 | Registar as minhas notas | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US34/](docs/US34/) · PR #44 |
+| US35 | Nota de candidatura a cada curso | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US35/](docs/US35/) · PR #44 |
+| US36 | Plano das 6 opções de candidatura | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US36/](docs/US36/) · PR #44 |
+| US40 | Quanto preciso no exame? | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US40/](docs/US40/) · PR #44 |
+| US41 | Tendência do último colocado | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US41/](docs/US41/) · PR #44 |
+| US42 | Procura do curso | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US42/](docs/US42/) · PR #44 |
+| US44 | Que exames me abrem mais portas? | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US44/](docs/US44/) · PR #44 |
+| US43 | Partilhar o plano | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US43/](docs/US43/) · PR #44 |
+| US45 | Plano B: 2.ª fase | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US45/](docs/US45/) · PR #44 |
 | US37 | Assistente que conhece as minhas notas | Backlog | Por fazer | — |
 | US46 | Exportar os meus dados | Backlog | Por fazer | — |
 | US47 | Recuperar a palavra-passe | Backlog | Por fazer | — |

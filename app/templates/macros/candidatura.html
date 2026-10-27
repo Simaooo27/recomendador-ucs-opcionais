@@ -19,6 +19,7 @@
 
 {#- Condições de acesso da DGES, na ficha do curso. -#}
 {% macro condicoes(curso, nomes) -%}
+{% if not curso.concurso_nacional %}<p class="situacao-detalhe">{{ texts.FICHA_FORA_DO_CONCURSO }}</p>{% endif %}
 {% if curso.tem_condicoes_de_acesso %}
 <dl class="ficha-dados acesso-dados">
   <div class="acesso-provas"><dt>{{ texts.FICHA_PROVAS }}</dt><dd>

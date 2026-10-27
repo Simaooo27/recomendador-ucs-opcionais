@@ -594,6 +594,10 @@ CANDIDATURA_NO_PLANO = "Já está no seu plano"
 CANDIDATURA_VER_PLANO = "Ver o meu plano"
 CANDIDATURA_JUNTADO = "{curso} juntado ao plano de candidatura."
 CANDIDATURA_CHEIO = "O plano já tem {maximo} opções: retire uma antes de juntar outra."
+CANDIDATURA_FORA_DO_CONCURSO = (
+    "Este curso é do ensino privado e não entra nas 6 opções do concurso nacional: "
+    "a candidatura faz-se diretamente na instituição."
+)
 CANDIDATURA_NOTAS_GUARDADAS = "Notas guardadas."
 
 # Que exames me abrem mais portas? (23/10): combinações de até 3 exames para as opções do plano.
@@ -647,6 +651,7 @@ CANDIDATURA_SITUACAO_ABAIXO_DO_MINIMO = "Abaixo da classificação mínima"
 CANDIDATURA_SITUACAO_FALTA_PROVA = "Falta-lhe uma prova de ingresso"
 CANDIDATURA_SITUACAO_SEM_NOTAS = "Indique as suas notas para ver a sua nota"
 CANDIDATURA_SITUACAO_SEM_REGRAS = "A DGES não publica as condições de acesso deste curso"
+CANDIDATURA_SITUACAO_FORA_DO_CONCURSO = "Ensino privado: não entra no concurso nacional (candidatura na instituição)"
 CANDIDATURA_FALTA = "Falta: {provas}"
 CANDIDATURA_MINIMO_PROVA = "Abaixo do mínimo de {minimo} pontos: {provas}"
 CANDIDATURA_MINIMO_NOTA = "A nota de candidatura fica abaixo do mínimo de {minimo} pontos."
@@ -658,7 +663,10 @@ CANDIDATURA_NOTAS_INTRO = "Só servem para as contas do plano. Pode mudá-las qu
 CANDIDATURA_MEDIA = "Média do secundário"
 CANDIDATURA_MEDIA_DICA = "De 9,5 a 20 valores, por exemplo 15,2."
 CANDIDATURA_EXAMES = "Exames nacionais (provas de ingresso)"
-CANDIDATURA_EXAMES_DICA = "Preencha só os que fez, de 0 a 200 pontos (ou de 0 a 20 valores: 14,5 conta como 145)."
+CANDIDATURA_EXAMES_DICA = (
+    "Preencha só os que fez, de 0 a 200 pontos (ou de 0 a 20 valores: 14,5 conta como 145). "
+    "Na Matemática, indique o exame que fez: a Matemática A também conta para as provas de Matemática e de MACS."
+)
 CANDIDATURA_GUARDAR = "Guardar e ver o plano"
 CANDIDATURA_VOLTAR = "Voltar ao plano"
 CANDIDATURA_ERRO_MEDIA_VAZIA = "Indique a sua média do secundário."
@@ -696,6 +704,10 @@ FICHA_FORMULA_VALOR = "{secundario}% média do secundário + {provas}% provas de
 FICHA_MINIMOS = "Classificações mínimas"
 FICHA_MINIMOS_VALOR = "{candidatura} pontos na nota de candidatura e {provas} em cada prova"
 FICHA_PRE_REQUISITOS = "Pré-requisitos"
+FICHA_FORA_DO_CONCURSO = (
+    "Ensino privado: este curso não entra no Concurso Nacional de Acesso. A candidatura faz-se diretamente "
+    "na instituição, com as regras dela; as condições abaixo são as que a DGES publica."
+)
 FICHA_SEM_ACESSO = "A DGES ainda não tem as condições de acesso deste curso no OptaBem. Consulte a página da DGES."
 FICHA_A_SUA_NOTA = "A sua nota neste curso"
 FICHA_ENTRE_PARA_SIMULAR = "Inicie sessão para calcular a sua nota de candidatura a este curso."

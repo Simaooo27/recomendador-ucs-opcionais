@@ -72,7 +72,8 @@
       {% endif %}
       <div class="escolha-acoes">
         {% if simulacao.situacao.value == "sem_notas" %}<a class="botao-secundario botao-ligacao" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_INDICAR_NOTAS }}</a>{% endif %}
-        {% if no_plano %}<span class="no-plano">{{ texts.CANDIDATURA_NO_PLANO }}</span>
+        {% if not curso.concurso_nacional %}{# ensino privado: não entra nas 6 opções do concurso nacional #}
+        {% elif no_plano %}<span class="no-plano">{{ texts.CANDIDATURA_NO_PLANO }}</span>
         {% else %}{{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}{% endif %}
         <a href="{{ url_for('candidatura.plano') }}">{{ texts.CANDIDATURA_VER_PLANO }}</a>
       </div>

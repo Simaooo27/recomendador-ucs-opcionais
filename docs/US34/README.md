@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Protótipo (código feito antes do Sprint 4, no PR #44; por aceitar na Sprint Review) |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
 | Sprint | Sprint 4 (29/10 a 05/11) |
 | Story points | 2 |
 | Épico | E4 — Plano de candidatura |
@@ -15,7 +15,7 @@
 
 ## A ideia em três pontos
 
-1. **Uma página só para as notas** (`/candidatura/notas`): a média do secundário e um campo por cada prova de ingresso do catálogo. Só se preenchem os exames feitos.
+1. **Uma página só para as notas** (`/candidatura/notas`): a média do secundário e um campo por cada exame. Na Matemática, a pessoa indica o exame que fez (Matemática A, Matemática B ou MACS), e cada um conta para as provas que a DGES aceita. Só se preenchem os exames feitos.
 2. **Aceita a nota como a pessoa a conhece:** os exames de 0 a 200 pontos ou de 0 a 20 valores («14,5» conta como 145), com vírgula ou ponto.
 3. **As notas são da pessoa:** podem ser mudadas a qualquer momento e saem com a conta (US17). Nunca são enviadas ao LLM.
 
@@ -42,11 +42,11 @@ Os diagramas são gerados por [`diagramas/gerar.py`](diagramas/gerar.py): mudar 
 
 | Onde | O quê |
 |---|---|
-| `app/candidatura/routes.py` | `GET|POST /candidatura/notas`; `_provas_do_formulario` (Matemática A uma só vez) |
+| `app/candidatura/routes.py` | `GET|POST /candidatura/notas`; `_provas_do_formulario` (um campo por exame, com os nomes das Matemáticas) |
 | `app/candidatura/services.py` | `ler_notas` (validação), `guardar_notas`, `obter` |
-| `app/candidatura/calculos.py` | `ler_numero`, `nota_de_exame` (valores → pontos), `Notas`, `EQUIVALENTES` |
+| `app/candidatura/calculos.py` | `ler_numero`, `nota_de_exame` (valores → pontos), `Notas`, `ACEITA` e `NOMES_DOS_EXAMES` (correspondência das Matemáticas) |
 | `app/candidatura/repository.py` | SQL da tabela `planos_candidatura` |
 | `app/schema.sql` | Tabela `planos_candidatura` (apagada com a conta: `ON DELETE CASCADE`) |
 | `app/templates/candidatura/notas.html` | Formulário |
 | `app/texts.py` | Textos `CANDIDATURA_NOTAS_*`, `CANDIDATURA_MEDIA*`, `CANDIDATURA_EXAMES*`, `CANDIDATURA_ERRO_*` |
-| `tests/test_candidatura.py` | `test_notas_invalidas_nao_sao_guardadas`, `test_o_formulario_mostra_matematica_a_uma_so_vez`, `test_exames_em_valores_ou_em_pontos`, `test_matematica_e_matematica_a_contam_com_o_mesmo_exame`, `test_apagar_a_conta_apaga_o_plano`, entre outros |
+| `tests/test_candidatura.py` | `test_notas_invalidas_nao_sao_guardadas`, `test_o_formulario_pede_os_exames_de_matematica_pelo_nome`, `test_exames_em_valores_ou_em_pontos`, `test_matematica_a_conta_para_as_provas_16_17_e_19`, `test_matematica_b_e_macs_so_contam_para_as_suas_provas`, `test_apagar_a_conta_apaga_o_plano`, entre outros |

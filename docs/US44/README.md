@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Protótipo (código feito antes do Sprint 4, no PR #44; por aceitar na Sprint Review) |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 27/10 |
 | Story points | 3 |
 | Épico | E4 — Plano de candidatura |
@@ -16,7 +16,7 @@
 
 1. **No plano, com 2 ou mais opções, a secção «Que exames lhe abrem mais portas?»** mostra as combinações de até 3 exames nacionais que servem para mais opções.
 2. **As 3 melhores, por ordem:** primeiro a que serve para mais opções, depois a que tem menos exames, depois a que tem mais exames já feitos.
-3. **Para cada combinação**, diz para que opções não dá e que exames a pessoa já fez. Matemática e Matemática A contam como o mesmo exame.
+3. **Para cada combinação**, diz para que opções não dá e que exames a pessoa já fez. Nas Matemáticas, as combinações são de exames (Matemática A, B ou MACS), cada um a contar para as provas que a DGES aceita.
 
 ## Experimentar
 

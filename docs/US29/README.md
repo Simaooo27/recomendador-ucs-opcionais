@@ -7,7 +7,7 @@
 | Estado | Feita (aceite na Sprint Review do Sprint 2, 22/10) |
 | Sprint | Sprint 2 (feita antes do início do sprint, por decisão do PO de 14/10) |
 | Story points | 5 |
-| Épico | E11 — Orientação de curso |
+| Épico | E3 — Orientação com o assistente (E11 até 27/10) |
 | Prioridade | Must |
 | Requisito de origem | RF36, RNF12 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Depende de | Spike do LLM ([05-spike-llm.md](../geral/05-spike-llm.md)): `app/llm/` e `app/orientacao/conversa.py` |

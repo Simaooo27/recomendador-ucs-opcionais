@@ -24,7 +24,7 @@ flowchart LR
 
 | Tema | Escolha | Porquê |
 |---|---|---|
-| Linguagem | Python 3.10+ | Conhecida pelos dois elementos; boas bibliotecas de dados para o motor |
+| Linguagem | Python 3.10+ | Conhecida pelos dois elementos; boas bibliotecas para ler e tratar os dados da DGES |
 | Framework web | Flask 3.x | Pequeno e explícito: cada pedido é uma função visível, o que facilita rever código gerado com IA |
 | Base de dados | SQLite (`sqlite3` da biblioteca padrão) | Um ficheiro, sem servidor para instalar; suficiente para o volume do projeto |
 | Testes | `unittest` | Biblioteca padrão; corre com um único comando e sem rede |
@@ -82,6 +82,8 @@ Testes: `tests/test_perfis.py` testa cada padrão isoladamente (incluindo um per
 ## 4. Padrões para as funcionalidades novas
 
 ### 4.1 Strategy — estratégias de recomendação (US11; depois US12, US22)
+
+> **Arquivado a 27/10/2026:** as opcionais saíram do produto (anexo A dos requisitos). Esta secção fica como registo do desenho previsto; o padrão Strategy continua em uso no início de sessão (secção 3.1).
 
 Várias formas de recomendar, com a mesma interface. O serviço não sabe qual está a usar.
 
@@ -163,6 +165,8 @@ Comportamentos que envolvem o LLM sem alterar os adaptadores:
 A validação é obrigatória e fica sempre entre o LLM e o ecrã.
 
 ### 4.5 Chain of Responsibility — filtros antes de recomendar (US13, US20)
+
+> **Arquivado a 27/10/2026**, com as opcionais. A Chain of Responsibility continua em uso no início de sessão (secção 3.1).
 
 Cada filtro recebe a lista de candidatos e devolve-a reduzida: área, instituição, já concluída (RN03), curso e ano, semestre e ECTS. Acrescentar um filtro não obriga a mudar os outros, e cada um testa-se isoladamente.
 

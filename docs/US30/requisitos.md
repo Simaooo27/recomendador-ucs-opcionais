@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Épico | E11 — Orientação de curso |
+| Épico | E3 — Orientação com o assistente (E11 até 27/10) |
 | Prioridade | Must · 3 story points · Sprint 2 |
 | Requisitos de origem | RF37, RF38, RNF12, RN09, RN10 |
 | Atores | Aluno (com sessão iniciada), LLM (fornecedor externo) |

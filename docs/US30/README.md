@@ -7,7 +7,7 @@
 | Estado | Feita (aceite na Sprint Review do Sprint 2, 22/10) |
 | Sprint | Sprint 2 |
 | Story points | 3 |
-| Épico | E11 — Orientação de curso |
+| Épico | E3 — Orientação com o assistente (E11 até 27/10) |
 | Prioridade | Must |
 | Requisito de origem | RF37, RF38, RNF12, RN09, RN10 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Depende de | [US29](../US29/README.md) (conversa de orientação) e o spike do LLM ([05-spike-llm.md](../geral/05-spike-llm.md)) |

@@ -24,7 +24,7 @@ Estas regras aplicam-se a **todo** o código, testes e documentação gerados co
 | Base de dados | SQLite pela biblioteca padrão (`sqlite3`), com consultas parametrizadas. Mudar para outro motor ou ORM exige decisão da equipa |
 | Testes | `unittest` da biblioteca padrão (o `pytest` também os executa) |
 | Motor de recomendação (a partir da US11) | `pandas` e `numpy`; `scikit-surprise` só para a estratégia SVD (US22) |
-| LLM (US30) | Sempre através da interface `ClienteLLM` e de um adaptador por fornecedor ([03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md#42-adapter--ligação-ao-llm-us30)). Só `app/llm/adaptadores.py` pode importar a biblioteca de um fornecedor. Os testes usam o `LLMFalso` |
+| LLM (US30) | Sempre através da interface `ClienteLLM` e de um adaptador por fornecedor ([03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md#42-adapter--ligação-ao-llm-spike-de-1410-us29-us30)). Só `app/llm/adaptadores.py` pode importar a biblioteca de um fornecedor. Os testes usam o `LLMFalso` |
 | Novas dependências | Só com justificação escrita no Pull Request (para que serve, alternativa na biblioteca padrão, licença, manutenção) e atualização de `requirements.txt` |
 
 ## 3. Estrutura e responsabilidades
@@ -55,7 +55,7 @@ docs/
 
 - As **rotas** não contêm regras de negócio; os **serviços** não conhecem `request` nem `session`; os **repositórios** não decidem nada.
 - Cada função faz uma coisa. Funções puras (validação, cálculos de similaridade) ficam separadas do acesso a dados para serem testáveis sem base de dados.
-- O motor de recomendação (RNF07) vive num módulo próprio, com interface comum às estratégias.
+- O acesso ao LLM e as contas da candidatura (RNF07) vivem em módulos próprios, que não dependem do Flask (`app/llm`, `app/candidatura/calculos.py`).
 - Os padrões de desenho do projeto (os que já existem e os previstos para o catálogo, a orientação e o LLM) estão em [03-arquitetura-e-padroes.md](03-arquitetura-e-padroes.md). Os pacotes novos nascem com a story que os usa.
 
 ## 4. Estilo
@@ -79,10 +79,10 @@ docs/
 8. Logs sem dados pessoais (emails, tokens, palavras-passe).
 9. Cookies de sessão `HttpOnly` e `SameSite=Lax`; `Secure` em produção.
 
-## 6. Privacidade (RNF01, RN04)
+## 6. Privacidade (RNF01, RNF12)
 
 - Recolher só os dados necessários (minimização). Cada campo novo precisa de justificação.
-- As avaliações ficam ligadas a um identificador pseudonimizado (US09) e **nunca** se mostram individualmente nem em agregados com menos de 5 respostas.
+- Ao LLM nunca seguem email, nome ou identificadores da conta (RNF12). As notas do candidato só saem da conta pela ligação de partilha que ele próprio cria, e mesmo aí sem a média nem os exames.
 - O consentimento à política de privacidade fica registado com versão e data.
 
 ## 7. Testes

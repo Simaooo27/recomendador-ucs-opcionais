@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros/candidatura.html" as cand with context %}
 {% set page_title = curso.curso ~ " · " ~ curso.instituicao %}
 
 {#- Ficha completa de um curso (/cursos/<chave>, US05): descrição, saídas profissionais, dados de
@@ -18,6 +19,11 @@
     <div><dt>{{ texts.LANDING_CARD_VAGAS }}</dt><dd>{{ curso.vagas if curso.vagas is not none else texts.FICHA_SEM_DADOS }}</dd></div>
     <div><dt>{{ texts.LANDING_CARD_NOTA }}</dt><dd{% if not curso.ultimo_colocado %} class="sem-dados"{% endif %}>{{ curso.ultimo_colocado or texts.LANDING_CARD_NO_NOTA }}</dd></div>
   </dl>
+  {#- Tendência (2023–2025) e procura em 2025 (23/10). -#}
+  <div class="ficha-contexto">
+    {{ cand.tendencia(curso) }}
+    {{ cand.procura(curso) }}
+  </div>
 
   <div class="ficha-colunas">
     <section aria-labelledby="ficha-sobre">
@@ -43,6 +49,8 @@
         <div><dt>{{ texts.FICHA_ECTS }}</dt><dd>{{ curso.ects or texts.FICHA_SEM_DADOS }}</dd></div>
         <div><dt>{{ texts.FICHA_AREA_OFICIAL }}</dt><dd>{{ curso.area_cnaef or texts.FICHA_SEM_DADOS }}</dd></div>
       </dl>
+      <h2>{{ texts.FICHA_ACESSO }}</h2>
+      {{ cand.condicoes(curso, nomes_provas) }}
       <h2>{{ texts.FICHA_FONTES }}</h2>
       <ul class="ficha-fontes">
         <li><a href="{{ curso.fonte }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DGES }}</a></li>
@@ -50,6 +58,27 @@
       </ul>
     </section>
   </div>
+
+  {#- Plano de candidatura (23/10): a nota do aluno neste curso e o botão para o juntar ao plano. -#}
+  <section class="cartao ficha-simulacao" aria-labelledby="ficha-simulacao">
+    <h2 id="ficha-simulacao">{{ texts.FICHA_A_SUA_NOTA }}</h2>
+    {% if g.user %}
+      {% if simulacao.nota is not none %}<p class="ficha-simulacao-nota">{{ simulacao.nota | pontos }}</p>{% endif %}
+      {{ cand.situacao(simulacao, curso, nomes_provas) }}
+      {% if necessidade or simulacao.situacao.value == "sem_notas" %}
+        <h3 class="ficha-precisa-titulo">{{ texts.FICHA_PRECISA_TITULO }}</h3>
+        {% if necessidade %}{{ cand.necessidade(necessidade, nomes_provas) }}{% else %}<p>{{ texts.FICHA_PRECISA_SEM_MEDIA }}</p>{% endif %}
+      {% endif %}
+      <div class="escolha-acoes">
+        {% if simulacao.situacao.value == "sem_notas" %}<a class="botao-secundario botao-ligacao" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_INDICAR_NOTAS }}</a>{% endif %}
+        {% if no_plano %}<span class="no-plano">{{ texts.CANDIDATURA_NO_PLANO }}</span>
+        {% else %}{{ cand.botao("candidatura.juntar", curso.chave, texts.CANDIDATURA_JUNTAR) }}{% endif %}
+        <a href="{{ url_for('candidatura.plano') }}">{{ texts.CANDIDATURA_VER_PLANO }}</a>
+      </div>
+    {% else %}
+      <p>{{ texts.FICHA_ENTRE_PARA_SIMULAR }} <a href="{{ url_for('auth.login_form') }}">{{ texts.LANDING_NAV_LOGIN }}</a></p>
+    {% endif %}
+  </section>
 
   <div class="ficha-acoes">
     {% if g.user %}<a class="button-link" href="{{ url_for('percurso.confirmar', chave=curso.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>{% endif %}

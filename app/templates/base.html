@@ -55,12 +55,13 @@
     {% set inicio = url_for('gestao.dashboard') if g.admin else (url_for('main.home') if g.user else url_for('main.index')) %}
     <p class="marca"><a class="marca-ligacao" href="{{ inicio }}">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></a>{% if g.admin %}<span class="marca-area">{{ texts.ADMIN_AREA_NAME }}</span>{% endif %}</p>
     {% if g.user and not g.admin %}
-      {#- Menu dos alunos (revisão de 22/10). A página atual fica marcada com aria-current. -#}
+      {#- Menu dos alunos (revisão de 22/10). A página atual fica marcada com aria-current.
+          «As minhas decisões» saiu do menu a 23/10 (decisão do PO): chega-se lá pelo início e por «A minha conta». -#}
       <nav class="user-nav" aria-label="{{ texts.NAV_LABEL }}">
         <a href="{{ url_for('main.home') }}"{% if request.endpoint == 'main.home' %} aria-current="page"{% endif %}>{{ texts.NAV_INICIO }}</a>
         <a href="{{ url_for('orientacao.pagina') }}"{% if request.blueprint == 'orientacao' %} aria-current="page"{% endif %}>{{ texts.NAV_CONVERSA }}</a>
         <a href="{{ url_for('catalogo.lista') }}"{% if request.blueprint == 'catalogo' %} aria-current="page"{% endif %}>{{ texts.NAV_CATALOGO }}</a>
-        <a href="{{ url_for('percurso.linha_tempo') }}"{% if request.blueprint == 'percurso' %} aria-current="page"{% endif %}>{{ texts.NAV_DECISOES }}</a>
+        <a href="{{ url_for('candidatura.plano') }}"{% if request.blueprint == 'candidatura' %} aria-current="page"{% endif %}>{{ texts.NAV_CANDIDATURA }}</a>
       </nav>
     {% endif %}
     {% if g.admin %}

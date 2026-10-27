@@ -40,7 +40,7 @@
 <section class="resultados catalogo-resultados" aria-labelledby="resultados-titulo">
   <div class="resultados-cabecalho">
     <h2 id="resultados-titulo">
-      {%- if filtros.ativos %}{{ texts.CATALOGO_CONTA.format(mostrados=cursos|length, total=total) }}{% else %}{{ texts.CATALOGO_CONTA_TODOS.format(total=total) }}{% endif -%}
+      {%- if filtros.ativos %}{{ texts.CATALOGO_CONTA.format(mostrados=pagina.total, total=total) }}{% else %}{{ texts.CATALOGO_CONTA_TODOS.format(total=total) }}{% endif -%}
     </h2>
   </div>
   {% if cursos %}
@@ -54,6 +54,16 @@
     <ul class="cursos">
       {% for curso in cursos %}{{ marca.cartao_curso(curso, escolher=g.user is not none, comparar=true) }}{% endfor %}
     </ul>
+    {#- Paginação (US04): os filtros ficam no endereço de cada página. -#}
+    {% if pagina.paginas > 1 %}
+    {% set argumentos = {"q": filtros.termo, "area": filtros.area, "instituicao": filtros.instituicao, "localidade": filtros.localidade} %}
+    {% set argumentos = argumentos | dictsort | selectattr(1) | list %}
+    <nav class="paginacao" aria-label="{{ texts.CATALOGO_PAGINAS }}">
+      {% if pagina.anterior %}<a href="{{ url_for('catalogo.lista', p=pagina.anterior, **dict(argumentos)) }}" rel="prev">{{ texts.CATALOGO_ANTERIOR }}</a>{% endif %}
+      <span>{{ texts.CATALOGO_PAGINA.format(numero=pagina.numero, paginas=pagina.paginas) }}</span>
+      {% if pagina.seguinte %}<a href="{{ url_for('catalogo.lista', p=pagina.seguinte, **dict(argumentos)) }}" rel="next">{{ texts.CATALOGO_SEGUINTE }}</a>{% endif %}
+    </nav>
+    {% endif %}
   {% else %}
     <p class="resultados-vazio">{{ texts.CATALOGO_VAZIO }}</p>
   {% endif %}

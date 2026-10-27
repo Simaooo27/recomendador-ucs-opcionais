@@ -18,6 +18,22 @@ Catálogo do MVP: **30 licenciaturas de 12 instituições**, em três áreas (Ci
 | `descricao`, `saidas_profissionais` | Resumo escrito pela equipa a partir do site da instituição | Ver `fonte_descricao` |
 | `fonte_dados_acesso`, `fonte_descricao` | Ligações para confirmar cada linha | — |
 
+`catalogo-cursos.csv` (catálogo completo, US04) tem as mesmas colunas e, desde 23/10, as **condições de acesso** usadas no plano de candidatura (lidas por `recolher_dges.py processar`):
+
+| Coluna | Conteúdo | Fonte |
+|---|---|---|
+| `provas_ingresso` | Conjuntos alternativos de provas, por código: `09\|17+18` = Geografia, **ou** Mat. Apl. Ciências Soc. **e** Português. Basta um conjunto. Vazio quando a DGES manda consultar a instituição | DGES |
+| `peso_secundario`, `peso_provas` | Percentagem da média do secundário e das provas na nota de candidatura | DGES |
+| `minimo_candidatura`, `minimo_provas` | Classificações mínimas, em pontos (0 a 200) | DGES |
+| `pre_requisitos` | Tipo e grupo de pré-requisitos (por exemplo, «Seleção: Grupo F - Capacidade visual e motora») | DGES |
+
+| `ultimo_colocado_1fase_2023`, `ultimo_colocado_1fase_2024` | Nota do último colocado (contingente geral, 1.ª fase) nos dois anos anteriores, para a tendência | DGES |
+| `vagas_1fase_2025`, `candidatos_1fase_2025`, `candidatos_1opcao_1fase_2025`, `colocados_1fase_2025` | Procura na 1.ª fase de 2025: vagas, candidatos (em qualquer opção), candidatos com o curso em 1.ª opção e colocados | DGES |
+
+| `vagas_2fase_2025`, `colocados_2fase_2025`, `ultimo_colocado_2fase_2025` | 2.ª fase de 2025: vagas, colocados e nota do último colocado (plano B) | DGES |
+
+`provas-ingresso.csv` tem o código e o nome de cada prova de ingresso (`18,Português`), também escrito pelo `processar`.
+
 Formato: UTF-8 com BOM (abre diretamente no Excel), separador vírgula.
 
 ### O que falta ou exige atenção

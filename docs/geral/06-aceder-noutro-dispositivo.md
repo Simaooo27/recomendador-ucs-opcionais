@@ -93,3 +93,14 @@ O aviso do `cloudflared` sobre o *certificate pool* pode ser ignorado: a ligaç�
 ## 7. Ver os dados
 
 As contas e as conversas ficam em `instance/app.sqlite3`, no computador onde a aplicação corre. No VS Code, abrir esse ficheiro com a extensão **SQLite Viewer**. As palavras-passe aparecem cifradas (hash), como deve ser.
+
+
+## Partilhar o plano de candidatura pelo túnel (23/10)
+
+A ligação de partilha (`/candidatura/p/<código>`) usa o endereço por onde a página foi aberta. Para que funcione noutro dispositivo:
+
+1. Abra o OptaBem pelo endereço `https://….trycloudflare.com` (não por `127.0.0.1`) e só depois copie a ligação em «Partilhar o plano».
+2. A ligação só funciona enquanto o computador e o túnel estiverem ligados.
+3. Cada vez que o túnel é aberto, o endereço muda: o código continua válido, mas é preciso copiar a ligação de novo (pelo endereço novo).
+
+Com `SESSION_COOKIE_SECURE=true` (o modo do túnel), a aplicação lê o endereço público nos cabeçalhos que o `cloudflared` envia (`ProxyFix` em `app/__init__.py`), para as ligações completas começarem por `https://`.

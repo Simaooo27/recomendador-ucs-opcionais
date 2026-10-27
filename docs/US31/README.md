@@ -7,7 +7,7 @@
 | Estado | Feita (aceite na Sprint Review do Sprint 2, 22/10) |
 | Sprint | Sprint 2 (antecipada do Sprint 3 a 20/10) |
 | Story points | 5 |
-| Épico | E11 — Orientação de curso |
+| Épico | E3 — Orientação com o assistente (E11 até 27/10) |
 | Prioridade | Must |
 | Requisito de origem | RF03, RF35, RF39, RN10 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Depende de | [US30](../US30/README.md) (cursos sugeridos) e a página `/cursos/` |

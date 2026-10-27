@@ -32,6 +32,13 @@ def create_app(config: dict | None = None) -> Flask:
     if not app.config.get("DATABASE"):
         app.config["DATABASE"] = str(Path(app.instance_path) / "app.sqlite3")
 
+    if app.config.get("SESSION_COOKIE_SECURE"):
+        # Pelo túnel do Cloudflare (SESSION_COOKIE_SECURE=true), o Flask recebe os pedidos em
+        # http://localhost. Para as ligações completas (partilhar o plano, confirmar o email)
+        # terem o endereço https://….trycloudflare.com, lê-se o endereço que o túnel indica.
+        from werkzeug.middleware.proxy_fix import ProxyFix
+
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     db.init_app(app)
     from .gestao import cli as gestao_cli
 
@@ -43,6 +50,7 @@ def create_app(config: dict | None = None) -> Flask:
     app.extensions["mailer"] = create_mailer(app.config)
 
     from .auth import bp as auth_bp
+    from .candidatura.routes import bp as candidatura_bp
     from .catalogo import bp as catalogo_bp
     from .gestao import bp as gestao_bp
     from .main import bp as main_bp
@@ -54,6 +62,7 @@ def create_app(config: dict | None = None) -> Flask:
     app.register_blueprint(catalogo_bp)
     app.register_blueprint(orientacao_bp)
     app.register_blueprint(percurso_bp)
+    app.register_blueprint(candidatura_bp)
     app.register_blueprint(gestao_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
 
     # Todos os templates recebem os textos de app/texts.py como «texts».

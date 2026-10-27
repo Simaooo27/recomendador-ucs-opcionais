@@ -67,6 +67,8 @@ def _traduzir_erro(erro: ErroHTTP, fornecedor: str, modelo: str, chave: str) -> 
 
 PERGUNTA_SIMULADA = '{"tipo": "pergunta", "texto": "Pergunta simulada (LLM_BACKEND=falso): o que gosta de fazer?"}'
 SUGESTAO_SIMULADA = '{"tipo": "sugestao", "texto": "Sugestão simulada (LLM_BACKEND=falso), sem cursos.", "cursos": []}'
+# Com o catálogo completo (filtro por área, app/orientacao/conversa.py), o 1.º passo pede áreas.
+AREAS_SIMULADAS = '{"tipo": "areas", "areas": [], "localidades": []}'
 
 
 class LLMFalso:
@@ -87,7 +89,9 @@ class LLMFalso:
         self.pedidos.append((instrucoes, tuple(mensagens)))
         if self._respostas is None:
             respostas_do_utilizador = sum(1 for m in mensagens if m.papel == "utilizador")
-            return PERGUNTA_SIMULADA if respostas_do_utilizador <= 1 else SUGESTAO_SIMULADA
+            if respostas_do_utilizador <= 1:
+                return PERGUNTA_SIMULADA
+            return AREAS_SIMULADAS if "## Áreas do catálogo" in instrucoes else SUGESTAO_SIMULADA
         indice = min(len(self.pedidos) - 1, len(self._respostas) - 1)
         return self._respostas[indice]
 

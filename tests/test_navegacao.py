@@ -12,7 +12,7 @@ MENU = {
     "/inicio": texts.NAV_INICIO,
     "/orientacao/": texts.NAV_CONVERSA,
     "/cursos/": texts.NAV_CATALOGO,
-    "/percurso/": texts.NAV_DECISOES,
+    "/candidatura/": texts.NAV_CANDIDATURA,
 }
 
 
@@ -26,6 +26,12 @@ class MenuDosAlunosTests(AppTestCase):
         super().setUp()
         self.create_active_user()
         self.login()
+
+    def test_as_minhas_decisoes_saiu_do_menu_mas_continua_na_conta(self):
+        # Decisão do PO (23/10): a página da US31 deixa de ser uma aba.
+        self.assertNotIn('href="/percurso/"', _menu(self.client.get("/inicio").get_data(as_text=True)))
+        self.assertIn('href="/percurso/"', self.client.get("/auth/conta").get_data(as_text=True))
+        self.assertEqual(self.client.get("/percurso/").status_code, 200)
 
     def test_o_menu_tem_as_quatro_paginas(self):
         menu = _menu(self.client.get("/inicio").get_data(as_text=True))

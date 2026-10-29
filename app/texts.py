@@ -486,6 +486,7 @@ ADMIN_NAV_DASHBOARD = "Painel"
 ADMIN_NAV_ADMINS = "Administradores"
 # Ativar contas por confirmar (23/10): enquanto o site não envia emails reais, um administrador ativa-as aqui.
 ADMIN_NAV_CONTAS = "Contas por confirmar"
+ADMIN_NAV_CURSOS = "Catálogo"
 ADMIN_CONTAS_TITULO = "Contas por confirmar"
 ADMIN_CONTAS_INTRO = (
     "Enquanto o OptaBem não envia emails a sério, as contas novas ficam aqui até um administrador as ativar. "
@@ -520,6 +521,51 @@ ADMIN_UPCOMING = [
     "Abrir e fechar os períodos de avaliação.",
     "Moderar comentários.",
 ]
+
+# Catálogo na gestão (/gestao/cursos, US39): corrigir a descrição e as saídas, ou esconder um curso.
+ADMIN_CURSOS_TITULO = "Catálogo de cursos"
+ADMIN_CURSOS_INTRO = (
+    "Os cursos vêm da DGES. Aqui pode corrigir a descrição e as saídas profissionais, ou esconder um curso. "
+    "As correções ficam por cima dos dados da DGES: a recolha seguinte não as apaga."
+)
+ADMIN_CURSOS_PROCURAR = "Procurar curso ou instituição"
+ADMIN_CURSOS_PROCURAR_BOTAO = "Procurar"
+ADMIN_CURSOS_MOSTRAR = "Mostrar"
+ADMIN_CURSOS_FILTRO_TODOS = "Todos"
+ADMIN_CURSOS_FILTRO_CORRIGIDOS = "Só corrigidos ou escondidos"
+ADMIN_CURSOS_FILTRO_ESCONDIDOS = "Só escondidos"
+ADMIN_CURSOS_CONTA = "{n} cursos"
+ADMIN_CURSOS_VAZIO = "Nenhum curso corresponde à procura."
+ADMIN_COL_CURSO = "Curso"
+ADMIN_COL_INSTITUICAO = "Instituição"
+ADMIN_COL_ESTADO = "Estado"
+ADMIN_COL_ALTERADO = "Última alteração"
+ADMIN_CURSO_ESTADO_DGES = "Dados da DGES"
+ADMIN_CURSO_ESTADO_CORRIGIDO = "Corrigido"
+ADMIN_CURSO_ESTADO_ESCONDIDO = "Escondido"
+ADMIN_CURSO_EDITAR = "Corrigir"
+ADMIN_CURSO_VOLTAR = "Voltar ao catálogo"
+ADMIN_CURSO_DESCRICAO = "Descrição"
+ADMIN_CURSO_SAIDAS = "Saídas profissionais"
+ADMIN_CURSO_SAIDAS_DICA = "Uma por linha. Deixe vazio para usar o texto da DGES."
+ADMIN_CURSO_DESCRICAO_DICA = "Deixe vazio para usar o texto da DGES."
+ADMIN_CURSO_ESCONDER = "Esconder este curso dos alunos (deixa de aparecer no catálogo, na conversa e no plano)"
+ADMIN_CURSO_GUARDAR = "Guardar"
+ADMIN_CURSO_GUARDADO = "Correção guardada."
+ADMIN_CURSO_NADA_MUDOU = "Nada mudou."
+ADMIN_CURSO_REPOR = "Repor os dados da DGES"
+ADMIN_CURSO_REPOSTO = "O curso voltou aos dados da DGES."
+ADMIN_CURSO_ORIGINAL = "Texto da DGES"
+ADMIN_CURSO_SEM_TEXTO = "(sem texto)"
+ADMIN_CURSO_HISTORICO = "Histórico"
+ADMIN_CURSO_SEM_HISTORICO = "Ainda ninguém alterou este curso."
+ADMIN_CURSO_ALTERACAO = "{o_que}, por {por}, a {em}"
+ADMIN_CURSO_ERRO_LONGO = "O texto não pode ter mais de {maximo} caracteres."
+ADMIN_CURSO_O_QUE_DESCRICAO = "descrição"
+ADMIN_CURSO_O_QUE_SAIDAS = "saídas profissionais"
+ADMIN_CURSO_O_QUE_ESCONDIDO = "escondido"
+ADMIN_CURSO_O_QUE_VISIVEL = "voltou a ser visível"
+ADMIN_CURSO_O_QUE_REPOSTO = "reposto com os dados da DGES"
 
 ADMIN_LIST_TITLE = "Administradores"
 ADMIN_LIST_INTRO = "Os administradores têm contas próprias, separadas das contas dos alunos."
@@ -635,6 +681,12 @@ CANDIDATURA_ULTIMO = "Último colocado 2025"
 CANDIDATURA_SUBIR = "Subir"
 CANDIDATURA_DESCER = "Descer"
 CANDIDATURA_RETIRAR = "Retirar"
+# Opções do plano que deixaram de estar no catálogo (por exemplo, escondidas pela gestão, US39).
+CANDIDATURA_INDISPONIVEIS = (
+    "Estas opções já não estão no catálogo do OptaBem e não contam para a nota nem para os avisos. "
+    "Confirme na DGES e retire-as do plano."
+)
+CANDIDATURA_INDISPONIVEL_SEM_NOME = "Curso {chave}"
 CANDIDATURA_SUBIR_ROTULO = "Subir {curso}"
 CANDIDATURA_DESCER_ROTULO = "Descer {curso}"
 CANDIDATURA_RETIRAR_ROTULO = "Retirar {curso} do plano"

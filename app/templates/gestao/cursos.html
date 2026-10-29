@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set page_title = texts.ADMIN_CURSOS_TITULO %}
+{% set noindex = true %}
+
+{#- Catálogo na gestão (US39): procurar um curso para o corrigir ou esconder. Só dados dos cursos. -#}
+{% block content %}
+<h1>{{ texts.ADMIN_CURSOS_TITULO }}</h1>
+<p class="lead">{{ texts.ADMIN_CURSOS_INTRO }}</p>
+
+<form method="get" action="{{ url_for('gestao.cursos') }}" class="gestao-filtros">
+  <div class="field">
+    <label for="q">{{ texts.ADMIN_CURSOS_PROCURAR }}</label>
+    <input id="q" name="q" type="search" value="{{ termo }}" maxlength="80">
+  </div>
+  <div class="field">
+    <label for="mostrar">{{ texts.ADMIN_CURSOS_MOSTRAR }}</label>
+    <select id="mostrar" name="mostrar">
+      <option value="todos"{% if mostrar == "todos" %} selected{% endif %}>{{ texts.ADMIN_CURSOS_FILTRO_TODOS }}</option>
+      <option value="corrigidos"{% if mostrar == "corrigidos" %} selected{% endif %}>{{ texts.ADMIN_CURSOS_FILTRO_CORRIGIDOS }}</option>
+      <option value="escondidos"{% if mostrar == "escondidos" %} selected{% endif %}>{{ texts.ADMIN_CURSOS_FILTRO_ESCONDIDOS }}</option>
+    </select>
+  </div>
+  <button type="submit" class="botao-secundario">{{ texts.ADMIN_CURSOS_PROCURAR_BOTAO }}</button>
+</form>
+
+<p>{{ texts.ADMIN_CURSOS_CONTA.format(n=linhas | length) }}</p>
+{% if linhas %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">{{ texts.ADMIN_COL_CURSO }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_INSTITUICAO }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_ESTADO }}</th>
+        <th scope="col">{{ texts.ADMIN_COL_ALTERADO }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for curso, correcao in linhas %}
+        <tr data-chave="{{ curso.chave }}">
+          <td><a href="{{ url_for('gestao.curso', chave=curso.chave) }}">{{ curso.curso }}</a></td>
+          <td>{{ curso.instituicao }}</td>
+          <td>
+            {%- if correcao and correcao.escondido %}{{ texts.ADMIN_CURSO_ESTADO_ESCONDIDO }}
+            {%- elif correcao %}{{ texts.ADMIN_CURSO_ESTADO_CORRIGIDO }}
+            {%- else %}{{ texts.ADMIN_CURSO_ESTADO_DGES }}{% endif -%}
+          </td>
+          <td class="nowrap">{% if correcao %}{{ correcao.alterado_em[:16].replace("T", " ") }} · {{ correcao.alterado_por }}{% else %}—{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>{{ texts.ADMIN_CURSOS_VAZIO }}</p>
+{% endif %}
+{% endblock %}

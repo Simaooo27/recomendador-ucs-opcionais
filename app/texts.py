@@ -304,6 +304,10 @@ CONTA_DESDE = "Conta criada a"
 # Desde 23/10 «As minhas decisões» (US31) não está no menu: fica aqui e no passo «Escolher curso» do início.
 CONTA_DECISOES = "As minhas decisões"
 CONTA_DECISOES_TEXTO = "Os cursos que foi escolhendo e quando."
+# Exportar os meus dados (US46), em «A minha conta».
+CONTA_EXPORTAR_TITULO = "Os meus dados"
+CONTA_EXPORTAR_TEXTO = "Descarregue tudo o que o OptaBem guarda sobre si, num ficheiro que pode abrir noutro programa."
+CONTA_EXPORTAR_LIGACAO = "Descarregar os meus dados"
 CONTA_APAGAR_TITULO = "Apagar a conta"
 CONTA_APAGAR_TEXTO = "Apaga a conta e todos os dados do seu percurso. Não pode ser desfeito."
 HOME_CONTA_APAGAR = "Apagar a minha conta e todos os meus dados"
@@ -322,6 +326,21 @@ APAGAR_BOTAO = "Apagar a minha conta"
 APAGAR_CANCELAR = "Cancelar e voltar à minha conta"
 APAGAR_ERRO_PASSWORD = "A palavra-passe não está certa. A conta não foi apagada."
 APAGAR_FEITO = "A sua conta e todos os seus dados foram apagados."
+
+# Página «Descarregar os meus dados» (/auth/conta/exportar, US46).
+EXPORTAR_TITLE = "Descarregar os meus dados"
+EXPORTAR_INTRO = "O ficheiro (formato JSON) tem tudo o que o OptaBem guarda sobre si:"
+EXPORTAR_ITENS = [
+    "a sua conta: nome, email, datas de criação e de confirmação, e a versão da política de privacidade que aceitou;",
+    "as decisões do seu percurso (cursos escolhidos e o que o assistente tinha sugerido);",
+    "o plano de candidatura: média, notas dos exames e opções;",
+    "a conversa de orientação, se ainda existir, e o número de pedidos ao assistente por dia.",
+]
+EXPORTAR_SEM_PASSWORD = "A palavra-passe não vai no ficheiro: o OptaBem não a guarda, só um resumo (hash) que não permite descobri-la."
+EXPORTAR_PASSWORD_LABEL = "Para confirmar que é a sua conta, escreva a sua palavra-passe"
+EXPORTAR_BOTAO = "Descarregar"
+EXPORTAR_CANCELAR = "Voltar à minha conta"
+EXPORTAR_ERRO_PASSWORD = "A palavra-passe não está certa. O ficheiro não foi descarregado."
 HOME_INTRO = "Este é o seu percurso. Cada passo concluído fica registado aqui."
 
 # Linha do tempo «O seu percurso» (app/percurso/__init__.py decide em que passo está cada pessoa).
@@ -723,8 +742,9 @@ PRIVACY_BODY = (
     "Texto provisório. A política final descreve que dados são recolhidos (nome, email, conversa de "
     "orientação, cursos escolhidos e, no plano de candidatura, as notas que a pessoa indica; o plano só é visto por outras pessoas se ela criar uma ligação de partilha, que pode desligar a qualquer momento), com que finalidade (sugerir cursos), como são protegidos "
     "(a conversa é enviada ao assistente sem emails nem números e é apagada depois de escolher o "
-    "curso) e como exercer os direitos de acesso e de apagamento: cada aluno pode apagar a conta e "
-    "todos os seus dados em «A minha conta» («Apagar a minha conta»)."
+    "curso) e como exercer os direitos de acesso, de portabilidade e de apagamento: em «A minha conta», cada aluno "
+    "pode descarregar todos os seus dados num ficheiro («Descarregar os meus dados») e apagar a conta e "
+    "todos os seus dados («Apagar a minha conta»)."
 )
 
 # ---------------------------------------------------------------------------

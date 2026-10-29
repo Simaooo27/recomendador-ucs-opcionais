@@ -25,6 +25,12 @@
 
 <p class="conta-decisoes"><a href="{{ url_for('percurso.linha_tempo') }}">{{ texts.CONTA_DECISOES }}</a> · {{ texts.CONTA_DECISOES_TEXTO }}</p>
 
+<section class="conta-exportar" aria-labelledby="exportar-dados">
+  <h2 id="exportar-dados">{{ texts.CONTA_EXPORTAR_TITULO }}</h2>
+  <p>{{ texts.CONTA_EXPORTAR_TEXTO }}</p>
+  <a href="{{ url_for('auth.export_form') }}">{{ texts.CONTA_EXPORTAR_LIGACAO }}</a>
+</section>
+
 <section class="zona-perigo" aria-labelledby="apagar-conta">
   <h2 id="apagar-conta">{{ texts.CONTA_APAGAR_TITULO }}</h2>
   <p>{{ texts.CONTA_APAGAR_TEXTO }}</p>

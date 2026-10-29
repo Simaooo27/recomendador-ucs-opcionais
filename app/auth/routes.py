@@ -1,12 +1,15 @@
 """Rotas HTTP do registo (US01) e do início e fim de sessão (US02)."""
 from __future__ import annotations
 
+import json
+
 from flask import current_app, flash, g, redirect, render_template, request, session, url_for
 
 from .. import texts
 from ..db import get_db
 from ..mailer import Message
-from . import bp, services, sessions
+from ..catalogo import services as catalogo
+from . import bp, exportar, services, sessions
 from .perfis import criar_cadeia_de_perfis
 from .services import ConfirmationOutcome, LoginOutcome
 from .validators import RegistrationInput, domains_hint, primeiro_nome
@@ -194,3 +197,33 @@ def delete_account_submit():
     sessions.logout_user()
     flash(texts.APAGAR_FEITO, "ok")
     return redirect(url_for("main.index"))
+
+
+# ---------------------------------------------------------------------------
+# Exportar os meus dados (US46)
+# ---------------------------------------------------------------------------
+
+def _render_exportar(error: str | None = None, status: int = 200):
+    return render_template("auth/exportar.html", error=error), status
+
+
+@bp.get("/conta/exportar")
+@sessions.login_required
+def export_form():
+    return _render_exportar()
+
+
+@bp.post("/conta/exportar")
+@sessions.login_required
+def export_submit():
+    """Descarrega o ficheiro JSON, depois de confirmada a palavra-passe."""
+    if not services.confirma_password(get_db(), g.user["id"], request.form.get("password", "")):
+        return _render_exportar(texts.EXPORTAR_ERRO_PASSWORD, 422)
+    dados = exportar.dados_do_utilizador(get_db(), g.user["id"], catalogo.cursos(current_app.config))
+    response = current_app.response_class(
+        json.dumps(dados, ensure_ascii=False, indent=2), mimetype="application/json"
+    )
+    response.headers["Content-Disposition"] = f'attachment; filename="{exportar.nome_do_ficheiro()}"'
+    # Os dados pessoais não ficam guardados em caches pelo caminho.
+    response.headers["Cache-Control"] = "no-store"
+    return response

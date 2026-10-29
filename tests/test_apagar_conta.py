@@ -1,6 +1,6 @@
 """US17 (âmbito reduzido a 22/10): apagar a minha conta e todos os meus dados.
 
-A exportação dos dados passou para o backlog (decisão do PO de 22/10).
+A exportação dos dados passou para a US46 (decisão do PO de 22/10; tests/test_exportar.py).
 """
 from __future__ import annotations
 
@@ -137,7 +137,7 @@ class ApagarTudoTests(ApagarContaTestCase):
 
 
 class PoliticaDePrivacidadeTests(AppTestCase):
-    def test_a_politica_explica_como_apagar_e_ja_nao_promete_exportar(self):
+    def test_a_politica_explica_como_apagar(self):
+        # Desde a US46 a política fala também em descarregar os dados (tests/test_exportar.py).
         html = self.client.get("/privacidade").get_data(as_text=True)
         self.assertIn("Apagar a minha conta", html)
-        self.assertNotIn("exportação", html)

@@ -41,3 +41,8 @@ def contar_pedido(db: sqlite3.Connection, user_id: int, dia: str) -> None:
         (user_id, dia),
     )
     db.commit()
+
+
+def pedidos_do_utilizador(db: sqlite3.Connection, user_id: int) -> list[sqlite3.Row]:
+    """Pedidos ao LLM por dia, do mais antigo para o mais recente (exportar os meus dados, US46)."""
+    return db.execute("SELECT dia, total FROM pedidos_llm WHERE user_id = ? ORDER BY dia", (user_id,)).fetchall()

@@ -164,6 +164,12 @@ def delete_account(db: sqlite3.Connection, user_id: int, password: str) -> bool:
     return True
 
 
+def confirma_password(db: sqlite3.Connection, user_id: int, password: str) -> bool:
+    """A palavra-passe está certa (confirmação de uma ação sensível, como exportar os dados, US46)."""
+    user = repository.get_by_id(db, user_id)
+    return user is not None and bool(password) and check_password_hash(user["password_hash"], password)
+
+
 def change_nome(db: sqlite3.Connection, user_id: int, raw: str) -> str | None:
     """Muda o nome da conta. Devolve a mensagem de erro, ou ``None`` se mudou."""
     nome = normalize_nome(raw)

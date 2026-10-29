@@ -31,6 +31,7 @@ def close_db(_exception: BaseException | None = None) -> None:
 _COLUNAS_NOVAS = (
     ("users", "nome", "TEXT NOT NULL DEFAULT ''"),   # nome no registo (23/10)
     ("planos_candidatura", "partilha", "TEXT"),      # partilhar o plano (23/10); único: índice abaixo
+    ("conversas_orientacao", "usar_notas", "INTEGER NOT NULL DEFAULT 0"),   # assistente com as notas (US37)
 )
 
 

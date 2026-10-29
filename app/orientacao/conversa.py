@@ -184,8 +184,12 @@ def proximo_passo(
     conversa: Sequence[Mensagem],
     *,
     forcar_sugestao: bool = False,
+    contexto: str = "",
 ) -> Pergunta | Sugestao:
     """Pede ao LLM o passo seguinte da conversa: uma pergunta ou a sugestão de cursos.
+
+    ``contexto`` junta-se às instruções de todos os pedidos: as provas feitas e o intervalo da média,
+    quando a pessoa o autorizou (US37, ``notas.py``). Vazio = nada sobre as notas.
 
     ``conversa`` são as mensagens trocadas até agora (vazia no início). O chamador acrescenta a
     resposta do LLM à conversa como mensagem do «assistente» antes do passo seguinte.
@@ -199,8 +203,10 @@ def proximo_passo(
     ]
     respostas_do_utilizador = sum(1 for m in conversa if m.papel == "utilizador")
     if len(catalogo) > MAX_CURSOS_DIRETO:
-        return _passo_com_filtro_por_area(cliente, catalogo, mensagens, forcar_sugestao or respostas_do_utilizador >= LIMITE_PERGUNTAS)
-    texto_instrucoes = instrucoes(catalogo)
+        return _passo_com_filtro_por_area(
+            cliente, catalogo, mensagens, forcar_sugestao or respostas_do_utilizador >= LIMITE_PERGUNTAS, contexto
+        )
+    texto_instrucoes = instrucoes(catalogo) + contexto
     exigir_sugestao = forcar_sugestao or respostas_do_utilizador >= LIMITE_PERGUNTAS
     if exigir_sugestao:
         texto_instrucoes += PEDIDO_DE_SUGESTAO
@@ -217,9 +223,9 @@ def proximo_passo(
 
 
 def _passo_com_filtro_por_area(
-    cliente: ClienteLLM, catalogo: Sequence[Curso], mensagens: list[Mensagem], exigir_sugestao: bool
+    cliente: ClienteLLM, catalogo: Sequence[Curso], mensagens: list[Mensagem], exigir_sugestao: bool, contexto: str = ""
 ) -> Pergunta | Sugestao:
-    texto_instrucoes = instrucoes_areas(catalogo)
+    texto_instrucoes = instrucoes_areas(catalogo) + contexto
     if exigir_sugestao:
         texto_instrucoes += PEDIDO_DE_AREAS
     dados = interpretar(cliente.conversar(texto_instrucoes, mensagens))
@@ -231,7 +237,7 @@ def _passo_com_filtro_por_area(
         # Sem a lista de cursos, uma sugestão direta só pode ter identificadores inventados.
         raise RespostaInvalida("O LLM sugeriu cursos antes de escolher as áreas.")
     escolhidos = cursos_das_areas(catalogo, dados.get("areas") or [], dados.get("localidades") or [])
-    final = interpretar(cliente.conversar(instrucoes(escolhidos) + PEDIDO_DE_SUGESTAO, mensagens))
+    final = interpretar(cliente.conversar(instrucoes(escolhidos) + contexto + PEDIDO_DE_SUGESTAO, mensagens))
     if final["tipo"] != "sugestao":
         raise RespostaInvalida("O LLM não sugeriu cursos no pedido da sugestão.")
     return validar_contra_catalogo(final, escolhidos)

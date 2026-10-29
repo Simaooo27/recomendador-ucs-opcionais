@@ -11,6 +11,7 @@ from flask import Blueprint, current_app, flash, g, redirect, render_template, r
 from .. import texts
 from ..auth.sessions import login_required
 from ..catalogo import services as catalogo
+from ..catalogo.repository import nomes_das_provas
 from ..db import get_db
 from ..llm import ClienteLLM, ErroLLM, LimiteAtingido, criar_cliente_llm
 from . import conversa, services
@@ -26,7 +27,11 @@ def _cliente() -> ClienteLLM:
     return current_app.extensions["llm"]
 
 
-def _com_o_llm(funcao, *argumentos) -> None:
+def _nomes_das_provas() -> dict[str, str]:
+    return nomes_das_provas(current_app.config["CATALOGO_CSV"])
+
+
+def _com_o_llm(funcao, *argumentos, **opcoes) -> None:
     """Chama o serviço; se o LLM falhar, mostra uma mensagem clara (a conversa fica guardada).
 
     O cliente do LLM vai embrulhado no limite de pedidos por aluno e por dia (``limite.py``).
@@ -34,7 +39,10 @@ def _com_o_llm(funcao, *argumentos) -> None:
     db = get_db()
     try:
         cliente = LimitarPedidosPorAluno(_cliente(), db, g.user["id"], current_app.config["ORIENTACAO_MAX_PEDIDOS_DIA"])
-        funcao(db, g.user["id"], *argumentos, cliente, catalogo.cursos(current_app.config))
+        funcao(
+            db, g.user["id"], *argumentos, cliente, catalogo.cursos(current_app.config),
+            nomes_das_provas=_nomes_das_provas(), **opcoes,
+        )
     except LimiteDoAlunoAtingido as erro:
         current_app.logger.info("Orientação: %s", erro)
         flash(texts.ORIENTACAO_ERRO_LIMITE_ALUNO, "error")
@@ -47,12 +55,20 @@ def _com_o_llm(funcao, *argumentos) -> None:
 
 
 def _pagina(erro: str | None = None, resposta: str = "", estado_http: int = 200):
-    estado = services.obter(get_db(), g.user["id"])
+    db = get_db()
+    estado = services.obter(db, g.user["id"])
+    sugestao = services.cursos_sugeridos(estado, catalogo.cursos(current_app.config))
+    nomes = _nomes_das_provas()
+    # US37: antes de começar, o que o assistente receberia se a pessoa autorizar.
+    exames, intervalo = services.o_que_o_assistente_recebe(db, g.user["id"], nomes) if not estado.comecada else ([], None)
     return (
         render_template(
             "orientacao/conversa.html",
             estado=estado,
-            sugestao=services.cursos_sugeridos(estado, catalogo.cursos(current_app.config)),
+            sugestao=sugestao,
+            exames_a_partilhar=exames,
+            intervalo_da_media=intervalo,
+            em_falta=services.em_falta_nas_sugestoes(db, g.user["id"], estado, sugestao, nomes),
             min_cursos=conversa.MIN_CURSOS_SUGERIDOS,
             erro=erro,
             resposta=resposta,
@@ -76,7 +92,8 @@ def pagina():
 @bp.post("/comecar")
 @login_required
 def comecar():
-    _com_o_llm(services.comecar)
+    # US37: a autorização para usar as notas é uma caixa no botão «Começar a conversa».
+    _com_o_llm(services.comecar, usar_notas=request.form.get("usar_notas") == "on")
     return _voltar()
 
 

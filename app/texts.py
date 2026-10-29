@@ -429,6 +429,25 @@ ORIENTACAO_AVISO = (
 # Ponto 14 dos requisitos, decidido a 20/10: protótipo da equipa, com este aviso (os termos do Gemini excluem menores de 18).
 ORIENTACAO_IDADE = "Por agora, esta conversa destina-se a maiores de 18 anos."
 ORIENTACAO_COMECAR = "Começar a conversa"
+# Assistente que conhece as minhas notas (US37): só com autorização, numa caixa ao começar a conversa.
+ORIENTACAO_NOTAS_CAIXA = "Usar os exames que fiz e a minha média, para o assistente não me sugerir cursos a que não posso concorrer"
+# {exames}: os nomes dos exames; {media}: ORIENTACAO_NOTAS_INTERVALO ou ORIENTACAO_NOTAS_SEM_MEDIA.
+ORIENTACAO_NOTAS_O_QUE = (
+    "O assistente recebe só isto: os exames que fez ({exames}) e a sua média do secundário {media}. "
+    "Nunca recebe a média exata nem a nota de cada exame."
+)
+ORIENTACAO_NOTAS_INTERVALO = "entre {inicio} e {fim} valores"
+ORIENTACAO_NOTAS_SEM_MEDIA = "(ainda não a indicou)"
+ORIENTACAO_NOTAS_SEM_BEFORE_LINK = "Se indicar os exames que fez no "
+ORIENTACAO_NOTAS_SEM_LINK = "plano de candidatura"
+ORIENTACAO_NOTAS_SEM_AFTER_LINK = ", o assistente pode tê-los em conta (só se autorizar)."
+ORIENTACAO_NOTAS_LIGADO = (
+    "Nesta conversa, o assistente sabe os exames que fez e a sua média aproximada. Para deixar de os usar, "
+    "recomece a conversa."
+)
+# Num curso sugerido a que falta uma prova de ingresso (US37). {provas}: «Matemática A e Física e Química A».
+ORIENTACAO_FALTA_PROVA = "Atenção: para concorrer a este curso falta-lhe o exame de {provas}."
+ORIENTACAO_FALTA_PROVA_JUNTAR = " e "
 ORIENTACAO_ASSISTENTE = "Assistente"
 ORIENTACAO_VOCE = "Você"
 # {numero} é a pergunta atual e {maximo} o limite.

@@ -16,9 +16,23 @@
 {% if not estado.comecada %}
   <form method="post" action="{{ url_for('orientacao.comecar') }}">
     <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+    {#- US37: só com autorização, e a página diz exatamente o que o assistente recebe. -#}
+    {% if exames_a_partilhar %}
+      {% set media = texts.ORIENTACAO_NOTAS_INTERVALO.format(inicio=intervalo_da_media[0], fim=intervalo_da_media[1]) if intervalo_da_media else texts.ORIENTACAO_NOTAS_SEM_MEDIA %}
+      <div class="field">
+        <div class="check">
+          <input id="usar_notas" name="usar_notas" type="checkbox" aria-describedby="usar-notas-o-que">
+          <label for="usar_notas">{{ texts.ORIENTACAO_NOTAS_CAIXA }}</label>
+        </div>
+        <p class="hint" id="usar-notas-o-que">{{ texts.ORIENTACAO_NOTAS_O_QUE.format(exames=exames_a_partilhar | join(", "), media=media) }}</p>
+      </div>
+    {% else %}
+      <p class="hint">{{ texts.ORIENTACAO_NOTAS_SEM_BEFORE_LINK }}<a href="{{ url_for('candidatura.notas') }}">{{ texts.ORIENTACAO_NOTAS_SEM_LINK }}</a>{{ texts.ORIENTACAO_NOTAS_SEM_AFTER_LINK }}</p>
+    {% endif %}
     <button type="submit">{{ texts.ORIENTACAO_COMECAR }}</button>
   </form>
 {% else %}
+  {% if estado.usar_notas %}<p class="hint" id="usar-notas-ligado">{{ texts.ORIENTACAO_NOTAS_LIGADO }}</p>{% endif %}
   <ol class="conversa" aria-label="{{ texts.ORIENTACAO_TITLE }}">
     {% for mensagem in estado.mensagens %}
       <li class="mensagem mensagem-{{ mensagem.papel }}">
@@ -35,7 +49,11 @@
       <h2 id="sugestoes-titulo">{{ texts.ORIENTACAO_SUGESTOES_TITULO }}</h2>
       {% if sugestao.cursos %}
         <ul class="cursos">
-          {% for sugerido in sugestao.cursos %}{{ marca.cartao_curso(sugerido.curso, sugerido.explicacao, escolher=true) }}{% endfor %}
+          {% for sugerido in sugestao.cursos %}
+            {%- set falta = em_falta.get(sugerido.curso.chave) %}
+            {%- set aviso = texts.ORIENTACAO_FALTA_PROVA.format(provas=falta | join(texts.ORIENTACAO_FALTA_PROVA_JUNTAR)) if falta else none %}
+            {{- marca.cartao_curso(sugerido.curso, sugerido.explicacao, escolher=true, aviso=aviso) }}
+          {%- endfor %}
         </ul>
       {% endif %}
       {% if sugestao.cursos|length >= min_cursos %}

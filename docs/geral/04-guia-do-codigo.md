@@ -52,8 +52,6 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── services.py                   regras do plano: notas, até 6 opções, subir/descer, avisos, sugestões
 │   ├── routes.py                     /candidatura/ (o plano), /candidatura/notas, os botões e a partilha (/candidatura/p/<código>)
 │   └── repository.py                 consultas SQL à tabela planos_candidatura
-├── manuscrito.py                     converte palavras em traços «escritos à mão» (fontTools)
-├── recursos/                         tipo de letra manuscrito Caveat, usado pelo servidor (licença OFL)
 │
 ├── auth/                             CONTAS E INÍCIO DE SESSÃO (US01 registo, US02 sessão, US03 perfis)
 │   ├── routes.py                     páginas /auth/registo, /auth/entrar, /auth/sair, /auth/confirmar
@@ -99,7 +97,7 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │   ├── privacy.html                  política de privacidade
 │   ├── error.html                    páginas de erro (404, pedido inválido)
 │   ├── macros/password.html          o ícone de olho dos campos de palavra-passe
-│   ├── macros/marca.html             símbolo, ilustração do percurso, ficha de curso, escrita à mão, botão «flow», lupa e conta da barra do topo
+│   ├── macros/marca.html             símbolo, ficha de curso, botão «flow» (uma ligação simples), lupa e conta da barra do topo
 │   ├── auth/                         registo, «confirme o seu email», confirmação, início de sessão,
 │   │                                 «A minha conta» (conta.html) e apagar a conta (US17)
 │   ├── orientacao/conversa.html      a conversa com o assistente (US29) e os cursos sugeridos (US30)
@@ -111,9 +109,8 @@ app/                                  TODO O CÓDIGO DA APLICAÇÃO
 │
 └── static/                           FICHEIROS ENVIADOS TAL COMO ESTÃO PARA O NAVEGADOR
     ├── style.css                     O ASPETO DE TODAS AS PÁGINAS (secção 4 deste guia)
-    ├── fonts/                        tipos de letra (Bricolage Grotesque e Atkinson Hyperlegible Next, licença OFL)
     ├── favicon.svg                   ícone no separador do navegador
-    ├── app.js                        interações: pesquisa ao vivo, escrita à mão, linha dos passos, regras da palavra-passe, números
+    ├── app.js                        interações: pesquisa ao vivo, comparação, regras da palavra-passe, botões «a enviar», painéis da barra do topo
     └── password-toggle.js            o clique no ícone de olho (mostrar/esconder a palavra-passe)
 
 tests/                                um ficheiro por área: test_registration, test_confirmation,
@@ -158,43 +155,40 @@ Depois de mudar um texto ou o CSS: guardar, recarregar a página no navegador co
 
 | Secção | Linha (aprox.) | O que controla |
 |---|---|---|
-| 1. Cores | 32 | Todas as cores: texto, fundos, verde dos botões, verde-escuro do painel, amarelo do caminho escolhido, erros, sucesso |
-| 2. Tipos de letra | 59 | Letra dos títulos (Bricolage Grotesque) e do texto (Atkinson Hyperlegible Next), em `app/static/fonts/` |
-| 3. Página e colunas | 93 | Fundo da página, tamanho base da letra, margens (`--margem`) e larguras (alunos, início, gestão e apresentação) |
-| 4. Barra do topo | 129 | Marca «OptaBem», «Gestão», menu, lupa e ícone de conta (com os painéis), nome do administrador, versão telemóvel |
-| 5. Páginas de entrada | 280 | Painel verde com o percurso (criar conta, iniciar sessão, confirmar email) e a coluna do formulário |
-| 6. Texto | 363 | Títulos, parágrafos, ligações, listas, contorno do teclado |
-| 7. Formulários | 392 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
-| 8. Botões | 483 | Botão principal, «Terminar sessão» e «Remover» |
-| 9. Caixas de mensagem | 535 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
-| 10. Tabelas | 551 | Lista de administradores na gestão |
-| 11. Página de apresentação | 562 | A página inicial pública: caixa de pesquisa, nota escrita à mão, fichas dos cursos, botão «flow» (círculo e setas), «Como funciona», «Para quem é» |
-| 12. O meu percurso | 875 | A linha do tempo da página inicial do aluno e a conversa de orientação (mensagens, aviso, «Recomeçar») |
-| 13. Gestão, erros e detalhes | 1142 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
-| 14. Movimento | 1222 | Todas as animações (e o que acontece a quem pede menos movimento) |
-| 15. Modo escuro | 1263 | Cores quando o computador está em modo escuro (fica sempre no fim) |
+| 1. Cores | 32 | Todas as cores: texto, fundos, faixa cinzenta, botões e ligações (preto), erros, sucesso, avisos; cantos e sombras das caixas |
+| 2. Tipos de letra | 66 | A letra do sistema (a do Windows, do Mac ou do telemóvel): não há nada a descarregar |
+| 3. Página e colunas | 77 | Fundo da página, tamanho base da letra, margens (`--margem`) e larguras (alunos, início, gestão e apresentação) |
+| 4. Barra do topo | 117 | Marca «OptaBem», «Gestão», menu, lupa e ícone de conta (com os painéis), nome do administrador, versão telemóvel |
+| 5. Páginas de entrada | 270 | A marca em cima e o formulário numa coluna centrada (criar conta, iniciar sessão, confirmar email, recuperar a palavra-passe) |
+| 6. Texto | 284 | Títulos, parágrafos, ligações, listas, contorno do teclado |
+| 7. Formulários | 312 | Campos, etiquetas, ajudas, erros a vermelho, caixa da política, ícone de olho |
+| 8. Botões | 403 | Botão principal (em forma de pílula), «Terminar sessão» e «Remover» |
+| 9. Caixas de mensagem | 455 | Caixas de erro, de sucesso e a caixa amarela de desenvolvimento |
+| 10. Tabelas | 471 | Lista de administradores na gestão |
+| 11. Página de apresentação | 489 | A página inicial pública: frase e pesquisa ao centro, faixa cinzenta com as fichas dos cursos, «Como funciona», «Para quem» |
+| 12. O meu percurso | 695 | O início do aluno (o próximo passo em destaque, a linha do tempo e os atalhos), as secções que abrem e fecham (`.dobra`) e a conversa de orientação |
+| 13. Gestão, erros e detalhes | 1009 | Números do painel, página não encontrada, regras da palavra-passe, botão «a enviar» |
+| 14. Movimento | 1089 | As poucas animações que ficam (e o que acontece a quem pede menos movimento) |
+| 15. Modo escuro | 1212 | Cores quando o computador está em modo escuro (fica sempre no fim) |
 
 **Exemplos de alterações comuns:**
 
 | Para… | Na secção | Mudar |
 |---|---|---|
-| Botões e ligações de outra cor | 1 | `--accent: #0e6b57;`; `--accent-hover` é a cor ao passar o rato |
-| Painel das páginas de entrada de outra cor | 1 | `--forest: #0f2e27;` |
-| Cor do caminho escolhido na ilustração | 1 | `--marigold: #f2b33d;` |
-| Fundo da página branco | 1 | `--page: #eef3f0;` para `#ffffff` |
-| Cantos menos arredondados | 1 | `--radius: 10px;` para, por exemplo, `4px` |
+| Botões e ligações de outra cor | 1 | `--accent: #171717;` e `--link`; `--accent-hover` é a cor ao passar o rato |
+| Cor da faixa cinzenta | 1 | `--band: #efefef;` |
+| Fundo da página branco | 1 | `--page: #f9f9f9;` para `#ffffff` |
+| Cantos menos arredondados | 1 | `--radius: 12px;` e `--radius-cartao: 16px;` para, por exemplo, `4px` |
 | Coluna dos alunos mais larga | 3 | `.conteudo { max-width: 40rem; }` |
 | Letra maior em todas as páginas | 3 | `body { font-size: 1.0625rem; }` para `1.15rem` |
 | Títulos maiores | 6 | `h1 { font-size: clamp(…); }` |
-| Outro tipo de letra | 2 | `--font-display` (títulos) e `--font-text` (texto) |
+| Outro tipo de letra | 2 | `--font-display` (títulos) e `--font-text` (texto); um tipo de letra que não seja do sistema tem de ficar em `app/static/` (ver os cuidados) |
 | Desligar as animações | 14 | Apagar os blocos `@media (prefers-reduced-motion: no-preference) { … }` |
-| Cor da nota escrita à mão | 11 | `.procura-nota { color: … }` |
-| Cor do círculo do botão «flow» | 11 | `--flow-cor` em `.flow-button` (e em `.flow-button-claro`) |
 
 **Cuidados:**
 - `rem` é uma medida relativa ao tamanho da letra (1rem ≈ 16 píxeis); prefira-a a píxeis para a página continuar a funcionar no telemóvel.
 - Se mudar cores na secção 1, veja também a secção 15 (modo escuro), que tem as suas próprias cores.
-- Os tipos de letra estão na própria aplicação (`app/static/fonts/`), porque a política de segurança não deixa carregar letras de outros sites.
+- Desde 29/10 a aplicação usa a letra do sistema. Para voltar a ter um tipo de letra próprio, os ficheiros têm de ficar em `app/static/`, porque a política de segurança não deixa carregar letras de outros sites.
 - Não mude a ordem das secções: o modo escuro tem de ficar no fim para se sobrepor ao resto.
 - Não escreva estilos dentro dos ficheiros HTML (`style="…"`): a política de segurança da aplicação (CSP, em `app/security.py`) bloqueia-os. Tudo vai para `style.css`.
 
@@ -249,6 +243,7 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
 | 23/10 | Quanto preciso no exame, tendência do último colocado, procura do curso e partilhar o plano (US40 a US43); gestão ativa contas por confirmar | `app/candidatura/`, `app/catalogo/repository.py`, `catalogo/ficha.html`, `candidatura/partilhado.html`, `app/gestao/`, `dados/recolher_dges.py` | PR #43 e #44 |
 | 23/10 | Que exames me abrem mais portas (US44) e plano B da 2.ª fase (US45) | `app/candidatura/calculos.py`, `services.py`, `templates/candidatura/plano.html`, `dados/recolher_dges.py` | PR #44 |
 | 23/10 | Revisão estética (pedido do PO): barra do topo encostada às margens, com lupa e ícone de conta; pesquisa da apresentação numa só caixa; pesquisa pelo início das palavras e sem a escola; ilustração da entrada alinhada com o formulário; início com o percurso numa caixa e atalhos; página «A minha conta» com «Apagar a conta»; comparação de cursos com caixas, grupos de linhas e textos sem palavras partidas | `app/templates/` (`base.html`, `landing.html`, `home.html`, `auth/conta.html`, `macros/marca.html`), `app/static/style.css`, `app/static/app.js`, `app/catalogo/services.py`, `app/auth/routes.py`, `docs/US17/` | PR da revisão estética |
+| 29/10 | Visual calmo (pedido do PO): menos texto à vista e uma ação principal por página; letra do sistema (saem os tipos de letra, a escrita à mão e o `fonttools`); no início, o próximo passo em destaque; no plano e na ficha, as secções secundárias abrem e fecham | `app/static/style.css`, `app/static/app.js`, `app/templates/` (`base.html`, `home.html`, `landing.html`, `macros/marca.html`, `candidatura/plano.html`, `catalogo/ficha.html`), `requirements.txt` | PR do visual calmo |
 
 **Para ver exatamente o que mudou numa alteração:** no GitHub, abra **Pull requests → Closed**, escolha o PR e veja o separador **Files changed** (verde = acrescentado, vermelho = retirado). Para o histórico de um ficheiro: abra o ficheiro no GitHub e carregue em **History**.
 

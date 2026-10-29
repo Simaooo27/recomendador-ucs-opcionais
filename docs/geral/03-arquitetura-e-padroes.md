@@ -31,7 +31,6 @@ flowchart LR
 | Motor de recomendação | `pandas` e `numpy` (a partir da US11) | Cálculos de médias e similaridades sobre matrizes |
 | LLM | Google Gemini (Flash-Lite, plano gratuito) e Groq como reserva, atrás de uma interface própria (secção 4.2); pedidos com `urllib`, sem SDK | Não ficar preso a um fornecedor; testes sem rede nem custos. Limites, custo e termos em [05-spike-llm.md](05-spike-llm.md) |
 | Interface | HTML (Jinja), CSS e JavaScript próprios, sem React nem Tailwind | Componentes de bibliotecas React (ex.: FlowButton, HandwritingText) são **adaptados** a este formato em vez de mudar o projeto para React: a política de segurança (CSP) só aceita ficheiros do próprio site e o código fica legível para os dois elementos |
-| Letras «escritas à mão» | `fontTools` no servidor (`app/manuscrito.py`) | Converte as letras em traços SVG sem carregar bibliotecas de outros sites; sem ele, a página mostra texto normal |
 
 ## 3. Padrões que o código já usa
 

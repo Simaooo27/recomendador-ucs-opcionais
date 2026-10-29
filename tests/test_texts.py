@@ -93,7 +93,7 @@ REQUIRED_PLACEHOLDERS = {
 
 
 def _all_texts() -> dict[str, str]:
-    """Todos os textos; as listas (ex.: ADMIN_UPCOMING, LANDING_STEPS) contam item a item."""
+    """Todos os textos; as listas (ex.: LANDING_STEPS) contam item a item."""
     result = {}
     for name, value in vars(texts).items():
         if not name.isupper():

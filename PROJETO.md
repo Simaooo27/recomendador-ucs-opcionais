@@ -6,8 +6,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11): US04, US33 a US36 e US40 a US45, 32 SP, aceites pelo PO a 27/10 (revisão do Simão pendente) · Entrega a 05/11 |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · Sprint 4 (aceites pelo PO a 27/10): US04, US33 a US36 e US40 a US45 |
+| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11): US04, US33 a US36 e US40 a US45 (aceites pelo PO a 27/10) e US37 a US39, US46 e US47 (aceites a 29/10), 47 SP; revisão do Simão pendente · Entrega a 05/11 |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · Sprint 4 (aceites pelo PO a 27/10): US04, US33 a US36 e US40 a US45 · Sprint 4 (aceites pelo PO a 29/10, PR #50 a #54): US37, US38, US39, US46 e US47 |
 | **Testes automáticos** | 436, todos a passar |
 
 ## Índice
@@ -32,7 +32,7 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 |---|---|
 | Sprint 2 (13 SP, concluído a 22/10) | Uma pessoa indecisa conversa com o assistente (LLM), recebe 2 a 3 cursos do catálogo com explicação e escolhe um, ficando a decisão registada no percurso. |
 | Sprint 3 (7 SP, concluído a 23/10) | Uma pessoa indecisa filtra, consulta e compara cursos de várias instituições, e pode apagar a sua conta e todos os seus dados. |
-| Sprint 4 (29/10 a 05/11, proposto a 27/10) | Quem escolheu um curso prepara a candidatura: vê as condições de acesso, a tendência e a procura de cada curso, indica as suas notas, vê a sua nota em cada curso e quanto precisa nos exames, ordena as 6 opções, descobre que exames lhe abrem mais portas, tem um plano B para a 2.ª fase e pode partilhar o plano; o catálogo passa a ter as licenciaturas recolhidas da DGES (US04, US33 a US36 e US40 a US45, 32 SP; a confirmar no Sprint Planning de 29/10 com o docente). O código fecha por volta de 03/11. |
+| Sprint 4 (29/10 a 05/11; alargado a 29/10) | Quem escolheu um curso prepara a candidatura: vê as condições de acesso, a tendência e a procura de cada curso, indica as suas notas, vê a sua nota em cada curso e quanto precisa nos exames, ordena as 6 opções, descobre que exames lhe abrem mais portas, tem um plano B para a 2.ª fase e pode partilhar o plano; o catálogo passa a ter as licenciaturas recolhidas da DGES (US04, US33 a US36 e US40 a US45, 32 SP). A 29/10 entram a exportação dos dados, a recuperação da palavra-passe por email, a correção do catálogo na gestão, as datas do concurso e um assistente que conhece as notas (US37 a US39, US46 e US47, mais 15 SP): 47 SP. O código fecha por volta de 03/11. |
 
 **Replaneamento de 14/10/2026 (decisão do PO, issue #15):** o LLM conduz a conversa de orientação (sem perguntas fixas) e passa para o Sprint 2; o plano passa a respeitar a velocidade real (10 SP por sprint). A US32 foi fundida na US29; US04, US09 e US11 passam para o backlog. Ver o [spike do LLM](docs/geral/05-spike-llm.md).
 
@@ -51,6 +51,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 **Sprint 4 alargado (27/10/2026, mais tarde; decisão do PO):** as US40 a US45 voltam ao Sprint 4, porque são partes importantes do produto e o código já está feito. O Sprint 4 passa a 32 SP para uma velocidade de 10: não é um planeamento realista de trabalho novo, e só se defende porque o código foi feito antes do sprint, como protótipo; no sprint sobra documentação, testes, revisão e aceitação. A documentação das stories do Sprint 4 está em `docs/USNN/`.
 
 **Verificação e aceitação do Sprint 4 (27/10/2026, decisão do PO):** antes de aceitar, as 11 stories foram verificadas com o catálogo real (174 cursos). Encontraram-se e corrigiram-se dois erros: os cursos do ensino privado entravam no plano do concurso nacional (nova RN12) e as Matemáticas só ligavam a prova 16 à 19 (correspondência completa da DGES: a Matemática A dá as provas 16, 17 e 19, a Matemática B a 16 e a 17, o MACS a 17). Depois disso, o PO aceitou as 11 stories (32 de 32 SP). A aceitação aconteceu antes da data de início marcada para o sprint (29/10) e com a revisão do Simão ainda pendente.
+
+**Sprint 4 alargado de novo (29/10/2026, decisão do PO):** a 29/10, o Claude fez o código das stories do backlog que ainda não o tinham (US37, US38, US39, US46 e US47), uma por ramo, com testes para cada critério e a documentação em `docs/USNN/` (PR #50 a #54). O PO testou-as no seu computador, com o envio real de emails, e pô-las no Sprint 4 como «Feito»: 47 SP para uma velocidade de 10. Não é um planeamento à velocidade: o código foi feito pela IA num dia, e o trabalho da equipa é rever, testar e aceitar; fica no relatório. A US48 fica no Backlog. Sem story: textos antigos das opcionais (PR #55) e o visual calmo, com menos texto à vista e a letra do sistema (PR #56, a juntar por último).
 
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
@@ -73,16 +75,16 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US44 | Que exames me abrem mais portas? | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US44/](docs/US44/) · PR #44 |
 | US43 | Partilhar o plano | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US43/](docs/US43/) · PR #44 |
 | US45 | Plano B: 2.ª fase | Sprint 4 | Feita (aceite pelo PO a 27/10) | [docs/US45/](docs/US45/) · PR #44 |
-| US37 | Assistente que conhece as minhas notas | Backlog | Por fazer | — |
-| US46 | Exportar os meus dados | Backlog | Por fazer | — |
-| US47 | Recuperar a palavra-passe | Backlog | Por fazer | — |
+| US37 | Assistente que conhece as minhas notas | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US37/](docs/US37/) · PR #54 |
+| US46 | Exportar os meus dados | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US46/](docs/US46/) · PR #50 |
+| US47 | Recuperar a palavra-passe | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US47/](docs/US47/) · PR #51 |
+| US39 | Corrigir e esconder cursos do catálogo (gestão) | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US39/](docs/US39/) · PR #53 |
+| US38 | Datas do concurso no percurso | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US38/](docs/US38/) · PR #52 |
 | US48 | Recolha completa das licenciaturas (DGES) | Backlog | Por fazer | — |
-| US39 | Corrigir e esconder cursos do catálogo (gestão) | Backlog | Por fazer | — |
-| US38 | Datas do concurso no percurso | Backlog | Por fazer | — |
 
 *Protótipo* = código feito antes do sprint, ainda não aceite numa Sprint Review. As stories das opcionais (US06 a US16, US18 a US28) e a US32 (fundida na US29) estão na folha «Arquivo (opcionais)» do [backlog](docs/geral/product-backlog.xlsx).
 
-Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31, US33 a US36 e US40 a US45).
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31, US33 a US47, exceto a US48).
 
 ## 2. Documentação do projeto
 
@@ -119,6 +121,11 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [US44](docs/US44/README.md) | Que exames me abrem mais portas? |
 | [US43](docs/US43/README.md) | Partilhar o plano com uma ligação só de leitura |
 | [US45](docs/US45/README.md) | Plano B: 2.ª fase |
+| [US37](docs/US37/README.md) | Assistente que conhece as minhas notas (só com autorização) |
+| [US38](docs/US38/README.md) | Datas do concurso nacional no início e no plano |
+| [US39](docs/US39/README.md) | Corrigir e esconder cursos do catálogo na gestão |
+| [US46](docs/US46/README.md) | Exportar os meus dados num ficheiro JSON |
+| [US47](docs/US47/README.md) | Recuperar a palavra-passe por email |
 
 ## 3. Alterar textos e cores
 
@@ -166,6 +173,21 @@ Abre http://127.0.0.1:5000: aparece o início de sessão, com uma ligação para
 flask --app app create-admin    # pede o nome e a palavra-passe
 ```
 
+**Enviar emails a sério (confirmação de conta e recuperação da palavra-passe, US47):** por omissão os emails só aparecem no terminal. Para os enviar, usar uma conta de email da equipa (por exemplo, uma conta Gmail com a verificação em dois passos ligada e uma **palavra-passe de aplicação**, criada nas definições de segurança da conta Google) e acrescentar ao `.env`:
+
+```ini
+MAIL_BACKEND=smtp
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME=conta.da.equipa@gmail.com
+MAIL_PASSWORD=a-palavra-passe-de-aplicacao
+MAIL_SENDER=conta.da.equipa@gmail.com
+SHOW_DEV_CONFIRMATION_LINK=false
+```
+
+Depois de mudar o `.env`, parar a aplicação (Ctrl+C) e voltar a arrancá-la. A palavra-passe de aplicação fica só no `.env`, que não vai para o repositório; nunca a colar em mensagens, issues ou pedidos à IA.
+
 <details>
 <summary>Outras configurações (variáveis de ambiente)</summary>
 
@@ -179,7 +201,7 @@ Para experimentar o LLM com a chave real (2 pedidos; a chave nunca é mostrada):
 | `ALLOWED_EMAIL_DOMAINS` | Restringe o registo a estes domínios (inclui subdomínios). Vazio = qualquer email | vazio |
 | `DATABASE_PATH` | Ficheiro SQLite | `instance/app.sqlite3` |
 | `MAIL_BACKEND` | `console` (escreve o email no terminal) ou `smtp` | `console` |
-| `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` | |
+| `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_USE_TLS`, `MAIL_SENDER` | Só para `smtp` (ver «Enviar emails a sério», acima) | |
 | `SHOW_DEV_CONFIRMATION_LINK` | Com `console`, mostrar a ligação de confirmação na página. `false` no túnel: fica só no terminal | `true` |
 | `SESSION_COOKIE_SECURE` | `true` em produção ou pelo túnel (HTTPS); com isto ligado, a aplicação recusa o modo debug | `false` |
 | `ADMIN_URL_PREFIX` | Endereço da área de gestão (administradores) | `gestao` |
@@ -187,6 +209,7 @@ Para experimentar o LLM com a chave real (2 pedidos; a chave nunca é mostrada):
 | `LLM_MODELO` | Outro modelo do fornecedor | `gemini-3.5-flash-lite` / `openai/gpt-oss-120b` |
 | `GEMINI_API_KEY`, `GROQ_API_KEY` | Chaves pessoais dos fornecedores (só no `.env`, nunca no repositório) | vazias |
 | `ORIENTACAO_MAX_PEDIDOS_DIA` | Pedidos ao LLM por aluno e por dia (`0` = sem limite) | `40` |
+| `CALENDARIO_CSV` | Datas do concurso nacional (US38) | `dados/calendario-concurso.csv` |
 
 </details>
 

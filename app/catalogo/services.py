@@ -1,15 +1,19 @@
 """Catálogo de cursos: pesquisa (página de apresentação), filtros, ficha e comparação (US05).
 
-Tudo funciona sem sessão iniciada (RF34). Os cursos vêm de ``repository.todos``.
+Tudo funciona sem sessão iniciada (RF34). Os cursos vêm de ``repository.todos`` (o CSV da DGES),
+com as correções da gestão por cima (US39): ``cursos`` é o único ponto por onde o resto da
+aplicação lê o catálogo, por isso um curso corrigido ou escondido muda em todo o lado (ficha,
+pesquisa, comparação, conversa com o assistente e plano de candidatura).
 """
 from __future__ import annotations
 
 import re
+import sqlite3
 import unicodedata
-from dataclasses import dataclass
-from typing import Mapping
+from dataclasses import dataclass, replace
+from typing import Iterable, Mapping
 
-from . import repository
+from . import correcoes_repository, repository
 from .repository import Curso
 
 
@@ -46,8 +50,79 @@ def _relevancia(palavras: list[str], curso: Curso) -> int:
     return 1 if _corresponde(palavras, curso.curso) else 2
 
 
-def cursos(config: Mapping) -> tuple[Curso, ...]:
-    return repository.todos(config["CATALOGO_CSV"])
+@dataclass(frozen=True)
+class Correcao:
+    """O que a gestão mudou num curso (US39). ``None`` = fica o texto da DGES."""
+
+    descricao: str | None = None
+    saidas: str | None = None
+    escondido: bool = False
+    alterado_por: str = ""
+    alterado_em: str = ""
+
+
+def _correcao(linha: sqlite3.Row) -> Correcao:
+    return Correcao(linha["descricao"], linha["saidas"], bool(linha["escondido"]), linha["alterado_por"], linha["alterado_em"])
+
+
+def correcoes(db: sqlite3.Connection) -> dict[str, Correcao]:
+    return {linha["curso_chave"]: _correcao(linha) for linha in correcoes_repository.todas(db)}
+
+
+def corrigido(curso: Curso, correcao: Correcao | None) -> Curso:
+    """O curso com a descrição e as saídas corrigidas (função pura)."""
+    if correcao is None:
+        return curso
+    campos = {}
+    if correcao.descricao is not None:
+        campos["descricao"] = correcao.descricao
+    if correcao.saidas is not None:
+        campos["saidas"] = correcao.saidas
+    return replace(curso, **campos) if campos else curso
+
+
+def aplicar_correcoes(base: Iterable[Curso], por_chave: Mapping[str, Correcao]) -> tuple[Curso, ...]:
+    """Os cursos que os alunos veem: corrigidos e sem os escondidos (função pura)."""
+    resultado = []
+    for curso in base:
+        correcao = por_chave.get(curso.chave)
+        if correcao is not None and correcao.escondido:
+            continue
+        resultado.append(corrigido(curso, correcao))
+    return tuple(resultado)
+
+
+def _ligacao_atual() -> sqlite3.Connection | None:
+    """A base de dados do pedido atual, se houver (fora da aplicação, por exemplo num script, não há)."""
+    from flask import has_app_context
+
+    if not has_app_context():
+        return None
+    from ..db import get_db
+
+    return get_db()
+
+
+def cursos(config: Mapping, db: sqlite3.Connection | None = None) -> tuple[Curso, ...]:
+    """O catálogo que os alunos veem: o da DGES com as correções da gestão (US39)."""
+    base = repository.todos(config["CATALOGO_CSV"])
+    db = db if db is not None else _ligacao_atual()
+    if db is None:
+        return base
+    por_chave = correcoes(db)
+    return aplicar_correcoes(base, por_chave) if por_chave else base
+
+
+def cursos_para_gestao(config: Mapping, db: sqlite3.Connection) -> list[tuple[Curso, Correcao | None]]:
+    """Todos os cursos, também os escondidos, já corrigidos, com a correção de cada um (US39)."""
+    por_chave = correcoes(db)
+    return [(corrigido(c, por_chave.get(c.chave)), por_chave.get(c.chave)) for c in repository.todos(config["CATALOGO_CSV"])]
+
+
+def corresponde(curso: Curso, termo: str) -> bool:
+    """O curso corresponde ao termo (as mesmas regras da pesquisa do catálogo). Termo vazio: sim."""
+    palavras = _palavras_do_texto(termo or "")
+    return not palavras or _corresponde(palavras, *_campos_pesquisados(curso))
 
 
 @dataclass(frozen=True)

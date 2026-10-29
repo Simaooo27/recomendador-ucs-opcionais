@@ -13,6 +13,7 @@ from flask import Blueprint, abort, current_app, flash, g, redirect, render_temp
 from .. import texts
 from ..auth.sessions import login_required
 from ..catalogo import services as catalogo
+from ..catalogo import repository as catalogo_repository
 from ..catalogo.repository import nomes_das_provas
 from ..db import get_db
 from ..percurso import services as percurso
@@ -58,6 +59,10 @@ def plano():
     curso_escolhido = catalogo.por_chave(current_app.config, atual.curso_chave) if atual else None
     lista = services.opcoes(plano, cursos)
     area = lista[0].curso.area if lista else ""
+    # Opções que saíram do catálogo (por exemplo, escondidas na gestão, US39): avisa em vez de as esconder.
+    visiveis = {c.chave for c in cursos}
+    da_dges = {c.chave: c for c in catalogo_repository.todos(current_app.config["CATALOGO_CSV"])}
+    indisponiveis = [(chave, da_dges.get(chave)) for chave in plano.opcoes if chave not in visiveis]
     return render_template(
         "candidatura/plano.html",
         plano=plano,
@@ -66,6 +71,7 @@ def plano():
         sugestoes=services.sugestoes(plano, cursos, area),
         area=area,
         curso_escolhido=curso_escolhido,
+        indisponiveis=indisponiveis,
         partilha=services.codigo_de_partilha(db, g.user["id"]),
         combinacoes=services.exames_do_plano(plano, lista),
         plano_b=services.plano_b(plano, lista, cursos),

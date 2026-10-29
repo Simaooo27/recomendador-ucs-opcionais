@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% set page_title = original.curso ~ " · " ~ texts.ADMIN_CURSOS_TITULO %}
+{% set noindex = true %}
+
+{#- Corrigir ou esconder um curso (US39). Mostra o texto da DGES ao lado e o histórico de alterações. -#}
+{% block content %}
+<p><a href="{{ url_for('gestao.cursos') }}">{{ texts.ADMIN_CURSO_VOLTAR }}</a></p>
+<h1>{{ original.curso }}</h1>
+<p class="lead">{{ original.instituicao }} · {{ original.localidade }} ·
+  {%- if correcao and correcao.escondido %} {{ texts.ADMIN_CURSO_ESTADO_ESCONDIDO }}
+  {%- elif correcao %} {{ texts.ADMIN_CURSO_ESTADO_CORRIGIDO }}
+  {%- else %} {{ texts.ADMIN_CURSO_ESTADO_DGES }}{% endif %}</p>
+
+<form method="post" action="{{ url_for('gestao.curso_guardar', chave=original.chave) }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+
+  <div class="field">
+    <label for="descricao">{{ texts.ADMIN_CURSO_DESCRICAO }}</label>
+    <textarea id="descricao" name="descricao" rows="6" maxlength="{{ limites.descricao }}"
+              {% if errors.descricao %}aria-invalid="true" aria-describedby="descricao-error"{% else %}aria-describedby="descricao-hint"{% endif %}>{{ valores.descricao }}</textarea>
+    {% if errors.descricao %}<p class="error" id="descricao-error">{{ errors.descricao }}</p>
+    {% else %}<p class="hint" id="descricao-hint">{{ texts.ADMIN_CURSO_DESCRICAO_DICA }}</p>{% endif %}
+    <details class="gestao-original"><summary>{{ texts.ADMIN_CURSO_ORIGINAL }}</summary><p>{{ original.descricao or texts.ADMIN_CURSO_SEM_TEXTO }}</p></details>
+  </div>
+
+  <div class="field">
+    <label for="saidas">{{ texts.ADMIN_CURSO_SAIDAS }}</label>
+    <textarea id="saidas" name="saidas" rows="5" maxlength="{{ limites.saidas }}"
+              {% if errors.saidas %}aria-invalid="true" aria-describedby="saidas-error"{% else %}aria-describedby="saidas-hint"{% endif %}>{{ valores.saidas }}</textarea>
+    {% if errors.saidas %}<p class="error" id="saidas-error">{{ errors.saidas }}</p>
+    {% else %}<p class="hint" id="saidas-hint">{{ texts.ADMIN_CURSO_SAIDAS_DICA }}</p>{% endif %}
+    <details class="gestao-original"><summary>{{ texts.ADMIN_CURSO_ORIGINAL }}</summary><p>{{ original.saidas or texts.ADMIN_CURSO_SEM_TEXTO }}</p></details>
+  </div>
+
+  <div class="field">
+    <div class="check">
+      <input id="escondido" name="escondido" type="checkbox"{% if valores.escondido %} checked{% endif %}>
+      <label for="escondido">{{ texts.ADMIN_CURSO_ESCONDER }}</label>
+    </div>
+  </div>
+
+  <button type="submit">{{ texts.ADMIN_CURSO_GUARDAR }}</button>
+</form>
+
+{% if correcao %}
+<form method="post" action="{{ url_for('gestao.curso_repor', chave=original.chave) }}" class="form-em-linha gestao-repor">
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <button type="submit" class="botao-secundario">{{ texts.ADMIN_CURSO_REPOR }}</button>
+</form>
+{% endif %}
+
+<section aria-labelledby="historico">
+  <h2 id="historico">{{ texts.ADMIN_CURSO_HISTORICO }}</h2>
+  {% if historico %}
+    <ul class="plain-list">
+      {% for alteracao in historico %}
+        <li>{{ texts.ADMIN_CURSO_ALTERACAO.format(o_que=alteracao.resumo, por=alteracao.por, em=alteracao.em[:16].replace("T", " ")) }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{{ texts.ADMIN_CURSO_SEM_HISTORICO }}</p>
+  {% endif %}
+</section>
+{% endblock %}

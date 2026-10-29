@@ -121,7 +121,10 @@ def _render_curso(chave: str, *, valores: dict | None = None, errors: dict | Non
     correcao = catalogo.correcoes(get_db()).get(chave)
     atual = catalogo.corrigido(original, correcao)
     if valores is None:
-        valores = {"descricao": atual.descricao, "saidas": "\n".join(atual.lista_saidas), "escondido": bool(correcao and correcao.escondido)}
+        # Uma saída por linha, tal como estão escritas (sem a maiúscula que a ficha lhes põe): guardar o
+        # formulário sem mexer nas saídas não pode criar uma correção.
+        saidas = "\n".join(p.strip() for p in atual.saidas.split(";") if p.strip())
+        valores = {"descricao": atual.descricao, "saidas": saidas, "escondido": bool(correcao and correcao.escondido)}
     page = render_template(
         "gestao/curso.html",
         original=original,

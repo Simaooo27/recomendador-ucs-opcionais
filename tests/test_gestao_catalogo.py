@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import csv
 import os
+import re
 import shutil
 import sqlite3
 import tempfile
+from html import unescape
 
 from app import texts
 from app.catalogo import repository as catalogo_repository
@@ -109,6 +111,13 @@ class CorrigirTests(CatalogoGestaoTestCase):
         self.assertEqual(curso.saidas, "Bibliotecário; arquivista; Gestor de conteúdos")
         html = self.ficha().get_data(as_text=True)
         self.assertIn("Gestor de conteúdos", html)
+
+    def test_guardar_o_formulario_como_vem_so_muda_o_que_se_editou(self):
+        """O formulário vem preenchido com o texto atual; mudar só a descrição não pode corrigir as saídas."""
+        html = self.client.get(f"/gestao/cursos/{CURSO.chave}").get_data(as_text=True)
+        saidas = re.search(r'<textarea id="saidas"[^>]*>(.*?)</textarea>', html, re.S).group(1)
+        self.guardar(descricao=DESCRICAO_NOVA, saidas=unescape(saidas))
+        self.assertEqual([h[0] for h in self.historico()], ["descricao"])
 
     def test_campo_vazio_ou_igual_ao_da_dges_nao_e_correcao(self):
         self.guardar(descricao=CURSO.descricao, saidas="")

@@ -90,6 +90,26 @@ def domains_hint(allowed_domains: Iterable[str]) -> str:
     return " ou ".join("@" + d for d in allowed_domains)
 
 
+def password_errors(password: str, password_confirm: str, *, min_length: int, max_length: int) -> dict[str, str]:
+    """Regras da palavra-passe nova, no registo (US01) e ao recuperá-la (US47).
+
+    Devolve ``{"password" | "password_confirm": mensagem}``; vazio se está válida.
+    """
+    errors: dict[str, str] = {}
+    if not password:
+        errors["password"] = MSG_PASSWORD_REQUIRED
+    elif len(password) < min_length:
+        errors["password"] = texts.ERROR_PASSWORD_TOO_SHORT.format(minimo=min_length)
+    elif len(password) > max_length:
+        errors["password"] = texts.ERROR_PASSWORD_TOO_LONG.format(maximo=max_length)
+    elif not (any(c.isalpha() for c in password) and any(c.isdigit() for c in password)):
+        errors["password"] = MSG_PASSWORD_COMPOSITION
+
+    if "password" not in errors and password_confirm != password:
+        errors["password_confirm"] = MSG_PASSWORD_MISMATCH
+    return errors
+
+
 def validate_registration(
     data: RegistrationInput,
     *,
@@ -115,18 +135,7 @@ def validate_registration(
     elif not is_allowed_domain(data.email, allowed_domains):
         errors["email"] = texts.ERROR_EMAIL_DOMAIN.format(dominios=domains_hint(allowed_domains))
 
-    password = data.password
-    if not password:
-        errors["password"] = MSG_PASSWORD_REQUIRED
-    elif len(password) < min_length:
-        errors["password"] = texts.ERROR_PASSWORD_TOO_SHORT.format(minimo=min_length)
-    elif len(password) > max_length:
-        errors["password"] = texts.ERROR_PASSWORD_TOO_LONG.format(maximo=max_length)
-    elif not (any(c.isalpha() for c in password) and any(c.isdigit() for c in password)):
-        errors["password"] = MSG_PASSWORD_COMPOSITION
-
-    if "password" not in errors and data.password_confirm != password:
-        errors["password_confirm"] = MSG_PASSWORD_MISMATCH
+    errors.update(password_errors(data.password, data.password_confirm, min_length=min_length, max_length=max_length))
 
     if not data.accepted_privacy:
         errors["accepted_privacy"] = MSG_PRIVACY_REQUIRED

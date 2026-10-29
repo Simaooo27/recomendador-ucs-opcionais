@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "macros/password.html" as password with context %}
+{% set layout = "entrada" %}
+{% set page_title = texts.RECUPERAR_NOVA_TITLE %}
+
+{#- Escolher a palavra-passe nova (US47), a partir da ligação do email. Mesmas regras do registo. -#}
+{% block content %}
+<h1>{{ texts.RECUPERAR_NOVA_TITLE }}</h1>
+<p class="lead">{{ texts.RECUPERAR_NOVA_INTRO }}</p>
+
+<form method="post" action="{{ url_for('auth.recovery_reset_submit', token=token) }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <div class="field">
+    <label for="password">{{ texts.RECUPERAR_NOVA_LABEL }}</label>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="new-password" required
+             {% if errors.password %}aria-invalid="true" aria-describedby="password-error"{% else %}aria-describedby="password-hint"{% endif %}>
+      {{ password.toggle("password") }}
+    </div>
+    {% if errors.password %}
+      <p class="error" id="password-error">{{ errors.password }}</p>
+    {% else %}
+      <p class="hint" id="password-hint">{{ texts.REGISTER_PASSWORD_HINT.format(minimo=min_length) }}</p>
+    {% endif %}
+  </div>
+  <div class="field">
+    <label for="password_confirm">{{ texts.REGISTER_PASSWORD_CONFIRM_LABEL }}</label>
+    <div class="password-field">
+      <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required
+             {% if errors.password_confirm %}aria-invalid="true" aria-describedby="password_confirm-error"{% endif %}>
+      {{ password.toggle("password_confirm") }}
+    </div>
+    {% if errors.password_confirm %}
+      <p class="error" id="password_confirm-error">{{ errors.password_confirm }}</p>
+    {% endif %}
+  </div>
+  <button type="submit">{{ texts.RECUPERAR_NOVA_BOTAO }}</button>
+</form>
+{% endblock %}

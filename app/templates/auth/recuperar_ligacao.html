@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% set layout = "entrada" %}
+{% set page_title = texts.RECUPERAR_EXPIRADA_TITLE if outcome == "expired" else texts.RECUPERAR_INVALIDA_TITLE %}
+
+{#- Ligação de recuperação que já não serve (US47): expirou, foi usada ou não é válida. -#}
+{% block content %}
+{% if outcome == "expired" %}
+  <h1>{{ texts.RECUPERAR_EXPIRADA_TITLE }}</h1>
+  <div class="alert alert-error" role="alert">{{ texts.RECUPERAR_EXPIRADA }}</div>
+{% else %}
+  <h1>{{ texts.RECUPERAR_INVALIDA_TITLE }}</h1>
+  <div class="alert alert-error" role="alert">{{ texts.RECUPERAR_INVALIDA }}</div>
+{% endif %}
+<p><a href="{{ url_for('auth.recovery_form') }}">{{ texts.RECUPERAR_PEDIR_OUTRA }}</a></p>
+{% endblock %}

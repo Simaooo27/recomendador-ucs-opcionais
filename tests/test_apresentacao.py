@@ -1,7 +1,5 @@
 """Página de apresentação, «O seu percurso», painel com números e detalhes de interação."""
-from unittest import mock
-
-from app import manuscrito, percurso, texts
+from app import percurso, texts
 from app.percurso import EstadoPercurso
 from tests.base import CSRF_TOKEN, AppTestCase
 
@@ -40,8 +38,9 @@ class LandingPageTests(AppTestCase):
 
     def test_mostra_numeros_reais_do_catalogo(self):
         html = self.client.get("/").get_data(as_text=True)
-        self.assertIn('<strong data-contar="30">30</strong> licenciaturas', html)
-        self.assertIn('<strong data-contar="12">12</strong> instituições', html)
+        # Desde o visual calmo (29/10) os números já não contam até ao valor: aparecem logo.
+        self.assertIn('<strong>30</strong> licenciaturas', html)
+        self.assertIn('<strong>12</strong> instituições', html)
 
 
 class CourseSearchTests(AppTestCase):
@@ -88,30 +87,29 @@ class CourseSearchTests(AppTestCase):
         self.assertEqual(len(dados["termo"]), 80)
 
 
-class HandwritingTests(AppTestCase):
-    """A nota «comece por aqui» é escrita à mão; sem fontTools aparece texto normal."""
+class VisualCalmoTests(AppTestCase):
+    """Visual calmo (29/10): sem tipos de letra descarregados, sem letra «escrita à mão» nem números a contar."""
 
-    def test_desenha_um_caminho_por_contorno(self):
-        desenho = manuscrito.desenhar("Gestão")
-        self.assertIsNotNone(desenho)
-        self.assertGreater(len(desenho.contornos), 3)
-        self.assertTrue(all(c.startswith("M") for c in desenho.contornos))
-        self.assertEqual(len(desenho.viewbox.split()), 4)
+    def test_as_paginas_nao_carregam_tipos_de_letra(self):
+        for pagina in ("/", "/auth/entrar", "/auth/registo"):
+            with self.subTest(pagina=pagina):
+                html = self.client.get(pagina).get_data(as_text=True)
+                self.assertNotIn("fonts/", html)
+                self.assertNotIn("manuscrito", html)
+                self.assertNotIn("data-contar", html)
 
-    def test_texto_vazio_nao_desenha(self):
-        self.assertIsNone(manuscrito.desenhar("   "))
+    def test_o_estilo_nao_tem_font_face(self):
+        css = self.client.get("/static/style.css").get_data(as_text=True)
+        self.assertNotIn("@font-face", css)
 
-    def test_apresentacao_tem_a_palavra_escrita_com_nome_acessivel(self):
-        html = self.client.get("/").get_data(as_text=True)
-        self.assertIn('class="manuscrito"', html)
-        self.assertIn(f'aria-label="{texts.LANDING_SEARCH_NOTE}"', html)
-
-    def test_sem_fonttools_mostra_texto_normal(self):
-        with mock.patch.object(manuscrito, "desenhar", return_value=None):
-            response = self.client.get("/")
-        html = response.get_data(as_text=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('class="manuscrito-texto"', html)
+    def test_o_inicio_destaca_o_proximo_passo_com_um_botao(self):
+        self.create_active_user()
+        self.login()
+        html = self.client.get("/inicio").get_data(as_text=True)
+        destaque = html.split('class="inicio-destaque"')[1].split('class="faixa')[0]
+        self.assertIn(texts.HOME_PASSO_DE.format(numero=2, total=4), destaque)
+        self.assertIn(texts.HOME_PATH_STEPS[1]["titulo"], destaque)
+        self.assertIn('href="/orientacao/"', destaque)
 
 
 class PathTimelineTests(AppTestCase):
@@ -162,8 +160,8 @@ class DashboardStatsTests(AppTestCase):
         self.set_csrf()
         self.client.post("/auth/entrar", data={"csrf_token": CSRF_TOKEN, "email": "gestor", "password": "gestao-segura-1"})
         html = self.client.get("/gestao/").get_data(as_text=True)
-        self.assertIn('data-contar="1"', html)  # um aluno ativo, uma conta por confirmar, um administrador
-        self.assertEqual(html.count('data-contar="1"'), 3)
+        # Um aluno ativo, uma conta por confirmar e um administrador.
+        self.assertEqual(html.count('<dd>1</dd>'), 3)
         self.assertNotIn("pendente@gmail.com", html)  # só totais, nunca dados de um aluno
 
 

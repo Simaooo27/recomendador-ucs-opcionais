@@ -399,6 +399,8 @@ HOME_PRAZO_FUTURO_DIA = "{etapa} da {fase}.ª fase: {inicio}."
 HOME_PRAZO_SEM_DATAS = "As datas do concurso de {ano} ainda não foram publicadas."
 HOME_PRAZO_LIGACAO = "Ver as datas do concurso"
 HOME_STEP_DONE = "Concluído"
+# Por cima da saudação, no início (visual calmo de 29/10): em que passo do percurso está a pessoa.
+HOME_PASSO_DE = "Passo {numero} de {total}"
 HOME_STEP_CURRENT = "Próximo passo"
 HOME_STEP_LATER = "Depois"
 HOME_NEXT_SOON = "Disponível em breve."

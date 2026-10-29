@@ -80,8 +80,9 @@
 
 {#- Que exames lhe abrem mais portas? (23/10) -#}
 {% if combinacoes %}
-<section class="plano-exames" aria-labelledby="plano-exames">
-  <h2 id="plano-exames">{{ texts.EXAMES_TITULO }}</h2>
+{#- Visual calmo (29/10): as ajudas extra ficam fechadas; abre-se a que interessa. -#}
+<details class="dobra plano-exames">
+  <summary><h2 id="plano-exames">{{ texts.EXAMES_TITULO }}</h2></summary>
   <p>{{ texts.EXAMES_INTRO }}</p>
   <ol class="exames-lista">
     {% for combo in combinacoes %}
@@ -95,14 +96,14 @@
       </li>
     {% endfor %}
   </ol>
-</section>
+</details>
 {% endif %}
 
 {#- Plano B: cursos com vagas na 2.ª fase de 2025 a que a nota chegava (23/10) -#}
 {#- Aparece sempre que há notas e opções; sem cursos, explica porquê (pedido do PO: «onde está o plano B?»). -#}
 {% if plano.tem_notas and opcoes %}
-<section class="plano-sugestoes plano-b" aria-labelledby="plano-b">
-  <h2 id="plano-b">{{ texts.PLANO_B_TITULO }}</h2>
+<details class="dobra plano-sugestoes plano-b">
+  <summary><h2 id="plano-b">{{ texts.PLANO_B_TITULO }}</h2></summary>
   {% if not plano_b %}<p>{{ texts.PLANO_B_VAZIO }}</p>{% else %}
   <p>{{ texts.PLANO_B_INTRO }}</p>
   <ul class="sugestoes-lista">
@@ -117,12 +118,12 @@
     {% endfor %}
   </ul>
   {% endif %}
-</section>
+</details>
 {% endif %}
 
 {% if sugestoes and not plano.cheio %}
-<section class="plano-sugestoes" aria-labelledby="plano-sugestoes">
-  <h2 id="plano-sugestoes">{{ texts.CANDIDATURA_SUGESTOES_TITULO.format(area=area) }}</h2>
+<details class="dobra plano-sugestoes">
+  <summary><h2 id="plano-sugestoes">{{ texts.CANDIDATURA_SUGESTOES_TITULO.format(area=area) }}</h2></summary>
   <ul class="sugestoes-lista">
     {% for curso, sim in sugestoes %}
       <li class="cartao sugestao">
@@ -133,7 +134,7 @@
       </li>
     {% endfor %}
   </ul>
-</section>
+</details>
 {% endif %}
 
 <section class="cartao plano-partilha" id="partilhar" aria-labelledby="plano-partilha">

@@ -11,6 +11,7 @@ from tests.base import AppTestCase
 REQUIRED_PLACEHOLDERS = {
     "PAGE_TITLE_FORMAT": {"pagina", "aplicacao"},
     "HOME_GREETING_NOME": {"nome"},
+    "HOME_PASSO_DE": {"numero", "total"},
     "CONFIRMATION_EMAIL_HELLO_NOME": {"nome"},
     "ERROR_NOME_INVALID": {"maximo"},
     "ADMIN_DASHBOARD_GREETING": {"nome"},

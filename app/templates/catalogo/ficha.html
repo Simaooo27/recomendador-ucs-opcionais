@@ -25,41 +25,8 @@
     {{ cand.procura(curso) }}
   </div>
 
-  <div class="ficha-colunas">
-    <section aria-labelledby="ficha-sobre">
-      <h2 id="ficha-sobre">{{ texts.FICHA_SOBRE }}</h2>
-      <p>{{ curso.descricao or texts.FICHA_SEM_DADOS }}</p>
-      <h2>{{ texts.FICHA_SAIDAS }}</h2>
-      {% if curso.lista_saidas %}
-        <ul class="ficha-saidas">{% for saida in curso.lista_saidas %}<li>{{ saida }}</li>{% endfor %}</ul>
-      {% else %}
-        <p>{{ texts.FICHA_SEM_DADOS }}</p>
-      {% endif %}
-    </section>
-
-    <section aria-labelledby="ficha-dados">
-      <h2 id="ficha-dados">{{ texts.FICHA_DADOS }}</h2>
-      <dl class="ficha-dados">
-        <div><dt>{{ texts.FICHA_INSTITUICAO }}</dt><dd>{{ curso.instituicao }}</dd></div>
-        <div><dt>{{ texts.FICHA_UNIDADE }}</dt><dd>{{ curso.unidade_organica or texts.FICHA_SEM_DADOS }}</dd></div>
-        <div><dt>{{ texts.FICHA_LOCALIDADE }}</dt><dd>{{ curso.localidade }}</dd></div>
-        <div><dt>{{ texts.FICHA_TIPO }}</dt><dd>{{ curso.tipo_ensino or texts.FICHA_SEM_DADOS }}</dd></div>
-        <div><dt>{{ texts.FICHA_GRAU }}</dt><dd>{{ curso.grau or texts.FICHA_SEM_DADOS }}</dd></div>
-        <div><dt>{{ texts.FICHA_DURACAO }}</dt><dd>{{ texts.FICHA_DURACAO_VALOR.format(semestres=curso.duracao_semestres) if curso.duracao_semestres else texts.FICHA_SEM_DADOS }}</dd></div>
-        <div><dt>{{ texts.FICHA_ECTS }}</dt><dd>{{ curso.ects or texts.FICHA_SEM_DADOS }}</dd></div>
-        <div><dt>{{ texts.FICHA_AREA_OFICIAL }}</dt><dd>{{ curso.area_cnaef or texts.FICHA_SEM_DADOS }}</dd></div>
-      </dl>
-      <h2>{{ texts.FICHA_ACESSO }}</h2>
-      {{ cand.condicoes(curso, nomes_provas) }}
-      <h2>{{ texts.FICHA_FONTES }}</h2>
-      <ul class="ficha-fontes">
-        <li><a href="{{ curso.fonte }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DGES }}</a></li>
-        {% if curso.fonte_descricao %}<li><a href="{{ curso.fonte_descricao }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DESCRICAO }}</a></li>{% endif %}
-      </ul>
-    </section>
-  </div>
-
-  {#- Plano de candidatura (23/10): a nota do aluno neste curso e o botão para o juntar ao plano. -#}
+  {#- Plano de candidatura (23/10): a nota do aluno neste curso e o botão para o juntar ao plano.
+      Visual calmo (29/10): vem logo a seguir aos números, antes do texto do curso. -#}
   <section class="cartao ficha-simulacao" aria-labelledby="ficha-simulacao">
     <h2 id="ficha-simulacao">{{ texts.FICHA_A_SUA_NOTA }}</h2>
     {% if g.user %}
@@ -86,5 +53,42 @@
     {% if g.user %}<a class="button-link" href="{{ url_for('percurso.confirmar', chave=curso.chave) }}">{{ texts.CURSO_ESCOLHER }}</a>{% endif %}
     <a class="botao-secundario botao-ligacao" href="{{ url_for('catalogo.lista', area=curso.area) }}">{{ texts.FICHA_COMPARAR }}</a>
   </div>
+
+  <div class="ficha-colunas">
+    <section aria-labelledby="ficha-sobre">
+      <h2 id="ficha-sobre">{{ texts.FICHA_SOBRE }}</h2>
+      <p>{{ curso.descricao or texts.FICHA_SEM_DADOS }}</p>
+      <h2>{{ texts.FICHA_SAIDAS }}</h2>
+      {% if curso.lista_saidas %}
+        <ul class="ficha-saidas">{% for saida in curso.lista_saidas %}<li>{{ saida }}</li>{% endfor %}</ul>
+      {% else %}
+        <p>{{ texts.FICHA_SEM_DADOS }}</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <details class="dobra">
+      <summary><h2 id="ficha-dados">{{ texts.FICHA_DADOS }}</h2></summary>
+      <dl class="ficha-dados">
+        <div><dt>{{ texts.FICHA_INSTITUICAO }}</dt><dd>{{ curso.instituicao }}</dd></div>
+        <div><dt>{{ texts.FICHA_UNIDADE }}</dt><dd>{{ curso.unidade_organica or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_LOCALIDADE }}</dt><dd>{{ curso.localidade }}</dd></div>
+        <div><dt>{{ texts.FICHA_TIPO }}</dt><dd>{{ curso.tipo_ensino or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_GRAU }}</dt><dd>{{ curso.grau or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_DURACAO }}</dt><dd>{{ texts.FICHA_DURACAO_VALOR.format(semestres=curso.duracao_semestres) if curso.duracao_semestres else texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_ECTS }}</dt><dd>{{ curso.ects or texts.FICHA_SEM_DADOS }}</dd></div>
+        <div><dt>{{ texts.FICHA_AREA_OFICIAL }}</dt><dd>{{ curso.area_cnaef or texts.FICHA_SEM_DADOS }}</dd></div>
+      </dl>
+      </details>
+      <h2>{{ texts.FICHA_ACESSO }}</h2>
+      {{ cand.condicoes(curso, nomes_provas) }}
+      <h2>{{ texts.FICHA_FONTES }}</h2>
+      <ul class="ficha-fontes">
+        <li><a href="{{ curso.fonte }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DGES }}</a></li>
+        {% if curso.fonte_descricao %}<li><a href="{{ curso.fonte_descricao }}" target="_blank" rel="noopener">{{ texts.FICHA_FONTE_DESCRICAO }}</a></li>{% endif %}
+      </ul>
+    </section>
+  </div>
+
 </article>
 {% endblock %}

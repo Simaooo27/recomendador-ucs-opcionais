@@ -42,8 +42,10 @@ class BarraDoTopoTests(AppTestCase):
         from pathlib import Path
 
         css = (Path(self.app.static_folder) / "style.css").read_text(encoding="utf-8")
-        regra = re.search(r"\.site-header-apresentacao \{([^}]*)\}", css).group(1)
-        self.assertNotIn("padding-inline", regra)   # já não é centrada como o conteúdo
+        # Desde o visual calmo (29/10) a apresentação usa a mesma barra que as outras páginas.
+        regra = re.search(r"\n\.site-header \{([^}]*)\}", css).group(1)
+        self.assertIn("var(--margem)", regra)        # encostada às margens, não centrada como o conteúdo
+        self.assertNotIn("padding-inline", regra)
 
 
 class MinhaContaTests(AppTestCase):

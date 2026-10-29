@@ -29,11 +29,5 @@
   </dl>
 </section>
 
-<h2>{{ texts.ADMIN_DASHBOARD_INTRO }}</h2>
-<ul class="plain-list">
-  {% for item in texts.ADMIN_UPCOMING %}
-    <li>{{ item }}</li>
-  {% endfor %}
-</ul>
 <p><a href="{{ url_for('gestao.contas') }}">{{ texts.ADMIN_NAV_CONTAS }}</a> · <a href="{{ url_for('gestao.cursos') }}">{{ texts.ADMIN_NAV_CURSOS }}</a> · <a href="{{ url_for('gestao.admins') }}">{{ texts.ADMIN_NAV_ADMINS }}</a></p>
 {% endblock %}

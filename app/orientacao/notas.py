@@ -58,11 +58,16 @@ def contexto(notas: Notas, nomes_das_provas: Mapping[str, str]) -> str:
 
 
 def cursos_para_enviar(catalogo: Sequence[Curso], notas: Notas) -> tuple[Curso, ...]:
-    """O catálogo sem os cursos a que falta uma prova (ou inteiro, se sobrarem menos de ``MIN_CURSOS_FILTRADOS``)."""
+    """O catálogo sem os cursos a que falta uma prova (ou inteiro, se a pessoa cumprir as provas de menos
+    de ``MIN_CURSOS_FILTRADOS`` cursos)."""
     if not tem_o_que_partilhar(notas):
         return tuple(catalogo)
     possiveis = tuple(c for c in catalogo if not provas_em_falta(c, notas))
-    return possiveis if len(possiveis) >= MIN_CURSOS_FILTRADOS else tuple(catalogo)
+    # Só contam os cursos com provas publicadas que a pessoa cumpre. Os que não têm provas na DGES
+    # (ensino privado, com candidatura na instituição) passam o filtro, mas não chegam para o
+    # aplicar: sem isto, quem só fez Francês recebia só esses cursos (encontrado com os 1699 cursos).
+    abertos = sum(1 for c in possiveis if c.provas)
+    return possiveis if abertos >= MIN_CURSOS_FILTRADOS else tuple(catalogo)
 
 
 def em_falta_por_curso(cursos: Sequence[Curso], notas: Notas) -> dict[str, tuple[str, ...]]:

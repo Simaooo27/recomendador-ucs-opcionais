@@ -36,7 +36,9 @@ CREATE TABLE IF NOT EXISTS conversas_orientacao (
     user_id         INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     mensagens       TEXT    NOT NULL,  -- JSON: [{"papel": "assistente" | "utilizador", "texto": "..."}]
     sugestao        TEXT,              -- JSON da sugestão final (US30); vazio enquanto a conversa decorre
-    atualizada_em   TEXT    NOT NULL   -- UTC, ISO 8601
+    atualizada_em   TEXT    NOT NULL,  -- UTC, ISO 8601
+    -- US37: a pessoa autorizou, ao começar, que o LLM receba as provas feitas e o intervalo da média.
+    usar_notas      INTEGER NOT NULL DEFAULT 0 CHECK (usar_notas IN (0, 1))
 );
 
 -- Pedidos ao LLM por aluno e por dia (revisão de 22/10): o limite do fornecedor é partilhado por

@@ -37,7 +37,7 @@
 {#- ``escolher`` (US31): mostra a ligação «Escolher este curso», que leva à página de confirmação. -#}
 {#- O nome do curso leva à ficha completa (US05). ``comparar`` (US05): caixa «Comparar», ligada ao
     formulário ``comparar-form`` da página (atributo form=, para não haver formulários dentro de formulários). -#}
-{% macro cartao_curso(c, explicacao=none, escolher=false, comparar=false) -%}
+{% macro cartao_curso(c, explicacao=none, escolher=false, comparar=false, aviso=none) -%}
 <li class="curso"{% if c %} data-chave="{{ c.chave }}"{% endif %}>
   <p class="curso-area"><span class="curso-area-ponto" aria-hidden="true"></span><span data-campo="area">{{ c.area if c }}</span></p>
   <h3 class="curso-nome"><a href="{{ url_for('catalogo.ficha', chave=c.chave) if c else '#' }}" data-campo="curso" data-campo-href="ficha">{{ c.curso if c }}</a></h3>
@@ -52,6 +52,9 @@
     <p>{{ explicacao }}</p>
   </div>
   {% endif %}
+  {%- if aviso %}
+  <p class="curso-aviso" role="note">{{ aviso }}</p>
+  {%- endif %}
   <dl class="curso-numeros">
     <div><dt>{{ texts.LANDING_CARD_VAGAS }}</dt><dd data-campo="vagas">{{ (c.vagas if c.vagas is not none else "—") if c }}</dd></div>
     <div><dt>{{ texts.LANDING_CARD_NOTA }}</dt><dd data-campo="ultimo_colocado" data-vazio="{{ texts.LANDING_CARD_NO_NOTA }}"{% if c and not c.ultimo_colocado %} class="sem-dados"{% endif %}>{{ (c.ultimo_colocado or texts.LANDING_CARD_NO_NOTA) if c }}</dd></div>

@@ -35,6 +35,7 @@ REQUIRED_PLACEHOLDERS = {
     "ERROR_PASSWORD_TOO_SHORT": {"minimo"},
     "ERROR_PASSWORD_TOO_LONG": {"maximo"},
     "CONFIRMATION_EMAIL_BODY": {"horas", "ligacao"},
+    "RECUPERAR_EMAIL_BODY": {"minutos", "ligacao"},
     "PRIVACY_VERSION": {"versao"},
     "ORIENTACAO_INTRO": {"maximo"},
     "ORIENTACAO_PROGRESSO": {"numero", "maximo"},

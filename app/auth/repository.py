@@ -61,6 +61,12 @@ def update_nome(db: sqlite3.Connection, user_id: int, nome: str) -> None:
     db.commit()
 
 
+def update_password(db: sqlite3.Connection, user_id: int, password_hash: str) -> None:
+    """Muda a palavra-passe (US47). As sessões abertas terminam porque a impressão muda."""
+    db.execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))
+    db.commit()
+
+
 def list_pending(db: sqlite3.Connection) -> list[sqlite3.Row]:
     """Contas por confirmar, da mais recente para a mais antiga (ativação pela gestão, 23/10)."""
     return db.execute(

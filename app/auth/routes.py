@@ -11,8 +11,8 @@ from ..mailer import Message
 from ..catalogo import services as catalogo
 from . import bp, exportar, services, sessions
 from .perfis import criar_cadeia_de_perfis
-from .services import ConfirmationOutcome, LoginOutcome
-from .validators import RegistrationInput, domains_hint, primeiro_nome
+from .services import ConfirmationOutcome, LoginOutcome, RecuperacaoOutcome
+from .validators import RegistrationInput, domains_hint, is_valid_email, normalize_email, primeiro_nome
 
 _PENDING_EMAIL_KEY = "pending_email"
 # Só em desenvolvimento (MAIL_BACKEND=console): a ligação aparece também na página.
@@ -146,6 +146,87 @@ def logout():
     sessions.logout_user()
     flash(texts.LOGOUT_FEITO, "ok")
     return redirect(url_for("main.index"))
+
+
+# ---------------------------------------------------------------------------
+# Recuperar a palavra-passe (US47)
+# ---------------------------------------------------------------------------
+
+_RECUPERACAO_STATUS = {RecuperacaoOutcome.INVALID: 400, RecuperacaoOutcome.EXPIRED: 410}
+
+
+def _recovery_message(to: str, link: str, nome: str) -> Message:
+    minutos = current_app.config["RESET_TOKEN_MAX_AGE_SECONDS"] // 60
+    saudacao = texts.CONFIRMATION_EMAIL_HELLO_NOME.format(nome=primeiro_nome(nome)) if nome else texts.CONFIRMATION_EMAIL_HELLO
+    body = saudacao + texts.RECUPERAR_EMAIL_BODY.format(minutos=minutos, ligacao=link)
+    return Message(to=to, subject=texts.RECUPERAR_EMAIL_SUBJECT, body=body)
+
+
+def _no_store(page, status: int):
+    # A ligação leva o token no endereço: a página não fica guardada em caches.
+    response = current_app.make_response((page, status))
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
+
+
+@bp.get("/recuperar")
+def recovery_form():
+    return render_template("auth/recuperar.html", email="", error=None)
+
+
+@bp.post("/recuperar")
+def recovery_submit():
+    """Envia a ligação, se houver conta ativa. A resposta é a mesma quer a conta exista quer não."""
+    email = normalize_email(request.form.get("email", ""))
+    if not is_valid_email(email):
+        # Só o formato: não diz nada sobre se a conta existe.
+        return render_template("auth/recuperar.html", email=email, error=texts.ERROR_EMAIL_INVALID), 422
+    pedido = services.pedir_recuperacao(get_db(), email, current_app.config)
+    if pedido is not None:
+        link = url_for("auth.recovery_reset_form", token=pedido.token, _external=True)
+        try:
+            current_app.extensions["mailer"].send(_recovery_message(pedido.email, link, pedido.nome))
+        except Exception:  # noqa: BLE001 - mostrar um erro aqui revelaria que a conta existe
+            current_app.logger.exception("Falha ao enviar o email de recuperação da palavra-passe")
+    # A ligação nunca aparece na página (ao contrário da confirmação em desenvolvimento): quem
+    # pedisse a recuperação de uma conta que não é sua podia mudar-lhe a palavra-passe.
+    return redirect(url_for("auth.recovery_sent"))
+
+
+@bp.get("/recuperar/enviado")
+def recovery_sent():
+    return render_template("auth/recuperar_enviado.html")
+
+
+@bp.get("/recuperar/<token>")
+def recovery_reset_form(token: str):
+    outcome = services.verificar_recuperacao(get_db(), token, current_app.config)
+    if outcome is not RecuperacaoOutcome.VALID:
+        return _no_store(render_template("auth/recuperar_ligacao.html", outcome=outcome.value), _RECUPERACAO_STATUS[outcome])
+    page = render_template(
+        "auth/recuperar_nova.html", token=token, errors={}, min_length=current_app.config["PASSWORD_MIN_LENGTH"]
+    )
+    return _no_store(page, 200)
+
+
+@bp.post("/recuperar/<token>")
+def recovery_reset_submit(token: str):
+    try:
+        outcome = services.recuperar_password(
+            get_db(), token, request.form.get("password", ""), request.form.get("password_confirm", ""), current_app.config
+        )
+    except services.RecuperacaoRejeitada as rejected:
+        page = render_template(
+            "auth/recuperar_nova.html", token=token, errors=rejected.errors, min_length=current_app.config["PASSWORD_MIN_LENGTH"]
+        )
+        return _no_store(page, 422)
+    if outcome is not RecuperacaoOutcome.VALID:
+        return _no_store(render_template("auth/recuperar_ligacao.html", outcome=outcome.value), _RECUPERACAO_STATUS[outcome])
+    # Termina também a sessão deste navegador, se houver: entra-se de novo com a palavra-passe nova.
+    sessions.logout_user()
+    flash(texts.RECUPERAR_FEITO, "ok")
+    return redirect(url_for("auth.login_form"))
 
 
 # ---------------------------------------------------------------------------

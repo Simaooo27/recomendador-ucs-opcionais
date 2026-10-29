@@ -1361,6 +1361,18 @@ button.a-enviar::before {
 .sugestao .opcao-instituicao { margin: 0; }
 .sugestao .botao-secundario { justify-self: start; }
 .plano-estimativa { margin-top: 2rem; color: var(--muted); font-size: 0.9rem; }
+/* US38: datas do concurso nacional (plano de candidatura) e próximo prazo no percurso. */
+.etapa-prazo { margin: 0.5rem 0 0; font-size: 0.95rem; }
+.etapa-prazo a { display: inline-block; margin-left: 0.25rem; }
+.calendario-fases { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); margin: 1rem 0; }
+.calendario-fase h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+.calendario-fase dl { display: grid; gap: 0.5rem; margin: 0; }
+.calendario-fase dl > div { padding: 0.5rem 0.75rem; border-radius: 10px; box-shadow: 0 0 0 1px var(--line); }
+.calendario-fase dt { color: var(--muted); font-size: 0.9rem; }
+.calendario-fase dd { margin: 0; font-weight: 700; }
+.calendario-fase dd.hint { font-weight: 400; font-size: 0.85rem; }
+.calendario-fase .calendario-atual { box-shadow: 0 0 0 2px var(--accent); }
+.calendario-etiqueta { display: inline-block; margin-left: 0.35rem; padding: 0 0.45rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; color: var(--paper); background: var(--accent); }
 .exames { margin: 1.5rem 0; padding: 0; border: 0; }
 .exames legend { font-weight: 700; padding: 0; }
 .exames-grelha { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 1rem; margin-top: 0.75rem; }

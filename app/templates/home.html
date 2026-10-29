@@ -32,6 +32,11 @@
         <p class="etapa-texto">{{ passo.texto }}</p>
         {% if passo.acao %}<a class="etapa-acao" href="{{ url_for(passo.acao[1]) }}">{{ passo.acao[0] }}</a>
         {%- elif passo.situacao == "atual" %}<p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>{% endif %}
+        {% if passo.situacao == "atual" and prazo %}
+          {#- US38: o próximo prazo do concurso nacional (datas em dados/calendario-concurso.csv). -#}
+          <p class="etapa-prazo"><strong>{{ texts.HOME_PRAZO_TITULO }}:</strong> {{ prazo }}
+            <a href="{{ pagina_calendario }}" rel="noopener" target="_blank">{{ texts.HOME_PRAZO_LIGACAO }}</a></p>
+        {% endif %}
       </li>
     {% endfor %}
   </ol>

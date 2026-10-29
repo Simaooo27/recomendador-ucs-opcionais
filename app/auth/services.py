@@ -12,13 +12,22 @@ from typing import Mapping
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import repository
-from .tokens import TokenExpired, TokenInvalid, make_confirmation_token, read_confirmation_token
+from .tokens import (
+    TokenExpired,
+    TokenInvalid,
+    impressao_da_password,
+    make_confirmation_token,
+    make_reset_token,
+    read_confirmation_token,
+    read_reset_token,
+)
 from .validators import (
     MSG_EMAIL_DUPLICATE,
     RegistrationInput,
     nome_error,
     normalize_email,
     normalize_nome,
+    password_errors,
     validate_registration,
 )
 
@@ -171,3 +180,83 @@ def change_nome(db: sqlite3.Connection, user_id: int, raw: str) -> str | None:
     if erro is None:
         repository.update_nome(db, user_id, nome)
     return erro
+
+
+# ---------------------------------------------------------------------------
+# Recuperar a palavra-passe (US47)
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class PedidoDeRecuperacao:
+    email: str
+    nome: str
+    token: str
+
+
+def pedir_recuperacao(db: sqlite3.Connection, email: str, config: Mapping) -> PedidoDeRecuperacao | None:
+    """O token para a ligação de recuperação, ou ``None`` se não há conta ativa com este email.
+
+    A rota mostra a mesma mensagem nos dois casos, para não revelar que emails têm conta. Uma
+    conta por confirmar não recebe ligação: primeiro tem de confirmar o email (US01).
+    """
+    user = repository.get_by_email(db, normalize_email(email))
+    if user is None or not user["is_active"]:
+        return None
+    impressao = impressao_da_password(config["SECRET_KEY"], user["password_hash"])
+    token = make_reset_token(config["SECRET_KEY"], int(user["id"]), impressao)
+    return PedidoDeRecuperacao(email=user["email"], nome=user["nome"], token=token)
+
+
+class RecuperacaoOutcome(str, Enum):
+    VALID = "valid"
+    INVALID = "invalid"      # adulterada, de outra conta, ou já usada (a palavra-passe já mudou)
+    EXPIRED = "expired"      # passou mais de 1 hora
+
+
+def _ler_token_de_recuperacao(db: sqlite3.Connection, token: str, config: Mapping) -> tuple[RecuperacaoOutcome, sqlite3.Row | None]:
+    try:
+        user_id, impressao = read_reset_token(config["SECRET_KEY"], token, config["RESET_TOKEN_MAX_AGE_SECONDS"])
+    except TokenExpired:
+        return RecuperacaoOutcome.EXPIRED, None
+    except TokenInvalid:
+        return RecuperacaoOutcome.INVALID, None
+    user = repository.get_by_id(db, user_id)
+    if user is None or not user["is_active"]:
+        return RecuperacaoOutcome.INVALID, None
+    atual = impressao_da_password(config["SECRET_KEY"], user["password_hash"])
+    if not hmac.compare_digest(atual.encode(), impressao.encode()):
+        return RecuperacaoOutcome.INVALID, None
+    return RecuperacaoOutcome.VALID, user
+
+
+def verificar_recuperacao(db: sqlite3.Connection, token: str, config: Mapping) -> RecuperacaoOutcome:
+    """Se a ligação ainda serve (antes de mostrar o formulário da palavra-passe nova)."""
+    return _ler_token_de_recuperacao(db, token, config)[0]
+
+
+class RecuperacaoRejeitada(Exception):
+    """A palavra-passe nova não cumpre as regras. ``errors`` mapeia campo -> mensagem."""
+
+    def __init__(self, errors: dict[str, str]) -> None:
+        super().__init__(errors)
+        self.errors = errors
+
+
+def recuperar_password(
+    db: sqlite3.Connection, token: str, password: str, password_confirm: str, config: Mapping
+) -> RecuperacaoOutcome:
+    """Muda a palavra-passe, se a ligação servir e a palavra-passe nova cumprir as regras.
+
+    Ao mudar, a ligação deixa de servir (uso único) e as sessões abertas da conta terminam: as
+    duas coisas dependem da impressão da palavra-passe (app/auth/tokens.py, app/auth/sessions.py).
+    """
+    outcome, user = _ler_token_de_recuperacao(db, token, config)
+    if outcome is not RecuperacaoOutcome.VALID:
+        return outcome
+    errors = password_errors(
+        password, password_confirm, min_length=config["PASSWORD_MIN_LENGTH"], max_length=config["PASSWORD_MAX_LENGTH"]
+    )
+    if errors:
+        raise RecuperacaoRejeitada(errors)
+    repository.update_password(db, int(user["id"]), generate_password_hash(password))
+    return RecuperacaoOutcome.VALID

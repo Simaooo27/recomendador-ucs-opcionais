@@ -36,6 +36,8 @@ def default_config() -> dict:
         "PASSWORD_MIN_LENGTH": 8,
         "PASSWORD_MAX_LENGTH": 128,
         "CONFIRMATION_TOKEN_MAX_AGE_SECONDS": 24 * 60 * 60,
+        # Recuperar a palavra-passe (US47): a ligação serve uma só vez e durante 1 hora.
+        "RESET_TOKEN_MAX_AGE_SECONDS": 60 * 60,
         "PRIVACY_POLICY_VERSION": "1.1",   # 1.1 (23/10): passa a recolher o nome
         # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
         "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% set layout = "entrada" %}
+{% set page_title = texts.RECUPERAR_ENVIADO_TITLE %}
+
+{#- Depois de pedir a recuperação (US47): igual para todos os emails, existam ou não. -#}
+{% block content %}
+<h1>{{ texts.RECUPERAR_ENVIADO_TITLE }}</h1>
+<p>{{ texts.RECUPERAR_ENVIADO }}</p>
+<p class="lead">{{ texts.RECUPERAR_ENVIADO_AJUDA }}</p>
+<p class="switch"><a href="{{ url_for('auth.recovery_form') }}">{{ texts.RECUPERAR_PEDIR_OUTRA }}</a> · <a href="{{ url_for('auth.login_form') }}">{{ texts.RECUPERAR_VOLTAR }}</a></p>
+{% endblock %}

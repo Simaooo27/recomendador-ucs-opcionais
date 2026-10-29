@@ -31,5 +31,6 @@
 
   <button type="submit">{{ texts.LOGIN_BUTTON }}</button>
 </form>
+<p class="switch"><a href="{{ url_for('auth.recovery_form') }}">{{ texts.LOGIN_FORGOT }}</a></p>
 <p class="switch">{{ texts.LOGIN_NO_ACCOUNT }}<a href="{{ url_for('auth.register_form') }}">{{ texts.LOGIN_REGISTER_LINK }}</a></p>
 {% endblock %}

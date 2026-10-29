@@ -265,6 +265,7 @@ LOGIN_INTRO = "Entre com o email e a palavra-passe com que criou a conta."
 LOGIN_EMAIL_LABEL = "Email"
 LOGIN_PASSWORD_LABEL = "Palavra-passe"
 LOGIN_BUTTON = "Entrar"
+LOGIN_FORGOT = "Esqueceu-se da palavra-passe?"
 LOGIN_NO_ACCOUNT = "Ainda não tem conta? "
 LOGIN_REGISTER_LINK = "Crie uma conta"
 
@@ -272,6 +273,40 @@ LOGIN_REGISTER_LINK = "Crie uma conta"
 # Também é a mensagem dos administradores, para o formulário não revelar que a gestão existe.
 ERROR_LOGIN_INVALID = "Email ou palavra-passe incorretos."
 ERROR_LOGIN_INACTIVE = "Ainda não confirmou o seu email. Abra a ligação que lhe enviámos para ativar a conta."
+
+# ---------------------------------------------------------------------------
+# Recuperar a palavra-passe (/auth/recuperar, US47)
+# ---------------------------------------------------------------------------
+
+RECUPERAR_TITLE = "Recuperar a palavra-passe"
+RECUPERAR_INTRO = "Escreva o email da sua conta. Vamos enviar-lhe uma ligação para escolher uma palavra-passe nova."
+RECUPERAR_EMAIL_LABEL = "Email"
+RECUPERAR_BOTAO = "Enviar a ligação"
+RECUPERAR_VOLTAR = "Voltar a iniciar sessão"
+# A mesma mensagem quer a conta exista quer não (não revela que emails têm conta).
+RECUPERAR_ENVIADO_TITLE = "Veja o seu email"
+RECUPERAR_ENVIADO = (
+    "Se houver uma conta ativa com esse email, enviámos-lhe uma ligação para escolher uma palavra-passe nova. "
+    "A ligação serve uma só vez e durante 1 hora."
+)
+RECUPERAR_ENVIADO_AJUDA = "Não chegou nada? Veja a pasta de spam ou peça outra ligação."
+RECUPERAR_PEDIR_OUTRA = "Pedir outra ligação"
+RECUPERAR_NOVA_TITLE = "Escolher uma palavra-passe nova"
+RECUPERAR_NOVA_INTRO = "Depois de a mudar, todas as sessões abertas da sua conta terminam, em qualquer dispositivo."
+RECUPERAR_NOVA_LABEL = "Palavra-passe nova"
+RECUPERAR_NOVA_BOTAO = "Mudar a palavra-passe"
+RECUPERAR_FEITO = "Palavra-passe mudada. Inicie sessão com a palavra-passe nova."
+RECUPERAR_INVALIDA_TITLE = "Esta ligação já não serve"
+RECUPERAR_INVALIDA = "A ligação não é válida ou já foi usada. Cada ligação só serve uma vez."
+RECUPERAR_EXPIRADA_TITLE = "A ligação expirou"
+RECUPERAR_EXPIRADA = "A ligação só serve durante 1 hora. Peça outra."
+RECUPERAR_EMAIL_SUBJECT = "Escolher uma palavra-passe nova"
+RECUPERAR_EMAIL_BODY = (
+    "Recebemos um pedido para mudar a palavra-passe da sua conta OptaBem. Para escolher uma nova, abra a "
+    "ligação abaixo nos próximos {minutos} minutos. A ligação só serve uma vez:\n\n"
+    "{ligacao}\n\n"
+    "Se não fez este pedido, ignore esta mensagem: a palavra-passe continua a mesma.\n"
+)
 
 # ---------------------------------------------------------------------------
 # Página inicial do aluno (/inicio), depois de iniciar sessão

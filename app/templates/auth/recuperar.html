@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set layout = "entrada" %}
+{% set page_title = texts.RECUPERAR_TITLE %}
+
+{#- Recuperar a palavra-passe (US47): pede o email. A resposta é a mesma quer a conta exista quer não. -#}
+{% block content %}
+<h1>{{ texts.RECUPERAR_TITLE }}</h1>
+<p class="lead">{{ texts.RECUPERAR_INTRO }}</p>
+
+<form method="post" action="{{ url_for('auth.recovery_submit') }}" novalidate>
+  <input type="hidden" name="{{ csrf_field_name }}" value="{{ csrf_token() }}">
+  <div class="field">
+    <label for="email">{{ texts.RECUPERAR_EMAIL_LABEL }}</label>
+    <input id="email" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" required value="{{ email }}"
+           {% if error %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
+    {% if error %}<p class="error" id="email-error">{{ error }}</p>{% endif %}
+  </div>
+  <button type="submit">{{ texts.RECUPERAR_BOTAO }}</button>
+</form>
+<p class="switch"><a href="{{ url_for('auth.login_form') }}">{{ texts.RECUPERAR_VOLTAR }}</a></p>
+{% endblock %}

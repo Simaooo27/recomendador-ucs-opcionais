@@ -147,5 +147,34 @@
   {% endif %}
 </section>
 
+{#- US38: datas das 3 fases do concurso (dados/calendario-concurso.csv), com a ligação para a DGES. -#}
+<section class="cartao plano-calendario" id="datas" aria-labelledby="plano-calendario">
+  <h2 id="plano-calendario">{{ texts.CALENDARIO_TITULO }}</h2>
+  {% if calendario.ano %}
+    <p>{{ texts.CALENDARIO_INTRO.format(ano=calendario.ano) }}</p>
+    {% if not prazo.etapa %}<p class="aviso">{{ texts.CALENDARIO_JA_PASSOU.format(ano=calendario.ano, seguinte=prazo.ano_seguinte) }}</p>{% endif %}
+    <div class="calendario-fases">
+      {% for fase in calendario.fases %}
+        <div class="calendario-fase">
+          <h3>{{ texts.CALENDARIO_FASE.format(fase=fase.numero) }}</h3>
+          <dl>
+            {% for etapa in fase.etapas %}
+              {% set atual = prazo.etapa == etapa %}
+              <div{% if atual %} class="calendario-atual"{% endif %}>
+                <dt>{{ etapa.nome }}{% if atual and prazo.a_decorrer %} <span class="calendario-etiqueta">{{ texts.CALENDARIO_A_DECORRER }}</span>{% endif %}</dt>
+                <dd>{% if etapa.um_dia %}{{ etapa.inicio.strftime("%d/%m/%Y") }}{% else %}{{ texts.CALENDARIO_DE_A.format(inicio=etapa.inicio.strftime("%d/%m"), fim=etapa.fim.strftime("%d/%m/%Y")) }}{% endif %}</dd>
+                {% if etapa.nota %}<dd class="hint">{{ etapa.nota }}</dd>{% endif %}
+              </div>
+            {% endfor %}
+          </dl>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>{{ texts.CALENDARIO_SEM_DATAS }}</p>
+  {% endif %}
+  <p><a href="{{ pagina_calendario }}" rel="noopener" target="_blank">{{ texts.CALENDARIO_LIGACAO }}</a></p>
+</section>
+
 <p class="plano-estimativa">{{ texts.CANDIDATURA_AVISO_ESTIMATIVA }}</p>
 {% endblock %}

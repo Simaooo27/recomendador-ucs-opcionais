@@ -16,7 +16,9 @@ from ..catalogo import services as catalogo
 from ..catalogo.repository import nomes_das_provas
 from ..db import get_db
 from ..percurso import services as percurso
-from . import services
+from datetime import date
+
+from . import calendario, services
 from .calculos import NOMES_CURTOS_DOS_EXAMES, NOMES_DOS_EXAMES
 
 bp = Blueprint("candidatura", __name__, url_prefix="/candidatura")
@@ -70,7 +72,14 @@ def plano():
         nomes=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
         nomes_exames=_nomes_dos_exames(),
         maximo=services.MAX_OPCOES,
+        **_calendario(),
     )
+
+
+def _calendario() -> dict:
+    """As datas do concurso (US38) e a etapa a decorrer ou a seguir, para a secção do plano."""
+    datas = calendario.ler(current_app.config["CALENDARIO_CSV"])
+    return {"calendario": datas, "prazo": calendario.proximo_prazo(datas, date.today()), "pagina_calendario": calendario.PAGINA_DGES}
 
 
 @bp.route("/notas", methods=["GET", "POST"])

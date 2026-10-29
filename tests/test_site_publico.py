@@ -3,7 +3,6 @@ na página e limite de pedidos ao LLM por aluno e por dia. Sem rede (LLM falso).
 from __future__ import annotations
 
 import base64
-import json
 import sqlite3
 import unittest
 import zlib
@@ -11,7 +10,6 @@ from unittest import mock
 
 from app import create_app, texts
 from app.llm.adaptadores import LLMFalso
-from app.llm.decoradores import ProtegerDadosPessoais
 from app.orientacao import limite
 from tests.base import AppTestCase
 from tests.test_conversa import ConversaTestCase, pergunta

@@ -28,6 +28,7 @@
 | **RF42.5** | Sem média indicada, a ficha pede as notas (US34); sem condições de acesso no catálogo, diz que a DGES não as publica. |
 | **RF42.6** | A secção «A sua nota neste curso» aparece na ficha com sessão iniciada; sem sessão, a ficha convida a entrar. |
 | **RF42.7** | Sempre que a página mostra uma nota de candidatura, mostra também o aviso de que é uma estimativa (RN11). |
+| **RF42.8** | Num curso do ensino privado, a ficha diz que não entra no concurso nacional (a candidatura é na instituição) e não calcula a nota (RN12). *(27/10)* |
 
 ## 3. Mensagens
 
@@ -41,6 +42,7 @@
 | Abaixo do mínimo | Abaixo da classificação mínima · Abaixo do mínimo de 95 pontos: Português |
 | Conjunto usado | Conta com: História + Português |
 | Sem notas | Indique as suas notas para ver a sua nota |
+| Ensino privado | Ensino privado: não entra no concurso nacional (candidatura na instituição) |
 | Estimativa | As contas são uma estimativa para o contingente geral da 1.ª fase, com as regras publicadas pela DGES. A nota do último colocado muda todos os anos: é uma referência, não uma garantia. |
 
 ## 4. Dados
@@ -55,6 +57,7 @@ Sem dados novos: usa as condições do catálogo (US33) e as notas do aluno (US3
 | Situação: acima, perto ou abaixo; falta de prova e nota abaixo do mínimo assinaladas. | RF42.3 a RF42.5 | `ContasTests.test_perto_e_abaixo_do_ultimo_colocado`, `test_falta_prova_diz_qual_falta`, `test_prova_abaixo_do_minimo_nao_conta`, `test_sem_notas_sem_regras_e_sem_referencia` |
 | Aparece na ficha de cada curso, com sessão iniciada. | RF42.6 | `test_a_ficha_mostra_as_condicoes_de_acesso_e_a_nota_do_aluno` (146,0); `test_sem_sessao_a_ficha_mostra_as_condicoes_e_pede_para_entrar` |
 | Aviso visível: estimativa para o contingente geral da 1.ª fase, não uma garantia. | RF42.7 | `test_a_ficha_e_o_plano_dizem_que_a_nota_e_uma_estimativa` (acrescentado a 27/10) |
+| (ensino privado, 27/10) | RF42.8 | `ContasTests.test_ensino_privado_fica_fora_do_concurso_nacional`; `test_curso_privado_nao_entra_no_plano` |
 
 ## 6. Requisitos não funcionais aplicáveis
 
@@ -66,4 +69,5 @@ RNF06 (contas testadas com casos de resultado conhecido, sem rede), RNF07 (as co
 |---|---|---|
 | 1 | A margem de «perto» é de 5 pontos (0,5 valores). | Proposta do Claude, aceite pelo PO a 23/10 |
 | 2 | Até 27/10 a ficha mostrava a nota sem o aviso de estimativa (só o plano o tinha), o que não cumpria o 4.º critério. Corrigido ao escrever esta documentação. | **Corrigido** (27/10) |
-| 3 | Matemática e Matemática A contam como o mesmo exame. | **Por confirmar** (ponto 16 dos requisitos) |
+| 3 | Matemática e Matemática A contavam como o mesmo exame. | **Corrigido** (27/10): correspondência completa da DGES (US34, RF41.4) |
+| 4 | Os cursos do ensino privado apareciam com «Cumpre os mínimos», como se entrassem no concurso nacional. | **Corrigido** (27/10): RN12 |

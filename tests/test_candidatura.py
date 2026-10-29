@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 from app import texts
-from app.candidatura import services
+from app.candidatura import calculos, services
 from app.candidatura.calculos import (
     Notas, Situacao, chega_na_2a_fase, exames_que_abrem_portas, nota_de_exame, nota_necessaria, simular,
 )
@@ -48,9 +48,31 @@ class ContasTests(unittest.TestCase):
         self.assertIs(sim.situacao, Situacao.FALTA_PROVA)
         self.assertEqual(sim.em_falta, ("16",))
 
-    def test_matematica_e_matematica_a_contam_com_o_mesmo_exame(self):
-        sim = simular(_curso(provas=(("16",),)), Notas(15.0, {"19": 150}))
-        self.assertEqual(sim.nota, 150.0)
+    def test_matematica_a_conta_para_as_provas_16_17_e_19(self):
+        # Correspondência da DGES (27/10): o exame 635 (Matemática A, guardado em «19») dá as provas 16, 17 e 19.
+        for prova in ("16", "17", "19"):
+            with self.subTest(prova=prova):
+                self.assertEqual(simular(_curso(provas=((prova,),)), Notas(15.0, {"19": 150})).nota, 150.0)
+
+    def test_matematica_b_e_macs_so_contam_para_as_suas_provas(self):
+        # Matemática B (735, guardada em «16») dá as provas 16 e 17, mas não a 19; MACS (835, em «17») só a 17.
+        mat_b, macs = Notas(15.0, {"16": 150}), Notas(15.0, {"17": 150})
+        self.assertEqual(simular(_curso(provas=(("16",),)), mat_b).nota, 150.0)
+        self.assertEqual(simular(_curso(provas=(("17",),)), mat_b).nota, 150.0)
+        self.assertIs(simular(_curso(provas=(("19",),)), mat_b).situacao, Situacao.FALTA_PROVA)
+        self.assertEqual(simular(_curso(provas=(("17",),)), macs).nota, 150.0)
+        self.assertIs(simular(_curso(provas=(("16",),)), macs).situacao, Situacao.FALTA_PROVA)
+
+    def test_com_dois_exames_conta_o_melhor(self):
+        notas = Notas(15.0, {"19": 120, "16": 170})          # Matemática A 120, Matemática B 170
+        self.assertEqual(simular(_curso(provas=(("16",),)), notas).nota, 160.0)
+        self.assertEqual(simular(_curso(provas=(("19",),)), notas).nota, 135.0)
+
+    def test_ensino_privado_fica_fora_do_concurso_nacional(self):
+        privado = _curso(tipo_ensino="Privado universitário")
+        self.assertIs(simular(privado, Notas(15.0, {"18": 150})).situacao, Situacao.FORA_DO_CONCURSO)
+        self.assertFalse(Situacao.FORA_DO_CONCURSO.conta)
+        self.assertIsNone(nota_necessaria(privado, Notas(15.0, {})))
 
     def test_prova_abaixo_do_minimo_nao_conta(self):
         sim = simular(_curso(), Notas(18.0, {"18": 90}))
@@ -159,6 +181,14 @@ class ExamesQueAbremPortasTests(unittest.TestCase):
         b = _curso(codigo_instituicao="2", provas=(("19",),))
         self.assertEqual(exames_que_abrem_portas([a, b], Notas())[0].provas, ("19",))
 
+    def test_matematica_a_abre_os_cursos_de_macs_e_os_privados_ficam_de_fora(self):
+        macs = _curso(codigo_instituicao="1", provas=(("17",),))
+        mat_a = _curso(codigo_instituicao="2", provas=(("19",),))
+        privado = _curso(codigo_instituicao="3", provas=(("18",),), tipo_ensino="Privado universitário")
+        melhor = exames_que_abrem_portas([macs, mat_a, privado], Notas())[0]
+        self.assertEqual(melhor.provas, ("19",))                  # a Matemática A dá as duas provas
+        self.assertEqual((len(melhor.abre), melhor.nao_abre), (2, ()))
+
     def test_precisa_de_pelo_menos_dois_cursos_com_regras(self):
         self.assertEqual(exames_que_abrem_portas([_curso()], Notas()), [])
 
@@ -216,9 +246,9 @@ _COLUNAS = [
 ]
 
 
-def _linha(code, codc, curso, ultimo, provas="18|11+18", pre=""):
+def _linha(code, codc, curso, ultimo, provas="18|11+18", pre="", tipo="Público universitário"):
     return {
-        "instituicao": f"Instituição {code}", "unidade_organica": "", "tipo_ensino": "Público universitário",
+        "instituicao": f"Instituição {code}", "unidade_organica": "", "tipo_ensino": tipo,
         "localidade": "Porto", "codigo_instituicao_dges": code, "codigo_curso_dges": codc, "curso": curso,
         "area_optabem": "Ciência da Informação", "grau": "Licenciatura (1.º ciclo)", "duracao_semestres": "6",
         "ects": "180", "vagas_2026": "40", "ultimo_colocado_1fase_2025": ultimo, "area_cnaef": "", "descricao": "",
@@ -242,6 +272,7 @@ class PaginasDoPlanoTests(AppTestCase):
             escritor.writerow(_linha("0002", "9000", "Curso Disputado", "170,0"))
             escritor.writerow(_linha("0003", "9000", "Curso Vizinho", "130,0"))
             escritor.writerow(_linha("0004", "9000", "Curso Sem Regras", "", provas=""))
+            escritor.writerow(_linha("0005", "9000", "Curso Privado", "", tipo="Privado universitário"))
         with open(os.path.join(self._dados.name, "provas-ingresso.csv"), "w", encoding="utf-8-sig", newline="") as ficheiro:
             ficheiro.write("codigo,nome\n11,História\n16,Matemática\n18,Português\n19,Matemática A\n")
         self.config_overrides = {"CATALOGO_CSV": caminho}
@@ -268,10 +299,22 @@ class PaginasDoPlanoTests(AppTestCase):
         self.assertIn(texts.CANDIDATURA_ERRO_MEDIA, html)
         self.assertIn(texts.CANDIDATURA_ERRO_EXAME, html)
 
-    def test_o_formulario_mostra_matematica_a_uma_so_vez(self):
+    def test_o_formulario_pede_os_exames_de_matematica_pelo_nome(self):
         html = self.client.get("/candidatura/notas").get_data(as_text=True)
-        self.assertIn('name="exame_19"', html)
-        self.assertNotIn('name="exame_16"', html)
+        for codigo in ("19", "16", "17"):
+            self.assertIn(f'name="exame_{codigo}"', html)
+            self.assertIn(calculos.NOMES_DOS_EXAMES[codigo], html)
+
+    def test_curso_privado_nao_entra_no_plano(self):
+        self._post("/candidatura/notas", media="15,2", exame_18="140")
+        html = self.client.get("/cursos/0005-9000").get_data(as_text=True)
+        self.assertIn(texts.FICHA_FORA_DO_CONCURSO, html)
+        self.assertIn(texts.CANDIDATURA_SITUACAO_FORA_DO_CONCURSO, html)
+        self.assertNotIn(texts.CANDIDATURA_JUNTAR, html)
+        self._post("/candidatura/juntar/0005-9000", voltar="/candidatura/")
+        plano = self.client.get("/candidatura/").get_data(as_text=True)
+        self.assertNotIn('data-chave="0005-9000"', plano)
+        self.assertNotIn("Curso Privado", plano)                 # nem nas sugestões nem no plano B
 
     def test_percurso_completo_notas_juntar_ordenar_e_retirar(self):
         self.assertEqual(self._post("/candidatura/notas", media="15,2", exame_18="14").status_code, 302)

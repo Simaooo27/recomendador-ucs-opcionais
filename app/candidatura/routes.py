@@ -17,7 +17,7 @@ from ..catalogo.repository import nomes_das_provas
 from ..db import get_db
 from ..percurso import services as percurso
 from . import services
-from .calculos import EQUIVALENTES
+from .calculos import NOMES_CURTOS_DOS_EXAMES, NOMES_DOS_EXAMES
 
 bp = Blueprint("candidatura", __name__, url_prefix="/candidatura")
 
@@ -34,10 +34,15 @@ def _pontos(valor, sinal: bool = False) -> str:
 
 
 def _provas_do_formulario() -> list[tuple[str, str]]:
-    """(código, nome) das provas que aparecem no formulário. As equivalentes aparecem uma vez."""
-    nomes = nomes_das_provas(current_app.config["CATALOGO_CSV"])
-    escondidas = set(EQUIVALENTES)          # «16 Matemática» fica com a nota de «19 Matemática A»
-    return [(codigo, nome) for codigo, nome in sorted(nomes.items(), key=lambda p: p[1]) if codigo not in escondidas]
+    """(código, nome) dos exames do formulário: um por prova, e nas Matemáticas o nome do exame
+    (Matemática A, Matemática B, MACS; ver ``ACEITA`` em calculos.py)."""
+    nomes = {**nomes_das_provas(current_app.config["CATALOGO_CSV"]), **NOMES_DOS_EXAMES}
+    return sorted(nomes.items(), key=lambda p: p[1])
+
+
+def _nomes_dos_exames() -> dict[str, str]:
+    """Nomes para as notas e as combinações de exames do plano (Matemática B em vez de «Matemática»)."""
+    return {**nomes_das_provas(current_app.config["CATALOGO_CSV"]), **NOMES_CURTOS_DOS_EXAMES}
 
 
 @bp.get("/")
@@ -63,6 +68,7 @@ def plano():
         combinacoes=services.exames_do_plano(plano, lista),
         plano_b=services.plano_b(plano, lista, cursos),
         nomes=nomes_das_provas(current_app.config["CATALOGO_CSV"]),
+        nomes_exames=_nomes_dos_exames(),
         maximo=services.MAX_OPCOES,
     )
 
@@ -104,6 +110,9 @@ def _voltar():
 @login_required
 def juntar(chave: str):
     curso = _curso_ou_404(chave)
+    if not curso.concurso_nacional:          # ensino privado: candidatura na instituição (27/10)
+        flash(texts.CANDIDATURA_FORA_DO_CONCURSO, "error")
+        return _voltar()
     try:
         if services.juntar(get_db(), g.user["id"], chave):
             flash(texts.CANDIDATURA_JUNTADO.format(curso=curso.curso), "ok")

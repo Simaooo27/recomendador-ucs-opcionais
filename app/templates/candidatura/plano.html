@@ -14,7 +14,7 @@
   {% if plano.tem_notas %}
     <p>{{ texts.CANDIDATURA_MEDIA_RESUMO.format(media=plano.notas.media | pontos) }}</p>
     {% if plano.notas.exames %}
-      {% set exames %}{% for codigo, valor in plano.notas.exames | dictsort %}{{ nomes.get(codigo, codigo) }} {{ valor | pontos }}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
+      {% set exames %}{% for codigo, valor in plano.notas.exames | dictsort %}{{ nomes_exames.get(codigo, codigo) }} {{ valor | pontos }}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
       <p>{{ texts.CANDIDATURA_EXAMES_RESUMO.format(exames=exames) }}</p>
     {% else %}<p>{{ texts.CANDIDATURA_SEM_EXAMES }}</p>{% endif %}
     <a class="botao-secundario botao-ligacao" href="{{ url_for('candidatura.notas') }}">{{ texts.CANDIDATURA_MUDAR_NOTAS }}</a>
@@ -75,12 +75,12 @@
   <ol class="exames-lista">
     {% for combo in combinacoes %}
       <li class="cartao combinacao">
-        <p class="combinacao-provas">{{ cand.provas(combo.provas, nomes) }}</p>
+        <p class="combinacao-provas">{{ cand.provas(combo.provas, nomes_exames) }}</p>
         <p class="situacao {{ 'situacao-acima' if not combo.nao_abre else 'situacao-perto' }}">
           {{- texts.EXAMES_TODAS if not combo.nao_abre else texts.EXAMES_ABRE.format(n=combo.abre | length, total=combo.abre | length + combo.nao_abre | length) -}}
         </p>
         {% if combo.nao_abre %}<p class="situacao-detalhe">{{ texts.EXAMES_FALTA.format(cursos=combo.nao_abre | map(attribute="curso") | join(", ")) }}</p>{% endif %}
-        {% if combo.ja_feitas %}<p class="situacao-detalhe">{{ texts.EXAMES_JA_FEZ.format(provas=cand.provas(combo.ja_feitas, nomes)) }}</p>{% endif %}
+        {% if combo.ja_feitas %}<p class="situacao-detalhe">{{ texts.EXAMES_JA_FEZ.format(provas=cand.provas(combo.ja_feitas, nomes_exames)) }}</p>{% endif %}
       </li>
     {% endfor %}
   </ol>

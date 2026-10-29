@@ -30,6 +30,7 @@
 | **RF43.7** | Quem já escolheu um curso (US31) e tem o plano vazio vê um botão para o juntar como 1.ª opção. |
 | **RF43.8** | O percurso da página inicial tem o 4.º passo, «Preparar a candidatura», que leva ao plano. |
 | **RF43.9** | O plano mostra o aviso de que as contas são uma estimativa (RN11) e de que a candidatura se faz no site da DGES. |
+| **RF43.10** | Os cursos do ensino privado não entram no plano: a ficha não tem «Juntar ao plano» e um pedido para os juntar é recusado com uma mensagem. Também não aparecem nas sugestões (RN12). *(27/10)* |
 
 ## 3. Mensagens
 
@@ -39,6 +40,7 @@
 | Plano vazio | Ainda não juntou nenhum curso. Abra a ficha de um curso no catálogo e carregue em «Juntar ao plano». |
 | Juntado | {curso} juntado ao plano de candidatura. |
 | Plano cheio | O plano já tem 6 opções: retire uma antes de juntar outra. |
+| Ensino privado | Este curso é do ensino privado e não entra nas 6 opções do concurso nacional: a candidatura faz-se diretamente na instituição. |
 | Opções que não contam | {n} opção(ões) não conta(m) para a colocação: veja o que falta em cada uma. |
 | Nenhuma segura | Nenhuma opção está claramente acima do último colocado. Pense em juntar pelo menos um curso onde fique acima, para não arriscar ficar sem colocação. |
 | Ordem | A 1.ª opção ({curso}) é das mais fáceis de entrar. Se ficar colocado nela, as opções seguintes já não contam: ponha primeiro os cursos de que mais gosta, mesmo que sejam mais difíceis. |
@@ -60,6 +62,7 @@ Tabela `planos_candidatura`, coluna `opcoes`: lista (JSON) das chaves dos cursos
 | Passo «Preparar a candidatura» no percurso do início. | RF43.8 | `test_com_curso_o_proximo_passo_e_o_plano_de_candidatura` (`tests/test_apresentacao.py`) |
 | (aviso de estimativa) | RF43.9 | `test_a_ficha_e_o_plano_dizem_que_a_nota_e_uma_estimativa` |
 | (curso escolhido como 1.ª opção) | RF43.7 | `test_o_curso_escolhido_pode_ser_a_1a_opcao` (acrescentado a 27/10) |
+| Cursos do ensino privado não entram (critério acrescentado a 27/10). | RF43.10 | `test_curso_privado_nao_entra_no_plano` |
 
 ## 6. Requisitos não funcionais aplicáveis
 

@@ -26,6 +26,7 @@
 | **RF40.3** | A fórmula aparece como «50% média do secundário + 50% provas de ingresso»; os mínimos como «95 pontos na nota de candidatura e 95 em cada prova». Os pré-requisitos só aparecem quando existem. |
 | **RF40.4** | Um curso sem condições de acesso no catálogo mostra uma frase a dizê-lo e a ligação para a página da DGES (na secção «Fontes»). |
 | **RF40.5** | Tudo funciona sem sessão iniciada. Sem sessão, a ficha convida a iniciar sessão para calcular a nota (US35). |
+| **RF40.6** | Num curso do ensino privado, a secção diz que o curso não entra no concurso nacional e que a candidatura é feita na instituição (RN12). *(27/10)* |
 
 ## 3. Mensagens
 
@@ -60,5 +61,5 @@ RNF06 (os testes usam páginas guardadas e um CSV de teste, sem rede), RNF09 (us
 
 | # | Questão | Estado |
 |---|---|---|
-| 1 | «Matemática» (16) e «Matemática A» (19) aparecem como provas diferentes na DGES; o OptaBem conta-as como o mesmo exame. | **Por confirmar** pela equipa na DGES (ponto 16 dos requisitos) |
+| 1 | «Matemática» (16) e «Matemática A» (19) são provas diferentes na DGES. A ficha mostra as provas com o nome da DGES; a forma de as cumprir com os exames está na US34. | **Decidido** (27/10) |
 | 2 | Pré-requisitos (atestados, provas físicas) aparecem como texto, tal como a DGES os publica; o OptaBem não os verifica. | Aceite (aviso no plano, US36) |

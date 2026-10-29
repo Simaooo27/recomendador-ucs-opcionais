@@ -143,7 +143,7 @@ def avisos(plano: Plano, lista: Sequence[Opcao]) -> list[str]:
     if not lista:
         return []
     resultado = []
-    nao_contam = [o for o in lista if o.simulacao.situacao in (Situacao.FALTA_PROVA, Situacao.ABAIXO_DO_MINIMO)]
+    nao_contam = [o for o in lista if o.simulacao.situacao in (Situacao.FALTA_PROVA, Situacao.ABAIXO_DO_MINIMO, Situacao.FORA_DO_CONCURSO)]
     if nao_contam:
         resultado.append(texts.CANDIDATURA_AVISO_NAO_CONTAM.format(n=len(nao_contam)))
     if plano.tem_notas:

@@ -26,7 +26,7 @@
 | **RF48.3** | Ficam só as combinações mínimas (sem exames a mais para os mesmos cursos), sem repetir combinações que abrem exatamente os mesmos cursos. |
 | **RF48.4** | Mostra as 3 melhores: a que abre mais opções primeiro; depois a com menos exames; depois a com mais exames já feitos. |
 | **RF48.5** | Para cada combinação, diz para quantas opções dá (ou «todas»), para quais não dá e que exames a pessoa já fez. |
-| **RF48.6** | Matemática (16) e Matemática A (19) contam como o mesmo exame. |
+| **RF48.6** | As combinações são de exames: nas Matemáticas, Matemática A (635), Matemática B (735) e MACS (835), cada um a dar as provas que a DGES aceita (a Matemática A dá Matemática, MACS e Matemática A). Cursos do ensino privado não contam (RN12). *(Corrigido a 27/10.)* |
 
 ## 3. Mensagens
 
@@ -52,7 +52,7 @@ Sem dados novos: usa as provas de cada curso (US33) e os exames do aluno (US34).
 | Combinações de até 3 exames, a partir dos conjuntos de provas das opções do plano (2 ou mais opções). | RF48.1, RF48.2 | `ExamesQueAbremPortasTests.test_precisa_de_pelo_menos_dois_cursos_com_regras`; `test_o_plano_mostra_exames_que_abrem_portas_e_plano_b` |
 | Mostra as 3 melhores: a que serve para mais opções primeiro, depois a com menos exames. | RF48.3, RF48.4 | `ExamesQueAbremPortasTests.test_escolhe_a_combinacao_que_serve_para_mais_cursos` |
 | Diz para que opções não dá e que exames da combinação a pessoa já fez. | RF48.5 | `ExamesQueAbremPortasTests.test_escolhe_a_combinacao_que_serve_para_mais_cursos` (`nao_abre`, `ja_feitas`) |
-| Matemática e Matemática A contam como o mesmo exame. | RF48.6 | `ExamesQueAbremPortasTests.test_matematica_16_e_19_contam_como_a_mesma` |
+| Os exames de Matemática contam para as provas que a DGES aceita (critério reescrito a 27/10). | RF48.6 | `ExamesQueAbremPortasTests.test_matematica_16_e_19_contam_como_a_mesma`, `test_matematica_a_abre_os_cursos_de_macs_e_os_privados_ficam_de_fora` |
 
 ## 6. Requisitos não funcionais aplicáveis
 
@@ -62,4 +62,4 @@ RNF03 (no máximo 3 exames por combinação, para a conta ser rápida), RNF06 (t
 
 | # | Questão | Estado |
 |---|---|---|
-| 1 | Matemática e Matemática A contam como o mesmo exame. | **Por confirmar** (ponto 16 dos requisitos) |
+| 1 | A correspondência das Matemáticas estava incompleta. | **Corrigido** (27/10; ponto 16 dos requisitos) |

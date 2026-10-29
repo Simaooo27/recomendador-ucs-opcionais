@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.9 · rascunho para validação do Product Owner · 2026-10-27.** O OptaBem é um **recomendador de cursos**: orienta quem ainda está a escolher curso, compara cursos de várias instituições e ajuda a preparar a candidatura ao concurso nacional (ver a [visão do produto](00-visao-do-produto.md)). A 27/10, com autorização do docente, os requisitos das opcionais saíram do produto e estão no [anexo A](#anexo-a--requisitos-das-opcionais-arquivados-a-27102026). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.10 · rascunho para validação do Product Owner · 2026-10-27.** O OptaBem é um **recomendador de cursos**: orienta quem ainda está a escolher curso, compara cursos de várias instituições e ajuda a preparar a candidatura ao concurso nacional (ver a [visão do produto](00-visao-do-produto.md)). A 27/10, com autorização do docente, os requisitos das opcionais saíram do produto e estão no [anexo A](#anexo-a--requisitos-das-opcionais-arquivados-a-27102026). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os identificadores arquivados não são reutilizados, por isso a numeração tem saltos. Os requisitos de cada story estão detalhados em `docs/USNN/requisitos.md`.
 
@@ -37,9 +37,9 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 ### Módulo K — Plano de candidatura
 
 - **RF40** A ficha de cada curso deve mostrar as condições de acesso publicadas pela DGES: conjuntos alternativos de provas de ingresso, fórmula da nota de candidatura (pesos da média do secundário e das provas), classificações mínimas e pré-requisitos.
-- **RF41** O utilizador com sessão iniciada deve poder indicar a média do secundário (9,5 a 20) e as notas dos exames nacionais que fez (0 a 200), e mudá-las quando quiser.
+- **RF41** O utilizador com sessão iniciada deve poder indicar a média do secundário (9,5 a 20) e as notas dos exames nacionais que fez (0 a 200), e mudá-las quando quiser. Cada exame conta para as provas de ingresso que a DGES aceita (na Matemática: o exame 635 dá as provas 16, 17 e 19; o 735, a 16 e a 17; o 835, a 17). *(Alterado na 1.10.)*
 - **RF42** O sistema deve calcular a nota de candidatura do utilizador a cada curso, com o conjunto de provas mais favorável, e compará-la com a nota do último colocado (acima, perto ou abaixo), assinalando provas em falta e notas abaixo do mínimo. É uma estimativa para o contingente geral da 1.ª fase.
-- **RF43** O utilizador deve poder montar e ordenar uma lista de até 6 opções de candidatura e receber avisos (opções que não contam, nenhuma opção segura, a mais fácil em 1.º lugar, menos de 6 opções, pré-requisitos). O OptaBem não submete a candidatura.
+- **RF43** O utilizador deve poder montar e ordenar uma lista de até 6 opções de candidatura e receber avisos (opções que não contam, nenhuma opção segura, a mais fácil em 1.º lugar, menos de 6 opções, pré-requisitos). O OptaBem não submete a candidatura. Só entram cursos do concurso nacional (RN12).
 - **RF44** Na ficha de cada curso, o sistema deve dizer a nota que o utilizador precisa nas provas que ainda não fez para chegar ao último colocado (ou à nota mínima), no conjunto de provas em que é mais fácil, respeitando o mínimo de cada prova, e avisar quando nem 200 pontos chegam.
 - **RF45** A ficha deve mostrar a nota do último colocado da 1.ª fase de 2023 a 2025 e se está a subir, a descer ou estável.
 - **RF46** A ficha deve mostrar a procura na 1.ª fase de 2025: candidatos, candidatos em 1.ª opção, vagas e colocados, com uma etiqueta simples.
@@ -70,6 +70,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RN09** Só podem ser mostrados ao utilizador cursos que existem no catálogo: qualquer curso devolvido pelo LLM que não exista é descartado antes de chegar ao ecrã.
 - **RN10** As sugestões nunca atribuem um curso automaticamente: o utilizador confirma sempre a escolha. *(Alterado na 1.9: sai «ou uma opcional».)*
 - **RN11** A nota de candidatura e a diferença para o último colocado são sempre apresentadas como estimativa (contingente geral, 1.ª fase), nunca como garantia de entrada. *(Nova na 1.9; já era critério das US35 e US36.)*
+- **RN12** Os cursos do ensino privado não entram no Concurso Nacional de Acesso (nas páginas da DGES têm «Concurso: Institucional»): a ficha di-lo, não calcula a nota de candidatura e o curso não pode entrar no plano, nas sugestões, no plano B nem nas combinações de exames. *(Nova na 1.10.)*
 
 As RN01 a RN08 eram das opcionais e estão no [anexo A](#anexo-a--requisitos-das-opcionais-arquivados-a-27102026).
 
@@ -87,17 +88,17 @@ A partir de 13/10/2026 os números das stories ficam fixos: as stories novas rec
 | US31 — Escolher curso e linha do tempo do percurso | E3 | RF03, RF35, RF39, RN10 | Sprint 2 | Feita |
 | US05 — Consultar e comparar cursos | E2 | RF34 | Sprint 3 | Feita |
 | US17 — Apagar a minha conta | E1 | RF17 (apagamento) | Sprint 3 | Feita |
-| US04 — Catálogo de licenciaturas recolhido da DGES | E2 | RF05 | Sprint 4 | Protótipo |
-| US33 — Condições de acesso na ficha do curso | E4 | RF40 | Sprint 4 | Protótipo |
-| US34 — Registar as minhas notas | E4 | RF41, RF17 | Sprint 4 | Protótipo |
-| US35 — Nota de candidatura a cada curso | E4 | RF42, RN11 | Sprint 4 | Protótipo |
-| US36 — Plano das 6 opções de candidatura | E4 | RF43, RN11 | Sprint 4 | Protótipo |
-| US40 — Quanto preciso no exame? | E4 | RF44 | Sprint 4 | Protótipo |
-| US41 — Tendência do último colocado | E4 | RF45 | Sprint 4 | Protótipo |
-| US42 — Procura do curso | E4 | RF46 | Sprint 4 | Protótipo |
-| US44 — Que exames me abrem mais portas? | E4 | RF48 | Sprint 4 | Protótipo |
-| US43 — Partilhar o plano | E4 | RF47, RF17 | Sprint 4 | Protótipo |
-| US45 — Plano B: 2.ª fase | E4 | RF49 | Sprint 4 | Protótipo |
+| US04 — Catálogo de licenciaturas recolhido da DGES | E2 | RF05 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US33 — Condições de acesso na ficha do curso | E4 | RF40 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US34 — Registar as minhas notas | E4 | RF41, RF17 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US35 — Nota de candidatura a cada curso | E4 | RF42, RN11, RN12 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US36 — Plano das 6 opções de candidatura | E4 | RF43, RN11, RN12 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US40 — Quanto preciso no exame? | E4 | RF44 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US41 — Tendência do último colocado | E4 | RF45 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US42 — Procura do curso | E4 | RF46 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US44 — Que exames me abrem mais portas? | E4 | RF48 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US43 — Partilhar o plano | E4 | RF47, RF17 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
+| US45 — Plano B: 2.ª fase | E4 | RF49 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
 | US37 — Assistente que conhece as minhas notas | E3 | RF37, RF41, RNF12 | Backlog | Por fazer |
 | US46 — Exportar os meus dados | E1 | RF17 (exportação), RNF01 | Backlog | Por fazer |
 | US47 — Recuperar a palavra-passe | E1 | RF02 (recuperação) | Backlog | Por fazer |
@@ -125,7 +126,8 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar. | **Alterado (14/10):** o LLM conduz a conversa; US32 fundida na US29; RF36 a RF38 e RNF12 reescritos. Custo e privacidade avaliados no [spike](05-spike-llm.md). |
 | 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18; (c) plano pago ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | **Decidido (20/10):** opção (a). O OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa; fica escrito no relatório. |
 | 15 | A conversa tem de ser guardada entre pedidos, e não cabe no cookie de sessão (limite de 4 KB). | Guardá-la no servidor é guardar texto livre escrito pelo utilizador (RNF01). | Guardar no servidor só enquanto a conversa decorre e apagar ao recomeçar ou depois da escolha (US31). | **Decidido (20/10, US31):** a conversa fica no servidor enquanto decorre e é apagada ao recomeçar e depois da escolha do curso. |
-| 16 | «Matemática» (código 16) e «Matemática A» (19) contam com o mesmo exame no protótipo do plano de candidatura. | Se estiver errado, a nota de candidatura e os avisos ficam errados em vários cursos. | A equipa confirma na DGES antes de aceitar a US34 e a US35. | Por decidir |
+| 16 | «Matemática» (código 16) e «Matemática A» (19) contavam com o mesmo exame no protótipo do plano de candidatura. | Se estiver errado, a nota de candidatura e os avisos ficam errados em vários cursos. | Confirmar na tabela de correspondência da DGES entre exames e provas de ingresso. | **Corrigido (27/10):** a correspondência estava incompleta. A prova 16 aceita os exames 635 (Matemática A) e 735 (Matemática B); a 17 aceita 635, 735 e 835 (MACS); a 19 só o 635. O formulário pede o exame feito e cada um conta para as provas certas (RF41). |
+| 17 | Os cursos do ensino privado (36 no catálogo recolhido) apareciam como opções do concurso nacional. | Dava a um candidato uma informação errada: estes cursos têm candidatura na própria instituição. | Tirá-los do plano e dizê-lo na ficha. | **Corrigido (27/10):** nova RN12. |
 
 ## 6. Histórico de alterações
 
@@ -140,6 +142,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 | 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF49) e stories US33 a US45; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
+| 1.10 | 2026-10-27 | Verificação do Sprint 4 com o catálogo real: RF41 (correspondência das Matemáticas) e RF43 alterados; nova RN12 (ensino privado fora do concurso nacional); pontos 16 e 17 corrigidos. |
 | 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); US04 dividida (a recolha de todas as licenciaturas passa a ser a US48); épicos E1 a E4; o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45. |
 
 O Excel do backlog acompanha esta versão. O ficheiro Word continua na versão 1.0.

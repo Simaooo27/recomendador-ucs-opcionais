@@ -25,9 +25,28 @@ from ..catalogo.repository import Curso
 # Diferença (em pontos, de 0 a 200) para o último colocado abaixo da qual a situação é «perto».
 MARGEM = 5.0
 
-# Provas que a DGES lista com dois códigos e que se fazem com o mesmo exame nacional:
-# quem indica a nota de uma, tem-na na outra. A CONFIRMAR pela equipa no site da DGES.
-EQUIVALENTES = {"16": "19"}
+# As notas guardam-se por exame nacional. Nas outras disciplinas, cada prova de ingresso faz-se com um
+# só exame e usa-se o código da prova. Nas Matemáticas não (correspondência publicada pela DGES para
+# 2026, confirmada a 27/10):
+#   prova 16 «Matemática»                    <- exame 635 (Matemática A) ou 735 (Matemática B)
+#   prova 17 «Matemática Aplicada às C. S.»   <- exame 635, 735 ou 835 (MACS)
+#   prova 19 «Matemática A»                  <- exame 635
+# Os exames guardam-se com o código da prova que só eles fazem: Matemática A em «19», Matemática B
+# em «16» e MACS em «17». ACEITA diz que exames guardados servem para cada prova.
+ACEITA = {"16": ("19", "16"), "17": ("19", "16", "17"), "19": ("19",)}
+
+# Como se chamam os exames no formulário e no plano (as provas mantêm o nome da DGES na ficha).
+NOMES_DOS_EXAMES = {
+    "19": "Matemática A (exame 635)",
+    "16": "Matemática B (exame 735)",
+    "17": "Matemática Aplicada às Ciências Sociais (exame 835)",
+}
+NOMES_CURTOS_DOS_EXAMES = {"19": "Matemática A", "16": "Matemática B", "17": "MACS"}
+
+
+def exames_que_servem(prova: str) -> tuple[str, ...]:
+    """Os exames (pelo código com que se guardam) que dão a prova de ingresso ``prova``."""
+    return ACEITA.get(prova, (prova,))
 
 
 class Situacao(str, Enum):
@@ -39,6 +58,7 @@ class Situacao(str, Enum):
     FALTA_PROVA = "falta_prova"       # não tem nenhum conjunto de provas completo
     SEM_NOTAS = "sem_notas"           # o aluno ainda não indicou a média do secundário
     SEM_REGRAS = "sem_regras"         # a DGES não publica as condições deste curso
+    FORA_DO_CONCURSO = "fora_do_concurso"  # ensino privado: candidatura na instituição, não no concurso nacional
 
     @property
     def conta(self) -> bool:
@@ -49,17 +69,12 @@ class Situacao(str, Enum):
 @dataclass(frozen=True)
 class Notas:
     media: float | None = None                          # média do secundário, 0 a 20
-    exames: Mapping[str, float] = field(default_factory=dict)   # código da prova -> 0 a 200
+    exames: Mapping[str, float] = field(default_factory=dict)   # exame (código, ver ACEITA) -> 0 a 200
 
     def exame(self, codigo: str) -> float | None:
-        if codigo in self.exames:
-            return self.exames[codigo]
-        for um, outro in EQUIVALENTES.items():
-            if codigo == um and outro in self.exames:
-                return self.exames[outro]
-            if codigo == outro and um in self.exames:
-                return self.exames[um]
-        return None
+        """A nota da prova de ingresso ``codigo``: a mais alta dos exames que a dão (ver ACEITA)."""
+        notas = [self.exames[e] for e in exames_que_servem(codigo) if e in self.exames]
+        return max(notas) if notas else None
 
 
 @dataclass(frozen=True)
@@ -91,6 +106,8 @@ def nota_de_exame(texto: str) -> float | None:
 
 def simular(curso: Curso, notas: Notas) -> Simulacao:
     """A nota de candidatura do aluno a um curso e a comparação com o último colocado."""
+    if not curso.concurso_nacional:
+        return Simulacao(Situacao.FORA_DO_CONCURSO)
     if not curso.tem_condicoes_de_acesso:
         return Simulacao(Situacao.SEM_REGRAS)
     if notas.media is None:
@@ -162,7 +179,7 @@ def nota_necessaria(curso: Curso, notas: Notas) -> Necessidade | None:
     conjunto, supõe a mesma nota em todas. ``None`` sem média, sem regras ou quando já fez as
     provas de todos os conjuntos (aí a ``simular`` já diz a nota).
     """
-    if not curso.tem_condicoes_de_acesso or notas.media is None or not curso.peso_provas:
+    if not curso.concurso_nacional or not curso.tem_condicoes_de_acesso or notas.media is None or not curso.peso_provas:
         return None
     referencia = curso.ultimo_colocado_numero
     alvo = referencia if referencia is not None else float(curso.minimo_candidatura or 0)
@@ -200,29 +217,28 @@ class Combinacao:
     ja_feitas: tuple[str, ...]       # exames da combinação que a pessoa já indicou
 
 
-def _canonico(codigo: str) -> str:
-    """«16 Matemática» conta como «19 Matemática A» (EQUIVALENTES), para não repetir combinações."""
-    return EQUIVALENTES.get(codigo, codigo)
-
-
 def exames_que_abrem_portas(cursos, notas: Notas, limite: int = 3) -> list[Combinacao]:
     """As combinações de até 3 exames que dão para concorrer a mais cursos da lista.
 
-    Um curso fica «aberto» se um dos seus conjuntos de provas está todo dentro da combinação.
+    Os exames são os de ``ACEITA`` (Matemática A, B e MACS) e, nas outras disciplinas, o da prova.
+    Um curso fica «aberto» se a combinação dá todas as provas de um dos seus conjuntos.
     Ficam só as combinações mínimas (sem exames a mais para o mesmo resultado), ordenadas por
     número de cursos abertos, depois por número de exames e, por fim, pelos exames já feitos.
     """
-    com_regras = [c for c in cursos if c.tem_condicoes_de_acesso]
+    com_regras = [c for c in cursos if c.tem_condicoes_de_acesso and c.concurso_nacional]
     if len(com_regras) < 2:
         return []
-    conjuntos = {c.chave: [frozenset(_canonico(p) for p in conj) for conj in c.provas] for c in com_regras}
-    codigos = sorted({p for lista in conjuntos.values() for conj in lista for p in conj})
-    feitos = {_canonico(p) for p in notas.exames}
+    codigos = sorted({e for c in com_regras for conj in c.provas for p in conj for e in exames_que_servem(p)})
+    feitos = set(notas.exames)
+
+    def da(conjunto, escolhidos) -> bool:
+        return all(any(e in escolhidos for e in exames_que_servem(p)) for p in conjunto)
+
     candidatas = []
     for tamanho in range(1, MAX_EXAMES + 1):
         for combo in combinations(codigos, tamanho):
             escolhidos = frozenset(combo)
-            abre = tuple(c for c in com_regras if any(conj <= escolhidos for conj in conjuntos[c.chave]))
+            abre = tuple(c for c in com_regras if any(da(conj, escolhidos) for conj in c.provas))
             if abre:
                 candidatas.append((escolhidos, abre))
     # Mínimas: retira as que têm uma combinação mais pequena com os mesmos cursos abertos.

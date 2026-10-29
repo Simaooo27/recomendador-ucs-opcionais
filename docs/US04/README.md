@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Protótipo (código feito antes do Sprint 4, no PR #44; por aceitar na Sprint Review) |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
 | Sprint | Sprint 4 (29/10 a 05/11) |
 | Story points | 5 |
 | Épico | E2 — Catálogo de cursos |

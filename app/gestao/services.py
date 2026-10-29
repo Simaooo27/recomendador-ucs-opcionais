@@ -148,3 +148,122 @@ def ativar_conta(db: sqlite3.Connection, user_id: int) -> str | None:
     contas.activate_user(db, user_id, _utc_now())
     db.commit()
     return conta["email"]
+
+
+# ---------------------------------------------------------------------------
+# Corrigir e esconder cursos do catálogo (US39)
+# ---------------------------------------------------------------------------
+
+LIMITE_DESCRICAO = 3000
+LIMITE_SAIDAS = 1500
+
+
+class CursoInexistente(LookupError):
+    """Não há nenhum curso com este identificador no catálogo da DGES."""
+
+
+class CorrecaoRejeitada(Exception):
+    def __init__(self, errors: dict[str, str]) -> None:
+        super().__init__(errors)
+        self.errors = errors
+
+
+def normalizar_descricao(raw: str) -> str:
+    """Um só parágrafo, como no CSV: espaços e mudanças de linha seguidos passam a um espaço."""
+    return " ".join((raw or "").split())
+
+
+def normalizar_saidas(raw: str) -> str:
+    """Uma saída por linha ou separadas por «;» -> «A; B; C» (o formato do CSV)."""
+    partes = [normalizar_descricao(p) for linha in (raw or "").splitlines() for p in linha.split(";")]
+    return "; ".join(p for p in partes if p)
+
+
+def _curso_da_dges(config: Mapping, chave: str):
+    from ..catalogo import repository as catalogo
+
+    curso = next((c for c in catalogo.todos(config["CATALOGO_CSV"]) if c.chave == chave), None)
+    if curso is None:
+        raise CursoInexistente(chave)
+    return curso
+
+
+def guardar_correcao(
+    db: sqlite3.Connection, config: Mapping, chave: str, *, descricao: str, saidas: str, escondido: bool, admin: str
+) -> tuple[str, ...]:
+    """Guarda a correção de um curso e regista quem a fez e quando.
+
+    Um campo vazio, ou igual ao da DGES, deixa de ser correção (fica o texto da DGES). Se não sobrar
+    nada corrigido nem escondido, a linha sai da tabela. Devolve o que mudou (vazio se nada mudou).
+    """
+    from ..catalogo import correcoes_repository
+    from ..catalogo.services import Correcao, correcoes
+
+    original = _curso_da_dges(config, chave)
+    descricao, saidas = normalizar_descricao(descricao), normalizar_saidas(saidas)
+    errors: dict[str, str] = {}
+    if len(descricao) > LIMITE_DESCRICAO:
+        errors["descricao"] = texts.ADMIN_CURSO_ERRO_LONGO.format(maximo=LIMITE_DESCRICAO)
+    if len(saidas) > LIMITE_SAIDAS:
+        errors["saidas"] = texts.ADMIN_CURSO_ERRO_LONGO.format(maximo=LIMITE_SAIDAS)
+    if errors:
+        raise CorrecaoRejeitada(errors)
+
+    nova_descricao = None if descricao in ("", normalizar_descricao(original.descricao)) else descricao
+    novas_saidas = None if saidas in ("", normalizar_saidas(original.saidas)) else saidas
+    atual = correcoes(db).get(chave, Correcao())
+    alteracoes = []
+    if nova_descricao != atual.descricao:
+        alteracoes.append("descricao")
+    if novas_saidas != atual.saidas:
+        alteracoes.append("saidas")
+    if escondido != atual.escondido:
+        alteracoes.append("escondido" if escondido else "visivel")
+    if not alteracoes:
+        return ()
+
+    agora = _utc_now()
+    if nova_descricao is None and novas_saidas is None and not escondido:
+        correcoes_repository.apagar(db, chave)
+    else:
+        correcoes_repository.guardar(
+            db, chave, descricao=nova_descricao, saidas=novas_saidas, escondido=escondido, por=admin, em=agora
+        )
+    correcoes_repository.registar(db, chave, ",".join(alteracoes), admin, agora)
+    db.commit()
+    return tuple(alteracoes)
+
+
+def repor_curso(db: sqlite3.Connection, config: Mapping, chave: str, *, admin: str) -> bool:
+    """Volta aos dados da DGES (apaga a correção) e regista-o. Devolve False se não havia correção."""
+    from ..catalogo import correcoes_repository
+
+    _curso_da_dges(config, chave)
+    if correcoes_repository.obter(db, chave) is None:
+        return False
+    agora = _utc_now()
+    correcoes_repository.apagar(db, chave)
+    correcoes_repository.registar(db, chave, "reposto", admin, agora)
+    db.commit()
+    return True
+
+
+@dataclass(frozen=True)
+class Alteracao:
+    o_que: tuple[str, ...]   # códigos: descricao, saidas, escondido, visivel, reposto
+    por: str
+    em: str
+
+    @property
+    def resumo(self) -> str:
+        """«descrição, saídas profissionais» (textos ADMIN_CURSO_O_QUE_* de app/texts.py)."""
+        return ", ".join(getattr(texts, f"ADMIN_CURSO_O_QUE_{codigo.upper()}", codigo) for codigo in self.o_que)
+
+
+def historico_do_curso(db: sqlite3.Connection, chave: str) -> list[Alteracao]:
+    from ..catalogo import correcoes_repository
+
+    return [
+        Alteracao(tuple(linha["alteracao"].split(",")), linha["alterado_por"], linha["alterado_em"])
+        for linha in correcoes_repository.historico(db, chave)
+    ]

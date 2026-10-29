@@ -73,3 +73,26 @@ CREATE TABLE IF NOT EXISTS planos_candidatura (
     partilha        TEXT    UNIQUE,    -- código aleatório da ligação só de leitura (vazio = não partilhado)
     atualizado_em   TEXT    NOT NULL   -- UTC, ISO 8601
 );
+
+-- Correções ao catálogo feitas na gestão (US39). Ficam por cima dos dados da DGES
+-- (dados/catalogo-cursos.csv): uma recolha nova reescreve o CSV, mas não esta tabela.
+-- Uma linha por curso corrigido ou escondido; vazio (NULL) = usa o texto da DGES.
+CREATE TABLE IF NOT EXISTS correcoes_cursos (
+    curso_chave     TEXT    PRIMARY KEY,           -- identificador do catálogo (instituição-curso)
+    descricao       TEXT,
+    saidas          TEXT,                          -- saídas profissionais, separadas por «;» (como no CSV)
+    escondido       INTEGER NOT NULL DEFAULT 0 CHECK (escondido IN (0, 1)),
+    alterado_por    TEXT    NOT NULL,              -- nome do administrador
+    alterado_em     TEXT    NOT NULL               -- UTC, ISO 8601
+);
+
+-- Quem alterou o quê e quando (US39). Guarda o nome do administrador, que fica mesmo se a conta
+-- dele for removida. Não tem dados de alunos.
+CREATE TABLE IF NOT EXISTS historico_catalogo (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    curso_chave     TEXT    NOT NULL,
+    alteracao       TEXT    NOT NULL,              -- códigos separados por vírgula: descricao, saidas, escondido, visivel, reposto
+    alterado_por    TEXT    NOT NULL,
+    alterado_em     TEXT    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS historico_por_curso ON historico_catalogo (curso_chave, alterado_em);

@@ -1,7 +1,7 @@
 """Rotas da área de gestão (US03)."""
 from __future__ import annotations
 
-from flask import current_app, flash, g, redirect, render_template, request, url_for
+from flask import abort, current_app, flash, g, redirect, render_template, request, url_for
 
 from .. import texts
 from ..db import get_db
@@ -84,3 +84,86 @@ def admins_remove(admin_id: int):
     elif result.outcome is RemoveOutcome.SELF:
         flash(texts.ERROR_ADMIN_REMOVE_SELF, "error")
     return redirect(url_for("gestao.admins"))
+
+
+# ---------------------------------------------------------------------------
+# Catálogo: corrigir e esconder cursos (US39). Só cursos; nenhuma destas páginas lê dados de alunos.
+# ---------------------------------------------------------------------------
+
+_FILTROS_CURSOS = ("todos", "corrigidos", "escondidos")
+
+
+@bp.get("/cursos")
+@sessions.admin_required
+def cursos():
+    from ..catalogo import services as catalogo
+
+    termo = request.args.get("q", "")[:80]
+    mostrar = request.args.get("mostrar", "todos")
+    mostrar = mostrar if mostrar in _FILTROS_CURSOS else "todos"
+    linhas = [
+        (curso, correcao)
+        for curso, correcao in catalogo.cursos_para_gestao(current_app.config, get_db())
+        if catalogo.corresponde(curso, termo)
+        and (mostrar == "todos" or (correcao is not None and (mostrar == "corrigidos" or correcao.escondido)))
+    ]
+    linhas.sort(key=lambda par: (par[0].curso, par[0].instituicao))
+    return render_template("gestao/cursos.html", linhas=linhas, termo=termo, mostrar=mostrar)
+
+
+def _render_curso(chave: str, *, valores: dict | None = None, errors: dict | None = None, status: int = 200):
+    from ..catalogo import repository as catalogo_repository
+    from ..catalogo import services as catalogo
+
+    original = next((c for c in catalogo_repository.todos(current_app.config["CATALOGO_CSV"]) if c.chave == chave), None)
+    if original is None:
+        abort(404)
+    correcao = catalogo.correcoes(get_db()).get(chave)
+    atual = catalogo.corrigido(original, correcao)
+    if valores is None:
+        valores = {"descricao": atual.descricao, "saidas": "\n".join(atual.lista_saidas), "escondido": bool(correcao and correcao.escondido)}
+    page = render_template(
+        "gestao/curso.html",
+        original=original,
+        correcao=correcao,
+        valores=valores,
+        errors=errors or {},
+        historico=services.historico_do_curso(get_db(), chave),
+        limites={"descricao": services.LIMITE_DESCRICAO, "saidas": services.LIMITE_SAIDAS},
+    )
+    return page, status
+
+
+@bp.get("/cursos/<chave>")
+@sessions.admin_required
+def curso(chave: str):
+    return _render_curso(chave)
+
+
+@bp.post("/cursos/<chave>")
+@sessions.admin_required
+def curso_guardar(chave: str):
+    valores = {
+        "descricao": request.form.get("descricao", ""),
+        "saidas": request.form.get("saidas", ""),
+        "escondido": request.form.get("escondido") == "on",
+    }
+    try:
+        mudou = services.guardar_correcao(get_db(), current_app.config, chave, admin=g.admin["username"], **valores)
+    except services.CursoInexistente:
+        abort(404)
+    except services.CorrecaoRejeitada as rejected:
+        return _render_curso(chave, valores=valores, errors=rejected.errors, status=422)
+    flash(texts.ADMIN_CURSO_GUARDADO if mudou else texts.ADMIN_CURSO_NADA_MUDOU, "ok")
+    return redirect(url_for("gestao.curso", chave=chave))
+
+
+@bp.post("/cursos/<chave>/repor")
+@sessions.admin_required
+def curso_repor(chave: str):
+    try:
+        reposto = services.repor_curso(get_db(), current_app.config, chave, admin=g.admin["username"])
+    except services.CursoInexistente:
+        abort(404)
+    flash(texts.ADMIN_CURSO_REPOSTO if reposto else texts.ADMIN_CURSO_NADA_MUDOU, "ok")
+    return redirect(url_for("gestao.curso", chave=chave))

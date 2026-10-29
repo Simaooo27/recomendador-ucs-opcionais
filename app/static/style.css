@@ -1410,3 +1410,11 @@ button.a-enviar::before {
   .indicador { box-shadow: 0 0 0 1px var(--line); }
   .regras li::after { border-color: #08261e; }
 }
+
+/* US39: catálogo na gestão. */
+.gestao-filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 1rem; margin-bottom: 1rem; }
+.gestao-filtros .field { flex: 1 1 14rem; }
+.gestao-filtros button { margin-bottom: 1rem; }
+.gestao-original { margin-top: 0.5rem; color: var(--muted); }
+.gestao-original summary { cursor: pointer; }
+.gestao-repor { margin: 1rem 0 2rem; }

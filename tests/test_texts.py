@@ -19,6 +19,7 @@ REQUIRED_PLACEHOLDERS = {
     "ADMIN_ATIVAR_ROTULO": {"email"},
     "ADMIN_CONTA_ATIVADA": {"email"},
     "ADMIN_CURSOS_CONTA": {"n"},
+    "CANDIDATURA_INDISPONIVEL_SEM_NOME": {"chave"},
     "ADMIN_CURSO_ALTERACAO": {"o_que", "por", "em"},
     "ADMIN_CURSO_ERRO_LONGO": {"maximo"},
     "ADMIN_REMOVED": {"nome"},

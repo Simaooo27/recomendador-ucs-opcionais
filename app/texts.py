@@ -619,6 +619,12 @@ CANDIDATURA_ULTIMO = "Último colocado 2025"
 CANDIDATURA_SUBIR = "Subir"
 CANDIDATURA_DESCER = "Descer"
 CANDIDATURA_RETIRAR = "Retirar"
+# Opções do plano que deixaram de estar no catálogo (por exemplo, escondidas pela gestão, US39).
+CANDIDATURA_INDISPONIVEIS = (
+    "Estas opções já não estão no catálogo do OptaBem e não contam para a nota nem para os avisos. "
+    "Confirme na DGES e retire-as do plano."
+)
+CANDIDATURA_INDISPONIVEL_SEM_NOME = "Curso {chave}"
 CANDIDATURA_SUBIR_ROTULO = "Subir {curso}"
 CANDIDATURA_DESCER_ROTULO = "Descer {curso}"
 CANDIDATURA_RETIRAR_ROTULO = "Retirar {curso} do plano"

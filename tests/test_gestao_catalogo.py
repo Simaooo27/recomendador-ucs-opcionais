@@ -146,6 +146,20 @@ class EsconderTests(CatalogoGestaoTestCase):
         with self.app.app_context():
             self.assertNotIn(CURSO.chave, [c.chave for c in catalogo.cursos(self.app.config)])
 
+    def test_no_plano_do_aluno_fica_um_aviso_para_o_retirar(self):
+        self.create_active_user()
+        aluno = self.app.test_client()
+        self.login(aluno)
+        self.set_csrf(aluno)
+        aluno.post(f"/candidatura/juntar/{CURSO.chave}", data={"csrf_token": CSRF_TOKEN})
+        self.guardar(escondido=True)
+        html = aluno.get("/candidatura/").get_data(as_text=True)
+        self.assertIn(texts.CANDIDATURA_INDISPONIVEIS, html)
+        self.assertIn(CURSO.curso, html)
+        self.set_csrf(aluno)
+        aluno.post(f"/candidatura/retirar/{CURSO.chave}", data={"csrf_token": CSRF_TOKEN})
+        self.assertNotIn(texts.CANDIDATURA_INDISPONIVEIS, aluno.get("/candidatura/").get_data(as_text=True))
+
     def test_continua_na_gestao_assinalado(self):
         self.guardar(escondido=True)
         html = self.client.get("/gestao/cursos", query_string={"mostrar": "escondidos"}).get_data(as_text=True)

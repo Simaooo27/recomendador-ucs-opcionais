@@ -26,6 +26,17 @@
 
 <section class="plano-opcoes" aria-labelledby="plano-opcoes">
   <h2 id="plano-opcoes">{{ texts.CANDIDATURA_AS_MINHAS_OPCOES.format(n=opcoes | length, maximo=maximo) }}</h2>
+  {% if indisponiveis %}
+    <div class="aviso" role="status" id="opcoes-indisponiveis">
+      <p>{{ texts.CANDIDATURA_INDISPONIVEIS }}</p>
+      <ul class="plain-list">
+        {% for chave, curso in indisponiveis %}
+          {% set nome = (curso.curso ~ " · " ~ curso.instituicao) if curso else texts.CANDIDATURA_INDISPONIVEL_SEM_NOME.format(chave=chave) %}
+          <li>{{ nome }} {{ cand.botao("candidatura.retirar", chave, texts.CANDIDATURA_RETIRAR, texts.CANDIDATURA_RETIRAR_ROTULO.format(curso=nome), "botao-texto") }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
   {% if opcoes %}
     <ol class="opcoes">
       {% for opcao in opcoes %}

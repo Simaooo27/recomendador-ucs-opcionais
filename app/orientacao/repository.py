@@ -6,18 +6,21 @@ import sqlite3
 
 def obter(db: sqlite3.Connection, user_id: int) -> sqlite3.Row | None:
     return db.execute(
-        "SELECT mensagens, sugestao, atualizada_em FROM conversas_orientacao WHERE user_id = ?", (user_id,)
+        "SELECT mensagens, sugestao, atualizada_em, usar_notas FROM conversas_orientacao WHERE user_id = ?", (user_id,)
     ).fetchone()
 
 
-def guardar(db: sqlite3.Connection, user_id: int, mensagens: str, sugestao: str | None, agora: str) -> None:
+def guardar(
+    db: sqlite3.Connection, user_id: int, mensagens: str, sugestao: str | None, agora: str, usar_notas: bool = False
+) -> None:
     db.execute(
         """
-        INSERT INTO conversas_orientacao (user_id, mensagens, sugestao, atualizada_em) VALUES (?, ?, ?, ?)
+        INSERT INTO conversas_orientacao (user_id, mensagens, sugestao, atualizada_em, usar_notas) VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(user_id) DO UPDATE SET
-            mensagens = excluded.mensagens, sugestao = excluded.sugestao, atualizada_em = excluded.atualizada_em
+            mensagens = excluded.mensagens, sugestao = excluded.sugestao, atualizada_em = excluded.atualizada_em,
+            usar_notas = excluded.usar_notas
         """,
-        (user_id, mensagens, sugestao, agora),
+        (user_id, mensagens, sugestao, agora, int(usar_notas)),
     )
     db.commit()
 

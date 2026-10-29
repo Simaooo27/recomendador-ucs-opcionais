@@ -104,6 +104,24 @@ def nota_de_exame(texto: str) -> float | None:
     return round(valor * 10, 1) if valor <= 20 else valor
 
 
+def provas_em_falta(curso: Curso, notas: Notas) -> tuple[str, ...]:
+    """As provas que faltam para o conjunto mais próximo; vazio se tem um conjunto completo.
+
+    Só olha para os exames feitos (não precisa da média). Um curso sem condições publicadas pela
+    DGES não tem provas em falta conhecidas. Usado pelo assistente (US37).
+    """
+    if not curso.provas:
+        return ()
+    mais_proximo: tuple[str, ...] | None = None
+    for conjunto in curso.provas:
+        faltam = tuple(p for p in conjunto if notas.exame(p) is None)
+        if not faltam:
+            return ()
+        if mais_proximo is None or len(faltam) < len(mais_proximo):
+            mais_proximo = faltam
+    return mais_proximo or ()
+
+
 def simular(curso: Curso, notas: Notas) -> Simulacao:
     """A nota de candidatura do aluno a um curso e a comparação com o último colocado."""
     if not curso.concurso_nacional:

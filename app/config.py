@@ -14,6 +14,11 @@ def _catalogo_por_omissao() -> str:
     return completo if os.path.exists(completo) else os.path.join(dados, "catalogo-cursos-mvp.csv")
 
 
+def _calendario_por_omissao() -> str:
+    raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(raiz, "dados", "calendario-concurso.csv")
+
+
 def _env_bool(name: str, default: bool) -> bool:
     raw = os.environ.get(name)
     if raw is None:
@@ -42,6 +47,8 @@ def default_config() -> dict:
         # Catálogo de cursos (dados públicos da DGES). Por omissão, o catálogo completo gerado por
         # dados/recolher_dges.py (US04); se ainda não existir, o do MVP (30 cursos).
         "CATALOGO_CSV": os.environ.get("CATALOGO_CSV") or _catalogo_por_omissao(),
+        # Datas do Concurso Nacional de Acesso (US38), copiadas do despacho anual da DGES.
+        "CALENDARIO_CSV": os.environ.get("CALENDARIO_CSV") or _calendario_por_omissao(),
         # LLM (spike da US30; ver app/llm/fabrica.py e docs/geral/05-spike-llm.md).
         # "falso" por omissão: quem clona o projeto corre tudo sem chaves nem rede.
         "LLM_BACKEND": os.environ.get("LLM_BACKEND", "falso"),

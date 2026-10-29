@@ -336,6 +336,14 @@ HOME_PATH_STEPS = [
     {"titulo": "Preparar a candidatura", "texto": "Indique as suas notas, veja a sua nota em cada curso e ordene as suas 6 opções."},
 ]
 HOME_ACTION_CANDIDATURA = "Preparar a candidatura"
+# Próximo prazo do concurso no passo atual do percurso (US38). {etapa} é um dos CALENDARIO_ETAPA_*.
+HOME_PRAZO_TITULO = "Próximo prazo do concurso"
+HOME_PRAZO_A_DECORRER = "{etapa} da {fase}.ª fase: até {fim}."
+HOME_PRAZO_A_DECORRER_DIA = "{etapa} da {fase}.ª fase: hoje, {fim}."
+HOME_PRAZO_FUTURO = "{etapa} da {fase}.ª fase: de {inicio} a {fim}."
+HOME_PRAZO_FUTURO_DIA = "{etapa} da {fase}.ª fase: {inicio}."
+HOME_PRAZO_SEM_DATAS = "As datas do concurso de {ano} ainda não foram publicadas."
+HOME_PRAZO_LIGACAO = "Ver as datas do concurso"
 HOME_STEP_DONE = "Concluído"
 HOME_STEP_CURRENT = "Próximo passo"
 HOME_STEP_LATER = "Depois"
@@ -711,6 +719,23 @@ FICHA_FORA_DO_CONCURSO = (
 FICHA_SEM_ACESSO = "A DGES ainda não tem as condições de acesso deste curso no OptaBem. Consulte a página da DGES."
 FICHA_A_SUA_NOTA = "A sua nota neste curso"
 FICHA_ENTRE_PARA_SIMULAR = "Inicie sessão para calcular a sua nota de candidatura a este curso."
+
+# ---------------------------------------------------------------------------
+# Datas do Concurso Nacional de Acesso (US38), no plano de candidatura
+# As datas estão em dados/calendario-concurso.csv (do despacho anual da DGES).
+# ---------------------------------------------------------------------------
+
+CALENDARIO_TITULO = "Datas do concurso nacional"
+CALENDARIO_INTRO = "Datas do Concurso Nacional de Acesso de {ano}, publicadas pela DGES. Confirme sempre no site da DGES."
+CALENDARIO_SEM_DATAS = "O OptaBem ainda não tem as datas do concurso. Consulte o calendário no site da DGES."
+CALENDARIO_JA_PASSOU = "O concurso de {ano} já terminou. As datas de {seguinte} ainda não foram publicadas: costumam sair na primavera."
+CALENDARIO_FASE = "{fase}.ª fase"
+CALENDARIO_ETAPA_CANDIDATURA = "Candidatura"
+CALENDARIO_ETAPA_RESULTADOS = "Resultados"
+CALENDARIO_ETAPA_MATRICULA = "Matrícula e inscrição"
+CALENDARIO_DE_A = "{inicio} a {fim}"
+CALENDARIO_A_DECORRER = "A decorrer"
+CALENDARIO_LIGACAO = "Calendário oficial na DGES"
 
 # ---------------------------------------------------------------------------
 # Página «Política de privacidade» (/privacidade)

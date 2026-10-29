@@ -351,6 +351,13 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US47/diagramas/bpmn.svg](US47/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
 | [US47/diagramas/bpmn.bpmn](US47/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 | [US47/diagramas/gerar.py](US47/diagramas/gerar.py) | Script que gera os três diagramas |
+### [US48 — Recolha completa das licenciaturas](US48/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US48/README.md](US48/README.md) | O que foi feito, dados e verificação |
+| [US48/requisitos.md](US48/requisitos.md) | Critérios de aceitação e como foram verificados |
+| [US48/prompt.md](US48/prompt.md) | Pedido feito à IA |
 
 ## Nova story
 

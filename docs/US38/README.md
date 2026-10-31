@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 29/10 |
 | Story points | 2 |
 | Épico | E4 — Plano de candidatura |
@@ -38,7 +38,7 @@ A US38 só conta como «Feita» quando todas as caixas estiverem marcadas. As pr
 **Mínimo da equipa**
 
 - [x] Testes a passar: os desta story e os 541 do projeto
-- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11: o PR #52 foi juntado pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11: o PR #52 foi juntado pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
 - [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
 - [x] Documentação em `docs/US38/`: requisitos.md, use-case.md, bpmn.md, prompt.md
 - [x] Sem dívida técnica por registar

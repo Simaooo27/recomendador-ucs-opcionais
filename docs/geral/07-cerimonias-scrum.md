@@ -11,7 +11,7 @@ Versão de 31/10/2026. Este documento junta, num só sítio, as cinco cerimónia
 | Sprint 1 | até 07/10 | Sprint Goal registado; replaneado a 07/10 (24 → 10 SP) | Não registada (só «concluído a 07/10») | **Não registada** | 10 / 10 |
 | Sprint 2 | 20/10 a 22/10 | 20/10 (PROJETO.md) | 22/10, pelos dois Product Owners | **Não registada** | 13 / 13 |
 | Sprint 3 | 22/10 a 23/10 | 22/10 (PROJETO.md) | 23/10, pelos dois Product Owners | **Não registada** | 7 / 7 |
-| Sprint 4 | 29/10 a 05/11 | 27/10 e 29/10 (alargado duas vezes) | **Por fazer (05/11)**: guião na secção 4 | **Por fazer (05/11)** | 47 a 49 / por aceitar |
+| Sprint 4 | 29/10 a 05/11 | 27/10 e 29/10 (alargado duas vezes) | **Por fazer (05/11)**: guião na secção 4 | **Por fazer (05/11)** | 49 / 49 aceites pelo PO (Review a 05/11) |
 
 Daily Scrums: não há registo em nenhum sprint. Numa equipa de dois elementos com sprints de uma semana, a conversa diária pode ter sido informal; se foi, vale a pena dizê-lo no relatório, porque é uma das cinco cerimónias.
 
@@ -47,9 +47,9 @@ Factos: 7 de 7 SP, fechado a 23/10, antes da data prevista (29/10), porque o obj
 
 Factos para discutir:
 
-- O Sprint 4 tem 47 SP (49 com a US48) para uma velocidade de 10. Grande parte do código foi feita antes do sprint, como protótipo, e o sprint foi alargado duas vezes (27/10 e 29/10).
+- O Sprint 4 tem 49 SP (com a US48, aceite a 31/10) para uma velocidade de 10. Grande parte do código foi feita antes do sprint, como protótipo, e o sprint foi alargado duas vezes (27/10 e 29/10).
 - As stories foram aceites pelo PO a 27/10 e 29/10, antes da Sprint Review e, no primeiro caso, antes de o sprint começar.
-- Os PR #50 a #60 foram juntados pelo próprio autor, sem revisão do Simão. Nenhum PR do projeto tem uma revisão formal no GitHub.
+- Os PR #50 a #61 foram juntados pelo próprio autor. Nenhum PR do projeto tem uma revisão formal no GitHub; a 31/10 os Product Owners dispensaram-na, porque o Simão acompanhou todo o trabalho.
 - O PR #58 (US48) foi juntado no ramo do PR #57 depois de o #57 já estar na `main`, e por isso não chegou à `main`; só foi detetado a 31/10.
 - A verificação com o catálogo real encontrou erros que os testes não apanhavam (ensino privado no concurso nacional, equivalências das Matemáticas, US37 com o catálogo completo).
 
@@ -73,8 +73,7 @@ Participam os dois Product Owners, a equipa e, se possível, o docente (stakehol
 
 Decisões a tomar na Review:
 
-- [ ] Aceitar ou não a US48 (por aceitar desde 29/10).
 - [ ] Velocidade real do Sprint 4: só contam as stories com a Definition of Done completa (como no exemplo dos diapositivos, em que «quase feito» não conta).
 - [ ] O que fica para uma próxima release (por exemplo, os limites do assistente com o catálogo completo, registados na US48).
 
-Antes da Review, o Simão revê os PR que ainda não reviu (a lista está na coluna «Definition of Done» da folha «Product Backlog»).
+Depois da Review, marcar a caixa «Funciona na demonstração» na Definition of Done de cada story mostrada (é a única caixa que falta) e passar a coluna N do backlog a «Completa».

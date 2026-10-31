@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Recolha feita a 29/10; na main desde 31/10. Por aceitar pelo PO na Sprint Review. Revisão do Simão pendente |
+| Estado | Feita: recolha de 29/10, aceite pelo PO a 31/10. Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (entrou a 31/10, a pedido do PO) |
 | Story points | 2 |
 | Épico | E2 — Catálogo de cursos |
@@ -33,12 +33,12 @@ A US48 só conta como «Feita» quando todas as caixas estiverem marcadas. As pr
 **Mínimo da equipa**
 
 - [x] Testes a passar: os desta story e os 541 do projeto
-- [ ] Código revisto por outro elemento: o PR #58 foi juntado pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código revisto por outro elemento: o PR #58 foi juntado pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
 - [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
 - [x] Documentação em `docs/US48/`: requisitos.md, prompt.md (sem use case nem BPMN: a story não muda o que a pessoa faz no site)
 - [x] Sem dívida técnica por registar: limitação conhecida e registada — o assistente só recebe 80 cursos por área (7 áreas têm mais) e só 29 cursos têm descrição; tempos medidos sem rede
 - [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
-- [ ] Aceite pelo Product Owner: recolha feita a 29/10; falta o PO aceitá-la (e decidir se conta no Sprint 4)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 31/10
 
 ## Documentos
 

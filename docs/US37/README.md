@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 29/10 |
 | Story points | 3 |
 | Épico | E3 — Orientação com o assistente |
@@ -39,7 +39,7 @@ A US37 só conta como «Feita» quando todas as caixas estiverem marcadas. As pr
 **Mínimo da equipa**
 
 - [x] Testes a passar: os desta story e os 541 do projeto
-- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11, RNF12: os PR #54 e #59 foram juntados pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11, RNF12: os PR #54 e #59 foram juntados pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
 - [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
 - [x] Documentação em `docs/US37/`: requisitos.md, use-case.md, bpmn.md, prompt.md
 - [x] Sem dívida técnica por registar: limitação conhecida e registada — esta é a primeira story que envia dados do aluno ao Gemini (só com autorização e com a média num intervalo)

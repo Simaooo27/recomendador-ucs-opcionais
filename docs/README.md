@@ -282,6 +282,76 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US45/diagramas/bpmn.bpmn](US45/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 | [US45/diagramas/gerar.py](US45/diagramas/gerar.py) | Script que gera os três diagramas |
 
+### [US37 — Assistente que conhece as minhas notas](US37/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US37/README.md](US37/README.md) | Resumo, como experimentar, código e testes |
+| [US37/requisitos.md](US37/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US37/use-case.md](US37/use-case.md) | Use case |
+| [US37/bpmn.md](US37/bpmn.md) | Processo BPMN |
+| [US37/prompt.md](US37/prompt.md) | Pedido feito à IA |
+| [US37/diagramas/use-case.svg](US37/diagramas/use-case.svg) | Diagrama de use case |
+| [US37/diagramas/bpmn.svg](US37/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US37/diagramas/bpmn.bpmn](US37/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US37/diagramas/gerar.py](US37/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US38 — Datas do concurso nacional](US38/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US38/README.md](US38/README.md) | Resumo, como experimentar, código e testes |
+| [US38/requisitos.md](US38/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US38/use-case.md](US38/use-case.md) | Use case |
+| [US38/bpmn.md](US38/bpmn.md) | Processo BPMN |
+| [US38/prompt.md](US38/prompt.md) | Pedido feito à IA |
+| [US38/diagramas/use-case.svg](US38/diagramas/use-case.svg) | Diagrama de use case |
+| [US38/diagramas/bpmn.svg](US38/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US38/diagramas/bpmn.bpmn](US38/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US38/diagramas/gerar.py](US38/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US39 — Corrigir e esconder cursos do catálogo](US39/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US39/README.md](US39/README.md) | Resumo, como experimentar, código e testes |
+| [US39/requisitos.md](US39/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US39/use-case.md](US39/use-case.md) | Use case |
+| [US39/bpmn.md](US39/bpmn.md) | Processo BPMN |
+| [US39/prompt.md](US39/prompt.md) | Pedido feito à IA |
+| [US39/diagramas/use-case.svg](US39/diagramas/use-case.svg) | Diagrama de use case |
+| [US39/diagramas/bpmn.svg](US39/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US39/diagramas/bpmn.bpmn](US39/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US39/diagramas/gerar.py](US39/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US46 — Exportar os meus dados](US46/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US46/README.md](US46/README.md) | Resumo, como experimentar, código e testes |
+| [US46/requisitos.md](US46/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US46/use-case.md](US46/use-case.md) | Use case |
+| [US46/bpmn.md](US46/bpmn.md) | Processo BPMN |
+| [US46/prompt.md](US46/prompt.md) | Pedido feito à IA |
+| [US46/diagramas/use-case.svg](US46/diagramas/use-case.svg) | Diagrama de use case |
+| [US46/diagramas/bpmn.svg](US46/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US46/diagramas/bpmn.bpmn](US46/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US46/diagramas/gerar.py](US46/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US47 — Recuperar a palavra-passe](US47/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US47/README.md](US47/README.md) | Resumo, como experimentar, código e testes |
+| [US47/requisitos.md](US47/requisitos.md) | Requisitos funcionais e critérios de aceitação |
+| [US47/use-case.md](US47/use-case.md) | Use case |
+| [US47/bpmn.md](US47/bpmn.md) | Processo BPMN |
+| [US47/prompt.md](US47/prompt.md) | Pedido feito à IA |
+| [US47/diagramas/use-case.svg](US47/diagramas/use-case.svg) | Diagrama de use case |
+| [US47/diagramas/bpmn.svg](US47/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
+| [US47/diagramas/bpmn.bpmn](US47/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
+| [US47/diagramas/gerar.py](US47/diagramas/gerar.py) | Script que gera os três diagramas |
+
 ## Nova story
 
 Crie `docs/USNN/` com a mesma estrutura da US01: `README.md`, `requisitos.md`, `use-case.md`, `bpmn.md`, `prompt.md` e `diagramas/`. Acrescente a pasta a este índice e atualize a tabela de estado no [PROJETO.md](../PROJETO.md#1-estado-do-projeto).

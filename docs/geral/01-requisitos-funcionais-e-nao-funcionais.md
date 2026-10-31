@@ -2,7 +2,7 @@
 
 Projeto 1 · Metodologias Ágeis (Scrum) · OptaBem
 
-**Versão 1.10 · rascunho para validação do Product Owner · 2026-10-27.** O OptaBem é um **recomendador de cursos**: orienta quem ainda está a escolher curso, compara cursos de várias instituições e ajuda a preparar a candidatura ao concurso nacional (ver a [visão do produto](00-visao-do-produto.md)). A 27/10, com autorização do docente, os requisitos das opcionais saíram do produto e estão no [anexo A](#anexo-a--requisitos-das-opcionais-arquivados-a-27102026). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
+**Versão 1.11 · rascunho para validação do Product Owner · 2026-10-29.** O OptaBem é um **recomendador de cursos**: orienta quem ainda está a escolher curso, compara cursos de várias instituições e ajuda a preparar a candidatura ao concurso nacional (ver a [visão do produto](00-visao-do-produto.md)). A 27/10, com autorização do docente, os requisitos das opcionais saíram do produto e estão no [anexo A](#anexo-a--requisitos-das-opcionais-arquivados-a-27102026). As alterações estão na [secção 6](#6-histórico-de-alterações) e as decisões pendentes na [secção 5](#5-dependências-e-pontos-em-aberto).
 
 Este documento reúne os requisitos do produto. Cada requisito tem um identificador estável (RF, RNF, RN) que deve ser usado nas user stories, nos commits, nos testes e nos prompts de IA. Os identificadores arquivados não são reutilizados, por isso a numeração tem saltos. Os requisitos de cada story estão detalhados em `docs/USNN/requisitos.md`.
 
@@ -13,15 +13,16 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 ### Módulo A — Contas e privacidade
 
 - **RF01** O sistema deve permitir o registo com email pessoal e nome, confirmado por uma ligação enviada para esse email.
-- **RF02** O sistema deve permitir iniciar e terminar sessão e recuperar a palavra-passe.
+- **RF02** O sistema deve permitir iniciar e terminar sessão e recuperar a palavra-passe. *(Detalhe da recuperação, RF02.11 a RF02.16, em [US47/requisitos.md](../US47/requisitos.md).)*
 - **RF03** O utilizador pode ter um curso e uma instituição no perfil, ou ainda não ter curso. *(Alterado na 1.9: sai o ano curricular, que só servia as opcionais.)*
 - **RF04** O sistema deve distinguir os perfis Aluno e Administrador, com permissões distintas.
-- **RF17** O utilizador deve poder exportar e apagar todos os seus dados. *(A 22/10 a US17 ficou só com o apagamento; a exportação é a US46.)*
+- **RF17** O utilizador deve poder exportar e apagar todos os seus dados. *(A 22/10 a US17 ficou só com o apagamento; a exportação é a US46, com o detalhe RF17.7 a RF17.11 em [US46/requisitos.md](../US46/requisitos.md).)*
 
 ### Módulo B — Catálogo de instituições e cursos
 
 - **RF05** O catálogo tem as licenciaturas e os mestrados integrados do concurso nacional (código DGES, instituição, localidade, vagas, nota do último colocado, área, condições de acesso, descrição, saídas profissionais e fontes). É recolhido das páginas públicas da DGES por um script que a equipa corre no seu computador. *(Alterado na 1.9: antes era importado por CSV pelo administrador, com as UCs de cada curso.)*
 - **RF34** Qualquer utilizador deve poder consultar e filtrar os cursos do catálogo (por área, instituição e localidade) e comparar até 3 cursos lado a lado.
+- **RF51** O administrador deve poder corrigir a descrição e as saídas profissionais de um curso, ou escondê-lo, sem mexer no ficheiro da DGES. As correções ficam por cima dos dados recolhidos (uma recolha nova não as apaga), podem ser desfeitas e ficam registadas com quem as fez e quando, sem acesso aos dados dos alunos. *(Nova na 1.11, para a US39; detalhe em [US39/requisitos.md](../US39/requisitos.md).)*
 
 ### Módulo C — Percurso
 
@@ -33,6 +34,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RF37** No fim da conversa (quando o LLM tem informação suficiente, ao fim de 6 respostas ou a pedido do utilizador), o sistema deve sugerir 2 a 3 cursos do catálogo, cada um com os dados do catálogo e uma explicação em linguagem simples ligada ao que a pessoa disse.
 - **RF38** O fornecedor do LLM deve ser configurável (Google Gemini, Groq e um modelo falso para testes), sem alterar o resto da aplicação.
 - **RF39** O utilizador deve poder escolher um dos cursos sugeridos, ou outro do catálogo, passando a ter esse curso no perfil (RF03).
+- **RF52** Só com autorização dada ao começar a conversa, o assistente deve ter em conta os exames que o utilizador fez e a sua média num intervalo de 2 valores (nunca a média exata nem a nota de cada exame), e não deve sugerir cursos a que falta uma prova de ingresso, ou deve assinalá-los. *(Nova na 1.11, para a US37; detalhe em [US37/requisitos.md](../US37/requisitos.md).)*
 
 ### Módulo K — Plano de candidatura
 
@@ -46,7 +48,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 - **RF47** O utilizador deve poder criar e desligar uma ligação só de leitura para o seu plano, que mostra o primeiro nome, as opções, a nota de candidatura e a situação, e nunca o email, a média nem as notas dos exames.
 - **RF48** Com 2 ou mais opções no plano, o sistema deve mostrar as combinações de até 3 exames nacionais que dão para concorrer a mais opções, dizendo para que opções não dão e que exames a pessoa já fez.
 - **RF49** O sistema deve mostrar cursos das áreas do plano, fora dele, que tiveram vagas na 2.ª fase do ano anterior e a que a nota da pessoa chegava (plano B).
-- **RF50** O percurso deve mostrar as datas das fases do concurso nacional, com a ligação para a DGES, e o próximo prazo. *(Nova na 1.9, para a US38.)*
+- **RF50** O percurso deve mostrar as datas das fases do concurso nacional, com a ligação para a DGES, e o próximo prazo. *(Nova na 1.9, para a US38; detalhe em [US38/requisitos.md](../US38/requisitos.md).)*
 
 ## 2. Requisitos não funcionais
 
@@ -99,18 +101,18 @@ A partir de 13/10/2026 os números das stories ficam fixos: as stories novas rec
 | US44 — Que exames me abrem mais portas? | E4 | RF48 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
 | US43 — Partilhar o plano | E4 | RF47, RF17 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
 | US45 — Plano B: 2.ª fase | E4 | RF49 | Sprint 4 | Feita (aceite pelo PO a 27/10) |
-| US37 — Assistente que conhece as minhas notas | E3 | RF37, RF41, RNF12 | Backlog | Por fazer |
-| US46 — Exportar os meus dados | E1 | RF17 (exportação), RNF01 | Backlog | Por fazer |
-| US47 — Recuperar a palavra-passe | E1 | RF02 (recuperação) | Backlog | Por fazer |
+| US37 — Assistente que conhece as minhas notas | E3 | RF52, RF37, RF41, RNF12 (ver [detalhe](../US37/requisitos.md)) | Sprint 4 | Feita (aceite pelo PO a 29/10) |
+| US46 — Exportar os meus dados | E1 | RF17 (exportação), RNF01 (ver [detalhe](../US46/requisitos.md)) | Sprint 4 | Feita (aceite pelo PO a 29/10) |
+| US47 — Recuperar a palavra-passe | E1 | RF02 (recuperação; ver [detalhe](../US47/requisitos.md)) | Sprint 4 | Feita (aceite pelo PO a 29/10) |
+| US39 — Corrigir e esconder cursos do catálogo (gestão) | E2 | RF51, RF04, RF05 (ver [detalhe](../US39/requisitos.md)) | Sprint 4 | Feita (aceite pelo PO a 29/10) |
+| US38 — Datas do concurso no percurso | E4 | RF50 (ver [detalhe](../US38/requisitos.md)) | Sprint 4 | Feita (aceite pelo PO a 29/10) |
 | US48 — Recolha completa das licenciaturas (DGES) | E2 | RF05, RNF03 | Backlog | Por fazer |
-| US39 — Corrigir e esconder cursos do catálogo (gestão) | E2 | RF04, RF05 | Backlog | Por fazer |
-| US38 — Datas do concurso no percurso | E4 | RF50 | Backlog | Por fazer |
 
 **Épicos (desde 27/10):** E1 Conta e privacidade · E2 Catálogo de cursos · E3 Orientação com o assistente · E4 Plano de candidatura. **Protótipo** = código feito antes do sprint, ainda não aceite numa Sprint Review.
 
 ### Lacunas a resolver pelo Product Owner
 
-Desde 27/10 todos os requisitos têm story e todas as stories têm requisito: a recuperação da palavra-passe (RF02) passou a ser a US47, a exportação (RF17) a US46 e a US38 tem o RF50. As lacunas antigas (RF06, US26 e US28) eram das opcionais e foram arquivadas.
+Desde 27/10 todos os requisitos têm story e todas as stories têm requisito: a recuperação da palavra-passe (RF02) passou a ser a US47, a exportação (RF17) a US46 e a US38 tem o RF50. A 29/10 a US39 ganhou o RF51 e a US37 o RF52, porque o que pediam não estava escrito em nenhum requisito. As lacunas antigas (RF06, US26 e US28) eram das opcionais e foram arquivadas.
 
 ## 5. Dependências e pontos em aberto
 
@@ -120,14 +122,16 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 |---|---|---|---|---|
 | 8 | O RNF05 previa «Django ou Flask» e PostgreSQL, mas o código da US01 usa Flask e `sqlite3`. | Os requisitos e o código não podem contar histórias diferentes. | Alinhar o RNF05 com a decisão técnica e retirar o PostgreSQL do âmbito. | **Alterado:** RNF05 (e RNF02, RNF06 pelo mesmo motivo). |
 | 9 | O domínio dos emails institucionais dos alunos não está confirmado. | O RF01 depende dele. | Aceitar email pessoal; a restrição a um domínio fica como opção (`ALLOWED_EMAIL_DOMAINS`, ver [US01/requisitos.md](../US01/requisitos.md)). | **Alterado:** RF01 (versão 1.2). |
-| 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Planear a 10 SP por sprint. | **Alterado (14/10):** Sprints 2 a 4 com 8, 10 e 10 SP. **27/10:** o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45 (32 SP), por decisão do PO. Só se defende porque o código foi feito antes do sprint, como protótipo: no sprint sobra documentação, testes, revisão e aceitação. A confirmar com o docente a 29/10. |
-| 11 | A exportação e o apagamento de dados (RF17) ficavam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | **Decidido (22/10):** a US17 ficou com o apagamento (Sprint 3). **27/10:** a exportação passa a ser a US46 (backlog). |
+| 10 | O plano de sprints soma 13, 13 e 18 SP para os Sprints 2 a 4, e a velocidade real do Sprint 1 foi 10 SP. | Um plano acima da velocidade falha no fim de cada sprint e desmotiva. | Planear a 10 SP por sprint. | **Alterado (14/10):** Sprints 2 a 4 com 8, 10 e 10 SP. **27/10:** o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45 (32 SP), por decisão do PO. Só se defende porque o código foi feito antes do sprint, como protótipo: no sprint sobra documentação, testes, revisão e aceitação. A confirmar com o docente a 29/10. **29/10:** por decisão do PO, entram também a US37, US38, US39, US46 e US47 (15 SP), com o código feito a 29/10: o Sprint 4 passa a 47 SP. Fica no relatório que não é um planeamento à velocidade (10 SP) e que a revisão do Simão está pendente. |
+| 11 | A exportação e o apagamento de dados (RF17) ficavam no backlog. | O RNF01 (RGPD) exige estes direitos. | Antes da demonstração com utilizadores reais, implementar pelo menos o apagamento de conta; ou usar só contas de teste. | **Decidido (22/10):** a US17 ficou com o apagamento (Sprint 3). **27/10:** a exportação passa a ser a US46 (backlog). **29/10:** US46 feita (Sprint 4). |
 | 12 | A qualidade das sugestões depende das descrições dos cursos no catálogo. | Descrições vagas levam o LLM a sugestões genéricas. | Os Product Owners reveem as descrições do catálogo do MVP; com o catálogo completo (US04), os cursos sem descrição usam os dados da DGES. | Por decidir |
 | 13 | Um assistente LLM que conversa com o utilizador (US32), em vez de só um questionário e uma lista de sugestões. | Pode tornar a orientação mais natural, mas aumenta custo, riscos de respostas fora do catálogo e dados pessoais enviados ao fornecedor. | Os Product Owners avaliam o âmbito antes de estimar. | **Alterado (14/10):** o LLM conduz a conversa; US32 fundida na US29; RF36 a RF38 e RNF12 reescritos. Custo e privacidade avaliados no [spike](05-spike-llm.md). |
-| 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18; (c) plano pago ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | **Decidido (20/10):** opção (a). O OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa; fica escrito no relatório. |
+| 14 | Os termos da API do Gemini excluem aplicações dirigidas a menores de 18 ou com probabilidade de serem usadas por eles, e só permitem o plano pago com utilizadores no EEE (Portugal). | O público «pessoa a escolher licenciatura» inclui alunos do secundário com 16 ou 17 anos; e o plano escolhido é o gratuito. | (a) Assumir o OptaBem como protótipo usado só pela equipa e na demonstração; (b) conversa com LLM só para maiores de 18; (c) plano pago ou outro fornecedor. Ver o [spike](05-spike-llm.md), secção 5. | **Decidido (20/10):** opção (a). O OptaBem é um protótipo usado pela equipa e na demonstração, com aviso de 18+ na conversa; fica escrito no relatório. **29/10:** a US37 envia ao LLM mais dados do aluno (os nomes dos exames e um intervalo da média, só com autorização), o que torna este limite mais importante se o OptaBem deixar de ser um protótipo. |
 | 15 | A conversa tem de ser guardada entre pedidos, e não cabe no cookie de sessão (limite de 4 KB). | Guardá-la no servidor é guardar texto livre escrito pelo utilizador (RNF01). | Guardar no servidor só enquanto a conversa decorre e apagar ao recomeçar ou depois da escolha (US31). | **Decidido (20/10, US31):** a conversa fica no servidor enquanto decorre e é apagada ao recomeçar e depois da escolha do curso. |
 | 16 | «Matemática» (código 16) e «Matemática A» (19) contavam com o mesmo exame no protótipo do plano de candidatura. | Se estiver errado, a nota de candidatura e os avisos ficam errados em vários cursos. | Confirmar na tabela de correspondência da DGES entre exames e provas de ingresso. | **Corrigido (27/10):** a correspondência estava incompleta. A prova 16 aceita os exames 635 (Matemática A) e 735 (Matemática B); a 17 aceita 635, 735 e 835 (MACS); a 19 só o 635. O formulário pede o exame feito e cada um conta para as provas certas (RF41). |
 | 17 | Os cursos do ensino privado (36 no catálogo recolhido) apareciam como opções do concurso nacional. | Dava a um candidato uma informação errada: estes cursos têm candidatura na própria instituição. | Tirá-los do plano e dizê-lo na ficha. | **Corrigido (27/10):** nova RN12. |
+| 18 | Os emails de confirmação de conta e de recuperação da palavra-passe só eram mostrados no ecrã (modo de desenvolvimento). | Sem envio real, a US47 não se pode usar fora do computador de quem corre a aplicação. | Enviar por SMTP com uma conta de email da equipa, configurada só no `.env`. | **Feito (29/10):** envio real por SMTP testado pelo PO (Gmail com palavra-passe de aplicação). Ver o `PROJETO.md`. Falta um limite de pedidos de recuperação por endereço. |
+| 19 | O catálogo corrigido (US39) é lido da base de dados a cada pedido. | Com o catálogo completo (US48) pode passar os 2 segundos do RNF03. | Medir depois da US48; se for lento, guardar o catálogo corrigido em memória enquanto não houver alterações. | Por medir |
 
 ## 6. Histórico de alterações
 
@@ -142,6 +146,7 @@ Problemas encontrados ao rever os requisitos contra o backlog. Cada um traz uma 
 | 1.6 | 2026-10-20 | US31: ponto 15 decidido (a conversa é apagada depois da escolha do curso). Detalhe em [US31/requisitos.md](../US31/requisitos.md). |
 | 1.7 | 2026-10-22 | Sprint 3: US05 sem dependência da US04; US17 reduzida ao apagamento da conta e ponto 11 decidido. Detalhe em [US05/requisitos.md](../US05/requisitos.md) e [US17/requisitos.md](../US17/requisitos.md). |
 | 1.8 | 2026-10-23 | Plano de candidatura (decisão do PO, com o protótipo do PR #44): novo módulo K (RF40 a RF49) e stories US33 a US45; US04 reescrita (catálogo da DGES por recolha); as stories das opcionais passam a Won't (fase 2). Detalhe da US01 (nome no registo) e da US02 (terminar sessão volta à página inicial). |
+| 1.11 | 2026-10-29 | Sprint 4 alargado por decisão do PO: US37, US38, US39, US46 e US47 feitas e aceites. Novos RF51 (US39) e RF52 (US37); RF02, RF17 e RF50 com ligação ao detalhe de cada story; pontos 10, 11 e 14 atualizados; novos pontos 18 (envio de emails) e 19 (desempenho do catálogo corrigido). |
 | 1.10 | 2026-10-27 | Verificação do Sprint 4 com o catálogo real: RF41 (correspondência das Matemáticas) e RF43 alterados; nova RN12 (ensino privado fora do concurso nacional); pontos 16 e 17 corrigidos. |
 | 1.9 | 2026-10-27 | Reestruturação autorizada pelo docente: o OptaBem é só um recomendador de cursos. Os módulos D a I, os RF06 a RF16 (exceto o RF17) e RF18 a RF33, as RN01 a RN08 e os pontos 1 a 7 passam para o anexo A. RF01, RF03, RF05, RF35, RNF03 a RNF08 e RN10 alterados; novos RF50 e RN11 e ponto 16. Stories novas US46 (exportar dados) e US47 (recuperar a palavra-passe); US04 dividida (a recolha de todas as licenciaturas passa a ser a US48); épicos E1 a E4; o Sprint 4 fica com a US04, as US33 a US36 e as US40 a US45. |
 

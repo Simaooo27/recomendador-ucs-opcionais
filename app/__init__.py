@@ -5,7 +5,7 @@ from pathlib import Path
 
 from flask import Flask, render_template
 
-from . import db, manuscrito, texts
+from . import db, texts
 from .config import default_config
 from .mailer import create_mailer
 from .security import init_security
@@ -68,7 +68,7 @@ def create_app(config: dict | None = None) -> Flask:
     # Todos os templates recebem os textos de app/texts.py como «texts».
     @app.context_processor
     def _inject_texts():
-        return {"texts": texts, "manuscrito": manuscrito.desenhar}
+        return {"texts": texts}
 
     @app.errorhandler(400)
     @app.errorhandler(404)

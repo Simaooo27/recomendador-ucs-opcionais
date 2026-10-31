@@ -1,54 +1,64 @@
 {% extends "base.html" %}
 {% set page_title = texts.HOME_TITLE %}
-{% set largura = "media" %}
+{% set largura = "inteira" %}
 
-{#- Revisão estética de 23/10: o percurso numa caixa, atalhos por baixo, e «Apagar a minha conta»
-    passou para «A minha conta» (ícone de conta na barra do topo). -#}
+{#- Visual calmo (29/10): em cima, só o próximo passo (uma frase e um botão); por baixo, na faixa
+    cinzenta, o percurso inteiro em linha e os atalhos. Os passos vêm de app/percurso/__init__.py. -#}
 {% block content %}
-<div class="inicio">
-<header class="inicio-cabecalho">
-  {#- Desde 23/10 a pessoa é tratada pelo primeiro nome, e não pelo email (decisão do PO). -#}
-  {% set primeiro = (g.user["nome"] or "").split() | first | default("") %}
+{% set primeiro = (g.user["nome"] or "").split() | first | default("") %}
+{% set atual = passos | selectattr("situacao", "equalto", "atual") | first %}
+{% set numero = (passos | map(attribute="situacao") | list).index("atual") + 1 if atual else passos | length %}
+
+<section class="inicio-destaque">
+  {% if atual %}<p class="inicio-passo">{{ texts.HOME_PASSO_DE.format(numero=numero, total=passos | length) }}</p>{% endif %}
   <h1>{{ texts.HOME_GREETING_NOME.format(nome=primeiro) if primeiro else texts.HOME_GREETING }}</h1>
+  {% if atual %}
+    <p class="inicio-proximo">{{ atual.titulo }}</p>
+    <p class="inicio-texto">{{ atual.texto }}</p>
+    {% if atual.acao %}
+      <a class="button-link inicio-acao" href="{{ url_for(atual.acao[1]) }}">{{ atual.acao[0] }}</a>
+    {% else %}
+      <p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>
+    {% endif %}
+  {% endif %}
+  {% if prazo %}
+    {#- US38: o próximo prazo do concurso nacional (datas em dados/calendario-concurso.csv). -#}
+    <p class="etapa-prazo"><strong>{{ texts.HOME_PRAZO_TITULO }}:</strong> {{ prazo }}
+      <a href="{{ pagina_calendario }}" rel="noopener" target="_blank">{{ texts.HOME_PRAZO_LIGACAO }}</a></p>
+  {% endif %}
   {% if not primeiro %}
     <p class="sessao-conta">{{ texts.HOME_SEM_NOME }}<a href="{{ url_for('auth.account') }}">{{ texts.HOME_SEM_NOME_LIGACAO }}</a>.</p>
   {% endif %}
-</header>
-
-{#- A linha do tempo do percurso. Os passos e o passo atual vêm de app/percurso/__init__.py. -#}
-<section class="meu-percurso cartao" aria-labelledby="meu-percurso">
-  <h2 id="meu-percurso">{{ texts.HOME_PATH_TITLE }}</h2>
-  <p class="lead">{{ texts.HOME_INTRO }}</p>
-  <ol class="linha-tempo" data-linha-tempo>
-    {% for passo in passos %}
-      <li class="etapa etapa-{{ passo.situacao }}"{% if passo.situacao == "atual" %} aria-current="step"{% endif %}>
-        <span class="etapa-no" aria-hidden="true"></span>
-        <p class="etapa-estado">
-          {%- if passo.situacao == "feito" %}{{ texts.HOME_STEP_DONE }}
-          {%- elif passo.situacao == "atual" %}{{ texts.HOME_STEP_CURRENT }}
-          {%- else %}{{ texts.HOME_STEP_LATER }}{% endif -%}
-        </p>
-        <h3>{{ passo.titulo }}</h3>
-        <p class="etapa-texto">{{ passo.texto }}</p>
-        {% if passo.acao %}<a class="etapa-acao" href="{{ url_for(passo.acao[1]) }}">{{ passo.acao[0] }}</a>
-        {%- elif passo.situacao == "atual" %}<p class="etapa-breve">{{ texts.HOME_NEXT_SOON }}</p>{% endif %}
-        {% if passo.situacao == "atual" and prazo %}
-          {#- US38: o próximo prazo do concurso nacional (datas em dados/calendario-concurso.csv). -#}
-          <p class="etapa-prazo"><strong>{{ texts.HOME_PRAZO_TITULO }}:</strong> {{ prazo }}
-            <a href="{{ pagina_calendario }}" rel="noopener" target="_blank">{{ texts.HOME_PRAZO_LIGACAO }}</a></p>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ol>
 </section>
 
-<section class="atalhos" aria-labelledby="atalhos">
-  <h2 id="atalhos">{{ texts.HOME_ATALHOS_TITULO }}</h2>
-  <ul class="atalhos-lista">
-    {% for atalho in texts.HOME_ATALHOS %}
-      <li><a class="atalho" href="{{ url_for(atalho.destino) }}"><span class="atalho-titulo">{{ atalho.titulo }}</span><span class="atalho-texto">{{ atalho.texto }}</span></a></li>
-    {% endfor %}
-  </ul>
-</section>
+<div class="faixa inicio-faixa">
+  <section class="meu-percurso" aria-labelledby="meu-percurso">
+    <h2 id="meu-percurso">{{ texts.HOME_PATH_TITLE }}</h2>
+    <ol class="linha-tempo" data-linha-tempo>
+      {% for passo in passos %}
+        <li class="etapa etapa-{{ passo.situacao }}"{% if passo.situacao == "atual" %} aria-current="step"{% endif %}>
+          <span class="etapa-no" aria-hidden="true"></span>
+          <p class="etapa-estado">
+            {%- if passo.situacao == "feito" %}{{ texts.HOME_STEP_DONE }}
+            {%- elif passo.situacao == "atual" %}{{ texts.HOME_STEP_CURRENT }}
+            {%- else %}{{ texts.HOME_STEP_LATER }}{% endif -%}
+          </p>
+          <h3>{{ passo.titulo }}</h3>
+          {#- O texto do passo atual já está em cima; aqui ficam os dos outros (por exemplo, o curso escolhido). -#}
+          {% if passo.situacao != "atual" %}<p class="etapa-texto">{{ passo.texto }}</p>{% endif %}
+          {% if passo.acao and passo.situacao != "atual" %}<a class="etapa-acao" href="{{ url_for(passo.acao[1]) }}">{{ passo.acao[0] }}</a>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="atalhos" aria-labelledby="atalhos">
+    <h2 id="atalhos">{{ texts.HOME_ATALHOS_TITULO }}</h2>
+    <ul class="atalhos-lista">
+      {% for atalho in texts.HOME_ATALHOS %}
+        <li><a class="atalho" href="{{ url_for(atalho.destino) }}"><span class="atalho-titulo">{{ atalho.titulo }}</span><span class="atalho-texto">{{ atalho.texto }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </section>
 </div>
 {% endblock %}

@@ -5,31 +5,17 @@
 
 {% block content %}
 <section class="hero">
-  {#- Revisão estética de 23/10: à esquerda, a frase, o apoio e os números do catálogo; à direita,
-      uma só caixa de pesquisa com as áreas lá dentro (antes eram quatro blocos empilhados). -#}
-  <div class="hero-texto">
-    <h1 class="hero-titulo">{{ texts.BRAND_TAGLINE }}</h1>
-    <p class="hero-apoio">{{ texts.BRAND_SUPPORT }}</p>
-    {#- «comece por aqui» por baixo da frase, com a seta a apontar para a pesquisa à direita
-        (decisão do PO de 23/10: por cima do bloco branco não fazia sentido). -#}
-    <div class="procura-nota" aria-hidden="true">
-      {{ marca.escrita(texts.LANDING_SEARCH_NOTE, manuscrito(texts.LANDING_SEARCH_NOTE)) }}
-      <svg class="procura-seta" viewBox="0 0 120 40" aria-hidden="true" focusable="false"><path d="M4 26c26 8 62 6 104-14" /><path d="M94 6l14 6-8 13" /></svg>
-    </div>
-    <p class="procura-numeros">
-      {{- texts.LANDING_STATS.format(
-            cursos='<strong data-contar="%d">%d</strong>'|format(resumo.cursos, resumo.cursos),
-            instituicoes='<strong data-contar="%d">%d</strong>'|format(resumo.instituicoes, resumo.instituicoes),
-            vagas='<strong data-contar="%d">%d</strong>'|format(resumo.vagas, resumo.vagas))|safe -}}
-    </p>
-  </div>
+  {#- Visual calmo (29/10): frase, apoio e pesquisa ao centro, com muito espaço; os resultados ficam
+      na faixa cinzenta por baixo. Saíram a nota escrita à mão e os números que contavam. -#}
+  <h1 class="hero-titulo">{{ texts.BRAND_TAGLINE }}</h1>
+  <p class="hero-apoio">{{ texts.BRAND_SUPPORT }}</p>
 
   {#- Pesquisa no catálogo real (app/catalogo). Sem JavaScript, o formulário recarrega a
       página com ?q=; com JavaScript, os resultados mudam enquanto se escreve. -#}
   <div class="procura" data-procura>
     <div class="procura-caixa">
       <form class="procura-form" method="get" action="{{ url_for('main.index') }}#resultados" role="search">
-        <label for="q" class="procura-etiqueta">{{ texts.LANDING_SEARCH_LABEL }}</label>
+        <label for="q" class="procura-etiqueta visually-hidden">{{ texts.LANDING_SEARCH_LABEL }}</label>
         <div class="procura-campo">
           <svg class="procura-lupa" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
           <input id="q" name="q" type="search" value="{{ termo }}" placeholder="{{ texts.LANDING_SEARCH_PLACEHOLDER }}"
@@ -37,17 +23,23 @@
           <button type="submit" class="procura-botao">{{ texts.LANDING_SEARCH_BUTTON }}</button>
         </div>
       </form>
-      <p class="procura-areas">
-        <span>{{ texts.LANDING_SEARCH_AREAS }}</span>
-        {% for area in resumo.areas %}
-          <a class="procura-area" href="{{ url_for('main.index', q=area) }}#resultados" data-termo="{{ area }}">{{ area }}</a>
-        {% endfor %}
-      </p>
     </div>
+    <p class="procura-areas">
+      <span>{{ texts.LANDING_SEARCH_AREAS }}</span>
+      {% for area in resumo.areas %}
+        <a class="procura-area" href="{{ url_for('main.index', q=area) }}#resultados" data-termo="{{ area }}">{{ area }}</a>
+      {% endfor %}
+    </p>
   </div>
+  <p class="procura-numeros">
+    {{- texts.LANDING_STATS.format(
+          cursos='<strong>%d</strong>'|format(resumo.cursos),
+          instituicoes='<strong>%d</strong>'|format(resumo.instituicoes),
+          vagas='<strong>%d</strong>'|format(resumo.vagas))|safe -}}
+  </p>
 </section>
 
-<section class="seccao resultados" id="resultados" aria-labelledby="resultados-titulo">
+<section class="seccao faixa resultados" id="resultados" aria-labelledby="resultados-titulo">
   <div class="resultados-cabecalho" aria-live="polite" data-resultados-cabecalho>
     <h2 id="resultados-titulo" data-resultados-titulo>
       {%- if resultado.amostra %}{{ texts.LANDING_RESULTS_SAMPLE }}{% else %}{{ texts.LANDING_RESULTS_FOUND.format(termo=termo) }}{% endif -%}
@@ -74,7 +66,7 @@
 
 <section class="seccao como-funciona" aria-labelledby="como-funciona">
   <h2 id="como-funciona">{{ texts.LANDING_HOW_TITLE }}</h2>
-  <ol class="passos" data-passos>
+  <ol class="passos">
     {% for passo in texts.LANDING_STEPS %}
       <li class="passo">
         <span class="passo-no" aria-hidden="true">{{ loop.index }}</span>

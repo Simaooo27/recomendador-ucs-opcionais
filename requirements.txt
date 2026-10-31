@@ -1,6 +1,4 @@
 Flask>=3.1,<4
-# Letras «escritas à mão» da página de apresentação (app/manuscrito.py). Sem ele, aparece texto normal.
-fonttools>=4.40,<5
 # Faz o comando «flask» ler o ficheiro .env (por exemplo GEMINI_API_KEY), sem ter de exportar à mão.
 # Os testes (python -m unittest) não leem o .env: continuam sem chaves e sem rede.
 python-dotenv>=1.0,<2

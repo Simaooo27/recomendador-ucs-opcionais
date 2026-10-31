@@ -3,7 +3,7 @@
 
     Três formatos (cada página escolhe com {% set layout = "..." %}):
     - "apresentacao": a página inicial pública (/), com barra própria e largura total;
-    - "entrada": criar conta, iniciar sessão e confirmar email, com o painel do percurso ao lado;
+    - "entrada": criar conta, iniciar sessão e confirmar email, numa coluna centrada;
     - sem layout: as restantes páginas, com a barra do topo e o conteúdo numa coluna. -#}
 {% import "macros/marca.html" as marca with context %}
 <html lang="pt-PT">
@@ -19,7 +19,6 @@
   </title>
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
-  <link rel="preload" href="{{ url_for('static', filename='fonts/atkinson-hyperlegible-next.woff') }}" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -37,16 +36,11 @@
   </header>
   <main class="apresentacao">
 {% elif layout == "entrada" %}
+  {#- Visual calmo (29/10): só a marca em cima e o formulário numa coluna centrada, sem o painel verde. -#}
   <div class="entrada">
-    <aside class="entrada-marca">
+    <header class="entrada-topo">
       <p class="marca"><a class="marca-ligacao" href="{{ url_for('main.index') }}">{{ marca.simbolo() }}<span>{{ texts.BRAND_NAME }}</span></a></p>
-      {#- Bloco centrado à altura do formulário (revisão estética de 23/10). -#}
-      <div class="entrada-destaque">
-        {{ marca.percurso() }}
-        <p class="entrada-frase">{{ texts.BRAND_TAGLINE }}</p>
-        <p class="entrada-apoio">{{ texts.BRAND_SUPPORT }}</p>
-      </div>
-    </aside>
+    </header>
     <main class="entrada-conteudo">
       <div class="entrada-coluna">
 {% else %}
@@ -83,7 +77,7 @@
       </form>
     {% endif %}
   </header>
-  <main class="conteudo{% if g.admin %} wide{% elif largura == "media" %} media{% endif %}">
+  <main class="conteudo{% if g.admin %} wide{% elif largura == "media" %} media{% elif largura == "inteira" %} inteira{% endif %}">
 {% endif %}
     {#- Na apresentação, os avisos ficam numa coluna com margens (ex.: «conta apagada», US17). -#}
     {% with avisos = get_flashed_messages(with_categories=true) %}

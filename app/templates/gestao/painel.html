@@ -12,15 +12,15 @@
   <dl class="indicadores">
     <div class="indicador">
       <dt>{{ texts.ADMIN_STAT_STUDENTS }}</dt>
-      <dd data-contar="{{ indicadores.alunos_ativos }}">{{ indicadores.alunos_ativos }}</dd>
+      <dd>{{ indicadores.alunos_ativos }}</dd>
     </div>
     <div class="indicador">
       <dt>{{ texts.ADMIN_STAT_PENDING }}</dt>
-      <dd data-contar="{{ indicadores.contas_por_confirmar }}">{{ indicadores.contas_por_confirmar }}</dd>
+      <dd>{{ indicadores.contas_por_confirmar }}</dd>
     </div>
     <div class="indicador">
       <dt>{{ texts.ADMIN_STAT_ADMINS }}</dt>
-      <dd data-contar="{{ indicadores.administradores }}">{{ indicadores.administradores }}</dd>
+      <dd>{{ indicadores.administradores }}</dd>
     </div>
     <div class="indicador">
       <dt>{{ texts.ADMIN_STAT_LAST_SIGNUP }}</dt>
@@ -29,11 +29,5 @@
   </dl>
 </section>
 
-<h2>{{ texts.ADMIN_DASHBOARD_INTRO }}</h2>
-<ul class="plain-list">
-  {% for item in texts.ADMIN_UPCOMING %}
-    <li>{{ item }}</li>
-  {% endfor %}
-</ul>
 <p><a href="{{ url_for('gestao.contas') }}">{{ texts.ADMIN_NAV_CONTAS }}</a> · <a href="{{ url_for('gestao.cursos') }}">{{ texts.ADMIN_NAV_CURSOS }}</a> · <a href="{{ url_for('gestao.admins') }}">{{ texts.ADMIN_NAV_ADMINS }}</a></p>
 {% endblock %}

@@ -11,6 +11,7 @@ from tests.base import AppTestCase
 REQUIRED_PLACEHOLDERS = {
     "PAGE_TITLE_FORMAT": {"pagina", "aplicacao"},
     "HOME_GREETING_NOME": {"nome"},
+    "HOME_PASSO_DE": {"numero", "total"},
     "CONFIRMATION_EMAIL_HELLO_NOME": {"nome"},
     "ERROR_NOME_INVALID": {"maximo"},
     "ADMIN_DASHBOARD_GREETING": {"nome"},
@@ -107,7 +108,7 @@ REQUIRED_PLACEHOLDERS = {
 
 
 def _all_texts() -> dict[str, str]:
-    """Todos os textos; as listas (ex.: ADMIN_UPCOMING, LANDING_STEPS) contam item a item."""
+    """Todos os textos; as listas (ex.: LANDING_STEPS) contam item a item."""
     result = {}
     for name, value in vars(texts).items():
         if not name.isupper():

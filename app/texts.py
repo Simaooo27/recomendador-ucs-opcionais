@@ -23,7 +23,7 @@ APP_NAME = "OptaBem: escolher curso"
 BRAND_NAME = "OptaBem"
 # Frase grande e frase de apoio no painel com o percurso (criar conta, iniciar sessão, confirmar email).
 BRAND_TAGLINE = "Escolha o curso com ajuda, sem decidir às cegas."
-BRAND_SUPPORT = "Compare cursos de várias instituições e decida com a opinião de outros alunos."
+BRAND_SUPPORT = "Compare cursos de várias instituições, calcule a sua nota de candidatura e prepare as suas 6 opções."
 
 # ---------------------------------------------------------------------------
 # Página de apresentação (/), para quem ainda não tem sessão iniciada
@@ -399,6 +399,8 @@ HOME_PRAZO_FUTURO_DIA = "{etapa} da {fase}.ª fase: {inicio}."
 HOME_PRAZO_SEM_DATAS = "As datas do concurso de {ano} ainda não foram publicadas."
 HOME_PRAZO_LIGACAO = "Ver as datas do concurso"
 HOME_STEP_DONE = "Concluído"
+# Por cima da saudação, no início (visual calmo de 29/10): em que passo do percurso está a pessoa.
+HOME_PASSO_DE = "Passo {numero} de {total}"
 HOME_STEP_CURRENT = "Próximo passo"
 HOME_STEP_LATER = "Depois"
 HOME_NEXT_SOON = "Disponível em breve."
@@ -508,8 +510,9 @@ ADMIN_NAV_CONTAS = "Contas por confirmar"
 ADMIN_NAV_CURSOS = "Catálogo"
 ADMIN_CONTAS_TITULO = "Contas por confirmar"
 ADMIN_CONTAS_INTRO = (
-    "Enquanto o OptaBem não envia emails a sério, as contas novas ficam aqui até um administrador as ativar. "
-    "Ative só contas de pessoas que conhece: ativar salta a confirmação do email."
+    "Uma conta nova fica por confirmar até a pessoa abrir a ligação do email. Se o email não chegar (ou o "
+    "OptaBem estiver a correr sem envio de emails), pode ativá-la aqui. Ative só contas de pessoas que conhece: "
+    "ativar salta a confirmação do email."
 )
 ADMIN_CONTAS_VAZIO = "Não há contas por confirmar."
 ADMIN_COL_NOME = "Nome"
@@ -533,13 +536,6 @@ ADMIN_STAT_PENDING = "Contas por confirmar"
 ADMIN_STAT_ADMINS = "Administradores"
 ADMIN_STAT_LAST_SIGNUP = "Último registo"
 ADMIN_STAT_NONE = "Ainda nenhum"
-ADMIN_DASHBOARD_INTRO = "Nos próximos sprints, esta área vai permitir:"
-# Uma linha por funcionalidade prevista (pode acrescentar ou retirar linhas).
-ADMIN_UPCOMING = [
-    "Importar o catálogo de cursos e UCs a partir de um ficheiro CSV.",
-    "Abrir e fechar os períodos de avaliação.",
-    "Moderar comentários.",
-]
 
 # Catálogo na gestão (/gestao/cursos, US39): corrigir a descrição e as saídas, ou esconder um curso.
 ADMIN_CURSOS_TITULO = "Catálogo de cursos"

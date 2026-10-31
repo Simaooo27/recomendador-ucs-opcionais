@@ -4,52 +4,19 @@
  * mesma informação. Quem pediu ao sistema menos animação não vê movimento.
  *
  *   1. Pesquisa de cursos da página de apresentação: resultados enquanto se escreve,
- *      com as fichas a deslizar para o novo lugar (e a nota «comece por aqui» escrita à mão)
- *   2. Linha de «Como funciona» que se desenha ao descer a página
+ *      com as fichas a deslizar para o novo lugar
  *   3. Regras da palavra-passe marcadas enquanto escreve (criar conta)
  *   4. Botões que mostram «a enviar» e evitam envios repetidos
- *   5. Números do painel de gestão que contam até ao valor
- *   6. Lupa e menu da conta na barra do topo: fechar ao clicar fora, com Esc ou ao abrir o outro
+ *   6. Cursos marcados para comparar, e a lupa e o menu da conta na barra do topo
+ *
+ * Visual calmo (29/10): saíram a nota escrita à mão, a linha de «Como funciona» que se desenhava
+ * ao descer a página e os números que contavam até ao valor (o passo 2 e o 5).
  */
 (function () {
   "use strict";
 
   var menosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Escrever à mão: o traço percorre cada contorno, por ordem, e no fim a tinta enche as letras. */
-  function escrever(svg) {
-    if (!svg || menosMovimento) return;
-    var tracos = Array.prototype.slice.call(svg.querySelectorAll(".manuscrito-traco"));
-    var tinta = svg.querySelector(".manuscrito-tinta");
-    var duracao = 1.4; // segundos para a caneta atravessar a palavra
-    var n = Math.max(1, tracos.length);
-    tracos.forEach(function (traco) {
-      var comprimento = traco.getTotalLength();
-      traco.style.transition = "none";
-      traco.style.strokeDasharray = comprimento;
-      traco.style.strokeDashoffset = comprimento;
-    });
-    if (tinta) { tinta.style.transition = "none"; tinta.style.opacity = "0"; }
-    // Dois frames: o primeiro fixa o início sem transição; o segundo arranca o desenho.
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () {
-        tracos.forEach(function (traco, i) {
-          var cada = (duracao / n) * 2.4;
-          var inicio = 0.05 + (i / n) * duracao;
-          traco.style.transition = "stroke-dashoffset " + cada.toFixed(3) + "s ease-out " + inicio.toFixed(3) + "s";
-          traco.style.strokeDashoffset = "0";
-        });
-        if (tinta) {
-          tinta.style.transition = "opacity 0.45s ease-out " + (0.05 + duracao * 0.72).toFixed(3) + "s";
-          tinta.style.opacity = "1";
-        }
-      });
-    });
-  }
-
-  /* 1. Pesquisa de cursos ------------------------------------------------- */
-  // Os resultados vêm de /cursos/pesquisa (Python, app/catalogo). Aqui só se desenham as
-  // fichas: as que ficam deslizam para o novo lugar, as novas aparecem uma a uma.
   function semAcentos(texto) {
     return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   }
@@ -207,33 +174,6 @@
       });
     });
 
-    escrever(document.querySelector(".procura-nota svg.manuscrito"));
-  });
-
-  /* 2. Linha de «Como funciona» ------------------------------------------- */
-  document.querySelectorAll("[data-passos]").forEach(function (lista) {
-    if (menosMovimento) return; // a linha fica completa desde o início
-    var passos = Array.prototype.slice.call(lista.children);
-    lista.classList.add("passos-animados");
-    var pedido = false;
-
-    function atualizar() {
-      pedido = false;
-      var caixa = lista.getBoundingClientRect();
-      var alvo = window.innerHeight * 0.6; // a linha acompanha 60% da altura do ecrã
-      var progresso = Math.min(1, Math.max(0, (alvo - caixa.top) / caixa.height));
-      lista.style.setProperty("--progresso", progresso.toFixed(3));
-      passos.forEach(function (passo) {
-        var meio = passo.offsetTop + 16;
-        passo.classList.toggle("alcancado", progresso * caixa.height >= meio);
-      });
-    }
-    function pedir() {
-      if (!pedido) { pedido = true; window.requestAnimationFrame(atualizar); }
-    }
-    window.addEventListener("scroll", pedir, { passive: true });
-    window.addEventListener("resize", pedir);
-    atualizar();
   });
 
   /* 3. Regras da palavra-passe -------------------------------------------- */
@@ -281,25 +221,6 @@
       botao.removeAttribute("aria-busy");
     });
   });
-
-  /* 5. Números que contam ------------------------------------------------- */
-  if (!menosMovimento) {
-    document.querySelectorAll("[data-contar]").forEach(function (elemento) {
-      var final = parseInt(elemento.getAttribute("data-contar"), 10);
-      if (!(final > 0)) return;
-      var inicio = null;
-      var duracao = 700;
-      function passo(agora) {
-        if (inicio === null) inicio = agora;
-        var t = Math.min(1, (agora - inicio) / duracao);
-        var suave = 1 - Math.pow(1 - t, 3); // abranda no fim
-        elemento.textContent = String(Math.round(final * suave));
-        if (t < 1) window.requestAnimationFrame(passo);
-      }
-      elemento.textContent = "0";
-      window.requestAnimationFrame(passo);
-    });
-  }
 
   /* 6. Quantos cursos estão marcados para comparar (/cursos/, US05) ------- */
   // Sem JavaScript, a barra mostra só a ajuda; com ele, diz quantos cursos estão marcados.

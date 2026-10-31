@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from app import texts
@@ -73,6 +74,13 @@ class FuncoesTests(unittest.TestCase):
     def test_com_poucos_cursos_possiveis_vai_o_catalogo_inteiro(self):
         self.assertEqual(len(notas.cursos_para_enviar(CATALOGO, Notas(15.2, SO_FRANCES))), len(CATALOGO))
 
+    def test_cursos_sem_provas_publicadas_nao_chegam_para_filtrar(self):
+        """No catálogo completo, 42 cursos privados não têm provas na DGES: passam o filtro, mas não
+        contam para o mínimo. Sem isto, quem só fez Francês recebia só esses cursos."""
+        sem_provas = [replace(c, provas=()) for c in CATALOGO[:notas.MIN_CURSOS_FILTRADOS + 5]]
+        catalogo = tuple(sem_provas) + tuple(CATALOGO[notas.MIN_CURSOS_FILTRADOS + 5:])
+        self.assertEqual(len(notas.cursos_para_enviar(catalogo, Notas(15.2, SO_FRANCES))), len(catalogo))
+
 
 class AssistenteComNotasTestCase(ConversaTestCase):
     config_overrides = {"CATALOGO_CSV": CATALOGO_COMPLETO}
@@ -96,8 +104,9 @@ class AssistenteComNotasTestCase(ConversaTestCase):
             ligacao.close()
 
     def conversa_ate_ao_fim(self, *, usar_notas: bool, resposta_final: str, exames: dict = PORTUGUES_E_MAT_A) -> str:
-        """Uma pergunta, uma resposta e a sugestão. Sem filtro (174 cursos) a conversa usa o filtro por
-        área (áreas e, a seguir, a sugestão); com o filtro das notas (120 cursos) o catálogo vai inteiro."""
+        """Uma pergunta, uma resposta e a sugestão. Com mais de ``MAX_CURSOS_DIRETO`` cursos enviados, a
+        conversa passa pelo filtro por área (áreas e, a seguir, a sugestão). Serve para o catálogo de
+        174 cursos e para o completo (US48)."""
         enviados = notas.cursos_para_enviar(CATALOGO, Notas(15.2, exames)) if usar_notas else CATALOGO
         if len(enviados) > conversa.MAX_CURSOS_DIRETO:
             respostas = [pergunta("Do que gosta?"), areas(COM_FALTA.area, SEM_FALTA.area), resposta_final]
@@ -139,7 +148,9 @@ class AutorizacaoTests(AssistenteComNotasTestCase):
         self.guardar_notas(PORTUGUES_E_MAT_A)
         html = self.conversa_ate_ao_fim(usar_notas=True, resposta_final=sugestao(SEM_FALTA.chave))
         self.assertTrue(self.usar_notas_guardado())
-        self.assertEqual(len(self.llm.pedidos), 2)   # a pergunta e a sugestão
+        enviados = notas.cursos_para_enviar(CATALOGO, Notas(15.2, PORTUGUES_E_MAT_A))
+        esperados = 3 if len(enviados) > conversa.MAX_CURSOS_DIRETO else 2   # pergunta, (áreas,) sugestão
+        self.assertEqual(len(self.llm.pedidos), esperados)
         for instrucoes, mensagens in self.llm.pedidos:
             with self.subTest(pedido=instrucoes[-80:]):
                 self.assertIn(CONTEXTO, instrucoes)
@@ -190,8 +201,12 @@ class CursosComProvaEmFaltaTests(AssistenteComNotasTestCase):
     def test_sem_filtro_o_curso_vem_assinalado_com_a_prova_que_falta(self):
         """Com poucos cursos possíveis, vai o catálogo inteiro e a página assinala a prova em falta."""
         self.guardar_notas(SO_FRANCES)
-        falta = next(c for c in CATALOGO if c.area and provas_em_falta(c, Notas(15.2, SO_FRANCES)))
-        outro = next(c for c in CATALOGO if c.area == falta.area and c.chave != falta.chave)
+        area = next(c.area for c in CATALOGO if c.area and provas_em_falta(c, Notas(15.2, SO_FRANCES)))
+        # Os cursos têm de estar entre os enviados no 2.º passo (no catálogo completo, uma área tem
+        # mais cursos do que os que vão ao LLM).
+        da_area = conversa.cursos_das_areas(CATALOGO, [area])
+        falta = next(c for c in da_area if provas_em_falta(c, Notas(15.2, SO_FRANCES)))
+        outro = next(c for c in da_area if c.chave != falta.chave)
         self.usar_llm(LLMFalso([pergunta("Do que gosta?"), areas(falta.area), sugestao(falta.chave, outro.chave)]))
         self.post("/orientacao/comecar", usar_notas="on")
         self.post("/orientacao/responder", resposta="Gosto de organizar informação")
@@ -203,8 +218,12 @@ class CursosComProvaEmFaltaTests(AssistenteComNotasTestCase):
 
     def test_sem_autorizacao_nao_se_assinala_nada(self):
         self.guardar_notas(SO_FRANCES)
-        falta = next(c for c in CATALOGO if c.area and provas_em_falta(c, Notas(15.2, SO_FRANCES)))
-        outro = next(c for c in CATALOGO if c.area == falta.area and c.chave != falta.chave)
+        area = next(c.area for c in CATALOGO if c.area and provas_em_falta(c, Notas(15.2, SO_FRANCES)))
+        # Os cursos têm de estar entre os enviados no 2.º passo (no catálogo completo, uma área tem
+        # mais cursos do que os que vão ao LLM).
+        da_area = conversa.cursos_das_areas(CATALOGO, [area])
+        falta = next(c for c in da_area if provas_em_falta(c, Notas(15.2, SO_FRANCES)))
+        outro = next(c for c in da_area if c.chave != falta.chave)
         self.usar_llm(LLMFalso([pergunta("Do que gosta?"), areas(falta.area), sugestao(falta.chave, outro.chave)]))
         self.post("/orientacao/comecar")
         self.post("/orientacao/responder", resposta="Gosto de organizar informação")

@@ -369,7 +369,7 @@ EXPORTAR_ITENS = [
     "a sua conta: nome, email, datas de criação e de confirmação, e a versão da política de privacidade que aceitou;",
     "as decisões do seu percurso (cursos escolhidos e o que o assistente tinha sugerido);",
     "o plano de candidatura: média, notas dos exames e opções;",
-    "a conversa de orientação, se ainda existir, e o número de pedidos ao assistente por dia.",
+    "a conversa de orientação, se ainda existir (e se autorizou o assistente a usar os seus exames e a média), e o número de pedidos ao assistente por dia.",
 ]
 EXPORTAR_SEM_PASSWORD = "A palavra-passe não vai no ficheiro: o OptaBem não a guarda, só um resumo (hash) que não permite descobri-la."
 EXPORTAR_PASSWORD_LABEL = "Para confirmar que é a sua conta, escreva a sua palavra-passe"

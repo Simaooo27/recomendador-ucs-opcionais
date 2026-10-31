@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11) |
 | Story points | 3 |
 | Épico | E4 — Plano de candidatura |
@@ -22,10 +22,32 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Iniciar sessão, indicar as notas (US34) e abrir a ficha de alguns cursos e procurar a secção **«A sua nota neste curso»**.
+
+## Definition of Done da US35
+
+A US35 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Nota = média do secundário × peso + provas × peso, com o conjunto de provas mais favorável (2 testes automáticos, todos a passar)
+- [x] Situação: acima, perto ou abaixo; falta de prova e nota abaixo do mínimo assinaladas (4 testes automáticos, todos a passar)
+- [x] Aparece na ficha de cada curso, com sessão iniciada (2 testes automáticos, todos a passar)
+- [x] Aviso visível: estimativa para o contingente geral da 1.ª fase, não uma garantia (1 teste automático, a passar)
+- [x] Ensino privado, 27/10 (2 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF07, RNF09, RNF10, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US35/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

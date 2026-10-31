@@ -22,10 +22,31 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Abrir http://127.0.0.1:5000/cursos/ (não é preciso iniciar sessão), escolher uma área e uma localidade e carregar em **«Aplicar filtros»**. Abrir uma ficha pelo nome do curso. Voltar, marcar **«Comparar»** em 2 ou 3 fichas e carregar em **«Comparar os cursos marcados»**.
+
+## Definition of Done da US05
+
+A US05 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Filtros por área, instituição e localidade (9 testes automáticos, todos a passar)
+- [x] Ficha de cada curso com descrição, saídas profissionais, vagas, nota do último colocado e ligação à fonte (5 testes automáticos, todos a passar)
+- [x] Comparação de até 3 cursos lado a lado (10 testes automáticos, todos a passar)
+- [x] Funciona sem sessão iniciada (2 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF02, RNF06, RNF09, RNF10, RNF11: PR #37 juntado pelo Simão, que escreveu as correções da revisão (PR #38)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US05/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: Sprint Review do Sprint 3 (23/10), testada pelos dois Product Owners
+- [x] Aceite pelo Product Owner: Sprint Review do Sprint 3 (23/10)
 
 ## Documentos
 

@@ -98,6 +98,46 @@ class PedidoTests(RecuperarTestCase):
         self.assertEqual(response.status_code, 400)
 
 
+class LimiteDeEnviosTests(RecuperarTestCase):
+    """Ninguém pode usar o site para encher a caixa de correio de outra pessoa."""
+
+    def test_no_maximo_3_emails_por_conta_por_hora(self):
+        self.assertEqual(self.app.config["RECUPERACAO_MAX_POR_HORA"], 3)
+        antes = len(self.mailer.outbox)
+        for _ in range(5):
+            self.assertEqual(self._pedir().status_code, 302)
+        self.assertEqual(len(self.mailer.outbox), antes + 3)
+
+    def test_passado_o_limite_a_resposta_e_a_mesma(self):
+        """Não revela que a conta existe nem que o limite foi atingido."""
+        for _ in range(3):
+            self._pedir()
+        bloqueado = self._pedir()
+        self.assertTrue(bloqueado.headers["Location"].endswith("/auth/recuperar/enviado"))
+
+    def test_uma_hora_depois_volta_a_poder_pedir(self):
+        from datetime import datetime, timedelta, timezone
+
+        from app.auth import services
+        from app.db import get_db
+
+        agora = datetime(2026, 10, 31, 12, 0, tzinfo=timezone.utc)
+        with self.app.app_context():
+            db = get_db()
+            for _ in range(3):
+                self.assertIsNotNone(services.pedir_recuperacao(db, VALID_EMAIL, self.app.config, agora))
+            self.assertIsNone(services.pedir_recuperacao(db, VALID_EMAIL, self.app.config, agora + timedelta(minutes=59)))
+            self.assertIsNotNone(services.pedir_recuperacao(db, VALID_EMAIL, self.app.config, agora + timedelta(minutes=61)))
+
+    def test_o_limite_e_por_conta(self):
+        for _ in range(3):
+            self._pedir()
+        self.create_active_user(email="outra@gmail.com")
+        antes = len(self.mailer.outbox)
+        self._pedir("outra@gmail.com", client=self.app.test_client())
+        self.assertEqual(len(self.mailer.outbox), antes + 1)
+
+
 class LigacaoTests(RecuperarTestCase):
     """Critério: ligação de uso único, que expira ao fim de 1 hora."""
 

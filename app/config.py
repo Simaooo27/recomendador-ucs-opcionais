@@ -43,6 +43,8 @@ def default_config() -> dict:
         "CONFIRMATION_TOKEN_MAX_AGE_SECONDS": 24 * 60 * 60,
         # Recuperar a palavra-passe (US47): a ligação serve uma só vez e durante 1 hora.
         "RESET_TOKEN_MAX_AGE_SECONDS": 60 * 60,
+        # Emails de recuperação da palavra-passe por conta e por hora (US47). 0 = sem limite.
+        "RECUPERACAO_MAX_POR_HORA": int(os.environ.get("RECUPERACAO_MAX_POR_HORA", "3")),
         "PRIVACY_POLICY_VERSION": "1.1",   # 1.1 (23/10): passa a recolher o nome
         # Área de gestão (US03): endereço sem ligações nas páginas dos alunos. Pode ser mudado.
         "ADMIN_URL_PREFIX": "/" + os.environ.get("ADMIN_URL_PREFIX", "gestao").strip("/"),

@@ -27,6 +27,28 @@ flask --app app run --debug                              # com LLM_BACKEND=gemin
 
 Iniciar sessão como aluno, abrir `/orientacao/`, responder a uma ou duas perguntas e carregar em **«Ver sugestões já»**. Com `LLM_BACKEND=falso` (sem chave), o assistente faz uma pergunta simulada e, depois da primeira resposta, sugere sem cursos: serve para ver o caso de poucos cursos. Para ver cursos sugeridos sem rede, correr os testes (`tests/test_sugestoes.py`).
 
+## Definition of Done da US30
+
+A US30 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] A sugestão aparece quando o LLM tem informação suficiente ou ao fim de 6 respostas; a pessoa pode pedi-la antes («Ver sugestões já») (7 testes automáticos, todos a passar)
+- [x] Só aparecem cursos do catálogo; os outros são descartados (RN09). Se sobrarem menos de 2, a página diz isso e propõe continuar a conversa ou ver o catálogo (9 testes automáticos, todos a passar)
+- [x] Cada curso mostra os dados do catálogo (instituição, localidade, vagas, nota do último colocado, ligação à DGES) e a explicação do LLM (4 testes automáticos, todos a passar)
+- [x] Nenhum curso é atribuído automaticamente: a escolha é feita na US31 (RN10) (2 testes automáticos, todos a passar)
+- [x] Os testes usam o LLM falso, incluindo respostas com cursos inventados (9 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF02, RNF06, RNF08, RNF09, RNF10, RNF11, RNF12: código do Simão (PR #22), revisto e juntado pelo Duarte
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US30/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar: limitação conhecida e registada — as sugestões apoiam-se no nome e na área do curso: só 29 cursos têm descrição escrita pela equipa
+- [x] Funciona na demonstração: Sprint Review do Sprint 2 (22/10), testada pelos dois Product Owners
+- [x] Aceite pelo Product Owner: Sprint Review do Sprint 2 (22/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

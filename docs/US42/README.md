@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 27/10 |
 | Story points | 2 |
 | Épico | E4 — Plano de candidatura |
@@ -21,10 +21,29 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Abrir a ficha de um curso e ver a linha **«Procura em 2025»** com a etiqueta e os números.
+
+## Definition of Done da US42
+
+A US42 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Candidatos, candidatos em 1.ª opção, vagas e colocados da 1.ª fase de 2025 (DGES), na ficha do curso (2 testes automáticos, todos a passar)
+- [x] Etiqueta: «Sobraram vagas», «Muito procurado», «Procurado» ou «Pouco escolhido em 1.ª opção» (1 teste automático, a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF10, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US42/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

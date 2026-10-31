@@ -138,6 +138,13 @@ class FicheiroTests(ExportarTestCase):
         self.assertEqual(ficheiro["conversa_de_orientacao"]["mensagens"][0]["texto"], "gosto de livros")
         self.assertEqual(ficheiro["pedidos_ao_assistente_por_dia"], [{"dia": "2026-10-01", "total": 3}])
 
+    def test_diz_se_o_assistente_foi_autorizado_a_usar_as_notas(self):
+        """US37: a autorização para o assistente usar os exames e a média também é um dado da pessoa."""
+        self._criar_dados(self.user_id)
+        self.assertFalse(self._ficheiro()["conversa_de_orientacao"]["autorizou_o_assistente_a_usar_as_notas"])
+        self._sql("UPDATE conversas_orientacao SET usar_notas = 1 WHERE user_id = ?", (self.user_id,))
+        self.assertTrue(self._ficheiro()["conversa_de_orientacao"]["autorizou_o_assistente_a_usar_as_notas"])
+
     def test_um_curso_que_saiu_do_catalogo_fica_na_lista_sem_nome(self):
         self._criar_dados(self.user_id)
         opcao = self._ficheiro()["plano_de_candidatura"]["opcoes"][1]

@@ -13,7 +13,7 @@ Este documento reúne os requisitos do produto. Cada requisito tem um identifica
 ### Módulo A — Contas e privacidade
 
 - **RF01** O sistema deve permitir o registo com email pessoal e nome, confirmado por uma ligação enviada para esse email.
-- **RF02** O sistema deve permitir iniciar e terminar sessão e recuperar a palavra-passe. *(Detalhe da recuperação, RF02.11 a RF02.16, em [US47/requisitos.md](../US47/requisitos.md).)*
+- **RF02** O sistema deve permitir iniciar e terminar sessão e recuperar a palavra-passe. *(Detalhe da recuperação, RF02.11 a RF02.17, em [US47/requisitos.md](../US47/requisitos.md).)*
 - **RF03** O utilizador pode ter um curso e uma instituição no perfil, ou ainda não ter curso. *(Alterado na 1.9: sai o ano curricular, que só servia as opcionais.)*
 - **RF04** O sistema deve distinguir os perfis Aluno e Administrador, com permissões distintas.
 - **RF17** O utilizador deve poder exportar e apagar todos os seus dados. *(A 22/10 a US17 ficou só com o apagamento; a exportação é a US46, com o detalhe RF17.7 a RF17.11 em [US46/requisitos.md](../US46/requisitos.md).)*

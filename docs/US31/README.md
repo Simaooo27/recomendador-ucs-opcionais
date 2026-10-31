@@ -28,6 +28,28 @@ flask --app app run --debug
 
 Iniciar sessão como aluno, ter uma conversa até aos cursos sugeridos (ou abrir `/cursos/`), carregar em **«Escolher este curso»** e confirmar. A página inicial passa a mostrar o curso; **«Ver as minhas decisões»** abre a linha do tempo (`/percurso/`).
 
+## Definition of Done da US31
+
+A US31 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] A escolha nunca é automática: o utilizador confirma (RN10) (12 testes automáticos, todos a passar)
+- [x] Depois de escolher, o curso e a instituição ficam no perfil (RF03) (2 testes automáticos, todos a passar)
+- [x] Cada decisão fica registada com data, opções sugeridas e opção escolhida (RF35) (5 testes automáticos, todos a passar)
+- [x] Linha do tempo com as decisões, da mais recente para a mais antiga (2 testes automáticos, todos a passar)
+- [x] O utilizador pode mudar de curso, o que cria uma nova decisão (3 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF06, RNF08, RNF09, RNF10, RNF11: o PR #29 foi juntado pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US31/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: Sprint Review do Sprint 2 (22/10), testada pelos dois Product Owners
+- [x] Aceite pelo Product Owner: Sprint Review do Sprint 2 (22/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

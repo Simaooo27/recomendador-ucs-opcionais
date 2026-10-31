@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#0f2e27"/>
+  <!-- Visual calmo (29/10): preto (--accent) e branco, sem o verde e o amarelo antigos. -->
+  <rect width="32" height="32" rx="8" fill="#171717"/>
   <path d="M5 22h7c5 0 6-12 12-12h3" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M12 22h15" fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="26" cy="10" r="3.5" fill="#f2b33d"/>
+  <circle cx="26" cy="10" r="3.5" fill="#ffffff"/>
 </svg>

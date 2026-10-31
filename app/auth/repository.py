@@ -96,3 +96,18 @@ def delete_user(db: sqlite3.Connection, user_id: int) -> None:
     (``ON DELETE CASCADE`` em app/schema.sql; a ligação liga ``PRAGMA foreign_keys``)."""
     db.execute("DELETE FROM users WHERE id = ?", (user_id,))
     db.commit()
+
+
+def contar_recuperacoes_desde(db: sqlite3.Connection, user_id: int, desde: str) -> int:
+    """Quantos emails de recuperação a conta recebeu desde ``desde`` (ISO 8601, UTC)."""
+    row = db.execute(
+        "SELECT COUNT(*) AS total FROM pedidos_recuperacao WHERE user_id = ? AND enviado_em >= ?", (user_id, desde)
+    ).fetchone()
+    return int(row["total"])
+
+
+def registar_recuperacao(db: sqlite3.Connection, user_id: int, agora: str, apagar_antes_de: str) -> None:
+    """Regista um envio e apaga os registos antigos da conta (só interessa a última hora)."""
+    db.execute("DELETE FROM pedidos_recuperacao WHERE user_id = ? AND enviado_em < ?", (user_id, apagar_antes_de))
+    db.execute("INSERT INTO pedidos_recuperacao (user_id, enviado_em) VALUES (?, ?)", (user_id, agora))
+    db.commit()

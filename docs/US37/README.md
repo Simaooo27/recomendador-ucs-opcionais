@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 29/10 |
 | Story points | 3 |
 | Épico | E3 — Orientação com o assistente |
@@ -21,10 +21,30 @@
 ## Experimentar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ferramentas\arrancar.ps1
+flask --app app run --debug
 ```
 
 Com sessão, indicar dois ou três exames e a média no **plano de candidatura**. Abrir a **conversa com o assistente**, marcar a caixa e começar. Os cursos sugeridos não pedem exames que a pessoa não fez. Para ver o que o LLM recebeu sem gastar a chave, correr os testes (usam o LLM falso).
+
+## Definition of Done da US37
+
+A US37 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Só com autorização da pessoa, o LLM recebe as provas feitas e um intervalo de nota (nunca a média exata, RNF12) (11 testes automáticos, todos a passar)
+- [x] Cursos a que falta uma prova não são sugeridos, ou vêm assinalados (7 testes automáticos, todos a passar)
+- [x] Os testes usam o LLM falso (verificado no código: todos os testes desta story usam o `LLMFalso` e correm sem rede)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11, RNF12: os PR #54 e #59 foram juntados pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US37/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar: limitação conhecida e registada — esta é a primeira story que envia dados do aluno ao Gemini (só com autorização e com a média num intervalo)
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 29/10
 
 ## Documentos
 

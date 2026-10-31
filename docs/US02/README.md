@@ -12,6 +12,29 @@
 | Requisito de origem | RF02, parte de início e fim de sessão (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 | Depende de | [US01](../US01/README.md): só contas confirmadas podem entrar |
 
+## Definition of Done da US02
+
+A US02 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Login com email e palavra-passe (7 testes automáticos, todos a passar)
+- [x] Mensagem genérica em caso de erro (4 testes automáticos, todos a passar)
+- [x] O logout termina a sessão (3 testes automáticos, todos a passar)
+- [x] Páginas privadas redirecionam para o login (5 testes automáticos, todos a passar)
+- [x] (Transversal) segurança (1 teste automático, a passar)
+- [x] (Pedido do PO) mostrar a palavra-passe (4 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF02, RNF04, RNF06, RNF08, RNF09, RNF10, RNF11: os PR #4 e #5 foram juntados pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US02/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: usada em todas as demonstrações seguintes (Sprint Review dos Sprints 2 e 3); o Sprint 1 não tem Sprint Review registada
+- [x] Aceite pelo Product Owner: fecho do Sprint 1 (07/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

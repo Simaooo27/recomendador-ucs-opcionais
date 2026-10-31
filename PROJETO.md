@@ -6,9 +6,9 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 | | |
 |---|---|
-| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11): US04, US33 a US36 e US40 a US45 (aceites pelo PO a 27/10) e US37 a US39, US46 e US47 (aceites a 29/10), 47 SP; revisão do Simão pendente · Entrega a 05/11 |
-| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · Sprint 4 (aceites pelo PO a 27/10): US04, US33 a US36 e US40 a US45 · Sprint 4 (aceites pelo PO a 29/10, PR #50 a #54): US37, US38, US39, US46 e US47 |
-| **Testes automáticos** | 436, todos a passar |
+| **Sprint atual** | Sprint 3 concluído a 23/10 (7 SP: US05, US17) · Sprint 2 concluído a 22/10 (13 SP) · Sprint 1 concluído (10 SP) · Sprint 4 (29/10 a 05/11): US04, US33 a US36 e US40 a US45 (aceites pelo PO a 27/10) e US37 a US39, US46 e US47 (aceites a 29/10), 47 SP; US48 (aceite a 31/10), 49 SP; revisão no GitHub dispensada pelos Product Owners a 31/10 · Entrega a 05/11 |
+| **No repositório** | US01 — Registo com confirmação por ligação · US02 — Iniciar e terminar sessão · US03 — Perfis de aluno e administrador · US29 — Conversa de orientação com o LLM · US30 — Sugestão de cursos · US31 — Escolher curso e linha do tempo · US05 — Consultar e comparar cursos · US17 — Apagar a minha conta · Sprint 4 (aceites pelo PO a 27/10): US04, US33 a US36 e US40 a US45 · Sprint 4 (aceites pelo PO a 29/10, PR #50 a #54): US37, US38, US39, US46 e US47 · Sprint 4 (aceite pelo PO a 31/10): US48 |
+| **Testes automáticos** | 541, todos a passar (31/10) |
 
 ## Índice
 
@@ -54,6 +54,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint 4 alargado de novo (29/10/2026, decisão do PO):** a 29/10, o Claude fez o código das stories do backlog que ainda não o tinham (US37, US38, US39, US46 e US47), uma por ramo, com testes para cada critério e a documentação em `docs/USNN/` (PR #50 a #54). O PO testou-as no seu computador, com o envio real de emails, e pô-las no Sprint 4 como «Feito»: 47 SP para uma velocidade de 10. Não é um planeamento à velocidade: o código foi feito pela IA num dia, e o trabalho da equipa é rever, testar e aceitar; fica no relatório. A US48 fica no Backlog. Sem story: textos antigos das opcionais (PR #55) e o visual calmo, com menos texto à vista e a letra do sistema (PR #56, a juntar por último).
 
+**Preparação do fecho do Sprint 4 (31/10/2026; feita pelo Claude a pedido do PO):** os PR #56 a #60 foram juntados pelo PO. O PR #58 (US48) ficou no ramo do #57, que já estava na `main`, e só chegou à `main` no PR de fecho. A US48 entra no Sprint 4 e foi aceite pelo PO a 31/10: o Sprint 4 fica com 49 SP. **Cada story passou a ter a sua própria Definition of Done**, no README da sua pasta: os critérios de aceitação dessa story, com os testes que os verificam, e o mínimo da equipa ([regras, secção 11](docs/geral/02-regras-de-geracao-de-codigo.md#11-definition-of-done)). Os Product Owners dispensaram a revisão do código no GitHub (o Simão acompanhou todo o trabalho; nenhum PR tem revisão formal), e isso fica escrito na Definition of Done de cada story. Falta só mostrar as stories do Sprint 4 na Sprint Review de 05/11. As retrospetivas não estão registadas em nenhum sprint: ver as [cerimónias Scrum](docs/geral/07-cerimonias-scrum.md), que têm também o guião da Sprint Review. Sem story: no máximo 3 emails de recuperação por conta e por hora (US47), a autorização da US37 na exportação dos dados (US46) e o ícone do separador com as cores do visual calmo.
+
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal (desde 23/10 pede também o nome) | Sprint 1 | Feita | [docs/US01/](docs/US01/) |
@@ -80,11 +82,11 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 | US47 | Recuperar a palavra-passe | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US47/](docs/US47/) · PR #51 |
 | US39 | Corrigir e esconder cursos do catálogo (gestão) | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US39/](docs/US39/) · PR #53 |
 | US38 | Datas do concurso no percurso | Sprint 4 | Feita (aceite pelo PO a 29/10) | [docs/US38/](docs/US38/) · PR #52 |
-| US48 | Recolha completa das licenciaturas (DGES) | Backlog | Por fazer | — |
+| US48 | Recolha completa das licenciaturas (DGES) | Sprint 4 | Feita (aceite pelo PO a 31/10) | [docs/US48/](docs/US48/) · PR #58 |
 
 *Protótipo* = código feito antes do sprint, ainda não aceite numa Sprint Review. As stories das opcionais (US06 a US16, US18 a US28) e a US32 (fundida na US29) estão na folha «Arquivo (opcionais)» do [backlog](docs/geral/product-backlog.xlsx).
 
-Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (para já, US01 a US05, US17, US29 a US31, US33 a US47, exceto a US48).
+Cada story tem a sua pasta `docs/USNN/` quando é desenvolvida (US01 a US05, US17, US29 a US31 e US33 a US48), com a sua Definition of Done no README.
 
 ## 2. Documentação do projeto
 
@@ -99,6 +101,7 @@ O índice completo está em [docs/README.md](docs/README.md). Os documentos gera
 | [Guia do código](docs/geral/04-guia-do-codigo.md) | Onde está cada coisa (incluindo o CSS), onde mexer para alterar, quem escreveu o quê |
 | [Spike do LLM](docs/geral/05-spike-llm.md) | Gemini e Groq: limites do plano gratuito, custo, privacidade, termos e viabilidade (14/10) |
 | [Abrir noutro dispositivo](docs/geral/06-aceder-noutro-dispositivo.md) | Usar o OptaBem no telemóvel ou noutro computador com um túnel do Cloudflare, sem modo debug (22/10) |
+| [Cerimónias Scrum](docs/geral/07-cerimonias-scrum.md) | Planning, Review e Retrospective de cada sprint, o que falta registar e o guião da Sprint Review do Sprint 4 (31/10) |
 | [Catálogo de cursos](dados/README.md) | Catálogo do MVP (30 licenciaturas) e catálogo completo recolhido da DGES (US04), com as condições de acesso do plano de candidatura |
 | [Registo de uso de IA](docs/geral/registo-de-uso-de-ia.md) | Cada utilização relevante de IA no projeto |
 | [Product Backlog (Excel)](docs/geral/product-backlog.xlsx) | Todas as stories, plano de sprints com gráfico e resumo MoSCoW |

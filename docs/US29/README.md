@@ -30,6 +30,30 @@ Iniciar sessão como aluno e, na página inicial, carregar em **«Começar a con
 
 Quando a conversa termina, a página diz que as sugestões aparecem em breve: mostrar os cursos é a US30.
 
+## Definition of Done da US29
+
+A US29 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] As perguntas não são fixas: o LLM faz uma de cada vez, a partir das respostas anteriores, no máximo 6 (8 testes automáticos, todos a passar)
+- [x] A página avisa para não escrever dados pessoais; emails e números longos são apagados antes de enviar, e o LLM nunca recebe email, nome ou identificadores da conta (RNF12) (9 testes automáticos, todos a passar)
+- [x] Disponível com sessão iniciada (7 testes automáticos, todos a passar)
+- [x] Se o LLM falhar, atingir o limite ou demorar mais de 15 s, aparece uma mensagem clara e a pessoa pode tentar de novo sem perder a conversa (27 testes automáticos, todos a passar)
+- [x] A pessoa pode recomeçar a conversa (1 teste automático, a passar)
+- [x] Os testes usam o LLM falso e correm sem rede (verificado no código: a base dos testes (`tests/base.py`) força `LLM_BACKEND=falso`)
+- [x] *(da linha do tempo)* (2 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF02, RNF06, RNF08, RNF09, RNF10, RNF11, RNF12: PR #19 e #24 juntados pelo Simão
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US29/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar: limitação conhecida e registada — a conversa com o Gemini é só para maiores de 18 anos e para uso da equipa (termos do plano gratuito do Gemini)
+- [x] Funciona na demonstração: Sprint Review do Sprint 2 (22/10), testada pelos dois Product Owners
+- [x] Aceite pelo Product Owner: Sprint Review do Sprint 2 (22/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

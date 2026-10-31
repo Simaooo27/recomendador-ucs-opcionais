@@ -18,6 +18,28 @@
 2. **A área de gestão está escondida.** Fica num endereço próprio (por omissão `/gestao`, configurável em `ADMIN_URL_PREFIX`), nenhuma página dos alunos tem ligações para lá e as páginas pedem para não ser indexadas pelos motores de busca.
 3. **Quem cria administradores é um administrador.** Só o **primeiro** é criado no terminal, por quem instala a aplicação (alguém tem de existir antes de haver administradores). Os seguintes são criados (e removidos) na área de gestão.
 
+## Definition of Done da US03
+
+A US03 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Os administradores têm contas próprias, sem email e separadas dos alunos (6 testes automáticos, todos a passar)
+- [x] O primeiro administrador é criado no terminal (5 testes automáticos, todos a passar)
+- [x] Os administradores entram pelo mesmo início de sessão, com mensagem genérica (13 testes automáticos, todos a passar)
+- [x] A área de gestão está escondida dos alunos (6 testes automáticos, todos a passar)
+- [x] Um administrador cria e remove outros administradores (8 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF02, RNF06, RNF08, RNF09, RNF10, RNF11: os PR #7, #14 e #16 foram juntados pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US03/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: usada em todas as demonstrações seguintes (Sprint Review dos Sprints 2 e 3); o Sprint 1 não tem Sprint Review registada
+- [x] Aceite pelo Product Owner: fecho do Sprint 1 (07/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

@@ -13,6 +13,7 @@ A documentação está organizada por user story: os documentos que valem para t
 | [geral/04-guia-do-codigo.md](geral/04-guia-do-codigo.md) | Guia do código: mapa das pastas, onde mexer, CSS secção a secção, histórico de alterações |
 | [geral/05-spike-llm.md](geral/05-spike-llm.md) | Spike do LLM (14/10): limites do plano gratuito, custo, privacidade, termos e viabilidade do Gemini e do Groq |
 | [geral/06-aceder-noutro-dispositivo.md](geral/06-aceder-noutro-dispositivo.md) | Abrir o OptaBem no telemóvel ou noutro computador com um túnel do Cloudflare (sem modo debug) |
+| [geral/07-cerimonias-scrum.md](geral/07-cerimonias-scrum.md) | Sprint Reviews e Retrospectives de cada sprint, e o guião da Sprint Review do Sprint 4 |
 | [../dados/README.md](../dados/README.md) | Catálogo de instituições e cursos: colunas, fontes e lacunas |
 | [geral/registo-de-uso-de-ia.md](geral/registo-de-uso-de-ia.md) | Registo de uso de IA |
 | [geral/product-backlog.xlsx](geral/product-backlog.xlsx) | Product Backlog: stories, plano de sprints e resumo MoSCoW |
@@ -23,7 +24,7 @@ A documentação está organizada por user story: os documentos que valem para t
 
 | Ficheiro | Conteúdo |
 |---|---|
-| [US01/README.md](US01/README.md) | Resumo da story, estado, código e testes |
+| [US01/README.md](US01/README.md) | Resumo da story, estado, Definition of Done, código e testes |
 | [US01/requisitos.md](US01/requisitos.md) | Requisitos funcionais e critérios de aceitação |
 | [US01/use-case.md](US01/use-case.md) | Use case |
 | [US01/bpmn.md](US01/bpmn.md) | Processo BPMN |
@@ -36,7 +37,7 @@ A documentação está organizada por user story: os documentos que valem para t
 
 | Ficheiro | Conteúdo |
 |---|---|
-| [US02/README.md](US02/README.md) | Resumo da story, estado, código e testes |
+| [US02/README.md](US02/README.md) | Resumo da story, estado, Definition of Done, código e testes |
 | [US02/requisitos.md](US02/requisitos.md) | Requisitos funcionais e critérios de aceitação |
 | [US02/use-case.md](US02/use-case.md) | Use case |
 | [US02/bpmn.md](US02/bpmn.md) | Processo BPMN |
@@ -351,6 +352,14 @@ A documentação está organizada por user story: os documentos que valem para t
 | [US47/diagramas/bpmn.svg](US47/diagramas/bpmn.svg) | Diagrama BPMN (imagem) |
 | [US47/diagramas/bpmn.bpmn](US47/diagramas/bpmn.bpmn) | Diagrama BPMN (ficheiro editável, BPMN 2.0) |
 | [US47/diagramas/gerar.py](US47/diagramas/gerar.py) | Script que gera os três diagramas |
+
+### [US48 — Recolha completa das licenciaturas](US48/README.md)
+
+| Ficheiro | Conteúdo |
+|---|---|
+| [US48/README.md](US48/README.md) | O que foi feito, dados e verificação |
+| [US48/requisitos.md](US48/requisitos.md) | Critérios de aceitação e como foram verificados |
+| [US48/prompt.md](US48/prompt.md) | Pedido feito à IA |
 
 ## Nova story
 

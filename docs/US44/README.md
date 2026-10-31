@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 27/10, antes do início formal do Sprint 4 (código de 23/10, documentação e testes em falta a 27/10). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 27/10 |
 | Story points | 3 |
 | Épico | E4 — Plano de candidatura |
@@ -21,10 +21,31 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Com sessão, juntar ao plano 2 ou 3 cursos com provas diferentes e ver a secção **«Que exames lhe abrem mais portas?»**.
+
+## Definition of Done da US44
+
+A US44 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Combinações de até 3 exames, a partir dos conjuntos de provas das opções do plano (2 ou mais opções) (2 testes automáticos, todos a passar)
+- [x] Mostra as 3 melhores: a que serve para mais opções primeiro, depois a com menos exames (1 teste automático, a passar)
+- [x] Diz para que opções não dá e que exames da combinação a pessoa já fez (1 teste automático, a passar)
+- [x] Os exames de Matemática contam para as provas que a DGES aceita (critério reescrito a 27/10) (2 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF03, RNF06, RNF07, RNF09, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US44/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

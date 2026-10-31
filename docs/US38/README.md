@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão do Simão pendente |
+| Estado | Feita: aceite pelo PO a 29/10 (código de 29/10, PR próprio). Revisão no GitHub dispensada pelos PO a 31/10 |
 | Sprint | Sprint 4 (29/10 a 05/11), por decisão do PO a 29/10 |
 | Story points | 2 |
 | Épico | E4 — Plano de candidatura |
@@ -21,10 +21,29 @@
 ## Experimentar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ferramentas\arrancar.ps1
+flask --app app run --debug
 ```
 
 Iniciar sessão e ver o próximo prazo no início, por baixo do passo atual. Abrir o plano de candidatura e ir a **«Datas do concurso nacional»**. Hoje (depois de 02/10/2026) aparece que as datas de 2027 ainda não foram publicadas.
+
+## Definition of Done da US38
+
+A US38 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Datas das 3 fases do concurso, com a ligação para a DGES (8 testes automáticos, todos a passar)
+- [x] O passo atual do percurso mostra o próximo prazo (10 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11: o PR #52 foi juntado pelo próprio autor; revisão no GitHub dispensada por decisão dos Product Owners a 31/10 (o Simão acompanhou todo o trabalho)
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US38/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 29/10
 
 ## Documentos
 

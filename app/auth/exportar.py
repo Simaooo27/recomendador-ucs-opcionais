@@ -84,6 +84,8 @@ def _conversa(linha: sqlite3.Row | None) -> dict | None:
     return {
         "mensagens": _json(linha["mensagens"], []),
         "sugestao": _json(linha["sugestao"], None),
+        # US37: se a pessoa autorizou o assistente a saber os exames feitos e a média aproximada.
+        "autorizou_o_assistente_a_usar_as_notas": bool(linha["usar_notas"]),
         "atualizada_em": linha["atualizada_em"],
     }
 

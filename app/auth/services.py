@@ -5,7 +5,7 @@ import hmac
 import secrets
 import sqlite3
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from typing import Mapping
 
@@ -199,15 +199,27 @@ class PedidoDeRecuperacao:
     token: str
 
 
-def pedir_recuperacao(db: sqlite3.Connection, email: str, config: Mapping) -> PedidoDeRecuperacao | None:
-    """O token para a ligação de recuperação, ou ``None`` se não há conta ativa com este email.
+def pedir_recuperacao(
+    db: sqlite3.Connection, email: str, config: Mapping, agora: datetime | None = None
+) -> PedidoDeRecuperacao | None:
+    """O token para a ligação de recuperação, ou ``None`` se não há nada a enviar.
 
-    A rota mostra a mesma mensagem nos dois casos, para não revelar que emails têm conta. Uma
-    conta por confirmar não recebe ligação: primeiro tem de confirmar o email (US01).
+    Não há nada a enviar se não houver conta ativa com este email, ou se a conta já recebeu
+    ``RECUPERACAO_MAX_POR_HORA`` emails na última hora (para ninguém usar o site para encher a
+    caixa de correio de outra pessoa). A rota mostra a mesma mensagem em todos os casos, para não
+    revelar que emails têm conta. Uma conta por confirmar não recebe ligação: primeiro tem de
+    confirmar o email (US01).
     """
     user = repository.get_by_email(db, normalize_email(email))
     if user is None or not user["is_active"]:
         return None
+    limite = int(config.get("RECUPERACAO_MAX_POR_HORA", 0))
+    if limite > 0:
+        agora = agora or datetime.now(timezone.utc)
+        ha_uma_hora = (agora - timedelta(hours=1)).isoformat(timespec="seconds")
+        if repository.contar_recuperacoes_desde(db, int(user["id"]), ha_uma_hora) >= limite:
+            return None
+        repository.registar_recuperacao(db, int(user["id"]), agora.isoformat(timespec="seconds"), ha_uma_hora)
     impressao = impressao_da_password(config["SECRET_KEY"], user["password_hash"])
     token = make_reset_token(config["SECRET_KEY"], int(user["id"]), impressao)
     return PedidoDeRecuperacao(email=user["email"], nome=user["nome"], token=token)

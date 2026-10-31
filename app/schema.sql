@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS conversas_orientacao (
 
 -- Pedidos ao LLM por aluno e por dia (revisão de 22/10): o limite do fornecedor é partilhado por
 -- todos, e este contador impede que uma só conta o gaste (ORIENTACAO_MAX_PEDIDOS_DIA).
+-- Emails de recuperação da palavra-passe enviados (US47): limita quantos uma conta recebe por hora,
+-- para ninguém usar o site para encher a caixa de correio de outra pessoa.
+CREATE TABLE IF NOT EXISTS pedidos_recuperacao (
+    user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    enviado_em  TEXT    NOT NULL   -- UTC, ISO 8601
+);
+CREATE INDEX IF NOT EXISTS pedidos_recuperacao_por_conta ON pedidos_recuperacao (user_id, enviado_em);
+
 CREATE TABLE IF NOT EXISTS pedidos_llm (
     user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     dia         TEXT    NOT NULL,  -- UTC, AAAA-MM-DD

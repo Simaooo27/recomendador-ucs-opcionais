@@ -21,10 +21,31 @@
 ## Experimentar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ferramentas\arrancar.ps1
+flask --app app run --debug
 ```
 
 Iniciar sessão, abrir **«A minha conta»** (ícone de conta, no topo) e carregar em **«Descarregar os meus dados»**. Escrever a palavra-passe e abrir o ficheiro descarregado (`optabem-os-meus-dados-AAAA-MM-DD.json`) num editor de texto.
+
+## Definition of Done da US46
+
+A US46 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Ficheiro JSON com a conta (sem a palavra-passe), as decisões do percurso, as notas e o plano de candidatura (8 testes automáticos, todos a passar)
+- [x] Pede a palavra-passe antes de descarregar (4 testes automáticos, todos a passar)
+- [x] Nunca inclui dados de outros utilizadores (1 teste automático, a passar)
+- [x] Página e acesso (4 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF06, RNF09, RNF11: o PR #50 foi juntado pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US46/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 29/10
 
 ## Documentos
 

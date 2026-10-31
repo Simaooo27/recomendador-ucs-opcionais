@@ -23,7 +23,7 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Abrir http://127.0.0.1:5000/cursos/ e ver a contagem («… de 174 cursos») e a navegação entre páginas no fim da lista. Para refazer o CSV a partir das páginas já guardadas (sem pedir nada à DGES):
@@ -31,6 +31,28 @@ Abrir http://127.0.0.1:5000/cursos/ e ver a contagem («… de 174 cursos») e a
 ```powershell
 python dados/recolher_dges.py processar
 ```
+
+## Definition of Done da US04
+
+A US04 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Os cursos vêm das páginas públicas da DGES, por um script que corre no computador da equipa, devagar e retomável (6 testes automáticos, todos a passar)
+- [x] O catálogo tem os cursos já recolhidos (174), com vagas, nota do último colocado e condições de acesso (2 testes automáticos, todos a passar)
+- [x] As descrições escritas pela equipa mantêm-se (verificado à mão a 27/10 no CSV: os 30 cursos do MVP mantêm a descrição da equipa)
+- [x] Lista de cursos com paginação (24 por página) (4 testes automáticos, todos a passar)
+- [x] Acima de 150 cursos, o assistente recebe só os cursos das áreas escolhidas (9 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF03, RNF05, RNF06, RNF09, RNF12: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US04/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

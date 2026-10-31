@@ -11,6 +11,29 @@
 | Prioridade | Must |
 | Requisito de origem | RF01 (ver [01-requisitos-funcionais-e-nao-funcionais.md](../geral/01-requisitos-funcionais-e-nao-funcionais.md)) |
 
+## Definition of Done da US01
+
+A US01 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] São aceites emails pessoais (24 testes automáticos, todos a passar)
+- [x] A conta só fica ativa após confirmação por email (22 testes automáticos, todos a passar)
+- [x] A palavra-passe é guardada com hash (1 teste automático, a passar)
+- [x] O registo exige aceitação explícita da política de privacidade (2 testes automáticos, todos a passar)
+- [x] (23/10) O registo pede o nome e a pessoa é tratada por ele (11 testes automáticos, todos a passar)
+- [x] (Transversal) proteção CSRF e cabeçalhos (5 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF04, RNF06, RNF08, RNF09, RNF10, RNF11: o PR principal (#3) foi juntado pelo próprio autor; o Simão só juntou o #2 (textos editáveis). **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US01/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: usada em todas as demonstrações seguintes (Sprint Review dos Sprints 2 e 3); o Sprint 1 não tem Sprint Review registada
+- [x] Aceite pelo Product Owner: fecho do Sprint 1 (07/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

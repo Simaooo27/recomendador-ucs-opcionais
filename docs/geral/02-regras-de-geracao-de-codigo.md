@@ -129,4 +129,16 @@ docs/
 
 ## 11. Definition of Done
 
-Remete para a Definition of Done da equipa: critérios verificados, código revisto por outro elemento, testes a passar, código de IA revisto e assinalado, funciona na demonstração, sem dívida técnica por registar e documentação atualizada.
+**Cada user story tem a sua própria Definition of Done**, no README da sua pasta (`docs/USNN/README.md#definition-of-done-da-usnn`). Tem duas partes:
+
+1. **Os critérios de aceitação dessa story** (o «Confirmation» das user stories), cada um com os testes automáticos que o verificam, ou, quando não há teste, como foi verificado à mão. Saem da tabela «Critérios de aceitação e testes» do `requisitos.md` da story.
+2. **O mínimo que a equipa exige a todas as stories:**
+   - testes a passar (os da story e todos os do projeto);
+   - código revisto por outro elemento, com atenção aos requisitos não funcionais que a story indica;
+   - código gerado por IA revisto e assinalado no [registo de uso de IA](registo-de-uso-de-ia.md);
+   - documentação em `docs/USNN/` (requisitos, use case, BPMN e prompt);
+   - sem dívida técnica por registar (as limitações conhecidas ficam escritas);
+   - funciona na demonstração (Sprint Review);
+   - aceite pelo Product Owner.
+
+Uma story só conta como «Feito» no backlog quando todas as caixas da sua Definition of Done estiverem marcadas. A coluna «Definition of Done» da folha «Product Backlog» resume quantas estão marcadas em cada story e o que falta.

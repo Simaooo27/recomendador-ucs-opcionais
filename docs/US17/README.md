@@ -24,6 +24,27 @@
 
 Iniciar sessão como aluno, abrir o ícone de conta na barra do topo, escolher «A minha conta» e carregar em **«Apagar a minha conta e todos os meus dados»**.
 
+## Definition of Done da US17
+
+A US17 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Apagar remove a conta, a conversa e as decisões (e os pedidos ao LLM) (4 testes automáticos, todos a passar)
+- [x] A ação de apagar pede confirmação (10 testes automáticos, todos a passar)
+- [x] A política de privacidade é verdadeira (2 testes automáticos, todos a passar)
+- Fora do âmbito desta story: Exportação em JSON/CSV (decisão registada em requisitos.md; passou a ser a US46)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [x] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF06, RNF09, RNF10, RNF11: PR #39 juntado pelo Simão
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US17/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [x] Funciona na demonstração: Sprint Review do Sprint 3 (23/10), testada pelos dois Product Owners
+- [x] Aceite pelo Product Owner: Sprint Review do Sprint 3 (23/10)
+
 ## Documentos
 
 | Documento | Conteúdo |

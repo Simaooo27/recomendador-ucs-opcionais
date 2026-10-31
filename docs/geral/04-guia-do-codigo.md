@@ -254,5 +254,5 @@ Todo o código foi gerado com apoio de IA (Claude) a partir dos requisitos e seg
    .venv\Scripts\python.exe -m unittest discover -s tests -t .
    ```
    No fim tem de aparecer `OK`. Se aparecer `FAILED`, o nome do teste diz o que deixou de funcionar.
-2. **A aplicação:** `.\ferramentas\arrancar.bat` e abrir http://127.0.0.1:5000. Alunos e administradores entram na mesma página: com o email (aluno) ou com o nome de utilizador (administrador). Para a abrir no telemóvel ou noutro computador, ver [abrir noutro dispositivo](06-aceder-noutro-dispositivo.md) (nunca com o modo debug).
+2. **A aplicação:** `flask --app app run --debug` (no Windows, também o atalho `.\ferramentas\arrancar.bat`, que só existe no computador de cada um) e abrir http://127.0.0.1:5000. Alunos e administradores entram na mesma página: com o email (aluno) ou com o nome de utilizador (administrador). Para a abrir no telemóvel ou noutro computador, ver [abrir noutro dispositivo](06-aceder-noutro-dispositivo.md) (nunca com o modo debug).
 3. **Os documentos:** os requisitos de cada story têm, na secção 5, a tabela critério de aceitação → teste que o verifica.

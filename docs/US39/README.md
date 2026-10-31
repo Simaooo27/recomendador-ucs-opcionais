@@ -21,10 +21,31 @@
 ## Experimentar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ferramentas\arrancar.ps1
+flask --app app run --debug
 ```
 
 Entrar como administrador, ir a **Gestão › Catálogo** e abrir um curso. Mudar a descrição e carregar em **«Guardar»**; abrir a ficha do curso como aluno (ou sem sessão) e ver o texto novo. Voltar, marcar **«Esconder este curso»** e ver que a ficha dá «página não encontrada». **«Repor os dados da DGES»** desfaz tudo; o histórico fica.
+
+## Definition of Done da US39
+
+A US39 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Só na área de gestão (5 testes automáticos, todos a passar)
+- [x] As correções ficam na base de dados, por cima dos dados da DGES (a recolha seguinte não as apaga) (12 testes automáticos, todos a passar)
+- [x] Fica registado quem alterou e quando (5 testes automáticos, todos a passar)
+- [x] Sem acesso aos dados dos alunos (3 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF03, RNF06, RNF09, RNF11: o PR #53 foi juntado pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US39/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 29/10
 
 ## Documentos
 

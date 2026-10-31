@@ -21,10 +21,32 @@
 ## Experimentar
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ferramentas\arrancar.ps1
+flask --app app run --debug
 ```
 
 No início de sessão, carregar em **«Esqueceu-se da palavra-passe?»** e escrever o email de uma conta ativa. Com `MAIL_BACKEND=smtp` no `.env` (ver [`PROJETO.md`](../../PROJETO.md)), a ligação chega ao email; sem isso, aparece no terminal da aplicação. Abrir a ligação, escolher a palavra-passe nova e voltar a abrir a mesma ligação: já não serve.
+
+## Definition of Done da US47
+
+A US47 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Ligação de uso único, que expira ao fim de 1 hora (9 testes automáticos, todos a passar)
+- [x] A mensagem é a mesma quer a conta exista quer não (7 testes automáticos, todos a passar)
+- [x] Depois de mudar a palavra-passe, as sessões abertas terminam (4 testes automáticos, todos a passar)
+- [x] Ninguém consegue usar o site para encher a caixa de correio de outra pessoa (acrescentado a 31/10) (4 testes automáticos, todos a passar)
+- [x] Segurança e acesso (3 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF02, RNF06, RNF09, RNF11: o PR #51 foi juntado pelo próprio autor. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US47/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 29/10
 
 ## Documentos
 

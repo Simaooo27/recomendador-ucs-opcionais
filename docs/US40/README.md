@@ -21,10 +21,32 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Iniciar sessão, indicar só a média do secundário (US34) e abrir a ficha de um curso: a secção **«Quanto precisa no exame?»** aparece por baixo da nota.
+
+## Definition of Done da US40
+
+A US40 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Na ficha do curso, com a média do secundário indicada (2 testes automáticos, todos a passar)
+- [x] Usa os exames já feitos e escolhe o conjunto de provas em que é mais fácil lá chegar (2 testes automáticos, todos a passar)
+- [x] Respeita o mínimo de cada prova; sem último colocado, usa a nota mínima do curso (2 testes automáticos, todos a passar)
+- [x] Diz quando nem 200 pontos chegam (1 teste automático, a passar)
+- [x] No plano, as opções a que falta uma prova mostram quanto precisa (1 teste automático, a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF07, RNF09, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US40/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

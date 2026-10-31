@@ -22,10 +22,32 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Abrir http://127.0.0.1:5000/cursos/, entrar na ficha de um curso e procurar a secção **«Condições de acesso»**, por baixo dos dados do curso.
+
+## Definition of Done da US33
+
+A US33 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Dados lidos das páginas da DGES (a mesma recolha da US04) (2 testes automáticos, todos a passar)
+- [x] Conjuntos alternativos de provas mostrados pelo nome («Basta um destes conjuntos») (2 testes automáticos, todos a passar)
+- [x] Fórmula (peso da média e das provas) e mínimos em pontos (2 testes automáticos, todos a passar)
+- [x] Um curso sem estes dados mostra a ligação à DGES (1 teste automático, a passar)
+- [x] Funciona sem sessão iniciada (1 teste automático, a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF10, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US33/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

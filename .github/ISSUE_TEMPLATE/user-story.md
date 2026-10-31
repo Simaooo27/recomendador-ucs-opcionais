@@ -25,12 +25,21 @@ assignees: ''
 | Sprint | <!-- Sprint N ou Backlog --> |
 | Documentação | `docs/USNN/` (mesma estrutura da [US01](../../docs/US01/README.md)) |
 
-## Definition of Done
+## Definition of Done desta story
 
-- [ ] Critérios de aceitação verificados.
-- [ ] Código revisto por outro elemento.
-- [ ] Testes a passar.
+Copiar para o `docs/USNN/README.md` da story e marcar à medida que se verifica.
+
+**Critérios de aceitação desta story** (um por linha, com os testes que o verificam)
+
+- [ ] <!-- critério 1 --> (testes: `test_...`)
+- [ ] <!-- critério 2 --> (testes: `test_...`)
+
+**Mínimo da equipa**
+
+- [ ] Testes a passar: os desta story e todos os do projeto.
+- [ ] Código revisto por outro elemento, com atenção aos RNF desta story: <!-- ex.: RNF02, RNF06 -->
 - [ ] Código gerado por IA revisto e assinalado no registo de uso de IA.
-- [ ] Funciona na demonstração.
-- [ ] Sem dívida técnica por registar.
-- [ ] Documentação atualizada (`docs/USNN/`, README e requisitos).
+- [ ] Documentação em `docs/USNN/` (requisitos, use case, BPMN e prompt).
+- [ ] Sem dívida técnica por registar (limitações conhecidas escritas na documentação).
+- [ ] Funciona na demonstração (Sprint Review).
+- [ ] Aceite pelo Product Owner.

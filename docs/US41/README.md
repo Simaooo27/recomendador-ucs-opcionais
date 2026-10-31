@@ -21,10 +21,30 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Abrir a ficha de um curso (não é preciso sessão) e ver a linha **«Último colocado (1.ª fase)»** com os três anos e a etiqueta. Com sessão, a mesma etiqueta aparece em cada opção do plano.
+
+## Definition of Done da US41
+
+A US41 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Notas da 1.ª fase de 2023, 2024 e 2025 (DGES) na ficha do curso (2 testes automáticos, todos a passar)
+- [x] Etiqueta «A subir», «A descer» ou «Estável» (3 pontos de margem entre o primeiro e o último ano) (1 teste automático, a passar)
+- [x] A etiqueta aparece também em cada opção do plano (1 teste automático, a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF10, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US41/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

@@ -21,10 +21,30 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Com sessão, indicar as notas, juntar cursos ao plano e ver a secção **«Plano B: 2.ª fase»** no fim do plano.
+
+## Definition of Done da US45
+
+A US45 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Vagas, colocados e último colocado da 2.ª fase de 2025 (DGES) (1 teste automático, a passar)
+- [x] Só cursos fora do plano, das mesmas áreas, onde a nota da pessoa chegava ao último colocado da 2.ª fase (ou, sem essa nota, onde sobraram vagas) (3 testes automáticos, todos a passar)
+- [x] Aviso: as vagas da 2.ª fase são as que sobram da 1.ª e mudam todos os anos (2 testes automáticos, todos a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF06, RNF09, RNF11: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US45/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

@@ -22,10 +22,32 @@
 ## Experimentar
 
 ```powershell
-.\ferramentas\arrancar.bat
+flask --app app run --debug
 ```
 
 Iniciar sessão, abrir **«Candidatura»** no menu e carregar em **«Indicar as minhas notas»**. Experimentar uma média de 25 para ver o erro; depois 15,2 e um exame de Português com 14.
+
+## Definition of Done da US34
+
+A US34 só conta como «Feita» quando todas as caixas estiverem marcadas. As primeiras são os critérios de aceitação desta story (o «Confirmation» dos três C); as outras são o mínimo que a equipa exige a todas. Verificado a 31/10/2026, com 541 testes automáticos a passar.
+
+**Critérios de aceitação desta story**
+
+- [x] Média de 9,5 a 20 valores; exames de 0 a 200 pontos (ou de 0 a 20, convertidos) (2 testes automáticos, todos a passar)
+- [x] Só se preenchem os exames feitos (1 teste automático, a passar)
+- [x] As notas podem ser mudadas e saem com a conta (US17) (1 teste automático, a passar)
+- [x] Na Matemática indica-se o exame feito (A, B ou MACS), e cada um conta para as provas que a DGES aceita (critério reescrito a 27/10) (4 testes automáticos, todos a passar)
+- [x] Sessão iniciada (1 teste automático, a passar)
+
+**Mínimo da equipa**
+
+- [x] Testes a passar: os desta story e os 541 do projeto
+- [ ] Código revisto por outro elemento, com atenção a RNF01, RNF02, RNF06, RNF09, RNF10, RNF11, RNF12: o código entrou na main pelo PR #45, juntado pelo Simão, mas a revisão dele está registada como pendente. **Falta a revisão do Simão**
+- [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
+- [x] Documentação em `docs/US34/`: requisitos.md, use-case.md, bpmn.md, prompt.md
+- [x] Sem dívida técnica por registar
+- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos
 

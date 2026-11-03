@@ -12,7 +12,7 @@
   <p><a href="{{ url_for('orientacao.pagina') }}">{{ texts.CATALOGO_VOLTAR }}</a></p>
 {% endif %}
 
-<form method="get" action="{{ url_for('catalogo.lista') }}" role="search" class="catalogo-filtros" aria-labelledby="filtros-titulo">
+<form method="get" action="{{ url_for('catalogo.lista') }}" role="search" class="catalogo-filtros" aria-labelledby="filtros-titulo" data-filtros-dependentes>
   <h2 id="filtros-titulo" class="visually-hidden">{{ texts.CATALOGO_FILTROS }}</h2>
   <div class="field filtro-termo">
     <label for="q">{{ texts.LANDING_SEARCH_LABEL }}</label>
@@ -25,12 +25,14 @@
        ("localidade", texts.CATALOGO_FILTRO_LOCALIDADE, opcoes.localidades, filtros.localidade)] %}
   <div class="field">
     <label for="filtro-{{ nome }}">{{ rotulo }}</label>
-    <select id="filtro-{{ nome }}" name="{{ nome }}">
+    <select id="filtro-{{ nome }}" name="{{ nome }}" data-filtro="{{ nome }}"{% if atual %} title="{{ atual }}"{% endif %}>
       <option value="">{{ texts.CATALOGO_FILTRO_TODAS }}</option>
       {% for valor in valores %}<option value="{{ valor }}"{% if valor == atual %} selected{% endif %}>{{ valor }}</option>{% endfor %}
     </select>
   </div>
   {% endfor %}
+  {#- Combinações que existem, para o app.js atualizar as listas ao escolher (revisão de 03/11). -#}
+  <script type="application/json" data-combinacoes>{{ combinacoes | tojson }}</script>
   <div class="filtros-acoes">
     <button type="submit">{{ texts.CATALOGO_APLICAR }}</button>
     {% if filtros.ativos %}<a href="{{ url_for('catalogo.lista') }}">{{ texts.CATALOGO_LIMPAR }}</a>{% endif %}

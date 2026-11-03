@@ -49,7 +49,7 @@ class CourseSearchTests(AppTestCase):
     def test_sem_termo_mostra_uma_amostra_de_cursos(self):
         html = self.client.get("/").get_data(as_text=True)
         self.assertIn(texts.LANDING_RESULTS_SAMPLE, html)
-        self.assertEqual(html.count('class="curso" data-chave='), 6)
+        self.assertEqual(html.count('class="curso" data-chave='), 8)   # duas filas de 4 (03/11)
 
     def test_pesquisa_sem_javascript_com_q(self):
         html = self.client.get("/?q=coimbra").get_data(as_text=True)

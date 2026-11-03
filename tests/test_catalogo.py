@@ -85,6 +85,45 @@ class FiltrosTests(AppTestCase):
         self.assertLess(opcoes.localidades.index("Évora"), opcoes.localidades.index("Felgueiras"))
 
 
+class FiltrosDependentesTests(AppTestCase):
+    """Revisão de 03/11: cada filtro só mostra as opções que dão cursos com os outros escolhidos."""
+
+    def test_area_limita_as_localidades(self):
+        area = CATALOGO[0].area
+        opcoes = services.opcoes_compativeis(default_config(), services.Filtros(area=area))
+        self.assertEqual(set(opcoes.localidades), {c.localidade for c in CATALOGO if c.area == area and c.localidade})
+        # A própria lista das áreas não fica reduzida, para se poder trocar de área.
+        self.assertEqual(set(opcoes.areas), {c.area for c in CATALOGO})
+
+    def test_dois_filtros_limitam_o_terceiro(self):
+        curso = CATALOGO[0]
+        filtros = services.Filtros(area=curso.area, localidade=curso.localidade)
+        opcoes = services.opcoes_compativeis(default_config(), filtros)
+        esperadas = {c.instituicao for c in CATALOGO if c.area == curso.area and c.localidade == curso.localidade}
+        self.assertEqual(set(opcoes.instituicoes), esperadas)
+
+    def test_a_pagina_so_mostra_opcoes_que_existem(self):
+        area = CATALOGO[0].area
+        pagina = self.client.get("/cursos/?" + urlencode({"area": area})).get_data(as_text=True)
+        bloco = pagina.split('id="filtro-localidade"')[1].split("</select>")[0]
+        sem_cursos = {c.localidade for c in CATALOGO} - {c.localidade for c in CATALOGO if c.area == area}
+        for localidade in sem_cursos:
+            self.assertNotIn(f'value="{html_lib.escape(localidade)}"', bloco)
+
+    def test_sem_opcao_em_branco(self):
+        opcoes = services.opcoes(default_config())
+        self.assertNotIn("", opcoes.localidades)
+
+    def test_combinacoes_para_o_javascript(self):
+        dados = services.combinacoes(default_config())
+        self.assertEqual(len(dados["trios"]), len({(c.area, c.instituicao, c.localidade) for c in CATALOGO}))
+        # Uma instituição cujos cursos não têm localidade continua a aparecer na lista.
+        self.assertEqual({t[1] for t in dados["trios"]}, set(range(len(dados["instituicao"]))))
+        a, i, l = dados["trios"][0]
+        self.assertTrue(any(c.area == dados["area"][a] and c.instituicao == dados["instituicao"][i]
+                            and c.localidade == dados["localidade"][l] for c in CATALOGO))
+
+
 class FichaTests(AppTestCase):
     """Critério 2: ficha de cada curso com descrição, saídas, vagas, nota do último colocado e fonte."""
 

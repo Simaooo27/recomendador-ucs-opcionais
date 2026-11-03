@@ -132,20 +132,25 @@ class Resultado:
     amostra: bool         # True quando não havia termo e se mostra uma amostra
 
 
+TAMANHO_AMOSTRA = 8
+
+
 def pesquisar(config: Mapping, termo: str, limite: int = 60) -> Resultado:
     """Cursos em que todas as palavras do termo começam uma palavra do nome, instituição, localidade ou área.
 
-    Sem termo, devolve uma amostra variada (um curso de cada instituição, por ordem de vagas).
+    Sem termo, devolve uma amostra variada: um curso de cada instituição, primeiro os que têm a nota
+    do último colocado (para a página inicial não mostrar «Sem dados») e depois por ordem de vagas.
+    São 8, para encherem duas filas de 4 em ecrã largo (revisão de 03/11).
     """
     todos = cursos(config)
     palavras = _palavras_do_texto(termo or "")
     if not palavras:
         vistos, amostra = set(), []
-        for curso in sorted(todos, key=lambda c: -(c.vagas or 0)):
+        for curso in sorted(todos, key=lambda c: (c.ultimo_colocado is None, -(c.vagas or 0))):
             if curso.instituicao not in vistos:
                 vistos.add(curso.instituicao)
                 amostra.append(curso)
-        return Resultado(amostra[:6], len(todos), True)
+        return Resultado(amostra[:TAMANHO_AMOSTRA], len(todos), True)
     encontrados = []
     for curso in todos:
         if _corresponde(palavras, *_campos_pesquisados(curso)):
@@ -202,7 +207,9 @@ class Opcoes:
 
 
 def _ordenados(valores) -> tuple[str, ...]:
-    return tuple(sorted(set(valores), key=_normalizar))
+    """Sem valores vazios: 18 cursos da recolha da DGES vêm sem localidade, e não faz sentido uma
+    opção em branco na lista (revisão de 03/11)."""
+    return tuple(sorted({v for v in valores if v and v.strip()}, key=_normalizar))
 
 
 def opcoes(config: Mapping) -> Opcoes:
@@ -212,6 +219,46 @@ def opcoes(config: Mapping) -> Opcoes:
         instituicoes=_ordenados(c.instituicao for c in todos),
         localidades=_ordenados(c.localidade for c in todos),
     )
+
+
+def opcoes_compativeis(config: Mapping, filtros: "Filtros") -> Opcoes:
+    """As opções de cada filtro que ainda dão cursos com os outros dois filtros escolhidos.
+
+    Ex.: com a área «Agricultura e pescas», a lista de localidades só mostra as cidades onde há
+    cursos dessa área (revisão de 03/11). Cada lista ignora o próprio filtro, para se poder trocar
+    de valor sem limpar primeiro. O valor escolhido fica sempre na lista.
+    """
+    todos = cursos(config)
+
+    def serve(curso, ignorar: str) -> bool:
+        return all(
+            not valor or getattr(curso, nome) == valor
+            for nome, valor in (("area", filtros.area), ("instituicao", filtros.instituicao), ("localidade", filtros.localidade))
+            if nome != ignorar
+        )
+
+    def lista(nome: str) -> tuple[str, ...]:
+        valores = {getattr(c, nome) for c in todos if serve(c, nome)}
+        atual = getattr(filtros, nome)
+        if atual:
+            valores.add(atual)
+        return _ordenados(valores)
+
+    return Opcoes(areas=lista("area"), instituicoes=lista("instituicao"), localidades=lista("localidade"))
+
+
+def combinacoes(config: Mapping) -> dict:
+    """As combinações de área, instituição e localidade que existem, para o JavaScript da página
+    do catálogo atualizar as listas logo ao escolher, sem recarregar. Vai em índices para pesar pouco;
+    -1 quer dizer que o curso não tem esse valor (ex.: os 18 cursos sem localidade)."""
+    base = opcoes(config)
+    indice = {nome: {v: i for i, v in enumerate(getattr(base, nome))} for nome in ("areas", "instituicoes", "localidades")}
+    trios = sorted({
+        (indice["areas"].get(c.area, -1), indice["instituicoes"].get(c.instituicao, -1), indice["localidades"].get(c.localidade, -1))
+        for c in cursos(config)
+    })
+    return {"area": list(base.areas), "instituicao": list(base.instituicoes), "localidade": list(base.localidades),
+            "trios": [list(t) for t in trios]}
 
 
 @dataclass(frozen=True)

@@ -355,6 +355,9 @@ select {
   background-size: 0.35rem 0.35rem;
   background-repeat: no-repeat;
   cursor: pointer;
+  text-overflow: ellipsis;   /* nomes compridos («Agricultura e pescas») acabam em «…» em vez de cortados */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* Campo com erro: contorno vermelho. */
@@ -1089,9 +1092,26 @@ button.a-enviar::before {
    14. Movimento
    Visual calmo (29/10): quase nada se mexe. Só os botões reagem ao clique e as mensagens
    aparecem com um deslize curto. Quem pediu ao sistema menos animação não vê nada disto.
+   Revisão de 03/11: a primeira página da visita entra com um desvanecer curto (a classe vem do
+   entrada.js) e as mensagens de sucesso recolhem sozinhas (app.js, passo 7).
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   .alert { animation: alerta-entrar 200ms ease-out both; }
+  .primeira-entrada body > header { animation: pagina-entrar 400ms ease-out both; }
+  .primeira-entrada body > main,
+  .primeira-entrada body > div { animation: pagina-entrar 500ms ease-out 120ms both; }
+}
+@keyframes pagina-entrar { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.alert-a-sair {
+  overflow: hidden;
+  opacity: 0;
+  height: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-width: 0;
+  transition: opacity 250ms ease-out, height 300ms ease-in 150ms, padding 300ms ease-in 150ms, margin 300ms ease-in 150ms, border-width 300ms ease-in 150ms;
 }
 @keyframes alerta-entrar { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {

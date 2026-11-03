@@ -24,7 +24,8 @@ def lista():
     return render_template(
         "catalogo/lista.html",
         filtros=filtros,
-        opcoes=services.opcoes(current_app.config),
+        opcoes=services.opcoes_compativeis(current_app.config, filtros),
+        combinacoes=services.combinacoes(current_app.config),
         cursos=pagina.cursos,
         pagina=pagina,
         total=len(services.cursos(current_app.config)),

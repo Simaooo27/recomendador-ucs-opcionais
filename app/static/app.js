@@ -8,6 +8,8 @@
  *   3. Regras da palavra-passe marcadas enquanto escreve (criar conta)
  *   4. Botões que mostram «a enviar» e evitam envios repetidos
  *   6. Cursos marcados para comparar, e a lupa e o menu da conta na barra do topo
+ *   7. Mensagens de sucesso que desaparecem sozinhas (as de erro ficam)
+ *   8. Filtros do catálogo que só mostram combinações que existem
  *
  * Visual calmo (29/10): saíram a nota escrita à mão, a linha de «Como funciona» que se desenhava
  * ao descer a página e os números que contavam até ao valor (o passo 2 e o 5).
@@ -257,5 +259,69 @@
     menus.forEach(function (menu) {
       if (menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
     });
+  });
+
+  /* 7. Mensagens de sucesso que desaparecem sozinhas (revisão de 03/11) ---- */
+  // «Sessão terminada», «Conta criada»…: ficam 5 segundos e depois recolhem. Enquanto o rato
+  // ou o foco estiverem em cima, a contagem para. As mensagens de erro não saem sozinhas,
+  // para ninguém perder um erro que ainda não leu.
+  document.querySelectorAll(".alert-ok").forEach(function (aviso) {
+    var espera = null;
+    function sair() {
+      if (menosMovimento) { aviso.remove(); return; }
+      aviso.style.height = aviso.offsetHeight + "px";
+      aviso.offsetHeight;   // obriga o navegador a registar a altura antes de a animar
+      aviso.classList.add("alert-a-sair");
+      aviso.addEventListener("transitionend", function (evento) {
+        if (evento.propertyName === "height") aviso.remove();
+      });
+    }
+    function contar() { espera = window.setTimeout(sair, 5000); }
+    function parar() { window.clearTimeout(espera); }
+    aviso.addEventListener("mouseenter", parar);
+    aviso.addEventListener("mouseleave", contar);
+    aviso.addEventListener("focusin", parar);
+    aviso.addEventListener("focusout", contar);
+    contar();
+  });
+
+  /* 8. Filtros do catálogo dependentes uns dos outros (/cursos/, revisão de 03/11) */
+  // Ao escolher uma área, as listas de instituições e localidades passam a ter só as que têm
+  // cursos dessa área (e assim por diante). Sem JavaScript, o servidor faz o mesmo depois de
+  // «Aplicar filtros» (opcoes_compativeis em app/catalogo/services.py).
+  document.querySelectorAll("[data-filtros-dependentes]").forEach(function (form) {
+    var fonte = form.querySelector("[data-combinacoes]");
+    if (!fonte) return;
+    var dados;
+    try { dados = JSON.parse(fonte.textContent); } catch (erro) { return; }
+    var nomes = ["area", "instituicao", "localidade"];
+    var listas = {};
+    nomes.forEach(function (nome) { listas[nome] = form.querySelector('[data-filtro="' + nome + '"]'); });
+    if (nomes.some(function (nome) { return !listas[nome]; })) return;
+    var todas = listas.area.options[0].textContent;   // o texto de «Todas»
+
+    function atualizar() {
+      var escolhido = {};
+      nomes.forEach(function (nome, i) {
+        var valor = listas[nome].value;
+        escolhido[nome] = valor ? dados[nome].indexOf(valor) : -1;
+      });
+      nomes.forEach(function (nome, i) {
+        var servem = {};
+        dados.trios.forEach(function (trio) {
+          var ok = nomes.every(function (outro, j) { return j === i || escolhido[outro] < 0 || trio[j] === escolhido[outro]; });
+          if (ok && trio[i] >= 0) servem[trio[i]] = true;   // -1: curso sem esse valor
+        });
+        var lista = listas[nome], atual = lista.value;
+        lista.textContent = "";
+        lista.appendChild(new Option(todas, ""));
+        dados[nome].forEach(function (valor, k) {
+          if (servem[k] || valor === atual) lista.appendChild(new Option(valor, valor, false, valor === atual));
+        });
+        lista.title = atual;
+      });
+    }
+    nomes.forEach(function (nome) { listas[nome].addEventListener("change", atualizar); });
+    atualizar();
   });
 })();

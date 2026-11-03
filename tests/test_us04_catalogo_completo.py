@@ -152,10 +152,13 @@ class FiltroPorAreaTests(unittest.TestCase):
         self.assertEqual(len(llm.pedidos), 2)
 
 
-PAGINAS_GUARDADAS = sorted((RAIZ / "dados" / "dges_html" / "cursos").glob("*.html"))
+# Cópia de 144 páginas da DGES, guardada no Git como dados de teste (decisão da equipa, 03/11);
+# as páginas da recolha completa ficam em dados/dges_html/, fora do Git.
+PASTA_PAGINAS = RAIZ / "tests" / "dados_dges" / "cursos"
+PAGINAS_GUARDADAS = sorted(PASTA_PAGINAS.glob("*.html"))
 
 
-@unittest.skipUnless(PAGINAS_GUARDADAS, "sem páginas da DGES guardadas em dados/dges_html/")
+@unittest.skipUnless(PAGINAS_GUARDADAS, "sem páginas da DGES guardadas em tests/dados_dges/cursos/")
 class CondicoesDeAcessoTests(unittest.TestCase):
     """US33: as condições de acesso lidas das páginas da DGES são as que estão no catálogo (27/10)."""
 
@@ -167,11 +170,11 @@ class CondicoesDeAcessoTests(unittest.TestCase):
 
     def _ler(self, nome: str) -> dict[str, str]:
         codc, code = nome.removesuffix(".html").split("-")
-        pagina = (RAIZ / "dados" / "dges_html" / "cursos" / nome).read_text(encoding="latin-1")   # como em processar()
+        pagina = (PASTA_PAGINAS / nome).read_text(encoding="latin-1")   # como em processar()
         return recolha.ler_curso(pagina, codc, code)
 
     def test_conjuntos_alternativos_formula_e_minimos(self):
-        if not (RAIZ / "dados" / "dges_html" / "cursos" / "8093-3062.html").exists():
+        if not (PASTA_PAGINAS / "8093-3062.html").exists():
             self.skipTest("página de exemplo não guardada")
         linha = self._ler("8093-3062.html")      # Animação Socioeducativa, Politécnico de Coimbra
         conjuntos = linha["provas_ingresso"].split("|")

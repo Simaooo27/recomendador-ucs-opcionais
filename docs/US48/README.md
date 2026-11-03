@@ -37,7 +37,7 @@ A US48 só conta como «Feita» quando todas as caixas estiverem marcadas. As pr
 - [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
 - [x] Documentação em `docs/US48/`: requisitos.md, prompt.md (sem use case nem BPMN: a story não muda o que a pessoa faz no site)
 - [x] Sem dívida técnica por registar: limitação conhecida e registada — o assistente só recebe 80 cursos por área (7 áreas têm mais) e só 29 cursos têm descrição; tempos medidos sem rede
-- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Funciona na demonstração: mostrada na Sprint Review do Sprint 4 (03/11)
 - [x] Aceite pelo Product Owner: aceite pelo PO a 31/10
 
 ## Documentos

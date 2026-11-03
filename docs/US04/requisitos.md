@@ -53,5 +53,5 @@ RNF03 (a lista pagina para continuar rápida com o catálogo completo), RNF05 (o
 |---|---|---|
 | 1 | O catálogo vem da DGES por recolha, em vez de o administrador importar um CSV (sugestão de um colega). | **Decidido** (PO, 23/10) |
 | 2 | A recolha de todas as licenciaturas exige o computador ligado uma noite inteira; passa para a US48. | **Decidido** (PO, 27/10) |
-| 3 | A pasta `dados/dges_html/` está no `.gitignore`, mas 165 ficheiros dessa pasta foram para o repositório no PR #44. Ou se tiram do Git (o CSV chega para a aplicação), ou se tira a linha do `.gitignore` e se assume que ficam como fonte dos testes da US33. | Por decidir pela equipa |
+| 3 | A pasta `dados/dges_html/` está no `.gitignore`, mas 165 ficheiros dessa pasta foram para o repositório no PR #44. As 165 páginas passam para `tests/dados_dges/`, no Git, como dados dos testes da US33; a pasta da recolha (`dados/dges_html/`, com as páginas dos 1699 cursos) continua fora do Git. | **Decidido** (equipa, 03/11) |
 | 4 | Os cursos fora do MVP não têm descrição: as sugestões do assistente para esses cursos baseiam-se só no nome e na área. | Aceite para esta release (ponto 12 dos requisitos) |

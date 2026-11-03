@@ -46,7 +46,7 @@ A US35 só conta como «Feita» quando todas as caixas estiverem marcadas. As pr
 - [x] Código gerado por IA assinalado no [registo de uso de IA](../geral/registo-de-uso-de-ia.md)
 - [x] Documentação em `docs/US35/`: requisitos.md, use-case.md, bpmn.md, prompt.md
 - [x] Sem dívida técnica por registar
-- [ ] Funciona na demonstração: a mostrar na Sprint Review do Sprint 4 (05/11)
+- [x] Funciona na demonstração: mostrada na Sprint Review do Sprint 4 (03/11)
 - [x] Aceite pelo Product Owner: aceite pelo PO a 27/10
 
 ## Documentos

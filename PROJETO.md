@@ -58,6 +58,8 @@ Projeto 1 de Metodologias Ágeis (Scrum) · Duarte Eusébio e Simão Almeida
 
 **Sprint Review e fecho do Sprint 4 (03/11/2026, decisão dos Product Owners):** as 17 stories do Sprint 4 foram mostradas a funcionar e a caixa «Funciona na demonstração» foi marcada na Definition of Done de cada uma: as 25 stories do backlog ficam com a Definition of Done completa (79 de 79 SP). O Sprint 4 termina a 03/11 e o projeto fica concluído; a entrega é a 05/11. As atas das Sprint Reviews e das Sprint Retrospectives dos quatro sprints estão no Notion (as dos Sprints 1 e 4 e as quatro Retrospectives registadas a 03/11).
 
+**Revisão do registo de uso de IA (04/11/2026):** as 50 entradas que estavam por validar foram revistas na véspera da entrega, cada uma pelo elemento que não fez o pedido: 41 pelo Simão e 9 pelo Duarte. As três entradas sem nome (01/10 e 07/10) foram pedidos do Simão.
+
 | User story | Título | Sprint | Estado | Documentação |
 |---|---|---|---|---|
 | US01 | Registo com email pessoal (desde 23/10 pede também o nome) | Sprint 1 | Feita | [docs/US01/](docs/US01/) |

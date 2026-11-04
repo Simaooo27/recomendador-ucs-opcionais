@@ -8,12 +8,12 @@ Versão de 04/11/2026 (31/10: primeira versão; 03/11: Sprint Review do Sprint 4
 
 | Sprint | Datas | Sprint Planning | Sprint Review | Sprint Retrospective | SP planeados / feitos |
 |---|---|---|---|---|---|
-| Sprint 1 | até 07/10 | Sprint Goal registado; replaneado a 07/10 (24 → 10 SP) | Não registada (só «concluído a 07/10») | Registada no Notion a 03/11 (no fim do projeto) | 10 / 10 |
+| Sprint 1 | até 07/10 | Sprint Goal registado; replaneado a 07/10 (24 → 10 SP) | Registada no Notion a 03/11 (no fim do projeto) | Registada no Notion a 03/11 (no fim do projeto) | 10 / 10 |
 | Sprint 2 | 20/10 a 22/10 | 20/10 (PROJETO.md) | 22/10, pelos dois Product Owners | Registada no Notion a 03/11 (no fim do projeto) | 13 / 13 |
 | Sprint 3 | 22/10 a 23/10 | 22/10 (PROJETO.md) | 23/10, pelos dois Product Owners | Registada no Notion a 03/11 (no fim do projeto) | 7 / 7 |
-| Sprint 4 | 29/10 a 03/11 | 27/10 e 29/10 (alargado duas vezes) | 03/11, pelos dois Product Owners (guião na secção 4) | 03/11 (ata no Notion) | 49 / 49, Definition of Done completa |
+| Sprint 4 | 29/10 a 03/11 | 27/10, 29/10 e 31/10 (alargado três vezes) | 03/11, pelos dois Product Owners (guião na secção 4) | 03/11 (ata no Notion) | 49 / 49, Definition of Done completa |
 
-Daily Scrums: não há registo em nenhum sprint. Numa equipa de dois elementos com sprints de uma semana, a conversa diária pode ter sido informal; se foi, vale a pena dizê-lo no relatório, porque é uma das cinco cerimónias.
+Daily Scrums: não há registo em nenhum sprint. Numa equipa de dois elementos com sprints de uma semana, a conversa diária pode ter sido informal; o relatório di-lo na secção 5.1.
 
 ## 2. Factos dos Sprints 1 a 3 (apoio às retrospetivas)
 

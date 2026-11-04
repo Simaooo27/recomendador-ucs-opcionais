@@ -1,21 +1,21 @@
 # Cerimónias Scrum: o que está registado e o que falta
 
-Versão de 03/11/2026 (31/10: primeira versão; 03/11: Sprint Review do Sprint 4 e atas no Notion). Este documento junta, num só sítio, as cinco cerimónias do Scrum de cada sprint. O detalhe das decisões continua no [PROJETO.md](../../PROJETO.md#1-estado-do-projeto) e na folha «Plano de sprints» do [backlog](product-backlog.xlsx).
+Versão de 04/11/2026 (31/10: primeira versão; 03/11: Sprint Review do Sprint 4 e atas no Notion; 04/11: estado das retrospetivas). Este documento junta, num só sítio, as cinco cerimónias do Scrum de cada sprint. O detalhe das decisões continua no [PROJETO.md](../../PROJETO.md#1-estado-do-projeto) e na folha «Plano de sprints» do [backlog](product-backlog.xlsx).
 
-**O que falta, em resumo:** as **Sprint Retrospectives** não estão registadas em nenhum sprint e as **Daily Scrums** também não. Se a equipa as fez e as escreveu no Notion, basta pôr aqui a ligação. Se não as escreveu, as secções 2 e 3 têm os factos de cada sprint, para a equipa preencher só o que pensa deles. **Este documento não inventa opiniões da equipa.**
+**Estado a 04/11:** as atas das **Sprint Retrospectives** dos quatro sprints foram registadas no Notion a 03/11, já no fim do projeto (ver o relatório, secção 5.1). As **Daily Scrums** não ficaram registadas: numa equipa de dois, a coordenação foi informal. As tabelas das secções 2 e 3 juntam os factos de cada sprint e ficam como apoio à leitura das atas. **Este documento não inventa opiniões da equipa.**
 
 ## 1. Visão geral
 
 | Sprint | Datas | Sprint Planning | Sprint Review | Sprint Retrospective | SP planeados / feitos |
 |---|---|---|---|---|---|
-| Sprint 1 | até 07/10 | Sprint Goal registado; replaneado a 07/10 (24 → 10 SP) | Não registada (só «concluído a 07/10») | **Não registada** | 10 / 10 |
-| Sprint 2 | 20/10 a 22/10 | 20/10 (PROJETO.md) | 22/10, pelos dois Product Owners | **Não registada** | 13 / 13 |
-| Sprint 3 | 22/10 a 23/10 | 22/10 (PROJETO.md) | 23/10, pelos dois Product Owners | **Não registada** | 7 / 7 |
-| Sprint 4 | 29/10 a 03/11 | 27/10 e 29/10 (alargado duas vezes) | 03/11, pelos dois Product Owners (guião na secção 4) | 03/11 (ata no Notion; respostas da equipa por preencher) | 49 / 49, Definition of Done completa |
+| Sprint 1 | até 07/10 | Sprint Goal registado; replaneado a 07/10 (24 → 10 SP) | Registada no Notion a 03/11 (no fim do projeto) | Registada no Notion a 03/11 (no fim do projeto) | 10 / 10 |
+| Sprint 2 | 20/10 a 22/10 | 20/10 (PROJETO.md) | 22/10, pelos dois Product Owners | Registada no Notion a 03/11 (no fim do projeto) | 13 / 13 |
+| Sprint 3 | 22/10 a 23/10 | 22/10 (PROJETO.md) | 23/10, pelos dois Product Owners | Registada no Notion a 03/11 (no fim do projeto) | 7 / 7 |
+| Sprint 4 | 29/10 a 03/11 | 27/10, 29/10 e 31/10 (alargado três vezes) | 03/11, pelos dois Product Owners (guião na secção 4) | 03/11 (ata no Notion) | 49 / 49, Definition of Done completa |
 
-Daily Scrums: não há registo em nenhum sprint. Numa equipa de dois elementos com sprints de uma semana, a conversa diária pode ter sido informal; se foi, vale a pena dizê-lo no relatório, porque é uma das cinco cerimónias.
+Daily Scrums: não há registo em nenhum sprint. Numa equipa de dois elementos com sprints de uma semana, a conversa diária pode ter sido informal; o relatório di-lo na secção 5.1.
 
-## 2. Retrospetivas dos Sprints 1 a 3 (para preencher)
+## 2. Factos dos Sprints 1 a 3 (apoio às retrospetivas)
 
 A retrospetiva responde a duas perguntas: **o que correu bem e menos bem?** e **o que melhorar no sprint seguinte?** Os factos abaixo vêm do registo do projeto; as respostas são da equipa.
 
